@@ -214,7 +214,7 @@ class Code
 
       def code_delete(*arguments, index: Integer.new(0), **globals)
         default =
-          (arguments.last if arguments.last.is_a?(Function) && arguments.many?)
+          (arguments.last if arguments.last.is_a?(Function) && arguments.size > 1)
 
         arguments = arguments[..-2] if default
 
@@ -337,7 +337,7 @@ class Code
 
       def code_fetch(*arguments, index: Integer.new(0), **globals)
         default =
-          (arguments.last if arguments.last.is_a?(Function) && arguments.many?)
+          (arguments.last if arguments.last.is_a?(Function) && arguments.size > 1)
 
         arguments = arguments[..-2] if default
 
@@ -485,7 +485,7 @@ class Code
 
       def code_merge(*arguments, **globals)
         conflict =
-          (arguments.last if arguments.last.is_a?(Function) && arguments.many?)
+          (arguments.last if arguments.last.is_a?(Function) && arguments.size > 1)
 
         arguments = arguments[..-2] if conflict
 

@@ -4,7 +4,9 @@ class Code
   class Node
     class Function < Node
       def initialize(parsed)
-        @parameters = parsed.delete(:parameters) { [] }.presence || []
+        @parameters = parsed.delete(:parameters) { [] }
+        @parameters = [] if @parameters.empty?
+
         @parameters =
           @parameters.map { |parameter| Node::FunctionParameter.new(parameter) }
 

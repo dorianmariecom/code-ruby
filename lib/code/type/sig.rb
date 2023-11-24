@@ -23,7 +23,7 @@ class Code
       attr_reader :args, :block, :object
 
       def expected_arguments
-        @expected_arguments ||= Array.wrap(block&.call || []).map do |clazz|
+        @expected_arguments ||= Array(block&.call || []).map do |clazz|
           clazz.is_a?(::Hash) ? Hash.new(clazz) : clazz
         end
       end
