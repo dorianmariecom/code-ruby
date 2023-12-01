@@ -71,6 +71,9 @@ class Code
         when "size"
           sig(args)
           code_size
+        when "sum"
+          sig(args)
+          code_sum
         when "uniq"
           sig(args)
           code_uniq
@@ -195,6 +198,10 @@ class Code
 
       def code_uniq
         List.new(raw.uniq)
+      end
+
+      def code_sum
+        raw.inject(&:code_plus) || Nothing.new
       end
 
       def inspect
