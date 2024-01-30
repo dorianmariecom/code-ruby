@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
 
   s.add_dependency "zeitwerk", "~> 2"
   s.add_dependency "language-ruby", "~> 0"
+  s.add_dependency "bigdecimal", "~> 3"
 end
