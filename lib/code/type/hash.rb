@@ -6,7 +6,7 @@ class Code
       attr_reader :hash
 
       def initialize(hash)
-        @hash = hash
+        @hash = hash.transform_keys { |key| Object::String.new(key) }
       end
 
       def valid?(argument)
@@ -19,15 +19,11 @@ class Code
       end
 
       def min_arguments
-        hash.sum do |_, value|
-          min_arguments_of(value)
-        end
+        hash.sum { |_, value| min_arguments_of(value) }
       end
 
       def max_arguments
-        hash.sum do |_, value|
-          max_arguments_of(value)
-        end
+        hash.sum { |_, value| max_arguments_of(value) }
       end
 
       def name

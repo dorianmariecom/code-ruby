@@ -36,9 +36,7 @@ class Code
             if parameter.regular_splat?
               context.code_set(
                 parameter.name,
-                List.new(
-                  arguments.select(&:regular?).map(&:value)
-                )
+                List.new(arguments.select(&:regular?).map(&:value))
               )
             elsif parameter.keyword_splat?
               context.code_set(
@@ -53,7 +51,10 @@ class Code
               context.code_set(parameter.name, argument)
             end
           elsif parameter.keyword?
-            argument = arguments.detect { |argument| argument.name == parameter.name }&.value
+            argument =
+              arguments
+                .detect { |argument| argument.name == parameter.name }
+                &.value
             argument = parameter.evaluate(**globals) if argument.nil?
             context.code_set(parameter.name, argument)
           else

@@ -19,8 +19,8 @@ RSpec.describe Code::Object::Function do
   context "valid" do
     [
       "f = () => {} f",
-      "f = (x) => {} f(1)",
-#      "f = (x:) => {} f(x: 1)"
+      "f = (x) => {} f(1)"
+      #      "f = (x:) => {} f(x: 1)"
     ].each do |input|
       it "#{input} is valid" do
         Code.evaluate(input)
