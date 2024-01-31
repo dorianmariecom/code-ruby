@@ -109,7 +109,7 @@ RSpec.describe Code do
     ['"Hello \\{name}"', '"Hello \\{" + "name}"'],
     ["'Hello {1}'", '"Hello 1"'],
     ['"Hello {1}"', '"Hello 1"'],
-    %w["Hello".include?("H") true],
+    [":Hello.include?(a: :H)", true],
     %w["Hello".downcase :hello],
     ["true ? 1", "1"],
     ["false ? 1", ""],

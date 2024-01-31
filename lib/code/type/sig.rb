@@ -23,9 +23,10 @@ class Code
       attr_reader :args, :block, :object
 
       def expected_arguments
-        @expected_arguments ||= Array(block&.call || []).map do |clazz|
-          clazz.is_a?(::Hash) ? Hash.new(clazz) : clazz
-        end
+        @expected_arguments ||=
+          wrap(block&.call || []).map do |clazz|
+            clazz.is_a?(::Hash) ? Hash.new(clazz) : clazz
+          end
       end
 
       def min_arguments_of(clazz)
@@ -53,7 +54,8 @@ class Code
       end
 
       def max_arguments
-        max_arguments = expected_arguments.map { |clazz| max_arguments_of(clazz) }
+        max_arguments =
+          expected_arguments.map { |clazz| max_arguments_of(clazz) }
         max_arguments.include?(nil) ? nil : max_arguments.sum
       end
 
@@ -94,6 +96,10 @@ class Code
 
       def valid_for?(expected:, actual:)
         expected.is_a?(Type) ? expected.valid?(actual) : actual.is_a?(expected)
+      end
+
+      def wrap(object)
+        object.is_a?(Array) ? object : [object]
       end
 
       def check_types_of_arguments!
