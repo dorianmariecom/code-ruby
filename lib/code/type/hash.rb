@@ -11,9 +11,11 @@ class Code
 
       def valid?(argument)
         return false unless argument.is_a?(Object::Dictionary)
+
         argument = argument.raw
         (argument.keys + hash.keys).uniq.all? do |key|
           next false unless hash[key] && argument[key]
+
           valid_for?(expected: hash[key], actual: argument[key])
         end
       end

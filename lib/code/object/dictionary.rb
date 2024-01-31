@@ -307,8 +307,8 @@ class Code
         self
       end
 
-      def code_dig(*arguments)
-        raw.dig(*arguments) || Nothing.new
+      def code_dig(*)
+        raw.dig(*) || Nothing.new
       end
 
       def code_each(argument, **globals)
@@ -335,8 +335,8 @@ class Code
         Boolean.new(raw.empty?)
       end
 
-      def code_except(*arguments)
-        self.class.new(raw.except(*arguments))
+      def code_except(*)
+        self.class.new(raw.except(*))
       end
 
       def code_fetch(*arguments, index: Integer.new(0), **globals)
@@ -394,8 +394,8 @@ class Code
         end
       end
 
-      def code_fetch_values(*arguments)
-        List.new(raw.fetch_values(*arguments))
+      def code_fetch_values(*)
+        List.new(raw.fetch_values(*))
       end
 
       def code_five?

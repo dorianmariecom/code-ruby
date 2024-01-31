@@ -3,18 +3,16 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::Function do
-=begin
-  [
-    ["even? = (i) => { i.even? } even?(2)", "true"],
-    ["even? = (i:) => { i.even? } even?(i: 2)", "true"],
-    ["add = (a, b) => { a + b } add(1, 2)", "3"],
-    ["minus = (a:, b:) => { a - b } minus(b: 1, a: 2)", "1"]
-  ].each do |input, expected|
-    it "#{input} == #{expected}" do
-      expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
-    end
-  end
-=end
+  #   [
+  #     ["even? = (i) => { i.even? } even?(2)", "true"],
+  #     ["even? = (i:) => { i.even? } even?(i: 2)", "true"],
+  #     ["add = (a, b) => { a + b } add(1, 2)", "3"],
+  #     ["minus = (a:, b:) => { a - b } minus(b: 1, a: 2)", "1"]
+  #   ].each do |input, expected|
+  #     it "#{input} == #{expected}" do
+  #       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
+  #     end
+  #   end
 
   context "valid" do
     [
