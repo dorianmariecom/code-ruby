@@ -33,7 +33,7 @@ class Code
           sig(args)
           code_downcase
         when "include?"
-          sig(args) { { a: String } }
+          sig(args) { String }
           code_include?(value)
         when "reverse"
           sig(args)

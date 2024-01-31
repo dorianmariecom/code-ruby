@@ -28,7 +28,7 @@ RSpec.describe Code::Object::Decimal do
     %w[0.0.zero? true],
     %w[1.2.truncate 1],
     %w[1.234.truncate(2) 1.23],
-    %w[1.2.to_string 1.2],
+    %w[1.2.to_string "1.2"],
     %w[1.2.to_integer 1],
     %w[1.2.to_decimal 1.2],
     %w[4.0.sqrt 2.0],
