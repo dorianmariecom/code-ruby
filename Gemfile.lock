@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (0.6.1)
+    code-ruby (0.6.2)
       bigdecimal (~> 3)
       language-ruby (~> 0)
       zeitwerk (~> 2)
