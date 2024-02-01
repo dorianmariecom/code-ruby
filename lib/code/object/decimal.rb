@@ -9,9 +9,7 @@ class Code
         @raw = BigDecimal(decimal)
 
         return unless exponent
-        unless exponent.is_a?(Number)
-          raise ::Code::Error::TypeError, "exponent is not a number"
-        end
+        raise ::Code::Error::TypeError, "exponent is not a number" unless exponent.is_a?(Number)
 
         @raw *= 10**exponent.raw
       end

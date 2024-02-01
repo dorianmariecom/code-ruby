@@ -76,7 +76,7 @@ class Code
               signature.last[parameter.name] = Object
               signature
             else
-              signature + [{ parameter.name => Object }]
+              signature + [{parameter.name => Object}]
             end
           else
             signature + [Object]

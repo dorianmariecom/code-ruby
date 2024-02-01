@@ -141,7 +141,7 @@ RSpec.describe Code do
   end
 
   it "converts nil" do
-    ruby = Code::Ruby.from_code(Code.evaluate("a", ruby: { a: nil }))
+    ruby = Code::Ruby.from_code(Code.evaluate("a", ruby: {a: nil}))
 
     expect(ruby).to eq(nil)
   end
@@ -154,7 +154,7 @@ RSpec.describe Code do
 
   it "works with nested objects" do
     expect(
-      Code.evaluate("items.first.title", ruby: { items: [{ title: "Hello" }] })
+      Code.evaluate("items.first.title", ruby: {items: [{title: "Hello"}]})
     ).to eq(Code.evaluate(":Hello"))
   end
 
@@ -163,7 +163,7 @@ RSpec.describe Code do
       Code.evaluate(
         "items.map { |item| item.title }",
         ruby: {
-          items: [{ title: "Hello" }]
+          items: [{title: "Hello"}]
         }
       )
     ).to eq(Code.evaluate("[:Hello]"))
