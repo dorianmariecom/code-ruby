@@ -54,19 +54,8 @@ class Code
 
     def from_code
       if code?
-        if code_nothing?
-          raw.raw
-        elsif code_boolean?
-          raw.raw
-        elsif code_decimal?
-          raw.raw
-        elsif code_integer?
-          raw.raw
-        elsif code_nothing?
-          raw.raw
-        elsif code_range?
-          raw.raw
-        elsif code_string?
+        if code_nothing? || code_boolean? || code_decimal? || code_integer? ||
+            code_range? || code_string?
           raw.raw
         elsif code_dictionnary?
           raw
@@ -151,10 +140,6 @@ class Code
 
     def code_integer?
       raw.is_a?(::Code::Object::Integer)
-    end
-
-    def code_nothing?
-      raw.is_a?(::Code::Object::Nothing)
     end
 
     def code_range?
