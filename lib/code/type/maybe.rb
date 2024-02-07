@@ -10,7 +10,9 @@ class Code
       end
 
       def valid?(argument)
-        !argument || valid_for?(expected: clazz, actual: argument)
+        !argument ||
+          argument.is_a?(Object::Nothing) ||
+          valid_for?(expected: clazz, actual: argument)
       end
 
       def min_arguments
