@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (0.6.3)
+    code-ruby (0.6.4)
       bigdecimal (~> 3)
       language-ruby (~> 0)
       zeitwerk (~> 2)
@@ -42,4 +42,4 @@ RUBY VERSION
    ruby 3.3.0p0
 
 BUNDLED WITH
-   2.5.5
+   2.5.6
