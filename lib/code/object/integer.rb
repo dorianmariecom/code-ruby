@@ -10,9 +10,7 @@ class Code
 
         return unless exponent
 
-        unless exponent.is_a?(Number)
-          raise Code::Error::TypeError, "exponent is not a number"
-        end
+        raise Code::Error::TypeError, "exponent is not a number" unless exponent.is_a?(Number)
 
         @raw *= 10**exponent.raw
       end
@@ -40,15 +38,9 @@ class Code
         when "**", "power"
           sig(args) { Number }
           code_power(value)
-        when "+", "plus"
-          sig(args) { Object.maybe }
-          value ? code_plus(value) : self
         when "+", "plus", "self"
           sig(args) { Object.maybe }
           value ? code_plus(value) : code_self
-        when "-", "minus"
-          sig(args) { Number.maybe }
-          value ? code_minus(value) : code_unary_minus
         when "-", "minus", "unary_minus"
           sig(args) { Number.maybe }
           value ? code_minus(value) : code_unary_minus

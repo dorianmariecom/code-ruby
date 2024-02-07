@@ -25,8 +25,8 @@ class Code
           args
             .select(&:keyword?)
             .map do |argument|
-              [argument.name.to_sym, Ruby.from_code(argument.value)]
-            end
+            [argument.name.to_sym, Ruby.from_code(argument.value)]
+          end
             .to_h
 
         Ruby.to_code(raw.call(*regular_arguments, **keyword_arguments))

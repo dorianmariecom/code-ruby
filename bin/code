@@ -1,24 +1,24 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "optparse"
-require_relative "../lib/code-ruby"
+require 'optparse'
+require_relative '../lib/code-ruby'
 
-options = { timeout: 0, profile: false, profiler: "text" }
+options = { timeout: 0, profile: false, profiler: 'text' }
 
 OptionParser
   .new do |opts|
-    opts.banner = "Usage: template [options]"
+    opts.banner = 'Usage: template [options]'
 
-    opts.on("-v", "--version", "Version of template") do |_input|
+    opts.on('-v', '--version', 'Version of template') do |_input|
       puts Code::Version
       exit
     end
 
     opts.on(
-      "-i INPUT",
-      "--input=INPUT",
-      "Input in the code language (String or File)"
+      '-i INPUT',
+      '--input=INPUT',
+      'Input in the code language (String or File)'
     ) do |input|
       input = File.read(input) if File.exist?(input)
 
@@ -26,43 +26,43 @@ OptionParser
     end
 
     opts.on(
-      "-c CONTEXT",
-      "--context=CONTEXT",
-      "Context in the code language (String or File)"
+      '-c CONTEXT',
+      '--context=CONTEXT',
+      'Context in the code language (String or File)'
     ) do |context|
       context = File.read(context) if File.exist?(context)
 
       options[:context] = context
     end
 
-    opts.on("-p", "--parse", "Get parser results for input") do |parse|
+    opts.on('-p', '--parse', 'Get parser results for input') do |parse|
       options[:parse] = parse
     end
 
     opts.on(
-      "-t TIMEOUT",
-      "--timeout=TIMEOUT",
-      "Set timeout in seconds"
+      '-t TIMEOUT',
+      '--timeout=TIMEOUT',
+      'Set timeout in seconds'
     ) { |timeout| options[:timeout] = timeout.to_f }
 
-    opts.on("--profile", "Profile Ruby code") do |_timeout|
-      require "ruby-prof"
+    opts.on('--profile', 'Profile Ruby code') do |_timeout|
+      require 'ruby-prof'
       options[:profile] = true
     end
 
     opts.on(
-      "--profiler TYPE",
-      "Profiler output type (text (default) or html)"
+      '--profiler TYPE',
+      'Profiler output type (text (default) or html)'
     ) do |profiler|
-      require "ruby-prof"
+      require 'ruby-prof'
       options[:profile] = true
       options[:profiler] = profiler
     end
   end
   .parse!
 
-input = options.fetch(:input, "")
-context = options.fetch(:context, "")
+input = options.fetch(:input, '')
+context = options.fetch(:context, '')
 
 RubyProf.start if options[:profile]
 
@@ -74,10 +74,10 @@ end
 
 if options[:profile]
   result = RubyProf.stop
-  if options[:profiler] == "text"
+  if options[:profiler] == 'text'
     printer = RubyProf::FlatPrinter.new(result)
     printer.print($stdout)
-  elsif options[:profiler] == "html"
+  elsif options[:profiler] == 'html'
     printer = RubyProf::GraphHtmlPrinter.new(result)
     printer.print($stdout)
   else
