@@ -40,9 +40,10 @@ class Code
         @arguments.each do |argument|
           if argument.keyword?
             if arguments.last&.value.is_a?(Object::Dictionary)
-              arguments.last.value[argument.name] = argument.evaluate(
-                **args
-              ).value
+              arguments.last.value.code_set(
+                argument.name,
+                argument.evaluate(**args).value
+              )
             else
               arguments << Object::Argument.new(
                 Object::Dictionary.new(
