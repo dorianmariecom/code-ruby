@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = "dorian@dorianmarie.fr"
   s.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
   s.require_paths = ["lib"]
-  s.homepage = "https://github.com/dorianmariefr/code-ruby"
+  s.homepage = "https://github.com/dorianmariecom/code-ruby"
   s.license = "MIT"
   s.executables = "code"
 
