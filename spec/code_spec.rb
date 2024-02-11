@@ -134,9 +134,9 @@ RSpec.describe Code do
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do
-      io = StringIO.new
-      Code.evaluate(input, io:)
-      expect(io.string).to eq(expected)
+      output = StringIO.new
+      Code.evaluate(input, output:)
+      expect(output.string).to eq(expected)
     end
   end
 

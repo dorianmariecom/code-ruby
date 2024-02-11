@@ -2,45 +2,51 @@
 
 class Code
   EMPTY_STRING = ""
-  GLOBALS = %i[io context object].freeze
+  GLOBALS = %i[output error context object].freeze
   DEFAULT_TIMEOUT = 0
 
-  def initialize(input, io: StringIO.new, timeout: DEFAULT_TIMEOUT, ruby: {})
+  def initialize(
+    input,
+    output: StringIO.new,
+    error: StringIO.new,
+    timeout: DEFAULT_TIMEOUT,
+    ruby: {}
+  )
     @input = input
-    @parsed = Timeout.timeout(timeout) { ::Code::Parser.parse(@input).to_raw }
-    @io = io
+    @parsed = Timeout.timeout(timeout) { ::Code::Parser.parse(input).to_raw }
+    @output = output
+    @error = error
     @timeout = timeout || DEFAULT_TIMEOUT
     @ruby = ::Code::Ruby.to_code(ruby || {}).code_to_context
   end
 
   def self.evaluate(
     input,
-    context = "",
-    io: StringIO.new,
+    context = EMPTY_STRING,
+    output: StringIO.new,
+    error: StringIO.new,
     timeout: DEFAULT_TIMEOUT,
     ruby: {}
   )
-    new(input, io:, timeout:, ruby:).evaluate(context)
+    new(input, output:, error:, timeout:, ruby:).evaluate(context)
   end
 
-  def evaluate(context = "")
+  def evaluate(context = EMPTY_STRING)
     Timeout.timeout(timeout) do
       context =
         if context == EMPTY_STRING
           Object::Context.new
         else
-          Code.evaluate(context, timeout:, io:, ruby:).code_to_context
+          Code.evaluate(context, timeout:, output:, error:, ruby:).code_to_context
         end
 
-      raise(Error::IncompatibleContext) unless context.is_a?(Object::Context)
+      context = ruby.merge(context)
 
-      context = context.merge(ruby)
-
-      Node::Code.new(parsed).evaluate(context:, io:)
+      Node::Code.new(parsed).evaluate(context:, output:, error:)
     end
   end
 
   private
 
-  attr_reader :input, :parsed, :timeout, :io, :ruby
+  attr_reader :input, :parsed, :timeout, :output, :error, :ruby
 end

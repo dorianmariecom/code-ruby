@@ -10,7 +10,7 @@ class Code
       def call(**args)
         operator = args.fetch(:operator, nil)
         arguments = args.fetch(:arguments, [])
-        io = args.fetch(:io)
+        output = args.fetch(:output)
         context = args.fetch(:context)
         multi_fetch(args, *GLOBALS)
         value = arguments.first&.value
@@ -60,13 +60,16 @@ class Code
           Code.evaluate(value.to_s)
         when "p"
           sig(args) { Object.repeat }
-          io.puts(*arguments.map(&:value).map(&:inspect)) || Nothing.new
+          output.puts(*arguments.map(&:value).map(&:inspect))
+          Nothing.new
         when "print"
           sig(args) { Object.repeat }
-          io.print(*arguments.map(&:value)) || Nothing.new
+          output.print(*arguments.map(&:value))
+          Nothing.new
         when "puts"
           sig(args) { Object.repeat }
-          io.puts(*arguments.map(&:value)) || Nothing.new
+          output.puts(*arguments.map(&:value))
+          Nothing.new
         else
           context = context.lookup!(operator)
           result = context.code_fetch(operator)
