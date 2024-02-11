@@ -4,11 +4,18 @@
 require 'optparse'
 require_relative '../lib/code-ruby'
 
-options = { timeout: 0, profile: false, profiler: 'text' }
+options = {
+  timeout: 0,
+  profile: false,
+  profiler: 'text',
+  input: "",
+  context: "",
+  parse: false
+}
 
 OptionParser
   .new do |opts|
-    opts.banner = 'Usage: template [options]'
+    opts.banner = 'Usage: code [options]'
 
     opts.on('-v', '--version', 'Version of template') do |_input|
       puts Code::Version
@@ -17,7 +24,7 @@ OptionParser
 
     opts.on(
       '-i INPUT',
-      '--input=INPUT',
+      '--input INPUT',
       'Input in the code language (String or File)'
     ) do |input|
       input = File.read(input) if File.exist?(input)
@@ -27,7 +34,7 @@ OptionParser
 
     opts.on(
       '-c CONTEXT',
-      '--context=CONTEXT',
+      '--context CONTEXT',
       'Context in the code language (String or File)'
     ) do |context|
       context = File.read(context) if File.exist?(context)
@@ -41,7 +48,7 @@ OptionParser
 
     opts.on(
       '-t TIMEOUT',
-      '--timeout=TIMEOUT',
+      '--timeout TIMEOUT',
       'Set timeout in seconds'
     ) { |timeout| options[:timeout] = timeout.to_f }
 
@@ -61,17 +68,14 @@ OptionParser
   end
   .parse!
 
-input = options.fetch(:input, '')
-context = options.fetch(:context, '')
-
 RubyProf.start if options[:profile]
 
 if options[:parse]
-  pp Code::Parser.parse(input).to_raw
+  pp Code::Parser.parse(options[:input]).to_raw
 else
   print Code.evaluate(
-    input,
-    context,
+    options[:input],
+    options[:context],
     output: $stdout,
     error: $stderr,
     timeout: options[:timeout]
@@ -80,6 +84,7 @@ end
 
 if options[:profile]
   result = RubyProf.stop
+
   if options[:profiler] == 'text'
     printer = RubyProf::FlatPrinter.new(result)
     printer.print($stdout)

@@ -8,7 +8,7 @@ class Code
       end
 
       def newline
-        str("\n")
+        str("\n") | str("\r")
       end
 
       def hashtag

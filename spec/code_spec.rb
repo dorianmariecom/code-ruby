@@ -4,6 +4,7 @@ require "spec_helper"
 
 RSpec.describe Code do
   [
+    ["\r\n", "nothing"],
     ["1 + 1", "2"],
     ["a = 1", "1"],
     ["a = 1 b = 2 c = a + b c", "3"],
