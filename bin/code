@@ -69,7 +69,13 @@ RubyProf.start if options[:profile]
 if options[:parse]
   pp Code::Parser.parse(input).to_raw
 else
-  print Code.evaluate(input, context, io: $stdout, timeout: options[:timeout])
+  print Code.evaluate(
+    input,
+    context,
+    output: $stdout,
+    error: $stderr,
+    timeout: options[:timeout]
+  )
 end
 
 if options[:profile]
