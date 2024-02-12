@@ -108,7 +108,7 @@ class Code
       end
 
       def separator
-        special_character
+        special_character | any.absent
       end
 
       def root

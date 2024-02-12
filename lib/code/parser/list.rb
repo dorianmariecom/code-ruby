@@ -4,6 +4,10 @@ class Code
   class Parser
     class List < Language
       def code
+        Code
+      end
+
+      def code_present
         Code.new.present
       end
 
@@ -28,13 +32,14 @@ class Code
       end
 
       def element
-        code
+        (whitespace? << code_present << (whitespace? << comma).maybe) |
+          (whitespace? << code << whitespace? << comma)
       end
 
       def root
         (
           opening_square_bracket.ignore << whitespace? <<
-            (whitespace? << element << (whitespace? << comma).maybe).repeat <<
+            element.repeat <<
             (whitespace? << closing_square_bracket.ignore).maybe
         ).aka(:list) | String
       end
