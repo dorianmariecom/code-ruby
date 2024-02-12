@@ -11,6 +11,10 @@ class Code
         str("*")
       end
 
+      def multiplication_sign
+        str("×")
+      end
+
       def slash
         str("/")
       end
@@ -19,8 +23,12 @@ class Code
         str("%")
       end
 
+      def division_sign
+        str("÷")
+      end
+
       def operator
-        asterisk | slash | percent
+        asterisk | slash | percent | multiplication_sign | division_sign
       end
     end
   end

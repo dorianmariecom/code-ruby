@@ -4,6 +4,7 @@ require "spec_helper"
 
 RSpec.describe Code do
   [
+    ["9975×14÷8", "17456.25"],
     ["\r\n", "nothing"],
     ["1 + 1", "2"],
     ["a = 1", "1"],

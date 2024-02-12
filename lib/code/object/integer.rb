@@ -32,7 +32,7 @@ class Code
         when "&", "bitwise_and"
           sig(args) { Number }
           code_bitwise_and(value)
-        when "*", "multiplication"
+        when "*", "multiplication", "×"
           sig(args) { Number | String }
           code_multiplication(value)
         when "**", "power"
@@ -44,7 +44,7 @@ class Code
         when "-", "minus", "unary_minus"
           sig(args) { Number.maybe }
           value ? code_minus(value) : code_unary_minus
-        when "/", "division"
+        when "/", "division", "÷"
           sig(args) { Number }
           code_division(value)
         when "<", "inferior"
