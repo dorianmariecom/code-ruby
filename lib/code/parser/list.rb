@@ -38,8 +38,7 @@ class Code
 
       def root
         (
-          opening_square_bracket.ignore << whitespace? <<
-            element.repeat <<
+          opening_square_bracket.ignore << whitespace? << element.repeat <<
             (whitespace? << closing_square_bracket.ignore).maybe
         ).aka(:list) | String
       end

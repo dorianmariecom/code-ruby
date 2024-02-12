@@ -8,7 +8,7 @@ class Code
           if parsed.key?(:statement)
             @key = Node::Statement.new(parsed.delete(:statement))
           elsif parsed.key?(:name)
-            @key = Node::String.new([{text: parsed.delete(:name)}])
+            @key = Node::String.new([{ text: parsed.delete(:name) }])
           end
 
           @value = Node::Code.new(parsed.delete(:value)) if parsed[:value]

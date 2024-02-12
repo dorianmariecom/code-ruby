@@ -37,7 +37,13 @@ class Code
         if context == EMPTY_STRING
           Object::Context.new
         else
-          Code.evaluate(context, timeout:, output:, error:, ruby:).code_to_context
+          Code.evaluate(
+            context,
+            timeout:,
+            output:,
+            error:,
+            ruby:
+          ).code_to_context
         end
 
       context = ruby.merge(context)

@@ -149,7 +149,9 @@ class Code
     end
 
     def hash
-      raise NotImplementedError, "#{self.class.name}#hash" unless respond_to?(:raw)
+      unless respond_to?(:raw)
+        raise NotImplementedError, "#{self.class.name}#hash"
+      end
 
       [self.class, raw].hash
     end

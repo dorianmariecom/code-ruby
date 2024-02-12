@@ -32,21 +32,21 @@ class Code
 
       def evaluate(**args)
         if @first_operator == IF_KEYWORD &&
-            @first_statement.evaluate(**args).truthy?
+             @first_statement.evaluate(**args).truthy?
           @first_body.evaluate(**args)
         elsif @first_operator == UNLESS_KEYWORD &&
-            @first_statement.evaluate(**args).falsy?
+              @first_statement.evaluate(**args).falsy?
           @first_body.evaluate(**args)
         else
           @elses.each do |elses|
             if elses.operator == ELSIF_KEYWORD &&
-                elses.statement.evaluate(**args).truthy?
+                 elses.statement.evaluate(**args).truthy?
               return elses.body.evaluate(**args)
             elsif elses.operator == IF_KEYWORD &&
-                elses.statement.evaluate(**args).truthy?
+                  elses.statement.evaluate(**args).truthy?
               return elses.body.evaluate(**args)
             elsif elses.operator == UNLESS_KEYWORD &&
-                elses.statement.evaluate(**args).falsy?
+                  elses.statement.evaluate(**args).falsy?
               return elses.body.evaluate(**args)
             elsif elses.operator == ELSE_KEYWORD
               return elses.body.evaluate(**args)

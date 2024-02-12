@@ -68,7 +68,7 @@ class Code
           [
             {
               function: {
-                parameters: [{name: "_"}],
+                parameters: [{ name: "_" }],
                 body: [
                   {
                     left_operation: {
@@ -78,7 +78,7 @@ class Code
                         }
                       },
                       others: [
-                        {operator: ".", statement: {call: {name: raw}}}
+                        { operator: ".", statement: { call: { name: raw } } }
                       ]
                     }
                   }

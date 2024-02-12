@@ -55,7 +55,7 @@ class Code
     def from_code
       if code?
         if code_nothing? || code_boolean? || code_decimal? || code_integer? ||
-            code_range? || code_string?
+             code_range? || code_string?
           raw.raw
         elsif code_dictionnary?
           raw

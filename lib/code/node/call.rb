@@ -47,7 +47,7 @@ class Code
             else
               arguments << Object::Argument.new(
                 Object::Dictionary.new(
-                  {argument.name => argument.evaluate(**args).value}
+                  { argument.name => argument.evaluate(**args).value }
                 )
               )
             end

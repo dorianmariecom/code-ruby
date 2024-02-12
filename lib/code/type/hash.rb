@@ -15,7 +15,10 @@ class Code
         argument = argument.raw
         (argument.keys + hash.keys).uniq.all? do |key|
           if hash[key]
-            valid_for?(expected: hash[key], actual: argument[key] || Object::Nothing.new)
+            valid_for?(
+              expected: hash[key],
+              actual: argument[key] || Object::Nothing.new
+            )
           else
             false
           end

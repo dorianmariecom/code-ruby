@@ -20,7 +20,16 @@ class Code
           end
 
           def evaluate(**_args)
-            ::Code::Object::String.new(@text)
+            ::Code::Object::String.new(
+              @text
+                .gsub('\n', "\n")
+                .gsub('\r', "\r")
+                .gsub('\t', "\t")
+                .gsub('\b', "\b")
+                .gsub('\f', "\f")
+                .gsub('\a', "\a")
+                .gsub('\e', "\e")
+            )
           end
         end
 

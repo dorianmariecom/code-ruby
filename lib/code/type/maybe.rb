@@ -10,8 +10,7 @@ class Code
       end
 
       def valid?(argument)
-        !argument ||
-          argument.is_a?(Object::Nothing) ||
+        !argument || argument.is_a?(Object::Nothing) ||
           valid_for?(expected: clazz, actual: argument)
       end
 

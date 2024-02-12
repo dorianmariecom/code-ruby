@@ -10,7 +10,9 @@ class Code
 
         return unless exponent
 
-        raise Code::Error::TypeError, "exponent is not a number" unless exponent.is_a?(Number)
+        unless exponent.is_a?(Number)
+          raise Code::Error::TypeError, "exponent is not a number"
+        end
 
         @raw *= 10**exponent.raw
       end
