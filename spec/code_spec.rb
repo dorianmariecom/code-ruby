@@ -189,4 +189,8 @@ RSpec.describe Code do
       )
     ).to eq(Code.evaluate("[:Hello]"))
   end
+
+  it "works with time" do
+    Code.evaluate("1.hour.from_now")
+  end
 end

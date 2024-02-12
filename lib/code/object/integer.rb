@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/core_ext/numeric/time"
+
 class Code
   class Object
     class Integer < Number
@@ -103,6 +105,9 @@ class Code
         when "four?"
           sig(args)
           code_four?
+        when "hour", "hours"
+          sig(args)
+          code_hours
         when "increment!"
           sig(args) { Integer.maybe }
           code_increment!(value)
@@ -380,6 +385,10 @@ class Code
 
       def code_zero?
         Boolean.new(raw.zero?)
+      end
+
+      def code_hours
+        Duration.new(raw.hours)
       end
 
       def inspect
