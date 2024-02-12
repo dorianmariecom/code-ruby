@@ -12,7 +12,7 @@ class Code
         arguments = args.fetch(:arguments, [])
         output = args.fetch(:output)
         context = args.fetch(:context)
-        multi_fetch(args, *GLOBALS)
+        globals = multi_fetch(args, *GLOBALS)
         value = arguments.first&.value
 
         case operator.to_s
@@ -28,6 +28,9 @@ class Code
         when "Dictionary"
           sig(args) { Object.maybe }
           value ? value.code_to_dictionnary : Class.new(Dictionary)
+        when "fetch"
+          sig(args) { [Object, Function.maybe] }
+          context.code_fetch(*arguments.map(&:value), **globals)
         when "Function"
           sig(args) { Object.maybe }
           value ? value.code_to_function : Class.new(Function)

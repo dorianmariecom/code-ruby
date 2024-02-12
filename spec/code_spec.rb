@@ -159,6 +159,20 @@ RSpec.describe Code do
     )
   end
 
+  describe "#fetch" do
+    it "returns the value when present" do
+      expect(Code.evaluate("fetch(:downcase)", "{ downcase: 1 }")).to eq(
+        Code.evaluate("1")
+      )
+    end
+
+    it "returns the default value when not present" do
+      expect(Code.evaluate("fetch(:downcase) { 2 }")).to eq(
+        Code.evaluate("2")
+      )
+    end
+  end
+
   it "works with nested objects" do
     expect(
       Code.evaluate("items.first.title", ruby: { items: [{ title: "Hello" }] })
