@@ -2,4 +2,4 @@
 
 require_relative "../code"
 
-Code::Version = Gem::Version.new("0.7.2")
+Code::Version = Gem::Version.new("0.7.3")
