@@ -22,6 +22,9 @@ class Code
         when "Class"
           sig(args) { Object.maybe }
           value ? value.code_to_class : Class.new(Class)
+        when "Date"
+          sig(args) { Object.maybe }
+          value ? value.code_to_date : Class.new(Date)
         when "Decimal"
           sig(args) { Object.maybe }
           value ? value.code_to_decimal : Class.new(Decimal)
@@ -55,6 +58,9 @@ class Code
         when "String"
           sig(args) { Object.maybe }
           value ? value.code_to_string : Class.new(String)
+        when "Time"
+          sig(args) { Object.maybe }
+          value ? value.code_to_time : Class.new(Time)
         when "context"
           sig(args) { String.maybe }
           value ? context.code_get(value) || Nothing.new : context

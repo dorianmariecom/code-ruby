@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "active_support/core_ext/numeric/time"
-
 class Code
   class Object
     class Integer < Number

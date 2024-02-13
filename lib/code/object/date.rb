@@ -2,22 +2,20 @@
 
 class Code
   class Object
-    class Time < Object
-      DEFAULT_ZONE = "Etc/UTC"
-
+    class Date < Object
       attr_reader :raw
 
-      def initialize(time)
-        @raw = time
+      def initialize(date)
+        @raw = date
       end
 
       def self.name
-        "Time"
+        "Date"
       end
 
       def self.code_tomorrow
-        ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.tomorrow.beginning_of_day)
+        ::Time.zone ||= Time::DEFAULT_ZONE
+        new(::Time.zone.tomorrow)
       end
 
       def inspect
