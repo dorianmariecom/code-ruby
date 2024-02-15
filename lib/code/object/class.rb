@@ -9,18 +9,16 @@ class Code
         @raw = raw
       end
 
-      def call(**args)
-        operator = args.fetch(:operator, nil)
+      def call(...)
+        raw.call(...)
+      end
 
-        if raw == Time && operator.to_s == "tomorrow"
-          sig(args)
-          Time.code_tomorrow
-        elsif raw == Date && operator.to_s == "tomorrow"
-          sig(args)
-          Date.code_tomorrow
-        else
-          super
-        end
+      def to_s
+        raw.name
+      end
+
+      def inspect
+        to_s
       end
 
       def self.name

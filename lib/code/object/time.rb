@@ -15,6 +15,18 @@ class Code
         "Time"
       end
 
+      def self.call(**args)
+        operator = args.fetch(:operator, nil)
+
+        case operator.to_s
+        when "tomorrow"
+          sig(args)
+          code_tomorrow
+        else
+          super
+        end
+      end
+
       def self.code_tomorrow
         ::Time.zone ||= DEFAULT_ZONE
         new(::Time.zone.tomorrow.beginning_of_day)
