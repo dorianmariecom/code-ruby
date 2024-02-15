@@ -86,7 +86,7 @@ class Code
       else
         raise(
           Code::Error::Undefined,
-          "#{operator} not defined on #{inspect}:#{name}"
+          "#{operator} not defined on #{inspect}:Class"
         )
       end
     end
@@ -135,14 +135,6 @@ class Code
       !truthy?
     end
 
-    def self.hash
-      unless respond_to?(:raw)
-        raise NotImplementedError, "#{self.class.name}#hash"
-      end
-
-      [self.class, raw].hash
-    end
-
     def self.multi_fetch(hash, *keys)
       keys.map { |key| [key, hash.fetch(key)] }.to_h
     end
@@ -157,6 +149,10 @@ class Code
 
     def self.to_s
       name
+    end
+
+    def self.inspect
+      to_s
     end
 
     def self.truthy?
@@ -311,6 +307,10 @@ class Code
 
     def to_s
       raise NotImplementedError, "#{self.class.name}#to_s"
+    end
+
+    def inspect
+      to_s
     end
 
     def truthy?
