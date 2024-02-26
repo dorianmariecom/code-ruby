@@ -6,15 +6,11 @@ class Code
       attr_reader :raw
 
       def initialize(whole, exponent: nil)
+        whole = whole.raw if whole.is_a?(Integer)
         @raw = whole.to_i
-
         return unless exponent
-
-        unless exponent.is_a?(Number)
-          raise Code::Error::TypeError, "exponent is not a number"
-        end
-
-        @raw *= 10**exponent.raw
+        exponent = exponent.raw if exponent.is_a?(Number)
+        @raw *= 10**exponent
       end
 
       def self.name
