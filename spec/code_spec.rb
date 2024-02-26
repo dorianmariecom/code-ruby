@@ -156,12 +156,6 @@ RSpec.describe Code do
     end
   end
 
-  it "converts nil" do
-    ruby = Code::Ruby.from_code(Code.evaluate("a", ruby: { a: nil }))
-
-    expect(ruby).to eq(nil)
-  end
-
   it "works with downcase" do
     expect(Code.evaluate("downcase", "{ downcase: 1 }")).to eq(
       Code.evaluate("1")
@@ -180,23 +174,6 @@ RSpec.describe Code do
         Code.evaluate("2")
       )
     end
-  end
-
-  it "works with nested objects" do
-    expect(
-      Code.evaluate("items.first.title", ruby: { items: [{ title: "Hello" }] })
-    ).to eq(Code.evaluate(":Hello"))
-  end
-
-  it "works with arrays" do
-    expect(
-      Code.evaluate(
-        "items.map { |item| item.title }",
-        ruby: {
-          items: [{ title: "Hello" }]
-        }
-      )
-    ).to eq(Code.evaluate("[:Hello]"))
   end
 
   [

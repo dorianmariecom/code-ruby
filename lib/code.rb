@@ -9,15 +9,13 @@ class Code
     input,
     output: StringIO.new,
     error: StringIO.new,
-    timeout: DEFAULT_TIMEOUT,
-    ruby: {}
+    timeout: DEFAULT_TIMEOUT
   )
     @input = input
     @parsed = Timeout.timeout(timeout) { ::Code::Parser.parse(input).to_raw }
     @output = output
     @error = error
     @timeout = timeout || DEFAULT_TIMEOUT
-    @ruby = ::Code::Ruby.to_code(ruby || {}).code_to_context
   end
 
   def self.evaluate(
@@ -25,10 +23,9 @@ class Code
     context = EMPTY_STRING,
     output: StringIO.new,
     error: StringIO.new,
-    timeout: DEFAULT_TIMEOUT,
-    ruby: {}
+    timeout: DEFAULT_TIMEOUT
   )
-    new(input, output:, error:, timeout:, ruby:).evaluate(context)
+    new(input, output:, error:, timeout:).evaluate(context)
   end
 
   def evaluate(context = EMPTY_STRING)
@@ -42,11 +39,8 @@ class Code
             timeout:,
             output:,
             error:,
-            ruby:
           ).code_to_context
         end
-
-      context = ruby.merge(context)
 
       Node::Code.new(parsed).evaluate(context:, output:, error:)
     end
@@ -54,5 +48,5 @@ class Code
 
   private
 
-  attr_reader :input, :parsed, :timeout, :output, :error, :ruby
+  attr_reader :input, :parsed, :timeout, :output, :error
 end

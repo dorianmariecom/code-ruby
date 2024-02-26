@@ -10,14 +10,15 @@ Gem::Specification.new do |s|
   s.description = 'A programming language, like Code.evaluate("1 + 1") # => 2'
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.fr"
-  s.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  s.files = `git ls-files`.lines.map(&:strip)
   s.require_paths = ["lib"]
   s.homepage = "https://github.com/dorianmariecom/code-ruby"
   s.license = "MIT"
   s.executables = "code"
 
-  s.add_dependency "bigdecimal", "~> 3"
-  s.add_dependency "language-ruby", "~> 0"
   s.add_dependency "activesupport", "~> 7"
+  s.add_dependency "bigdecimal", "~> 3"
+  s.add_dependency "json", "~> 2"
+  s.add_dependency "language-ruby", "~> 0"
   s.add_dependency "zeitwerk", "~> 2"
 end
