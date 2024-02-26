@@ -8,7 +8,10 @@ class Code
       attr_reader :raw
 
       def initialize(time)
-        @raw = time
+        ::Time.zone ||= DEFAULT_ZONE
+        time = time.raw if time.is_a?(Time)
+        time = time.to_s if time.is_a?(::Time)
+        @raw = ::Time.zone.parse(time)
       end
 
       def self.name
