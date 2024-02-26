@@ -19,6 +19,9 @@ class Code
         operator = args.fetch(:operator, nil)
 
         case operator.to_s
+        when "now"
+          sig(args)
+          code_now
         when "tomorrow"
           sig(args)
           code_tomorrow
@@ -30,6 +33,38 @@ class Code
       def self.code_tomorrow
         ::Time.zone ||= DEFAULT_ZONE
         new(::Time.zone.tomorrow.beginning_of_day)
+      end
+
+      def self.code_now
+        ::Time.zone ||= DEFAULT_ZONE
+        new(::Time.zone.now.beginning_of_day)
+      end
+
+      def call(**args)
+        operator = args.fetch(:operator, nil)
+        arguments = args.fetch(:arguments, [])
+        value = arguments.first&.value
+
+        case operator.to_s
+        when "after?"
+          sig(args) { Time.maybe }
+          code_after?(value)
+        when "before?"
+          sig(args) { Time.maybe }
+          code_before?(value)
+        else
+          super
+        end
+      end
+
+      def code_after?(other)
+        other ||= Time.code_now
+        Boolean.new(raw.after?(other.raw))
+      end
+
+      def code_before?(other)
+        other ||= Time.code_now
+        Boolean.new(raw.before?(other.raw))
       end
 
       def inspect
