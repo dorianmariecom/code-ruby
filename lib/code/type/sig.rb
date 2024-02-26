@@ -11,11 +11,13 @@ class Code
 
       def self.sig(...)
         new(...).sig
+        nil
       end
 
       def sig
         check_number_of_arguments!
         check_types_of_arguments!
+        nil
       end
 
       private
@@ -92,6 +94,8 @@ class Code
           Error::ArityError,
           "#{function}: Expected #{expected_count} but got #{actual_count}"
         )
+
+        nil
       end
 
       def valid_for?(expected:, actual:)
@@ -130,6 +134,8 @@ class Code
             )
           end
         end
+
+        nil
       end
     end
   end

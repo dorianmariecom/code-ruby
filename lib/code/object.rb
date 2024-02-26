@@ -20,6 +20,7 @@ class Code
 
     def self.sig(args, &block)
       Type::Sig.sig(args, object: self, &block)
+      nil
     end
 
     def self.call(**args)
@@ -141,6 +142,7 @@ class Code
 
     def self.sig(args, &block)
       Type::Sig.sig(args, object: self, &block)
+      nil
     end
 
     def self.name
@@ -303,6 +305,7 @@ class Code
 
     def sig(args, &block)
       Type::Sig.sig(args, object: self, &block)
+      nil
     end
 
     def to_s
