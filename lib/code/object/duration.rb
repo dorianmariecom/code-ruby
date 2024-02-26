@@ -17,12 +17,19 @@ class Code
         operator = args.fetch(:operator, nil)
 
         case operator.to_s
+        when "ago"
+          sig(args)
+          code_ago
         when "from_now"
           sig(args)
           code_from_now
         else
           super
         end
+      end
+
+      def code_ago
+        Time.new(raw.ago)
       end
 
       def code_from_now

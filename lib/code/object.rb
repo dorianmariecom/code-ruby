@@ -146,7 +146,7 @@ class Code
     end
 
     def self.name
-      raise NotImplementedError, "name"
+      "Object"
     end
 
     def self.to_s

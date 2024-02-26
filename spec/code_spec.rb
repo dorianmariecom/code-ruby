@@ -191,9 +191,16 @@ RSpec.describe Code do
   end
 
   [
+    "1.day.ago",
+    "1.day.from_now",
+    "1.hour.ago",
     "1.hour.from_now",
+    "2.days.ago",
+    "2.days.from_now",
+    "2.hours.ago",
+    "2.hours.from_now",
+    "Date.tomorrow",
     "Time.tomorrow",
-    "Date.tomorrow"
   ].each do |input|
     it(input) { Code.evaluate(input) }
   end

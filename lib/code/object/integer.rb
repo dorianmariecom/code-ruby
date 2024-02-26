@@ -82,6 +82,9 @@ class Code
         when "clone"
           sig(args)
           code_clone
+        when "day", "days"
+          sig(args)
+          code_days
         when "decrement!"
           sig(args) { Integer.maybe }
           code_decrement!(value)
@@ -387,6 +390,10 @@ class Code
 
       def code_hours
         Duration.new(raw.hours)
+      end
+
+      def code_days
+        Duration.new(raw.days)
       end
 
       def inspect
