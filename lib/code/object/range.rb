@@ -8,7 +8,7 @@ class Code
       def initialize(left, right, exclude_end: false)
         @left = left
         @right = right
-        @exclude_end = exclude_end
+        @exclude_end = !!exclude_end
         @raw = ::Range.new(left, right, exclude_end)
       end
 

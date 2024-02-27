@@ -6,7 +6,8 @@ class Code
       attr_reader :parent
 
       def initialize(raw = {}, parent: nil)
-        @raw = raw
+        raw = raw.raw if raw.is_a?(Dictionary)
+        @raw = raw.to_h
         @parent = parent
       end
 

@@ -6,6 +6,7 @@ class Code
       attr_reader :raw
 
       def initialize(duration)
+        duration = duration.raw if duration.is_a?(Duration)
         @raw = duration
       end
 

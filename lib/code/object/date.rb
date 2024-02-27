@@ -6,7 +6,8 @@ class Code
       attr_reader :raw
 
       def initialize(date)
-        @raw = date
+        date = date.raw if date.is_a?(Date)
+        @raw = date.to_date
       end
 
       def self.name

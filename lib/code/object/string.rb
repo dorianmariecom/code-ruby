@@ -6,6 +6,7 @@ class Code
       attr_reader :raw
 
       def initialize(string)
+        string = string.raw if string.is_a?(String)
         @raw = string.to_s
       end
 

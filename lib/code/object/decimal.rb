@@ -6,6 +6,7 @@ class Code
       attr_reader :raw
 
       def initialize(decimal, exponent: nil)
+        decimal = decimal.raw if decimal.is_a?(Decimal)
         @raw = BigDecimal(decimal)
 
         return unless exponent

@@ -6,6 +6,7 @@ class Code
       attr_reader :raw
 
       def initialize(raw)
+        raw = raw.raw if raw.is_a?(Class)
         @raw = raw
       end
 
