@@ -10,14 +10,6 @@ class Code
         @name = name
       end
 
-      def self.name
-        "Argument"
-      end
-
-      def inspect
-        to_s
-      end
-
       def keyword?
         !regular?
       end
@@ -28,10 +20,6 @@ class Code
 
       def regular?
         !name
-      end
-
-      def to_s
-        "<Argument #{value.inspect}>"
       end
     end
   end

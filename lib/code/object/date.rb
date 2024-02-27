@@ -37,6 +37,10 @@ class Code
       def to_s
         raw.to_s
       end
+
+      def as_json(...)
+        raw.as_json(...)
+      end
     end
   end
 end

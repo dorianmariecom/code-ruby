@@ -91,10 +91,6 @@ class Code
           end
         end
       end
-
-      def to_s
-        "global"
-      end
     end
   end
 end

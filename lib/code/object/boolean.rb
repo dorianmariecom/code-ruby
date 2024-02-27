@@ -60,6 +60,10 @@ class Code
       def truthy?
         raw
       end
+
+      def as_json(...)
+        raw.as_json(...)
+      end
     end
   end
 end

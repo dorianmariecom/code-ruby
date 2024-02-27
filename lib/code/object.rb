@@ -319,5 +319,13 @@ class Code
     def truthy?
       true
     end
+
+    def to_json(...)
+      as_json(...).to_json
+    end
+
+    def as_json(...)
+      raise NotImplementedError, "#{self.class}#as_json"
+    end
   end
 end

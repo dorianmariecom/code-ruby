@@ -24,6 +24,10 @@ class Code
       def self.name
         "Class"
       end
+
+      def as_json(...)
+        raw.name.as_json(...)
+      end
     end
   end
 end

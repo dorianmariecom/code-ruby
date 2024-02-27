@@ -211,6 +211,10 @@ class Code
       def to_s
         "[#{raw.map(&:inspect).join(", ")}]"
       end
+
+      def as_json(...)
+        raw.as_json(...)
+      end
     end
   end
 end

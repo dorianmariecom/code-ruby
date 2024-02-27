@@ -24,6 +24,10 @@ class Code
       def truthy?
         false
       end
+
+      def as_json(...)
+        raw.as_json(...)
+      end
     end
   end
 end

@@ -146,6 +146,10 @@ RSpec.describe Code do
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
     end
+
+    it "#{input} converts to json like #{expected}" do
+      expect(Code.evaluate(input).to_json).to eq(Code.evaluate(expected).to_json)
+    end
   end
 
   %w[
