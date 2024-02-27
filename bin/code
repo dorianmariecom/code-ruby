@@ -9,15 +9,14 @@ options = {
   profile: false,
   profiler: "text",
   input: "",
-  context: "",
   parse: false
 }
 
-OptionParser
+argv = OptionParser
   .new do |opts|
-    opts.banner = "Usage: code [options]"
+    opts.banner = "Usage: code INPUT\n\n"
 
-    opts.on("-v", "--version", "Version of template") do |_input|
+    opts.on("-v", "--version", "Version of Code") do |_input|
       puts Code::Version
       exit
     end
@@ -25,24 +24,14 @@ OptionParser
     opts.on(
       "-i INPUT",
       "--input INPUT",
-      "Input in the code language (String or File)"
+      "Input in the Code language (String or File)"
     ) do |input|
       input = File.read(input) if File.exist?(input)
 
       options[:input] = input
     end
 
-    opts.on(
-      "-c CONTEXT",
-      "--context CONTEXT",
-      "Context in the code language (String or File)"
-    ) do |context|
-      context = File.read(context) if File.exist?(context)
-
-      options[:context] = context
-    end
-
-    opts.on("-p", "--parse", "Get parser results for input") do |parse|
+    opts.on("-p", "--parse", "Parser tree for input") do |parse|
       options[:parse] = parse
     end
 
@@ -68,6 +57,21 @@ OptionParser
   end
   .parse!
 
+options[:input] = argv.join(" ") if options[:input].empty?
+
+if options[:input].empty?
+  abort <<~HELP
+    Usage: code INPUT
+
+      -v, --version                    Version of Code
+      -i, --input INPUT                Input in the Code language (String or File)
+      -p, --parse                      Parser tree for input
+      -t, --timeout TIMEOUT            Set timeout in seconds
+          --profile                    Profile Ruby code
+          --profiler TYPE              Profiler output type (text (default) or html)
+  HELP
+end
+
 RubyProf.start if options[:profile]
 
 if options[:parse]
@@ -75,7 +79,6 @@ if options[:parse]
 else
   print Code.evaluate(
           options[:input],
-          options[:context],
           output: $stdout,
           error: $stderr,
           timeout: options[:timeout]
