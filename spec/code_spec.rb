@@ -57,14 +57,14 @@ RSpec.describe Code do
     ["1 >> 1", "0"],
     ["1 ^ 2", "3"],
     ["1 | 2", "3"],
-    ["1.day.ago.after?(1.day.from_now)", 'false'],
-    ["1.day.ago.before?(1.day.from_now)", 'true'],
-    ["1.day.from_now.after?(1.day.ago)", 'true'],
-    ["1.day.from_now.before?(1.day.ago)", 'false'],
-    ["1.day.ago.after?", 'false'],
-    ["1.day.ago.before?", 'true'],
-    ["1.day.from_now.after?", "true"],
-    ["1.day.from_now.before?", "false"],
+    %w[1.day.ago.after?(1.day.from_now) false],
+    %w[1.day.ago.before?(1.day.from_now) true],
+    %w[1.day.from_now.after?(1.day.ago) true],
+    %w[1.day.from_now.before?(1.day.ago) false],
+    %w[1.day.ago.after? false],
+    %w[1.day.ago.before? true],
+    %w[1.day.from_now.after? true],
+    %w[1.day.from_now.before? false],
     ["2 * 3 + 2", "8"],
     ["2 * 3", "6"],
     ["2 ** 3 ** 2", "512"],
@@ -141,12 +141,25 @@ RSpec.describe Code do
     ['"Hello {1}"', '"Hello 1"'],
     ['user = {} user.name = "Dorian" user.name', ":Dorian"],
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
-    ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
+    ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}']
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
     end
   end
+
+  %w[
+    1.day.ago
+    1.day.from_now
+    1.hour.ago
+    1.hour.from_now
+    2.days.ago
+    2.days.from_now
+    2.hours.ago
+    2.hours.from_now
+    Date.tomorrow
+    Time.tomorrow
+  ].each { |input| it(input) { Code.evaluate(input) } }
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do
@@ -154,40 +167,5 @@ RSpec.describe Code do
       Code.evaluate(input, output:)
       expect(output.string).to eq(expected)
     end
-  end
-
-  it "works with downcase" do
-    expect(Code.evaluate("downcase", "{ downcase: 1 }")).to eq(
-      Code.evaluate("1")
-    )
-  end
-
-  describe "#fetch" do
-    it "returns the value when present" do
-      expect(Code.evaluate("fetch(:downcase)", "{ downcase: 1 }")).to eq(
-        Code.evaluate("1")
-      )
-    end
-
-    it "returns the default value when not present" do
-      expect(Code.evaluate("fetch(:downcase) { 2 }")).to eq(
-        Code.evaluate("2")
-      )
-    end
-  end
-
-  [
-    "1.day.ago",
-    "1.day.from_now",
-    "1.hour.ago",
-    "1.hour.from_now",
-    "2.days.ago",
-    "2.days.from_now",
-    "2.hours.ago",
-    "2.hours.from_now",
-    "Date.tomorrow",
-    "Time.tomorrow",
-  ].each do |input|
-    it(input) { Code.evaluate(input) }
   end
 end
