@@ -19,11 +19,15 @@ class Code
         raise NotImplementedError
       end
 
+      def right_statement
+        Statement
+      end
+
       def root
         (
           statement.aka(:left) << (
             whitespace? << operator.aka(:operator) << whitespace? <<
-              self.class.aka(:right)
+              right_statement.aka(:right)
           ).maybe
         )
           .aka(:right_operation)

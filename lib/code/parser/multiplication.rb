@@ -27,6 +27,10 @@ class Code
         str("÷")
       end
 
+      def right_statement
+        Negation
+      end
+
       def operator
         asterisk | slash | percent | multiplication_sign | division_sign
       end

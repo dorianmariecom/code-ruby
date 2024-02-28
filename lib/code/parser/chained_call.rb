@@ -7,14 +7,6 @@ class Code
         SquareBracket
       end
 
-      def whitespace
-        Whitespace
-      end
-
-      def whitespace?
-        whitespace.maybe
-      end
-
       def dot
         str(".")
       end
@@ -25,6 +17,10 @@ class Code
 
       def colon
         str(":")
+      end
+
+      def right_statement
+        Rescue
       end
 
       def operator

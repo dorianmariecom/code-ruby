@@ -27,6 +27,10 @@ class Code
         str("~")
       end
 
+      def right_statement
+        Greater
+      end
+
       def operator
         (equal << equal << equal) | (equal << equal) |
           (lesser << equal << greater) | (exclamation_point << equal) |

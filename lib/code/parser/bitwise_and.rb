@@ -7,6 +7,10 @@ class Code
         Shift
       end
 
+      def whitespace?
+        whitespace
+      end
+
       def ampersand
         str("&")
       end

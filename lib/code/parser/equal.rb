@@ -55,6 +55,10 @@ class Code
         str(".")
       end
 
+      def right_statement
+        Equal
+      end
+
       def operator
         equal | (plus << equal) | (minus << equal) | (asterisk << equal) |
           (slash << equal) | (percent << equal) |
