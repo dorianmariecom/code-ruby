@@ -6,10 +6,9 @@ class Code
       def initialize(parsed)
         @decimal = parsed.delete(:decimal)
 
-        @exponent =
-          Node::Statement.new(parsed.delete(:exponent)) if parsed.key?(
-          :exponent
-        )
+        if parsed.key?(:exponent)
+          @exponent = Node::Statement.new(parsed.delete(:exponent))
+        end
 
         super(parsed)
       end

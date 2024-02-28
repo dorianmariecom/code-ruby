@@ -20,7 +20,7 @@ class Code
       end
 
       def backslash
-        str("\\")
+        str('\\')
       end
 
       def opening_curly_bracket

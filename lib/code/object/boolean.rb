@@ -6,11 +6,7 @@ class Code
       attr_reader :raw
 
       def initialize(raw)
-        if raw.is_a?(Object)
-          @raw = raw.truthy?
-        else
-          @raw = !!raw
-        end
+        @raw = (raw.is_a?(Object) ? raw.truthy? : !!raw)
       end
 
       def self.name

@@ -9,6 +9,7 @@ class Code
         whole = whole.raw if whole.is_a?(Integer)
         @raw = whole.to_i
         return unless exponent
+
         exponent = exponent.raw if exponent.is_a?(Number)
         @raw *= 10**exponent
       end

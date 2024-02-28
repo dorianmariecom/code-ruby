@@ -176,7 +176,7 @@ class Code
         other == self
       end
     end
-    alias_method :eql?, :==
+    alias eql? ==
 
     def call(**args)
       operator = args.fetch(:operator, nil)

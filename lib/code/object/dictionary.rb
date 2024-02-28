@@ -470,6 +470,8 @@ class Code
               ],
               **globals
             ).falsy?
+          rescue Error::Next => e
+            (e.value || Nothing.new).falsy?
           end
         end
 
@@ -486,6 +488,8 @@ class Code
         else
           raw.key(value) || Nothing.new
         end
+      rescue Error::Next => e
+        e.value || Nothing.new
       end
 
       def code_keys
@@ -522,6 +526,9 @@ class Code
             else
               new_value.tap { index += 1 }
             end
+          rescue Error::Next => e
+            index += 1
+            e.value || Nothing.new
           end
         )
       end
@@ -548,6 +555,8 @@ class Code
               ],
               **globals
             ).truthy?
+          rescue Error::Next => e
+            (e.value || Nothing.new).truthy?
           end
         end
 
@@ -569,6 +578,8 @@ class Code
                 ],
                 **globals
               ).truthy?
+            rescue Error::Next => e
+              (e.value || Nothing.new).truthy?
             end
           )
         end
@@ -626,6 +637,8 @@ class Code
               ],
               **globals
             )
+          rescue Error::Next => e
+            e.value || Nothing.new
           end
         )
       end

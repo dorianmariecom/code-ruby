@@ -19,6 +19,12 @@ class Code
         when "Boolean"
           sig(args) { Object.maybe }
           value ? value.code_to_boolean : Class.new(Boolean)
+        when "break"
+          sig(args) { Object.maybe }
+          raise Error::Break, value || Nothing.new
+        when "next"
+          sig(args) { Object.maybe }
+          raise Error::Next, value || Nothing.new
         when "Class"
           sig(args) { Object.maybe }
           value ? value.code_to_class : Class.new(Class)

@@ -3,7 +3,7 @@
 class Code
   class Node
     def initialize(parsed)
-      return unless parsed.any?
+      return if parsed.nil? || parsed.empty?
 
       raise NotImplementedError, "#{self.class.name}: #{parsed.inspect}"
     end

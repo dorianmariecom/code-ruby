@@ -56,7 +56,7 @@ class Code
       end
 
       def right_statement
-        Equal
+        OrKeyword
       end
 
       def operator

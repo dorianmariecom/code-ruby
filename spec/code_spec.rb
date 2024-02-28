@@ -141,14 +141,20 @@ RSpec.describe Code do
     ['"Hello {1}"', '"Hello 1"'],
     ['user = {} user.name = "Dorian" user.name', ":Dorian"],
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
-    ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}']
+    ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
+    ["a = 0 loop a += 1 break end a", "1"],
+    ["a = 0 [1, 2, 3].each { |i| next if i == 2 a += i } a", "4"],
+    ["[1, 2, 3].map { |i| next if i == 2 i ** 2}", "[1, nothing, 9]"],
+    ["[1, 2, 3].map { |i| next(0) if i.even? i ** 2}", "[1, 0, 9]"]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
     end
 
     it "#{input} converts to json like #{expected}" do
-      expect(Code.evaluate(input).to_json).to eq(Code.evaluate(expected).to_json)
+      expect(Code.evaluate(input).to_json).to eq(
+        Code.evaluate(expected).to_json
+      )
     end
   end
 

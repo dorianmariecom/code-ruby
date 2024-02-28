@@ -27,10 +27,18 @@ class Code
         str("end")
       end
 
+      def loop_keyword
+        str("loop")
+      end
+
       def root
         (
-          (while_keyword | until_keyword).aka(:operator) << whitespace <<
-            statement.aka(:statement) << code.aka(:body) << end_keyword.maybe
+          (
+            (
+              (while_keyword | until_keyword).aka(:operator) << whitespace <<
+                statement.aka(:statement)
+            ) | (loop_keyword.aka(:operator) << whitespace)
+          ) << code.aka(:body) << end_keyword.maybe
         ).aka(:while) | statement
       end
     end

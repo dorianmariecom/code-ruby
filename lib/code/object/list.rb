@@ -69,6 +69,9 @@ class Code
         when "select"
           sig(args) { Function }
           code_select(value, **globals)
+        when "select!"
+          sig(args) { Function }
+          code_select!(value, **globals)
         when "size"
           sig(args)
           code_size
@@ -87,6 +90,8 @@ class Code
         Boolean.new(
           raw.any? do |element|
             argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          rescue Error::Next => e
+            e.value || Nothing.new
           end
         )
       end
@@ -99,12 +104,16 @@ class Code
       def code_detect(argument, **globals)
         raw.detect do |element|
           argument.call(arguments: [Argument.new(element)], **globals).truthy?
+        rescue Error::Next => e
+          e.value || Nothing.new
         end || Nothing.new
       end
 
       def code_each(argument, **globals)
         raw.each do |element|
           argument.call(arguments: [Argument.new(element)], **globals)
+        rescue Error::Next => e
+          e.value || Nothing.new
         end
         self
       end
@@ -146,6 +155,8 @@ class Code
         List.new(
           raw.map do |element|
             argument.call(arguments: [Argument.new(element)], **globals)
+          rescue Error::Next => e
+            e.value || Nothing.new
           end
         )
       end
@@ -157,6 +168,8 @@ class Code
       def code_max_by(argument, **globals)
         raw.max_by do |element|
           argument.call(arguments: [Argument.new(element)], **globals)
+        rescue Error::Next => e
+          e.value || Nothing.new
         end || Nothing.new
       end
 
@@ -164,6 +177,8 @@ class Code
         Boolean.new(
           raw.none? do |element|
             argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          rescue Error::Next => e
+            (e.value || Nothing.new).truthy?
           end
         )
       end
@@ -174,6 +189,8 @@ class Code
             arguments: [Argument.new(acc), Argument.new(element)],
             **globals
           )
+        rescue Error::Next => e
+          e.value || Nothing.new
         end || Nothing.new
       end
 
@@ -185,8 +202,21 @@ class Code
         List.new(
           raw.select do |element|
             argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          rescue Error::Next => e
+            (e.value || Nothing.new).truthy?
           end
         )
+      end
+
+      def code_select!(argument, **globals)
+        raw.select! do |element|
+          argument.call(arguments: [Argument.new(element)], **globals).truthy?
+        rescue Error::Next => e
+          p e.value
+          (e.value || Nothing.new).truthy?
+        end
+
+        self
       end
 
       def code_sort

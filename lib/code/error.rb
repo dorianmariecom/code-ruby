@@ -25,5 +25,21 @@ class Code
 
     class KeyNotFound < Error
     end
+
+    class Break < Error
+      attr_reader :value
+
+      def initialize(value = nil)
+        @value = value || Object::Nothing.new
+      end
+    end
+
+    class Next < Error
+      attr_reader :value
+
+      def initialize(value = nil)
+        @value = value || Object::Nothing.new
+      end
+    end
   end
 end
