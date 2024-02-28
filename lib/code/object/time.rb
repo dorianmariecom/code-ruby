@@ -55,19 +55,33 @@ class Code
         when "before?"
           sig(args) { Time.maybe }
           code_before?(value)
+        when "past?"
+          sig(args)
+          code_past?
+        when "future?"
+          sig(args)
+          code_future?
         else
           super
         end
       end
 
-      def code_after?(other)
+      def code_after?(other = nil)
         other ||= Time.code_now
         Boolean.new(raw.after?(other.raw))
       end
 
-      def code_before?(other)
+      def code_before?(other = nil)
         other ||= Time.code_now
         Boolean.new(raw.before?(other.raw))
+      end
+
+      def code_past?
+        code_before?
+      end
+
+      def code_future?
+        code_after?
       end
 
       def inspect
