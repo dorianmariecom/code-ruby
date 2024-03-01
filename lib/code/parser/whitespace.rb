@@ -44,7 +44,7 @@ class Code
         (
           space | newline | hash_comment | double_slash_comment |
             multi_line_comment
-        ).repeat(1)
+        ).repeat(1) | any.absent
       end
     end
   end
