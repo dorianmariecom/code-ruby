@@ -12,6 +12,8 @@ class Code
 
         exponent = exponent.raw if exponent.is_a?(Number)
         @raw *= 10**exponent
+      rescue FloatDomainError => e
+        raise Error, e.message
       end
 
       def self.name
