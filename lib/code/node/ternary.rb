@@ -4,17 +4,17 @@ class Code
   class Node
     class Ternary < Node
       def initialize(parsed)
-        @left = Node::Statement.new(parsed.delete(:left))
-        @middle = Node::Statement.new(parsed.delete(:middle))
-        @right = Node::Statement.new(parsed.delete(:right)) if parsed.key?(
-          :right
-        )
-        super(parsed)
+        return if parsed.blank?
+        @left = Node::Statement.new(parsed.delete(:left).presence)
+        @middle = Node::Statement.new(parsed.delete(:middle).presence)
+        if parsed.key?(:right)
+          @right = Node::Statement.new(parsed.delete(:right).presence)
+        end
       end
 
       def evaluate(**args)
-        if @left.evaluate(**args).truthy?
-          @middle.evaluate(**args)
+        if (@left&.evaluate(**args) || Object::Nothing.new).truthy?
+          @middle&.evaluate(**args) || Object::Nothing.new
         elsif @right
           @right.evaluate(**args)
         else

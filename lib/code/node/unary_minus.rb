@@ -4,13 +4,17 @@ class Code
   class Node
     class UnaryMinus < Node
       def initialize(parsed)
-        @operator = parsed.delete(:operator)
-        @right = Node::Statement.new(parsed.delete(:right))
-        super(parsed)
+        return if parsed.blank?
+        @operator = parsed.delete(:operator).presence
+        @right = Node::Statement.new(parsed.delete(:right).presence)
       end
 
       def evaluate(**args)
-        @right.evaluate(**args).call(operator: @operator, arguments: [], **args)
+        if @right
+          @right.evaluate(**args).call(operator: @operator, **args)
+        else
+          Object::Nothing.new
+        end
       end
     end
   end

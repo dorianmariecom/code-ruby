@@ -6,23 +6,22 @@ class Code
       EQUAL = "="
 
       def initialize(parsed)
-        @left = Statement.new(parsed.delete(:left))
-        @operator = parsed.delete(:operator)
-        @right = Statement.new(parsed.delete(:right))
-
-        super(parsed)
+        return if parsed.blank?
+        @left = Statement.new(parsed.delete(:left).presence)
+        @operator = parsed.delete(:operator).presence
+        @right = Statement.new(parsed.delete(:right).presence)
       end
 
       def evaluate(**args)
         case @operator
         when "if"
-          if @right.evaluate(**args).truthy?
-            @left.evaluate(**args)
+          if (@right&.evaluate(**args) || Object::Nothing.new).truthy?
+            @left&.evaluate(**args) || Object::Nothing.new
           else
             Object::Nothing.new
           end
         when "unless"
-          if @right.evaluate(**args).truthy?
+          if (@right&.evaluate(**args) || Object::Nothing.new).truthy?
             Object::Nothing.new
           else
             @left.evaluate(**args)
@@ -30,24 +29,28 @@ class Code
         when "while"
           left = Object::Nothing.new
 
-          left = @left.evaluate(**args) while @right.evaluate(**args).truthy?
+          while (@right&.evaluate(**args) || Object::Nothing.new).truthy?
+            left = @left&.evaluate(**args) || Object::Nothing.new
+          end
 
           left
         when "until"
           left = Object::Nothing.new
 
-          left = @left.evaluate(**args) while @right.evaluate(**args).falsy?
+          while (@right&.evaluate(**args) || Object::Nothing.new).falsy?
+            left = @left&.evaluate(**args) || Object::Nothing.new
+          end
 
           left
         when "rescue"
           begin
-            @left.evaluate(**args)
+            @left&.evaluate(**args) || Object::Nothing.new
           rescue Error
-            @right.evaluate(**args)
+            @right&.evaluate(**args) || Object::Nothing.new
           end
         when /=$/
-          right = @right.evaluate(**args)
-          left = @left.resolve(**args)
+          right = @right&.evaluate(**args) || Object::Nothing.new
+          left = @left&.resolve(**args) || Object::Nothing.new
 
           left.call(
             operator: @operator,
@@ -55,8 +58,8 @@ class Code
             **args
           )
         else
-          right = @right.evaluate(**args)
-          left = @left.evaluate(**args)
+          right = @right&.evaluate(**args) || Object::Nothing.new
+          left = @left&.evaluate(**args) || Object::Nothing.new
 
           left.call(
             operator: @operator,

@@ -20,7 +20,7 @@ class Code
       end
 
       def root
-        present | whitespace?.aka(:whitespace).then { [] }
+        present | whitespace?
       end
     end
   end

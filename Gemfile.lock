@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (0.10.3)
+    code-ruby (0.10.4)
       activesupport (~> 7)
       bigdecimal (~> 3)
       json (~> 2)

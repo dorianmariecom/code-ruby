@@ -37,14 +37,14 @@ class Code
       end
 
       def without_newline
-        (space | multi_line_comment).repeat(1)
+        (space | multi_line_comment).repeat(1).ignore
       end
 
       def root
         (
           space | newline | hash_comment | double_slash_comment |
             multi_line_comment
-        ).repeat(1) | any.absent
+        ).repeat(1).ignore | any.absent
       end
     end
   end

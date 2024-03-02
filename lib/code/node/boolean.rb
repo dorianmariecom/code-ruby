@@ -7,16 +7,17 @@ class Code
       FALSE_KEYWORD = "false"
 
       def initialize(parsed)
-        @boolean = parsed
+        return if parsed.blank?
+        @boolean = parsed.presence
       end
 
       def evaluate(**_args)
         if @boolean == TRUE_KEYWORD
-          ::Code::Object::Boolean.new(true)
+          Object::Boolean.new(true)
         elsif @boolean == FALSE_KEYWORD
-          ::Code::Object::Boolean.new(false)
+          Object::Boolean.new(false)
         else
-          raise NotImplementedError, @boolean
+          Object::Nothing.new
         end
       end
     end

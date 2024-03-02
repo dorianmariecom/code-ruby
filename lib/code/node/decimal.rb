@@ -4,23 +4,24 @@ class Code
   class Node
     class Decimal < Node
       def initialize(parsed)
-        @decimal = parsed.delete(:decimal)
+        return if parsed.blank?
+        @decimal = parsed.delete(:decimal).presence
 
         if parsed.key?(:exponent)
-          @exponent = Node::Statement.new(parsed.delete(:exponent))
+          @exponent = Statement.new(parsed.delete(:exponent).presence)
         end
-
-        super(parsed)
       end
 
       def evaluate(**args)
-        if @exponent
-          ::Code::Object::Decimal.new(
+        if @exponent && @decimal
+          Object::Decimal.new(
             @decimal,
             exponent: @exponent.evaluate(**args)
           )
+        elsif @decimal
+          Object::Decimal.new(@decimal)
         else
-          ::Code::Object::Decimal.new(@decimal)
+          Object::Nothing.new
         end
       end
     end

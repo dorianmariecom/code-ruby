@@ -6,8 +6,8 @@ class Code
       attr_reader :parameters, :body
 
       def initialize(parameters:, body:)
-        @parameters = parameters
-        @body = body
+        @parameters = parameters.presence || []
+        @body = body.presence || Node::Code.new
       end
 
       def self.name
@@ -57,8 +57,6 @@ class Code
                 &.value
             argument = parameter.evaluate(**globals) if argument.nil?
             context.code_set(parameter.name, argument)
-          else
-            raise NotImplementedError
           end
         end
 

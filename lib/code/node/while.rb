@@ -8,12 +8,12 @@ class Code
       LOOP_KEYWORD = "loop"
 
       def initialize(parsed)
-        @operator = parsed.delete(:operator)
-        @statement = Statement.new(parsed.delete(:statement)) if parsed[
-          :statement
-        ]
-        @body = Code.new(parsed.delete(:body))
-        super(parsed)
+        return if parsed.blank?
+        @operator = parsed.delete(:operator).presence
+        if parsed.key?(:statement)
+          @statement = Statement.new(parsed.delete(:statement))
+        end
+        @body = Code.new(parsed.delete(:body).presence)
       end
 
       def evaluate(**args)
@@ -21,22 +21,24 @@ class Code
         when WHILE_KEYWORD
           last = Object::Nothing.new
 
-          last = @body.evaluate(**args) while @statement.evaluate(
-            **args
-          ).truthy?
+          while (@statement&.evaluate(**args) || Object::Nothing.new).truthy?
+            last = @body&.evaluate(**args) || Object::Nothing.new
+          end
 
           last
         when UNTIL_KEYWORD
           last = Object::Nothing.new
 
-          last = @body.evaluate(**args) while @statement.evaluate(**args).falsy?
+          while (@statement&.evaluate(**args) || Object::Nothing.new).falsy?
+            last = @body&.evaluate(**args) || Object::Nothing.new
+          end
 
           last
         when LOOP_KEYWORD
-          loop { @body.evaluate(**args) }
-          raise NotImplementedError
+          loop { @body&.evaluate(**args) || Object::Nothing.new }
+          Object::Nothing.new
         else
-          raise NotImplementedError, @operator
+          Object::Nothing.new
         end
       rescue Error::Break => e
         e.value || Object::Nothing.new

@@ -4,7 +4,7 @@ class Code
   class Parser
     class LeftOperation < Language
       def statement
-        raise NotImplementedError
+        Statement
       end
 
       def whitespace
@@ -16,7 +16,7 @@ class Code
       end
 
       def operator
-        raise NotImplementedError
+        str("")
       end
 
       def right_statement

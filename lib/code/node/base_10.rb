@@ -4,26 +4,26 @@ class Code
   class Node
     class Base10 < Node
       def initialize(parsed)
-        @whole = parsed.delete(:whole)
+        return if parsed.blank?
+        @whole = parsed.delete(:whole).presence
 
         if parsed.key?(:exponent)
-          @exponent = Node::Statement.new(parsed.delete(:exponent))
+          @exponent = Node::Statement.new(parsed.delete(:exponent).presence)
         end
-
-        super(parsed)
       end
 
       def evaluate(**args)
-        if @exponent
+        if @exponent && @whole
           exponent = @exponent.evaluate(**args)
-
-          if exponent.is_a?(::Code::Object::Integer)
-            ::Code::Object::Integer.new(@whole.to_i, exponent:)
+          if exponent.is_a?(Object::Integer)
+            Object::Integer.new(@whole, exponent:)
           else
-            ::Code::Object::Decimal.new(@whole, exponent:)
+            Object::Decimal.new(@whole, exponent:)
           end
+        elsif @whole
+          Object::Integer.new(@whole.to_i)
         else
-          ::Code::Object::Integer.new(@whole.to_i)
+          Object::Nothing.new
         end
       end
     end

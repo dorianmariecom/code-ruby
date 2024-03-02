@@ -32,8 +32,8 @@ class Code
       end
 
       def element
-        (whitespace? << code_present << (whitespace? << comma).maybe) |
-          (whitespace? << code << whitespace? << comma)
+        (whitespace? << code_present << (whitespace? << comma.ignore).maybe) |
+          (whitespace? << code << whitespace? << comma.ignore)
       end
 
       def root

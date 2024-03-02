@@ -4,15 +4,19 @@ class Code
   class Node
     class CallArgument < Node
       def initialize(parsed)
-        @value = Node::Code.new(parsed.delete(:value))
-        @name = parsed.delete(:name)
+        return if parsed.blank?
+        @value = Node::Code.new(parsed.delete(:value).presence)
+        @name = parsed.delete(:name).presence
       end
 
       def evaluate(**args)
         if @name
-          Object::Argument.new(@value.evaluate(**args), name:)
+          Object::Argument.new(
+            @value&.evaluate(**args) || Object::Nothing.new,
+            name:
+          )
         else
-          Object::Argument.new(@value.evaluate(**args))
+          Object::Argument.new(@value&.evaluate(**args) || Object::Nothing.new)
         end
       end
 

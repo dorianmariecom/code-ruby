@@ -292,10 +292,6 @@ class Code
     end
 
     def hash
-      unless respond_to?(:raw)
-        raise NotImplementedError, "#{self.class.name}#hash"
-      end
-
       [self.class, raw].hash
     end
 
@@ -309,7 +305,7 @@ class Code
     end
 
     def to_s
-      raise NotImplementedError, "#{self.class.name}#to_s"
+      raw.to_s
     end
 
     def inspect
@@ -325,7 +321,7 @@ class Code
     end
 
     def as_json(...)
-      raise NotImplementedError, "#{self.class}#as_json"
+      raw.as_json
     end
   end
 end

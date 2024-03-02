@@ -10,8 +10,9 @@ class Code
         attr_reader :operator, :statement
 
         def initialize(parsed)
-          @operator = parsed.delete(:operator)
-          @statement = Statement.new(parsed.delete(:statement))
+          return if parsed.blank?
+          @operator = parsed.delete(:operator).presence
+          @statement = Statement.new(parsed.delete(:statement).presence)
         end
 
         def call?
@@ -20,15 +21,14 @@ class Code
       end
 
       def initialize(parsed)
-        @first = Statement.new(parsed.delete(:first))
-        @others =
-          parsed.delete(:others).map { |operator| Operator.new(operator) }
-
-        super(parsed)
+        return if parsed.blank?
+        @first = Statement.new(parsed.delete(:first).presence)
+        @others = parsed.delete(:others).presence || []
+        @others.map! { |operator| Operator.new(operator) }
       end
 
       def evaluate(**args)
-        first = @first.evaluate(**args)
+        first = @first&.evaluate(**args) || Object::Nothing.new
 
         @others.reduce(first) do |left, right|
           if right.call?
@@ -46,11 +46,11 @@ class Code
       end
 
       def resolve(**args)
-        first = @first.resolve(**args)
+        first = @first&.resolve(**args) || Object::Nothing.new
 
         list = Object::IdentifierList.new([first])
 
-        @others.each do |other|
+        (@others || []).each do |other|
           list.code_append(
             other.statement.resolve(**args, object: list.code_last)
           )

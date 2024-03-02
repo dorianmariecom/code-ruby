@@ -4,9 +4,9 @@ class Code
   class Node
     class FunctionParameter < Node
       def initialize(parsed)
-        @name = parsed.delete(:name)
-        @keyword = !parsed.delete(:keyword).nil?
-        super(parsed)
+        return if parsed.blank?
+        @name = parsed.delete(:name).presence
+        @keyword = parsed.delete(:keyword).present?
       end
 
       def name

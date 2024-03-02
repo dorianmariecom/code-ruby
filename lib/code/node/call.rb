@@ -5,14 +5,11 @@ class Code
     class Call < Node
       class Block < Node
         def initialize(parsed)
-          @parameters =
-            parsed
-              .delete(:parameters) { [] }
-              .map { |parameter| FunctionParameter.new(parameter) }
+          return if parsed.blank?
+          @parameters = parsed.delete(:parameters) { [] }.presence || []
+          @parameters.map! { |parameter| FunctionParameter.new(parameter) }
 
-          @body = Code.new(parsed.delete(:body))
-
-          super(parsed)
+          @body = Code.new(parsed.delete(:body).presence)
         end
 
         def evaluate(**_args)
@@ -23,21 +20,18 @@ class Code
       end
 
       def initialize(parsed)
-        @name = parsed.delete(:name)
-        @arguments =
-          parsed
-            .delete(:arguments) { [] }
-            .map { |argument| CallArgument.new(argument) }
+        return if parsed.blank?
+        @name = parsed.delete(:name).presence
+        @arguments = parsed.delete(:arguments).presence || []
+        @arguments.map! { |argument| CallArgument.new(argument) }
 
-        @block = Call::Block.new(parsed.delete(:block)) if parsed.key?(:block)
-
-        super(parsed)
+        @block = Call::Block.new(parsed.delete(:block).presence) if parsed.key?(:block)
       end
 
       def evaluate(**args)
         arguments = []
 
-        @arguments.each do |argument|
+        (@arguments || []).each do |argument|
           if argument.keyword?
             if arguments.last&.value.is_a?(Object::Dictionary)
               arguments.last.value.code_set(

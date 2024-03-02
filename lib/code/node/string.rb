@@ -6,22 +6,25 @@ class Code
       class Part < Node
         class Code < Node
           def initialize(parsed)
-            @code = Node::Code.new(parsed)
+            return if parsed.blank?
+            @code = Node::Code.new(parsed.presence)
           end
 
           def evaluate(**args)
-            @code.evaluate(**args)
+            @code&.evaluate(**args) || Object::Nothing.new
           end
         end
 
         class Text < Node
           def initialize(parsed)
+            return if parsed.blank?
             @text = parsed
           end
 
           def evaluate(**_args)
             ::Code::Object::String.new(
               @text
+                .to_s
                 .gsub('\n', "\n")
                 .gsub('\r', "\r")
                 .gsub('\t', "\t")
@@ -34,29 +37,28 @@ class Code
         end
 
         def initialize(parsed)
-          if parsed.key?(:text)
-            @part = Node::String::Part::Text.new(parsed.delete(:text))
-          elsif parsed.key?(:code)
-            @part = Node::String::Part::Code.new(parsed.delete(:code))
-          end
+          return if parsed.blank?
 
-          super(parsed)
+          if parsed.key?(:text)
+            @part = Node::String::Part::Text.new(parsed.delete(:text).presence)
+          elsif parsed.key?(:code)
+            @part = Node::String::Part::Code.new(parsed.delete(:code).presence)
+          end
         end
 
         def evaluate(**args)
-          @part.evaluate(**args)
+          @part&.evaluate(**args) || Object::Nothing.new
         end
       end
 
       def initialize(parsed)
-        parsed = [] if parsed == ""
-
-        @parts = parsed.map { |part| Node::String::Part.new(part) }
+        return if parsed.blank?
+        @parts = (parsed.presence || []).map { |part| Node::String::Part.new(part) }
       end
 
       def evaluate(**args)
         ::Code::Object::String.new(
-          @parts.map { |part| part.evaluate(**args) }.map(&:to_s).join
+          (@parts || []).map { |part| part.evaluate(**args) }.map(&:to_s).join
         )
       end
     end

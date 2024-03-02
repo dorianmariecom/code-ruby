@@ -4,6 +4,8 @@ class Code
   class Node
     class Statement < Node
       def initialize(parsed)
+        return if parsed.blank?
+
         if parsed.key?(:nothing)
           @statement = Node::Nothing.new(parsed.delete(:nothing))
         elsif parsed.key?(:boolean)
@@ -51,16 +53,14 @@ class Code
         elsif parsed.key?(:square_bracket)
           @statement = Node::SquareBracket.new(parsed.delete(:square_bracket))
         end
-
-        super(parsed)
       end
 
       def evaluate(**args)
-        @statement.evaluate(**args)
+        @statement&.evaluate(**args) || Object::Nothing.new
       end
 
       def resolve(**args)
-        @statement.resolve(**args)
+        @statement&.resolve(**args) || Object::Nothing.new
       end
     end
   end

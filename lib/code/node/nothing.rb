@@ -3,12 +3,13 @@
 class Code
   class Node
     class Nothing < Node
-      def initialize(nothing)
-        @nothing = nothing
+      def initialize(parsed)
+        return if parsed.blank?
+        @nothing = parsed.presence
       end
 
       def evaluate(**_args)
-        ::Code::Object::Nothing.new
+        Object::Nothing.new
       end
     end
   end

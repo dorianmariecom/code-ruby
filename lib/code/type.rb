@@ -3,11 +3,11 @@
 class Code
   class Type
     def name
-      raise NotImplementedError, "#{self.class}#name"
+      "Type"
     end
 
-    def valid?(argument)
-      raise NotImplementedError, "#{self.class}#valid?"
+    def valid?(_argument)
+      false
     end
 
     def valid_for?(expected:, actual:)

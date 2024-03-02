@@ -40,11 +40,11 @@ class Code
       end
 
       def actual_arguments
-        args[:arguments].map(&:value)
+        args.fetch(:arguments, []).map(&:value)
       end
 
       def operator
-        args[:operator] || "call"
+        args.fetch(:operator, nil) || "call"
       end
 
       def function

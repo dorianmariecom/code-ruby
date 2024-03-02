@@ -4,15 +4,11 @@ class Code
   class Node
     class Function < Node
       def initialize(parsed)
-        @parameters = parsed.delete(:parameters) { [] }
-        @parameters = [] if @parameters.empty?
+        return if parsed.blank?
+        @parameters = parsed.delete(:parameters).presence || []
+        @parameters.map! { |parameter| Node::FunctionParameter.new(parameter) }
 
-        @parameters =
-          @parameters.map { |parameter| Node::FunctionParameter.new(parameter) }
-
-        @body = Node::Code.new(parsed.delete(:body))
-
-        super(parsed)
+        @body = Node::Code.new(parsed.delete(:body).presence)
       end
 
       def evaluate(**_args)
