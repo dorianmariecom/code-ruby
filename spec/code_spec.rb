@@ -146,10 +146,10 @@ RSpec.describe Code do
     ["a = 0 [1, 2, 3].each { |i| next if i == 2 a += i } a", "4"],
     ["[1, 2, 3].map { |i| next if i == 2 i ** 2}", "[1, nothing, 9]"],
     ["[1, 2, 3].map { |i| next(0) if i.even? i ** 2}", "[1, 0, 9]"],
-    ["2.days.ago.past?", "true"],
-    ["2.days.from_now.past?", "false"],
-    ["2.days.ago.future?", "false"],
-    ["2.days.from_now.future?", "true"],
+    %w[2.days.ago.past? true],
+    %w[2.days.from_now.past? false],
+    %w[2.days.ago.future? false],
+    %w[2.days.from_now.future? true]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))

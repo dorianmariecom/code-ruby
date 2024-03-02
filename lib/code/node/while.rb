@@ -9,7 +9,9 @@ class Code
 
       def initialize(parsed)
         @operator = parsed.delete(:operator)
-        @statement = Statement.new(parsed.delete(:statement)) if parsed[:statement]
+        @statement = Statement.new(parsed.delete(:statement)) if parsed[
+          :statement
+        ]
         @body = Code.new(parsed.delete(:body))
         super(parsed)
       end
