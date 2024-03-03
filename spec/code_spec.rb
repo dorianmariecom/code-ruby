@@ -189,6 +189,18 @@ RSpec.describe Code do
     ['Date("0001-01-01").to_string', ":0001-01-01"],
     ['Date("2024-03-02").to_string', ":2024-03-02"],
     ["Date(2024,3, 2).to_string", ":2024-03-02"],
+    ["Decimal(1)", "1.0"],
+    ["Decimal(1)", "1"],
+    ["Decimal(:1)", "1.0"],
+    ["Decimal(:1)", "1"],
+    ["Decimal(:1, 2)", "100.0"],
+    ["Decimal(1, :2)", "100"],
+    ["Decimal.new(1)", "1.0"],
+    ["Decimal.new(1)", "1"],
+    ["Decimal.new(:1)", "1.0"],
+    ["Decimal.new(:1)", "1"],
+    ["Decimal.new(:1, 2)", "100.0"],
+    ["Decimal.new(1, :2)", "100"],
     ["", ""],
   ].each do |input, expected|
     it "#{input} == #{expected}" do

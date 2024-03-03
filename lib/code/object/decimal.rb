@@ -5,16 +5,14 @@ class Code
     class Decimal < ::Code::Object::Number
       attr_reader :raw
 
-      def initialize(decimal, exponent: nil)
-        decimal = decimal.raw if decimal.is_a?(Decimal)
-        @raw = BigDecimal(decimal)
-
-        return unless exponent
-        unless exponent.is_a?(Number)
-          raise ::Code::Error::TypeError, "exponent is not a number"
-        end
-
-        @raw *= 10**exponent.raw
+      def initialize(*args, **_kargs, &_block)
+        decimal = args.first || "0"
+        exponent = args.second || "0"
+        decimal = decimal.raw if decimal.is_an?(Object)
+        exponent = exponent.raw if exponent.is_an?(Object)
+        @raw = decimal.to_d * 10**exponent.to_d
+      rescue FloatDomainError => e
+        raise Error, "#{decimal} * 10**#{exponent} is invalid"
       end
 
       def self.name
@@ -307,12 +305,20 @@ class Code
         to_s
       end
 
+      def whole?
+        whole == raw
+      end
+
+      def whole
+        raw.round
+      end
+
       def to_s
-        raw.to_s("F")
+        whole? ? raw.to_i.to_s : raw.to_s("F")
       end
 
       def as_json(...)
-        raw.as_json(...)
+        whole? ? whole.as_json(...) : raw.as_json(...)
       end
     end
   end

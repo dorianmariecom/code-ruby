@@ -5,15 +5,14 @@ class Code
     class Integer < Number
       attr_reader :raw
 
-      def initialize(whole, exponent: nil)
-        whole = whole.raw if whole.is_a?(Integer)
-        @raw = whole.to_i
-        return unless exponent
-
-        exponent = exponent.raw if exponent.is_a?(Number)
-        @raw *= 10**exponent
+      def initialize(*args, **_kargs, &_block)
+        whole = args.first || 0
+        exponent = args.second || 0
+        whole = whole.raw if whole.is_an?(Object)
+        exponent = exponent.raw if exponent.is_an?(Object)
+        @raw = whole.to_i * 10**exponent
       rescue FloatDomainError => e
-        raise Error, e.message
+        raise Error, "#{decimal} * 10**#{exponent} is invalid"
       end
 
       def self.name

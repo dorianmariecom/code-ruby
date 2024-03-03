@@ -16,9 +16,9 @@ class Code
         if @exponent && @whole
           exponent = @exponent.evaluate(**args)
           if exponent.is_a?(Object::Integer)
-            Object::Integer.new(@whole, exponent:)
+            Object::Integer.new(@whole, exponent)
           else
-            Object::Decimal.new(@whole, exponent:)
+            Object::Decimal.new(@whole, exponent)
           end
         elsif @whole
           Object::Integer.new(@whole.to_i)
