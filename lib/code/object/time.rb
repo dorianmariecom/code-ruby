@@ -5,13 +5,12 @@ class Code
     class Time < Object
       DEFAULT_ZONE = "Etc/UTC"
 
-      attr_reader :raw
-
       def initialize(time)
         ::Time.zone ||= DEFAULT_ZONE
         time = time.raw if time.is_a?(Time)
         time = time.to_s if time.is_a?(::Time)
         @raw = ::Time.zone.parse(time)
+        super
       end
 
       def self.name

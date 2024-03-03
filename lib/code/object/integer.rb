@@ -3,8 +3,6 @@
 class Code
   class Object
     class Integer < Number
-      attr_reader :raw
-
       def initialize(*args, **_kargs, &_block)
         whole = args.first || 0
         exponent = args.second || 0
@@ -12,7 +10,7 @@ class Code
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = whole.to_i * 10**exponent
       rescue FloatDomainError => e
-        raise Error, "#{decimal} * 10**#{exponent} is invalid"
+        raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
       def self.name

@@ -38,9 +38,12 @@ class Code
         when "Dictionary"
           sig(args) { Object.repeat }
           value ? Dictionary.new(*values) : Class.new(Dictionary)
-        when "Function"
+        when "Duration"
           sig(args) { Object.repeat }
-          value ? Function.new(*values) : Class.new(Function)
+          value ? Duration.new(*values) : Class.new(Duration)
+        when "Function"
+          sig(args)
+          Class.new(Function)
         when "Integer"
           sig(args) { Object.repeat }
           value ? Integer.new(*values) : Class.new(Integer)
@@ -51,11 +54,11 @@ class Code
           sig(args) { Object.repeat }
           value ? Nothing.new(*values) : Class.new(Nothing)
         when "Number"
-          sig(args) { Object.repeat }
-          value ? Number.new(*values) : Class.new(Number)
+          sig(args)
+          Class.new(Number)
         when "Object"
-          sig(args) { Object.repeat }
-          value ? Object.new(*values) : Class.new(Object)
+          sig(args)
+          Class.new(Object)
         when "Range"
           sig(args) { Object.repeat }
           value ? Range.new(*values) : Class.new(Range)

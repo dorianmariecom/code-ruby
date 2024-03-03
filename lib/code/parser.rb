@@ -2,7 +2,7 @@
 
 class Code
   class Parser
-    class Error < ::Code::Error
+    class Error < Error
     end
 
     def initialize(input)

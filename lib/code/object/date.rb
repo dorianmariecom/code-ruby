@@ -3,13 +3,12 @@
 class Code
   class Object
     class Date < Object
-      attr_reader :raw
-
       def initialize(*args, **_kargs, &_block)
-        raw = args.map(&:to_s).join("-")
+        raw = args.map(&:to_s).join("-").presence || ::Date.current.to_s
         @raw = ::Date.parse(raw)
+        super
       rescue ::Date::Error
-        raise Error, "#{raw} is an invalid date"
+        raise Error, "#{raw.inspect} is an invalid date"
       end
 
       def self.name

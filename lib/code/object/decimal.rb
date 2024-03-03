@@ -3,16 +3,15 @@
 class Code
   class Object
     class Decimal < ::Code::Object::Number
-      attr_reader :raw
-
       def initialize(*args, **_kargs, &_block)
         decimal = args.first || "0"
         exponent = args.second || "0"
         decimal = decimal.raw if decimal.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = decimal.to_d * 10**exponent.to_d
+        super
       rescue FloatDomainError => e
-        raise Error, "#{decimal} * 10**#{exponent} is invalid"
+        raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
       def self.name

@@ -3,13 +3,14 @@
 class Code
   class Object
     class Range < Object
-      attr_reader :raw, :exclude_end, :left, :right
+      attr_reader :exclude_end, :left, :right
 
       def initialize(left, right, exclude_end: false)
         @left = left
         @right = right
         @exclude_end = !exclude_end.nil?
         @raw = ::Range.new(left, right, exclude_end)
+        super
       end
 
       def self.name

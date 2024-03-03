@@ -5,9 +5,13 @@ class Code
     class Function < ::Code::Object
       attr_reader :parameters, :body
 
-      def initialize(parameters:, body:)
-        @parameters = parameters.presence || []
-        @body = body.presence || Node::Code.new
+      def initialize(*args, **_kargs, &_block)
+        parameters = args.first.presence || List.new
+        parameters = parameters.raw if parameter.is_an?(Object)
+        @parameters = List.new(parameters)
+        @parameters.raw.map! { |parameter| Parameter.new(parameter) }
+        @body = Code.new(args.second.presence || Nothing.new)
+        super
       end
 
       def self.name
@@ -29,9 +33,9 @@ class Code
       end
 
       def code_call(*arguments, **globals)
-        context = Context.new({}, parent: globals[:context])
+        context = Context.new({}, globals[:context])
 
-        parameters.each.with_index do |parameter, index|
+        parameters.raw.each.with_index do |parameter, index|
           if parameter.regular?
             if parameter.regular_splat?
               context.code_set(
@@ -68,7 +72,7 @@ class Code
       end
 
       def signature_for_call
-        parameters.inject([]) do |signature, parameter|
+        parameters.raw.inject([]) do |signature, parameter|
           if parameter.keyword?
             if signature.last.is_a?(::Hash)
               signature.last[parameter.name] = Object

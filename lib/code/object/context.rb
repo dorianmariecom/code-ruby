@@ -5,10 +5,12 @@ class Code
     class Context < Dictionary
       attr_reader :parent
 
-      def initialize(raw = {}, parent: nil)
-        raw = raw.raw if raw.is_a?(Dictionary)
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || Dictionary.new
+        raw = raw.raw if raw.is_a?(Object)
         @raw = raw.to_h
-        @parent = parent
+        @parent = Context.new(args.second) if args.second
+        super
       end
 
       def self.name
@@ -26,7 +28,7 @@ class Code
       end
 
       def merge(other)
-        Context.new(raw.merge(other.raw), parent: parent || other.parent)
+        Context.new(raw.merge(other.raw), parent || other.parent)
       end
 
       def parent?

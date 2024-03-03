@@ -28,11 +28,8 @@ class Code
 
   def evaluate
     Timeout.timeout(timeout) do
-      Node::Code.new(::Code::Parser.parse(input).to_raw).evaluate(
-        context:,
-        output:,
-        error:
-      )
+      parsed = ::Code::Parser.parse(input).to_raw
+      Node::Code.new(parsed).evaluate(context:, output:, error:)
     end
   end
 

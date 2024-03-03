@@ -42,6 +42,12 @@ argv =
         "Set timeout in seconds"
       ) { |timeout| options[:timeout] = timeout.to_f }
 
+      opts.on(
+        "-z TIME_ZONE",
+        "--time-zone TIME_ZONE",
+        "Set time zone"
+      ) { |time_zone| Time.zone = time_zone }
+
       opts.on("--profile", "Profile Ruby code") do |_timeout|
         require "ruby-prof"
         options[:profile] = true

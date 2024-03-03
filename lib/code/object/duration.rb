@@ -3,11 +3,14 @@
 class Code
   class Object
     class Duration < Object
-      attr_reader :raw
-
-      def initialize(duration)
-        duration = duration.raw if duration.is_a?(Duration)
-        @raw = duration
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || 0.seconds
+        raw = raw.raw if raw.is_an?(Object)
+        raw = raw.iso8601 if raw.is_an?(::ActiveSupport::Duration)
+        @raw = ::ActiveSupport::Duration.parse(raw.to_s)
+        super
+      rescue ::ActiveSupport::Duration::ISO8601Parser::ParsingError
+        raise Error, "#{raw.inspect} is not a valid duration"
       end
 
       def self.name

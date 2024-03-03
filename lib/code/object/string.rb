@@ -3,11 +3,10 @@
 class Code
   class Object
     class String < Object
-      attr_reader :raw
-
       def initialize(string)
         string = string.raw if string.is_a?(String)
         @raw = string.to_s
+        super
       end
 
       def self.name
