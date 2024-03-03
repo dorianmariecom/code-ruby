@@ -186,6 +186,9 @@ RSpec.describe Code do
     ["Date", "Date"],
     ["Class.new(Date)", "Date"],
     ["Date(2024, 3, 2).to_string", ":2024-03-02"],
+    ['Date("0001-01-01").to_string', ":0001-01-01"],
+    ['Date("2024-03-02").to_string', ":2024-03-02"],
+    ["Date(2024,3, 2).to_string", ":2024-03-02"],
     ["", ""],
   ].each do |input, expected|
     it "#{input} == #{expected}" do
@@ -207,9 +210,6 @@ RSpec.describe Code do
     2.hours.from_now
     Date.tomorrow
     Time.tomorrow
-    Date("0001-01-01")
-    Date("2024-03-02")
-    Date(2024,3,2)
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
