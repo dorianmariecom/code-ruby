@@ -29,6 +29,9 @@ class Code
       value = arguments.first&.value
 
       case operator.to_s
+      when "new"
+        sig(args) { Object.repeat }
+        code_new(*arguments.map(&:value))
       when "!", "not"
         sig(args)
         code_exclamation_point
@@ -65,6 +68,61 @@ class Code
       when "||", "or"
         sig(args) { Object }
         code_or_operator(value)
+      when "to_boolean"
+      when "to_class"
+          sig(args) { Object.maybe }
+          value ? Class.new(value) : Class.new(Class)
+        when "Date"
+          sig(args) { Object.maybe }
+          value ? Date.new(value) : Class.new(Date)
+        when "Decimal"
+          sig(args) { Object.maybe }
+          value ? Decimal.new(value) : Class.new(Decimal)
+        when "Dictionary"
+          sig(args) { Object.maybe }
+          value ? Dictionary.new(value) : Class.new(Dictionary)
+        when "Function"
+          sig(args) { Object.maybe }
+          value ? Function.new(value) : Class.new(Function)
+        when "Integer"
+          sig(args) { Object.maybe }
+          value ? Integer.new(value) : Class.new(Integer)
+        when "List"
+          sig(args) { Object.maybe }
+          value ? List.new(value) : Class.new(List)
+        when "Nothing"
+          sig(args) { Object.maybe }
+          value ? Nothing.new(value) : Class.new(Nothing)
+        when "Number"
+          sig(args) { Object.maybe }
+          value ? Number.new(value) : Class.new(Number)
+        when "Object"
+          sig(args) { Object.maybe }
+          value ? Object.new(value) : Class.new(Object)
+        when "Range"
+          sig(args) { Object.maybe }
+          value ? Range.new(value) : Class.new(Range)
+        when "String"
+          sig(args) { Object.maybe }
+          value ? String.new(value) : Class.new(String)
+        when "Time"
+          sig(args) { Object.maybe }
+          value ? Time.new(value) : Class.new(Time)
+        when "evaluate"
+          sig(args) { Object }
+          Code.evaluate(value.to_s)
+        when "p"
+          sig(args) { Object.repeat }
+          output.puts(*arguments.map(&:value).map(&:inspect))
+          Nothing.new
+        when "print"
+          sig(args) { Object.repeat }
+          output.print(*arguments.map(&:value))
+          Nothing.new
+        when "puts"
+          sig(args) { Object.repeat }
+          output.puts(*arguments.map(&:value))
+          Nothing.new
       when /=$/
         sig(args) { Object }
 
@@ -90,6 +148,10 @@ class Code
           "#{operator} not defined on #{inspect}:Class"
         )
       end
+    end
+
+    def self.code_new(*arguments)
+      new(*arguments)
     end
 
     def self.code_and_operator(other)

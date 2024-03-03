@@ -32,12 +32,16 @@ class Code
       def initialize(parsed)
         return if parsed.blank?
         @key_values = parsed.presence || []
-        @key_values.map! { |key_value| Node::Dictionary::KeyValue.new(key_value) }
+        @key_values.map! do |key_value|
+          Node::Dictionary::KeyValue.new(key_value)
+        end
       end
 
       def evaluate(**args)
         ::Code::Object::Dictionary.new(
-          (@key_values || []).map { |key_value| key_value.evaluate(**args) }.to_h
+          (@key_values || [])
+            .map { |key_value| key_value.evaluate(**args) }
+            .to_h
         )
       end
     end

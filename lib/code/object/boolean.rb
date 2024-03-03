@@ -5,7 +5,8 @@ class Code
     class Boolean < ::Code::Object
       attr_reader :raw
 
-      def initialize(raw)
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || Nothing.new
         @raw = (raw.is_a?(Object) ? raw.truthy? : !!raw)
       end
 

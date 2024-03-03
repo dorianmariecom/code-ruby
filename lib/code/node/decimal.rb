@@ -14,10 +14,7 @@ class Code
 
       def evaluate(**args)
         if @exponent && @decimal
-          Object::Decimal.new(
-            @decimal,
-            exponent: @exponent.evaluate(**args)
-          )
+          Object::Decimal.new(@decimal, exponent: @exponent.evaluate(**args))
         elsif @decimal
           Object::Decimal.new(@decimal)
         else

@@ -5,7 +5,8 @@ class Code
     class Code < Node
       def initialize(parsed)
         return if parsed.blank?
-        @statements = (parsed.presence || []).map { |statement| Statement.new(statement) }
+        @statements =
+          (parsed.presence || []).map { |statement| Statement.new(statement) }
       end
 
       def evaluate(**args)

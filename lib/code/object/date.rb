@@ -5,9 +5,11 @@ class Code
     class Date < Object
       attr_reader :raw
 
-      def initialize(date)
-        date = date.raw if date.is_a?(Date)
-        @raw = date.to_date
+      def initialize(*args, **_kargs, &_block)
+        raw = args.map(&:to_s).join("-")
+        @raw = ::Date.parse(raw)
+      rescue ::Date::Error
+        raise Error, "#{raw} is an invalid date"
       end
 
       def self.name

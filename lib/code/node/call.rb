@@ -25,7 +25,9 @@ class Code
         @arguments = parsed.delete(:arguments).presence || []
         @arguments.map! { |argument| CallArgument.new(argument) }
 
-        @block = Call::Block.new(parsed.delete(:block).presence) if parsed.key?(:block)
+        if parsed.key?(:block)
+          @block = Call::Block.new(parsed.delete(:block).presence)
+        end
       end
 
       def evaluate(**args)

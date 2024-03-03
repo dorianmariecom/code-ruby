@@ -5,7 +5,8 @@ class Code
     class List < Node
       def initialize(parsed)
         return if parsed.blank?
-        @elements = (parsed.presence || []).map { |element| Node::Code.new(element) }
+        @elements =
+          (parsed.presence || []).map { |element| Node::Code.new(element) }
       end
 
       def evaluate(**args)

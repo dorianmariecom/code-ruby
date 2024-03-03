@@ -9,11 +9,7 @@ class Code
       end
 
       def evaluate(**_args)
-        if @base_2
-          Object::Integer.new(@base_2.to_i(2))
-        else
-          Object::Nothing.new
-        end
+        @base_2 ? Object::Integer.new(@base_2.to_i(2)) : Object::Nothing.new
       end
     end
   end

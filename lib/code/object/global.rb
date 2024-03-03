@@ -14,62 +14,57 @@ class Code
         context = args.fetch(:context)
         globals = multi_fetch(args, *GLOBALS)
         value = arguments.first&.value
+        values = arguments.map(&:value)
 
         case operator.to_s
         when "Boolean"
-          sig(args) { Object.maybe }
-          value ? value.code_to_boolean : Class.new(Boolean)
+          sig(args) { Object.repeat }
+          value ? Boolean.new(*values) : Class.new(Boolean)
         when "break"
-          sig(args) { Object.maybe }
+          sig(args) { Object.repeat }
           raise Error::Break, value || Nothing.new
         when "next"
-          sig(args) { Object.maybe }
+          sig(args) { Object.repeat }
           raise Error::Next, value || Nothing.new
         when "Class"
-          sig(args) { Object.maybe }
-          value ? value.code_to_class : Class.new(Class)
+          sig(args) { Object.repeat }
+          value ? Class.new(*values) : Class.new(Class)
         when "Date"
-          sig(args) { Object.maybe }
-          value ? value.code_to_date : Class.new(Date)
+          sig(args) { Object.repeat }
+          value ? Date.new(*values) : Class.new(Date)
         when "Decimal"
-          sig(args) { Object.maybe }
-          value ? value.code_to_decimal : Class.new(Decimal)
+          sig(args) { Object.repeat }
+          value ? Decimal.new(*values) : Class.new(Decimal)
         when "Dictionary"
-          sig(args) { Object.maybe }
-          value ? value.code_to_dictionnary : Class.new(Dictionary)
-        when "fetch"
-          sig(args) { [Object, Function.maybe] }
-          context.code_fetch(*arguments.map(&:value), **globals)
+          sig(args) { Object.repeat }
+          value ? Dictionary.new(*values) : Class.new(Dictionary)
         when "Function"
-          sig(args) { Object.maybe }
-          value ? value.code_to_function : Class.new(Function)
+          sig(args) { Object.repeat }
+          value ? Function.new(*values) : Class.new(Function)
         when "Integer"
-          sig(args) { Object.maybe }
-          value ? value.code_to_integer : Class.new(Integer)
+          sig(args) { Object.repeat }
+          value ? Integer.new(*values) : Class.new(Integer)
         when "List"
-          sig(args) { Object.maybe }
-          value ? value.code_to_list : Class.new(List)
+          sig(args) { Object.repeat }
+          value ? List.new(*values) : Class.new(List)
         when "Nothing"
-          sig(args) { Object.maybe }
-          value ? value.code_to_nothing : Class.new(Nothing)
+          sig(args) { Object.repeat }
+          value ? Nothing.new(*values) : Class.new(Nothing)
         when "Number"
-          sig(args) { Object.maybe }
-          value ? value.code_to_number : Class.new(Number)
+          sig(args) { Object.repeat }
+          value ? Number.new(*values) : Class.new(Number)
         when "Object"
-          sig(args) { Object.maybe }
-          value ? value.code_to_object : Class.new(Object)
+          sig(args) { Object.repeat }
+          value ? Object.new(*values) : Class.new(Object)
         when "Range"
-          sig(args) { Object.maybe }
-          value ? value.code_to_range : Class.new(Range)
+          sig(args) { Object.repeat }
+          value ? Range.new(*values) : Class.new(Range)
         when "String"
-          sig(args) { Object.maybe }
-          value ? value.code_to_string : Class.new(String)
+          sig(args) { Object.repeat }
+          value ? String.new(*values) : Class.new(String)
         when "Time"
-          sig(args) { Object.maybe }
-          value ? value.code_to_time : Class.new(Time)
-        when "context"
-          sig(args) { String.maybe }
-          value ? context.code_get(value) || Nothing.new : context
+          sig(args) { Object.repeat }
+          value ? Time.new(*values) : Class.new(Time)
         when "evaluate"
           sig(args) { Object }
           Code.evaluate(value.to_s)

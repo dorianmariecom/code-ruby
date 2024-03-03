@@ -53,7 +53,8 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
-        @parts = (parsed.presence || []).map { |part| Node::String::Part.new(part) }
+        @parts =
+          (parsed.presence || []).map { |part| Node::String::Part.new(part) }
       end
 
       def evaluate(**args)
