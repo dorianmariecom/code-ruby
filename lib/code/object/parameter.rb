@@ -2,10 +2,11 @@
 
 class Code
   class Object
-    class Argument < Object
+    class Parameter < Object
       attr_reader :value, :name
 
       def initialize(*args, **_kargs, &_block)
+        binding.irb
         @value = args.first
         @name = args.second.present? ? String.new(args.second) : nil
         super

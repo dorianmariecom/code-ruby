@@ -5,7 +5,7 @@ class Code
     attr_reader :raw
 
     def initialize(*_args, **_kargs, &_block)
-      @raw = self unless defined?(@raw)
+      @raw = nil unless defined?(@raw)
     end
 
     def self.maybe

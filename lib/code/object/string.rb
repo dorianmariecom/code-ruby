@@ -64,7 +64,7 @@ class Code
       end
 
       def code_to_function(**globals)
-        Code::Node::Code.new(
+        Node::Code.new(
           [
             {
               function: {

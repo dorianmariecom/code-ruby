@@ -13,9 +13,7 @@ class Code
         end
 
         def evaluate(**_args)
-          Object::Argument.new(
-            Object::Function.new(parameters: @parameters, body: @body)
-          )
+          Object::Argument.new(Object::Function.new(@parameters, @body))
         end
       end
 

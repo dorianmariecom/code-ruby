@@ -17,6 +17,12 @@ class Code
     @context = Object::Context.new
   end
 
+  def self.parse(input, timeout: DEFAULT_TIMEOUT)
+    Timeout.timeout(timeout) do
+      Parser.parse(input).to_raw
+    end
+  end
+
   def self.evaluate(
     input,
     output: StringIO.new,
@@ -28,7 +34,7 @@ class Code
 
   def evaluate
     Timeout.timeout(timeout) do
-      parsed = ::Code::Parser.parse(input).to_raw
+      parsed = Code.parse(input)
       Node::Code.new(parsed).evaluate(context:, output:, error:)
     end
   end

@@ -2,12 +2,12 @@
 
 class Code
   class Object
-    class Function < ::Code::Object
+    class Function < Object
       attr_reader :parameters, :body
 
       def initialize(*args, **_kargs, &_block)
         parameters = args.first.presence || List.new
-        parameters = parameters.raw if parameter.is_an?(Object)
+        parameters = parameters.raw if parameters.is_an?(Object)
         @parameters = List.new(parameters)
         @parameters.raw.map! { |parameter| Parameter.new(parameter) }
         @body = Code.new(args.second.presence || Nothing.new)
@@ -21,7 +21,7 @@ class Code
       def call(**args)
         operator = args.fetch(:operator, nil)
         arguments = args.fetch(:arguments, [])
-        globals = multi_fetch(args, *::Code::GLOBALS)
+        globals = multi_fetch(args, *GLOBALS)
 
         case operator.to_s
         when "", "call"
@@ -36,24 +36,22 @@ class Code
         context = Context.new({}, globals[:context])
 
         parameters.raw.each.with_index do |parameter, index|
-          if parameter.regular?
-            if parameter.regular_splat?
-              context.code_set(
-                parameter.name,
-                List.new(arguments.select(&:regular?).map(&:value))
+          if parameter.regular_splat?
+            context.code_set(
+              parameter.name,
+              List.new(arguments.select(&:regular?).map(&:value))
+            )
+          elsif parameter.keyword_splat?
+            context.code_set(
+              parameter.name,
+              Dictionary.new(
+                arguments.select(&:keyword?).map(&:name_value).to_h
               )
-            elsif parameter.keyword_splat?
-              context.code_set(
-                parameter.name,
-                Dictionary.new(
-                  arguments.select(&:keyword?).map(&:name_value).to_h
-                )
-              )
-            else
-              argument = arguments[index]&.value
-              argument = parameter.evaluate(**globals) if argument.nil?
-              context.code_set(parameter.name, argument)
-            end
+            )
+          elsif parameter.regular?
+            argument = arguments[index]&.value
+            argument = parameter.evaluate(**globals) if argument.nil?
+            context.code_set(parameter.name, argument)
           elsif parameter.keyword?
             argument =
               arguments
