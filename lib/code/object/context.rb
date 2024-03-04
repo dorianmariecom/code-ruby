@@ -23,7 +23,7 @@ class Code
         elsif parent?
           parent.lookup!(identifier)
         else
-          raise Code::Error::Undefined, "#{identifier} is not defined"
+          raise Error::Undefined, "#{identifier} is not defined"
         end
       end
 

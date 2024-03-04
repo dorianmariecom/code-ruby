@@ -56,6 +56,9 @@ class Code
         when "Number"
           sig(args)
           Class.new(Number)
+        when "context"
+          sig(args)
+          context
         when "Object"
           sig(args)
           Class.new(Object)

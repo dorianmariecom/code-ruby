@@ -9,7 +9,21 @@ class Code
         parameters = args.first.presence || List.new
         parameters = parameters.raw if parameters.is_an?(Object)
         @parameters = List.new(parameters)
-        @parameters.raw.map! { |parameter| Parameter.new(parameter) }
+        @parameters.raw.map! do |parameter|
+          if parameter.is_a?(Node::FunctionParameter)
+            Parameter.new(
+              Dictionary.new({
+                String.new(:name) => String.new(parameter.name),
+                String.new(:keyword) => Boolean.new(parameter.keyword?),
+                String.new(:regular_splat) => Boolean.new(parameter.regular_splat?),
+                String.new(:keyword_splat) => Boolean.new(parameter.keyword_splat?),
+                String.new(:default) => Code.new(parameter.default),
+              })
+            )
+          else
+            Parameter.new(parameter)
+          end
+        end
         @body = Code.new(args.second.presence || Nothing.new)
         super
       end
@@ -48,15 +62,15 @@ class Code
                 arguments.select(&:keyword?).map(&:name_value).to_h
               )
             )
-          elsif parameter.regular?
-            argument = arguments[index]&.value
-            argument = parameter.evaluate(**globals) if argument.nil?
-            context.code_set(parameter.name, argument)
           elsif parameter.keyword?
             argument =
               arguments
                 .detect { |argument| argument.name == parameter.name }
                 &.value
+            argument = parameter.evaluate(**globals) if argument.nil?
+            context.code_set(parameter.name, argument)
+          elsif parameter.regular?
+            argument = arguments[index]&.value
             argument = parameter.evaluate(**globals) if argument.nil?
             context.code_set(parameter.name, argument)
           end
@@ -73,7 +87,7 @@ class Code
         parameters.raw.inject([]) do |signature, parameter|
           if parameter.keyword?
             if signature.last.is_a?(::Hash)
-              signature.last[parameter.name] = Object
+              signature.last.code_set(parameter.name, Object)
               signature
             else
               signature + [{ parameter.name => Object }]

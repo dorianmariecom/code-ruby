@@ -326,8 +326,8 @@ class Code
         context.code_fetch(self)
       else
         raise(
-          Code::Error::Undefined,
-          "#{operator} not defined on #{inspect}:#{self.class.name}"
+          Error::Undefined,
+          "#{operator.inspect} not defined on #{inspect}:#{self.class.name}"
         )
       end
     end

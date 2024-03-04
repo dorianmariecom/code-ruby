@@ -3,9 +3,10 @@
 class Code
   class Object
     class String < Object
-      def initialize(string)
-        string = string.raw if string.is_a?(String)
-        @raw = string.to_s
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || Nothing.new
+        raw = raw.raw if raw.is_a?(Object)
+        @raw = raw.to_s
         super
       end
 

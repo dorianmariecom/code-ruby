@@ -5,7 +5,8 @@ class Code
     class Boolean < ::Code::Object
       def initialize(*args, **_kargs, &_block)
         raw = args.first || Nothing.new
-        @raw = (raw.is_a?(Object) ? raw.truthy? : !!raw)
+        raw = raw.raw if raw.is_a?(Object)
+        @raw = !!raw
         super
       end
 
