@@ -2,8 +2,16 @@
 
 class Code
   class Type
-    def name
-      "Type"
+    def maybe
+      Maybe.new(self)
+    end
+
+    def repeat(minimum = 0, maximum = nil)
+      Repeat.new(self, minimum:, maximum:)
+    end
+
+    def |(other)
+      Or.new(self, other)
     end
 
     def valid?(_argument)

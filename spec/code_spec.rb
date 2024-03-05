@@ -224,27 +224,58 @@ RSpec.describe Code do
     2.hours.ago
     2.hours.from_now
     Boolean.new
+    Boolean.new(true)
+    Boolean.new(false)
     Class.new
+    Class.new(Boolean)
+    Class.new(Class)
     Context.new
+    Context.new(a:1)
     Date.new
+    Date.new("2024-03-05")
+    Date.today
+    Date.yesterday
     Date.tomorrow
     Decimal.new
+    Decimal.new(0)
+    Decimal.new(1.2)
     Dictionary.new
+    Dictionary.new(a:1)
     Duration.new
+    Duration.new(1.day)
+    Duration.new("P1D")
     Function.new
     Integer.new
+    Integer.new(0)
+    Integer.new(1)
+    Integer.new(1.2)
     List.new
+    List.new([])
+    List.new([1,2])
     Nothing.new
-    Number.new
+    Nothing.new(1)
     Object.new
+    Object.new(1)
     Range.new
+    Range.new(1,2)
+    Range.new(-1)
+    Range.new(1,2,exclude_end:false)
+    Range.new(1,2,exclude_end:true)
     String.new
+    String.new(:hello)
     Time.new
+    Time.new("2024-03-05.06:10:59.UTC")
+    Time.now
+    Time.tomorrow
+    Time.yesterday
     Time.tomorrow
     Code.new
     Parameter.new
     Argument.new
+    Argument.new(1)
+    Argument.new(1,name:"index")
     IdentifierList.new
+    IdentifierList.new([])
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|

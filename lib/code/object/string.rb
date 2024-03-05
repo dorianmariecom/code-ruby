@@ -25,7 +25,7 @@ class Code
           sig(args)
           code_to_function(**globals)
         when "*"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_multiplication(value)
         when "+"
           sig(args) { Object }

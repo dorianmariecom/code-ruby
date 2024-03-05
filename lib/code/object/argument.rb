@@ -6,7 +6,7 @@ class Code
       attr_reader :value, :name
 
       def initialize(*args, **_kargs, &_block)
-        @value = args.first
+        @value = args.first.presence || Nothing.new
         @name = args.second.present? ? String.new(args.second) : nil
         super
       end

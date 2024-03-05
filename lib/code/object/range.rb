@@ -3,13 +3,14 @@
 class Code
   class Object
     class Range < Object
-      attr_reader :exclude_end, :left, :right
+      attr_reader :left, :right, :options, :exclude_end
 
-      def initialize(left, right, exclude_end: false)
-        @left = left
-        @right = right
-        @exclude_end = !exclude_end.nil?
-        @raw = ::Range.new(left, right, exclude_end)
+      def initialize(*args, **_kargs, &_block)
+        @left = args.first.presence || Integer.new(0)
+        @right = args.second.presence || Integer.new(0)
+        @options = Dictionary.new(args.third.presence || Dictionary.new)
+        @exclude_end = Boolean.new(@options.code_get(String.new(:exclude_end)))
+        @raw = ::Range.new(left, right, exclude_end?)
         super
       end
 
@@ -46,7 +47,7 @@ class Code
           sig(args) { Function }
           code_select(value, **globals)
         when "step"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_step(value)
         when "to_list"
           sig(args)
@@ -103,6 +104,10 @@ class Code
         )
       end
 
+      def exclude_end?
+        exclude_end.truthy?
+      end
+
       def code_step(argument)
         list = List.new
         element = left
@@ -126,10 +131,6 @@ class Code
 
       def code_to_list
         List.new(raw.to_a)
-      end
-
-      def exclude_end?
-        !!exclude_end
       end
 
       def inspect

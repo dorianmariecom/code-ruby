@@ -131,7 +131,7 @@ class Code
         context.code_fetch(self)
       else
         raise(
-          Code::Error::Undefined,
+          Error::Undefined,
           "#{operator} not defined on #{inspect}:Class"
         )
       end
@@ -349,11 +349,23 @@ class Code
     end
 
     def code_exclusive_range(value)
-      Range.new(self, value, exclude_end: true)
+      Range.new(
+        self,
+        value,
+        Dictionary.new({
+          String.new(:exclude_end) => Boolean.new(true)
+        })
+      )
     end
 
     def code_inclusive_range(value)
-      Range.new(self, value, exclude_end: false)
+      Range.new(
+        self,
+        value,
+        Dictionary.new({
+          String.new(:exclude_end) => Boolean.new(false)
+        })
+      )
     end
 
     def code_or_operator(other)

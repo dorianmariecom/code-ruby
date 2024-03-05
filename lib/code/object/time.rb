@@ -5,11 +5,11 @@ class Code
     class Time < Object
       DEFAULT_ZONE = "Etc/UTC"
 
-      def initialize(time)
+      def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
-        time = time.raw if time.is_a?(Time)
-        time = time.to_s if time.is_a?(::Time)
-        @raw = ::Time.zone.parse(time)
+        raw = args.first.presence || ::Time.zone.now
+        raw = raw.raw if raw.is_an?(Object)
+        @raw = ::Time.zone.parse(raw.to_s)
         super
       end
 
@@ -27,6 +27,9 @@ class Code
         when "tomorrow"
           sig(args)
           code_tomorrow
+        when "yesterday"
+          sig(args)
+          code_yesterday
         else
           super
         end
@@ -34,12 +37,17 @@ class Code
 
       def self.code_tomorrow
         ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.tomorrow.beginning_of_day)
+        new(::Time.zone.tomorrow)
+      end
+
+      def self.code_yesterday
+        ::Time.zone ||= DEFAULT_ZONE
+        new(::Time.zone.yesterday)
       end
 
       def self.code_now
         ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.now.beginning_of_day)
+        new(::Time.zone.now)
       end
 
       def call(**args)
