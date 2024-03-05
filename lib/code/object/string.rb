@@ -3,11 +3,11 @@
 class Code
   class Object
     class String < Object
-      attr_reader :raw
-
-      def initialize(string)
-        string = string.raw if string.is_a?(String)
-        @raw = string.to_s
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || Nothing.new
+        raw = raw.raw if raw.is_a?(Object)
+        @raw = raw.to_s
+        super
       end
 
       def self.name
@@ -25,7 +25,7 @@ class Code
           sig(args)
           code_to_function(**globals)
         when "*"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_multiplication(value)
         when "+"
           sig(args) { Object }
@@ -65,7 +65,7 @@ class Code
       end
 
       def code_to_function(**globals)
-        Code::Node::Code.new(
+        Node::Code.new(
           [
             {
               function: {

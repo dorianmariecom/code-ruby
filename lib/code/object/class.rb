@@ -3,13 +3,12 @@
 class Code
   class Object
     class Class < Object
-      attr_reader :raw
-
       def initialize(*args, **_kargs, &_block)
         raw = args.first || Nothing.new
         raw = raw.raw if raw.is_a?(Class)
         raw = raw.class if raw.is_an?(Object)
         @raw = raw
+        super
       end
 
       def call(...)

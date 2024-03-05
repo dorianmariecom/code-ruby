@@ -2,6 +2,12 @@
 
 class Code
   class Object
+    attr_reader :raw
+
+    def initialize(*_args, **_kargs, &_block)
+      @raw = nil unless defined?(@raw)
+    end
+
     def self.maybe
       Type::Maybe.new(self)
     end
@@ -69,60 +75,41 @@ class Code
         sig(args) { Object }
         code_or_operator(value)
       when "to_boolean"
+        sig(args)
+        Boolean.new(self)
       when "to_class"
-          sig(args) { Object.maybe }
-          value ? Class.new(value) : Class.new(Class)
-        when "Date"
-          sig(args) { Object.maybe }
-          value ? Date.new(value) : Class.new(Date)
-        when "Decimal"
-          sig(args) { Object.maybe }
-          value ? Decimal.new(value) : Class.new(Decimal)
-        when "Dictionary"
-          sig(args) { Object.maybe }
-          value ? Dictionary.new(value) : Class.new(Dictionary)
-        when "Function"
-          sig(args) { Object.maybe }
-          value ? Function.new(value) : Class.new(Function)
-        when "Integer"
-          sig(args) { Object.maybe }
-          value ? Integer.new(value) : Class.new(Integer)
-        when "List"
-          sig(args) { Object.maybe }
-          value ? List.new(value) : Class.new(List)
-        when "Nothing"
-          sig(args) { Object.maybe }
-          value ? Nothing.new(value) : Class.new(Nothing)
-        when "Number"
-          sig(args) { Object.maybe }
-          value ? Number.new(value) : Class.new(Number)
-        when "Object"
-          sig(args) { Object.maybe }
-          value ? Object.new(value) : Class.new(Object)
-        when "Range"
-          sig(args) { Object.maybe }
-          value ? Range.new(value) : Class.new(Range)
-        when "String"
-          sig(args) { Object.maybe }
-          value ? String.new(value) : Class.new(String)
-        when "Time"
-          sig(args) { Object.maybe }
-          value ? Time.new(value) : Class.new(Time)
-        when "evaluate"
-          sig(args) { Object }
-          Code.evaluate(value.to_s)
-        when "p"
-          sig(args) { Object.repeat }
-          output.puts(*arguments.map(&:value).map(&:inspect))
-          Nothing.new
-        when "print"
-          sig(args) { Object.repeat }
-          output.print(*arguments.map(&:value))
-          Nothing.new
-        when "puts"
-          sig(args) { Object.repeat }
-          output.puts(*arguments.map(&:value))
-          Nothing.new
+        sig(args)
+        Class.new(self)
+      when "to_date"
+        sig(args)
+        Date.new(self)
+      when "to_decimal"
+        sig(args)
+        Decimal.new(self)
+      when "to_dictionary"
+        sig(args)
+        Dictionary.new(self)
+      when "to_duration"
+        sig(args)
+        Duration.new(self)
+      when "to_integer"
+        sig(args)
+        Integer.new(self)
+      when "to_list"
+        sig(args)
+        List.new(self)
+      when "to_nothing"
+        sig(args)
+        Nothing.new(self)
+      when "to_range"
+        sig(args)
+        Range.new(self)
+      when "to_string"
+        sig(args)
+        String.new(self)
+      when "to_time"
+        sig(args)
+        Time.new(self)
       when /=$/
         sig(args) { Object }
 
@@ -144,7 +131,7 @@ class Code
         context.code_fetch(self)
       else
         raise(
-          Code::Error::Undefined,
+          Error::Undefined,
           "#{operator} not defined on #{inspect}:Class"
         )
       end
@@ -282,6 +269,42 @@ class Code
       when "||", "or"
         sig(args) { Object }
         code_or_operator(value)
+      when "to_boolean"
+        sig(args)
+        Boolean.new(self)
+      when "to_class"
+        sig(args)
+        Class.new(self)
+      when "to_date"
+        sig(args)
+        Date.new(self)
+      when "to_decimal"
+        sig(args)
+        Decimal.new(self)
+      when "to_duration"
+        sig(args)
+        Duration.new(self)
+      when "to_dictionary"
+        sig(args)
+        Dictionary.new(self)
+      when "to_integer"
+        sig(args)
+        Integer.new(self)
+      when "to_list"
+        sig(args)
+        List.new(self)
+      when "to_nothing"
+        sig(args)
+        Nothing.new(self)
+      when "to_range"
+        sig(args)
+        Range.new(self)
+      when "to_string"
+        sig(args)
+        String.new(self)
+      when "to_time"
+        sig(args)
+        Time.new(self)
       when /=$/
         sig(args) { Object }
 
@@ -303,8 +326,8 @@ class Code
         context.code_fetch(self)
       else
         raise(
-          Code::Error::Undefined,
-          "#{operator} not defined on #{inspect}:#{self.class.name}"
+          Error::Undefined,
+          "#{operator.inspect} not defined on #{inspect}:#{self.class.name}"
         )
       end
     end
@@ -326,11 +349,23 @@ class Code
     end
 
     def code_exclusive_range(value)
-      Range.new(self, value, exclude_end: true)
+      Range.new(
+        self,
+        value,
+        Dictionary.new({
+          String.new(:exclude_end) => Boolean.new(true)
+        })
+      )
     end
 
     def code_inclusive_range(value)
-      Range.new(self, value, exclude_end: false)
+      Range.new(
+        self,
+        value,
+        Dictionary.new({
+          String.new(:exclude_end) => Boolean.new(false)
+        })
+      )
     end
 
     def code_or_operator(other)

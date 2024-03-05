@@ -2,10 +2,8 @@
 
 class Code
   class Object
-    class Nothing < ::Code::Object
-      attr_reader :raw
-
-      def initialize
+    class Nothing < Object
+      def initialize(*_args, **_kargs, &_block)
         @raw = nil
       end
 

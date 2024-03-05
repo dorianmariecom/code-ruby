@@ -10,7 +10,7 @@ class Code
       end
 
       def name
-        ::Code::Object::String.new(@name)
+        Object::String.new(@name)
       end
 
       def regular?
@@ -27,6 +27,10 @@ class Code
 
       def keyword_splat?
         false
+      end
+
+      def default
+        nil
       end
     end
   end

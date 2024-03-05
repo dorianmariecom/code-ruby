@@ -2,12 +2,30 @@
 
 class Code
   class Object
-    class Function < ::Code::Object
+    class Function < Object
       attr_reader :parameters, :body
 
-      def initialize(parameters:, body:)
-        @parameters = parameters.presence || []
-        @body = body.presence || Node::Code.new
+      def initialize(*args, **_kargs, &_block)
+        parameters = args.first.presence || List.new
+        parameters = parameters.raw if parameters.is_an?(Object)
+        @parameters = List.new(parameters)
+        @parameters.raw.map! do |parameter|
+          if parameter.is_a?(Node::FunctionParameter)
+            Parameter.new(
+              Dictionary.new({
+                String.new(:name) => String.new(parameter.name),
+                String.new(:keyword) => Boolean.new(parameter.keyword?),
+                String.new(:regular_splat) => Boolean.new(parameter.regular_splat?),
+                String.new(:keyword_splat) => Boolean.new(parameter.keyword_splat?),
+                String.new(:default) => Code.new(parameter.default),
+              })
+            )
+          else
+            Parameter.new(parameter)
+          end
+        end
+        @body = Code.new(args.second.presence || Nothing.new)
+        super
       end
 
       def self.name
@@ -17,7 +35,7 @@ class Code
       def call(**args)
         operator = args.fetch(:operator, nil)
         arguments = args.fetch(:arguments, [])
-        globals = multi_fetch(args, *::Code::GLOBALS)
+        globals = multi_fetch(args, *GLOBALS)
 
         case operator.to_s
         when "", "call"
@@ -29,32 +47,30 @@ class Code
       end
 
       def code_call(*arguments, **globals)
-        context = Context.new({}, parent: globals[:context])
+        context = Context.new({}, globals[:context])
 
-        parameters.each.with_index do |parameter, index|
-          if parameter.regular?
-            if parameter.regular_splat?
-              context.code_set(
-                parameter.name,
-                List.new(arguments.select(&:regular?).map(&:value))
+        parameters.raw.each.with_index do |parameter, index|
+          if parameter.regular_splat?
+            context.code_set(
+              parameter.name,
+              List.new(arguments.select(&:regular?).map(&:value))
+            )
+          elsif parameter.keyword_splat?
+            context.code_set(
+              parameter.name,
+              Dictionary.new(
+                arguments.select(&:keyword?).map(&:name_value).to_h
               )
-            elsif parameter.keyword_splat?
-              context.code_set(
-                parameter.name,
-                Dictionary.new(
-                  arguments.select(&:keyword?).map(&:name_value).to_h
-                )
-              )
-            else
-              argument = arguments[index]&.value
-              argument = parameter.evaluate(**globals) if argument.nil?
-              context.code_set(parameter.name, argument)
-            end
+            )
           elsif parameter.keyword?
             argument =
               arguments
                 .detect { |argument| argument.name == parameter.name }
                 &.value
+            argument = parameter.evaluate(**globals) if argument.nil?
+            context.code_set(parameter.name, argument)
+          elsif parameter.regular?
+            argument = arguments[index]&.value
             argument = parameter.evaluate(**globals) if argument.nil?
             context.code_set(parameter.name, argument)
           end
@@ -68,10 +84,10 @@ class Code
       end
 
       def signature_for_call
-        parameters.inject([]) do |signature, parameter|
+        parameters.raw.inject([]) do |signature, parameter|
           if parameter.keyword?
             if signature.last.is_a?(::Hash)
-              signature.last[parameter.name] = Object
+              signature.last.code_set(parameter.name, Object)
               signature
             else
               signature + [{ parameter.name => Object }]

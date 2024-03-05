@@ -2,12 +2,12 @@
 
 class Code
   class Object
-    class List < ::Code::Object
-      attr_reader :raw
-
-      def initialize(raw = [])
-        raw = raw.raw if raw.is_a?(List)
+    class List < Object
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || Nothing.new
+        raw = raw.raw if raw.is_an?(Object)
         @raw = raw.to_a
+        super
       end
 
       def self.name

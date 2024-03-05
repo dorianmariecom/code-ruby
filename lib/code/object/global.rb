@@ -2,9 +2,13 @@
 
 class Code
   class Object
-    class Global < ::Code::Object
+    class Global < Object
       def self.name
         "Global"
+      end
+
+      def initialize(...)
+        super
       end
 
       def call(**args)
@@ -38,9 +42,12 @@ class Code
         when "Dictionary"
           sig(args) { Object.repeat }
           value ? Dictionary.new(*values) : Class.new(Dictionary)
-        when "Function"
+        when "Duration"
           sig(args) { Object.repeat }
-          value ? Function.new(*values) : Class.new(Function)
+          value ? Duration.new(*values) : Class.new(Duration)
+        when "Function"
+          sig(args)
+          Class.new(Function)
         when "Integer"
           sig(args) { Object.repeat }
           value ? Integer.new(*values) : Class.new(Integer)
@@ -50,12 +57,12 @@ class Code
         when "Nothing"
           sig(args) { Object.repeat }
           value ? Nothing.new(*values) : Class.new(Nothing)
-        when "Number"
-          sig(args) { Object.repeat }
-          value ? Number.new(*values) : Class.new(Number)
+        when "context"
+          sig(args)
+          context
         when "Object"
-          sig(args) { Object.repeat }
-          value ? Object.new(*values) : Class.new(Object)
+          sig(args)
+          Class.new(Object)
         when "Range"
           sig(args) { Object.repeat }
           value ? Range.new(*values) : Class.new(Range)
@@ -65,6 +72,24 @@ class Code
         when "Time"
           sig(args) { Object.repeat }
           value ? Time.new(*values) : Class.new(Time)
+        when "Context"
+          sig(args) { Object.repeat }
+          value ? Context.new(*values) : Class.new(Context)
+        when "Code"
+          sig(args) { Object.repeat }
+          value ? Code.new(*values) : Class.new(Code)
+        when "Argument"
+          sig(args) { Object.repeat }
+          value ? Argument.new(*values) : Class.new(Argument)
+        when "Parameter"
+          sig(args) { Object.repeat }
+          value ? Parameter.new(*values) : Class.new(Parameter)
+        when "Range"
+          sig(args) { Object.repeat }
+          value ? Range.new(*values) : Class.new(Range)
+        when "IdentifierList"
+          sig(args) { Object.repeat }
+          value ? IdentifierList.new(*values) : Class.new(IdentifierList)
         when "evaluate"
           sig(args) { Object }
           Code.evaluate(value.to_s)

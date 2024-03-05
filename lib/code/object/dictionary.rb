@@ -3,11 +3,11 @@
 class Code
   class Object
     class Dictionary < ::Code::Object
-      attr_reader :raw
-
-      def initialize(raw = {})
-        raw = raw.raw if raw.is_a?(Dictionary)
+      def initialize(*args, **_kargs, &_block)
+        raw = args.first || {}
+        raw = raw.raw if raw.is_a?(Object)
         @raw = raw.to_h
+        super
       end
 
       def self.name

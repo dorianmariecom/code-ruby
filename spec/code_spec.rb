@@ -57,6 +57,7 @@ RSpec.describe Code do
     %w[Boolean(nothing) false],
     %w[Boolean(true) true],
     %w[Boolean({}) true],
+    %w[Boolean.new false],
     %w[Boolean.new(1) true],
     %w[Boolean.new(2.days.ago) true],
     %w[Boolean.new(2.days.ago) true],
@@ -70,11 +71,25 @@ RSpec.describe Code do
     %w[Class(nothing) Nothing],
     %w[Class(true) Boolean],
     %w[Class.new Nothing],
+    %w[Class.new Nothing],
     %w[Class.new(2.days.ago) Time],
     %w[Class.new(Boolean) Boolean],
+    %w[Class.new(Date) Date],
     %w[Class.new(Time) Time],
     %w[Class.new(nothing) Nothing],
     %w[Class.new(true) Boolean],
+    %w[Date Date],
+    %w[Date("0001-01-01").to_string :0001-01-01],
+    %w[Date("2024-03-02").to_string :2024-03-02],
+    %w[Decimal(1) 1.0],
+    %w[Decimal(1) 1],
+    %w[Decimal(:1) 1.0],
+    %w[Decimal(:1) 1],
+    %w[Decimal.new 0],
+    %w[Decimal.new(1) 1.0],
+    %w[Decimal.new(1) 1],
+    %w[Decimal.new(:1) 1.0],
+    %w[Decimal.new(:1) 1],
     %w[false false],
     %w[true true],
     %w[{} {}],
@@ -103,11 +118,19 @@ RSpec.describe Code do
     ["3.times {}", "3"],
     ["4 % 3", "1"],
     ["Boolean([])", "true"],
+    ["Boolean(true, false)", "true"],
     ["Boolean.new([])", "true"],
-    ["Boolean.new(true, false)", "true"],
     ["Boolean.new(false, true)", "false"],
+    ["Boolean.new(true, false)", "true"],
+    ["Class(true, 1)", "Boolean"],
     ["Class.new(Boolean, Time)", "Boolean"],
     ["Class.new(Time, Boolean)", "Time"],
+    ["Date(2024, 3, 2).to_string", ":2024-03-02"],
+    ["Date(2024,3, 2).to_string", ":2024-03-02"],
+    ["Decimal(1, :2)", "100"],
+    ["Decimal(:1, 2)", "100.0"],
+    ["Decimal.new(1, :2)", "100"],
+    ["Decimal.new(:1, 2)", "100.0"],
     ["[,,].include?(4)", "false"],
     ["[,].include?(4)", "false"],
     ["[1, 2, 3,  \n  ].include?(4)", "false"],
@@ -181,27 +204,7 @@ RSpec.describe Code do
     ['user = {} user.name = "Dorian" user.name', ":Dorian"],
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
-    ["Boolean(true, false)", "true"],
-    ["Class(true, 1)", "Boolean"],
-    ["Date", "Date"],
-    ["Class.new(Date)", "Date"],
-    ["Date(2024, 3, 2).to_string", ":2024-03-02"],
-    ['Date("0001-01-01").to_string', ":0001-01-01"],
-    ['Date("2024-03-02").to_string', ":2024-03-02"],
-    ["Date(2024,3, 2).to_string", ":2024-03-02"],
-    ["Decimal(1)", "1.0"],
-    ["Decimal(1)", "1"],
-    ["Decimal(:1)", "1.0"],
-    ["Decimal(:1)", "1"],
-    ["Decimal(:1, 2)", "100.0"],
-    ["Decimal(1, :2)", "100"],
-    ["Decimal.new(1)", "1.0"],
-    ["Decimal.new(1)", "1"],
-    ["Decimal.new(:1)", "1.0"],
-    ["Decimal.new(:1)", "1"],
-    ["Decimal.new(:1, 2)", "100.0"],
-    ["Decimal.new(1, :2)", "100"],
-    ["", ""],
+    ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
@@ -220,8 +223,59 @@ RSpec.describe Code do
     2.days.from_now
     2.hours.ago
     2.hours.from_now
+    Boolean.new
+    Boolean.new(true)
+    Boolean.new(false)
+    Class.new
+    Class.new(Boolean)
+    Class.new(Class)
+    Context.new
+    Context.new(a:1)
+    Date.new
+    Date.new("2024-03-05")
+    Date.today
+    Date.yesterday
     Date.tomorrow
+    Decimal.new
+    Decimal.new(0)
+    Decimal.new(1.2)
+    Dictionary.new
+    Dictionary.new(a:1)
+    Duration.new
+    Duration.new(1.day)
+    Duration.new("P1D")
+    Function.new
+    Integer.new
+    Integer.new(0)
+    Integer.new(1)
+    Integer.new(1.2)
+    List.new
+    List.new([])
+    List.new([1,2])
+    Nothing.new
+    Nothing.new(1)
+    Object.new
+    Object.new(1)
+    Range.new
+    Range.new(1,2)
+    Range.new(-1)
+    Range.new(1,2,exclude_end:false)
+    Range.new(1,2,exclude_end:true)
+    String.new
+    String.new(:hello)
+    Time.new
+    Time.new("2024-03-05.06:10:59.UTC")
+    Time.now
     Time.tomorrow
+    Time.yesterday
+    Time.tomorrow
+    Code.new
+    Parameter.new
+    Argument.new
+    Argument.new(1)
+    Argument.new(1,name:"index")
+    IdentifierList.new
+    IdentifierList.new([])
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|

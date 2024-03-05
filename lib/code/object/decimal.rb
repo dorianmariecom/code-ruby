@@ -2,17 +2,16 @@
 
 class Code
   class Object
-    class Decimal < ::Code::Object::Number
-      attr_reader :raw
-
+    class Decimal < Object
       def initialize(*args, **_kargs, &_block)
         decimal = args.first || "0"
         exponent = args.second || "0"
         decimal = decimal.raw if decimal.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = decimal.to_d * 10**exponent.to_d
+        super
       rescue FloatDomainError => e
-        raise Error, "#{decimal} * 10**#{exponent} is invalid"
+        raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
       def self.name
@@ -26,49 +25,49 @@ class Code
 
         case operator.to_s
         when "%", "modulo"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_modulo(value)
         when "&", "bitwise_and"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_bitwise_and(value)
         when "*", "multiplication"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_multiplication(value)
         when "**", "power"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_power(value)
         when "+", "plus"
           sig(args) { Object.maybe }
           value ? code_plus(value) : self
         when "-", "minus"
-          sig(args) { Number.maybe }
+          sig(args) { (Integer | Decimal).maybe }
           value ? code_minus(value) : code_unary_minus
         when "/", "division"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_division(value)
         when "<", "inferior"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_inferior(value)
         when "<<", "left_shift"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_left_shift(value)
         when "<=", "inferior_or_equal"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_inferior_or_equal(value)
         when "<=>", "compare"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_compare(value)
         when ">", "superior"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_superior(value)
         when ">=", "superior_or_equal"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_superior_or_equal(value)
         when ">>", "right_shift"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_right_shift(value)
         when "^", "bitwise_xor"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_bitwise_xor(value)
         when "abs"
           sig(args)
@@ -134,7 +133,7 @@ class Code
           sig(args)
           code_zero?
         when "|", "bitwise_or"
-          sig(args) { Number }
+          sig(args) { Integer | Decimal }
           code_bitwise_or(value)
         else
           super
@@ -224,7 +223,7 @@ class Code
       end
 
       def code_plus(other)
-        if other.is_a?(Number)
+        if other.is_an?(Integer) || other.is_a?(Decimal)
           Decimal.new(raw + other.raw)
         else
           String.new(to_s + other.to_s)

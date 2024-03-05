@@ -5,9 +5,10 @@ class Code
     class Argument < Object
       attr_reader :value, :name
 
-      def initialize(value, name: nil)
-        @value = value
-        @name = name
+      def initialize(*args, **_kargs, &_block)
+        @value = args.first.presence || Nothing.new
+        @name = args.second.present? ? String.new(args.second) : nil
+        super
       end
 
       def keyword?
