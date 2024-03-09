@@ -3,6 +3,71 @@
 require "spec_helper"
 
 RSpec.describe Code do
+
+  %w[
+    1.day.ago
+    1.day.from_now
+    1.hour.ago
+    1.hour.from_now
+    2.days.ago
+    2.days.from_now
+    2.hours.ago
+    2.hours.from_now
+    Boolean.new
+    Boolean.new(true)
+    Boolean.new(false)
+    Class.new
+    Class.new(Boolean)
+    Class.new(Class)
+    Context.new
+    Context.new(a:1)
+    Date.new
+    Date.new("2024-03-05")
+    Date.today
+    Date.yesterday
+    Date.tomorrow
+    Decimal.new
+    Decimal.new(0)
+    Decimal.new(1.2)
+    Dictionary.new
+    Dictionary.new(a:1)
+    Duration.new
+    Duration.new(1.day)
+    Duration.new("P1D")
+    Function.new
+    Integer.new
+    Integer.new(0)
+    Integer.new(1)
+    Integer.new(1.2)
+    List.new
+    List.new([])
+    List.new([1,2])
+    Nothing.new
+    Nothing.new(1)
+    Object.new
+    Object.new(1)
+    Range.new
+    Range.new(1,2)
+    Range.new(-1)
+    Range.new(1,2,exclude_end:false)
+    Range.new(1,2,exclude_end:true)
+    String.new
+    String.new(:hello)
+    Time.new
+    Time.new("2024-03-05.06:10:59.UTC")
+    Time.now
+    Time.tomorrow
+    Time.yesterday
+    Time.tomorrow
+    Code.new
+    Parameter.new
+    Argument.new
+    Argument.new(1)
+    Argument.new(1,name:"index")
+    IdentifierList.new
+    IdentifierList.new([])
+  ].each { |input| it(input) { Code.evaluate(input) } }
+
   [
     [
       "user = { name: :Dorian, age: 31 } user.delete_if(String) user.keys",
@@ -204,6 +269,11 @@ RSpec.describe Code do
     ['user = {} user.name = "Dorian" user.name', ":Dorian"],
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
+    ['{ "first_name": "Dorian" }.as_json', '{"first_name" => "Dorian"}'],
+    ["nothing.to_json", ":null"],
+    ["1.to_json", ":1"],
+    ["1.0.to_json", ":1"],
+    ["1.1.to_json", %{'"1.1"'}],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
@@ -213,70 +283,6 @@ RSpec.describe Code do
       )
     end
   end
-
-  %w[
-    1.day.ago
-    1.day.from_now
-    1.hour.ago
-    1.hour.from_now
-    2.days.ago
-    2.days.from_now
-    2.hours.ago
-    2.hours.from_now
-    Boolean.new
-    Boolean.new(true)
-    Boolean.new(false)
-    Class.new
-    Class.new(Boolean)
-    Class.new(Class)
-    Context.new
-    Context.new(a:1)
-    Date.new
-    Date.new("2024-03-05")
-    Date.today
-    Date.yesterday
-    Date.tomorrow
-    Decimal.new
-    Decimal.new(0)
-    Decimal.new(1.2)
-    Dictionary.new
-    Dictionary.new(a:1)
-    Duration.new
-    Duration.new(1.day)
-    Duration.new("P1D")
-    Function.new
-    Integer.new
-    Integer.new(0)
-    Integer.new(1)
-    Integer.new(1.2)
-    List.new
-    List.new([])
-    List.new([1,2])
-    Nothing.new
-    Nothing.new(1)
-    Object.new
-    Object.new(1)
-    Range.new
-    Range.new(1,2)
-    Range.new(-1)
-    Range.new(1,2,exclude_end:false)
-    Range.new(1,2,exclude_end:true)
-    String.new
-    String.new(:hello)
-    Time.new
-    Time.new("2024-03-05.06:10:59.UTC")
-    Time.now
-    Time.tomorrow
-    Time.yesterday
-    Time.tomorrow
-    Code.new
-    Parameter.new
-    Argument.new
-    Argument.new(1)
-    Argument.new(1,name:"index")
-    IdentifierList.new
-    IdentifierList.new([])
-  ].each { |input| it(input) { Code.evaluate(input) } }
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do

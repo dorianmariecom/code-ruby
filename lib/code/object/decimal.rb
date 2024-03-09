@@ -9,13 +9,8 @@ class Code
         decimal = decimal.raw if decimal.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = decimal.to_d * 10**exponent.to_d
-        super
       rescue FloatDomainError => e
         raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
-      end
-
-      def self.name
-        "Decimal"
       end
 
       def call(**args)
@@ -300,10 +295,6 @@ class Code
         Boolean.new(raw.zero?)
       end
 
-      def inspect
-        to_s
-      end
-
       def whole?
         whole == raw
       end
@@ -312,12 +303,8 @@ class Code
         raw.round
       end
 
-      def to_s
-        whole? ? raw.to_i.to_s : raw.to_s("F")
-      end
-
       def as_json(...)
-        whole? ? whole.as_json(...) : raw.as_json(...)
+        whole? ? whole.as_json(...) : super
       end
     end
   end

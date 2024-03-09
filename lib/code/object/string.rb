@@ -7,11 +7,6 @@ class Code
         raw = args.first || Nothing.new
         raw = raw.raw if raw.is_a?(Object)
         @raw = raw.to_s
-        super
-      end
-
-      def self.name
-        "String"
       end
 
       def call(**args)
@@ -88,22 +83,6 @@ class Code
             }
           ]
         ).evaluate(**globals)
-      end
-
-      def inspect
-        raw.inspect
-      end
-
-      def succ
-        String.new(raw.succ)
-      end
-
-      def to_s
-        raw
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

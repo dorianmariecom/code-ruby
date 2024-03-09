@@ -6,30 +6,10 @@ class Code
       attr_reader :parameters, :body
 
       def initialize(*args, **_kargs, &_block)
-        parameters = args.first.presence || List.new
-        parameters = parameters.raw if parameters.is_an?(Object)
-        @parameters = List.new(parameters)
-        @parameters.raw.map! do |parameter|
-          if parameter.is_a?(Node::FunctionParameter)
-            Parameter.new(
-              Dictionary.new({
-                String.new(:name) => String.new(parameter.name),
-                String.new(:keyword) => Boolean.new(parameter.keyword?),
-                String.new(:regular_splat) => Boolean.new(parameter.regular_splat?),
-                String.new(:keyword_splat) => Boolean.new(parameter.keyword_splat?),
-                String.new(:default) => Code.new(parameter.default),
-              })
-            )
-          else
-            Parameter.new(parameter)
-          end
-        end
+        @parameters = List.new(args.first.presence || [])
+        @parameters.raw.map! { |parameter| Parameter.new(parameter) }
         @body = Code.new(args.second.presence || Nothing.new)
-        super
-      end
-
-      def self.name
-        "Function"
+        @raw = List.new(parameters, body)
       end
 
       def call(**args)
@@ -52,12 +32,12 @@ class Code
         parameters.raw.each.with_index do |parameter, index|
           if parameter.regular_splat?
             context.code_set(
-              parameter.name,
+              parameter.code_name,
               List.new(arguments.select(&:regular?).map(&:value))
             )
           elsif parameter.keyword_splat?
             context.code_set(
-              parameter.name,
+              parameter.code_name,
               Dictionary.new(
                 arguments.select(&:keyword?).map(&:name_value).to_h
               )
@@ -65,45 +45,33 @@ class Code
           elsif parameter.keyword?
             argument =
               arguments
-                .detect { |argument| argument.name == parameter.name }
+                .detect { |argument| argument.name == parameter.code_name }
                 &.value
             argument = parameter.evaluate(**globals) if argument.nil?
-            context.code_set(parameter.name, argument)
+            context.code_set(parameter.code_name, argument)
           elsif parameter.regular?
             argument = arguments[index]&.value
             argument = parameter.evaluate(**globals) if argument.nil?
-            context.code_set(parameter.name, argument)
+            context.code_set(parameter.code_name, argument)
           end
         end
 
         body.evaluate(**globals, context:)
       end
 
-      def inspect
-        "function"
-      end
-
       def signature_for_call
         parameters.raw.inject([]) do |signature, parameter|
           if parameter.keyword?
             if signature.last.is_a?(::Hash)
-              signature.last.code_set(parameter.name, Object)
+              signature.last.code_set(parameter.code_name, Object)
               signature
             else
-              signature + [{ parameter.name => Object }]
+              signature + [{ parameter.code_name => Object }]
             end
           else
             signature + [Object]
           end
         end + [Object.repeat]
-      end
-
-      def to_s
-        ""
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

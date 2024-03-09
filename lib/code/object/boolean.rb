@@ -7,11 +7,6 @@ class Code
         raw = args.first || Nothing.new
         raw = raw.raw if raw.is_a?(Object)
         @raw = !!raw
-        super
-      end
-
-      def self.name
-        "Boolean"
       end
 
       def call(**args)
@@ -46,24 +41,8 @@ class Code
         Boolean.new(raw ^ value.raw)
       end
 
-      def inspect
-        to_s
-      end
-
-      def succ
-        Boolean.new(!raw)
-      end
-
-      def to_s
-        raw.to_s
-      end
-
       def truthy?
         raw
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

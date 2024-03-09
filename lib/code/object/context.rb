@@ -10,11 +10,6 @@ class Code
         raw = raw.raw if raw.is_a?(Object)
         @raw = raw.to_h
         @parent = Context.new(args.second) if args.second
-        super
-      end
-
-      def self.name
-        "Context"
       end
 
       def lookup!(identifier)
@@ -23,7 +18,7 @@ class Code
         elsif parent?
           parent.lookup!(identifier)
         else
-          raise Error::Undefined, "#{identifier} is not defined"
+            raise Error::Undefined, "#{identifier} is not defined"
         end
       end
 

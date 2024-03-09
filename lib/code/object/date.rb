@@ -6,13 +6,8 @@ class Code
       def initialize(*args, **_kargs, &_block)
         raw = args.map(&:to_s).join("-").presence || ::Date.current.to_s
         @raw = ::Date.parse(raw)
-        super
       rescue ::Date::Error
         raise Error, "#{raw.inspect} is an invalid date"
-      end
-
-      def self.name
-        "Date"
       end
 
       def self.call(**args)
@@ -54,18 +49,6 @@ class Code
       def self.code_yesterday
         ::Time.zone ||= Time::DEFAULT_ZONE
         new(::Time.zone.yesterday.beginning_of_day)
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        raw.to_s
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

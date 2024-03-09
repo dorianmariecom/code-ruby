@@ -8,13 +8,8 @@ class Code
         raw = raw.raw if raw.is_an?(Object)
         raw = raw.iso8601 if raw.is_an?(::ActiveSupport::Duration)
         @raw = ::ActiveSupport::Duration.parse(raw.to_s)
-        super
       rescue ::ActiveSupport::Duration::ISO8601Parser::ParsingError
         raise Error, "#{raw.inspect} is not a valid duration"
-      end
-
-      def self.name
-        "Duration"
       end
 
       def call(**args)
@@ -38,18 +33,6 @@ class Code
 
       def code_from_now
         Time.new(raw.from_now)
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        raw.to_s
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

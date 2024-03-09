@@ -3,20 +3,28 @@
 class Code
   class Object
     class Parameter < Object
-      attr_reader :name, :keyword, :regular_splat, :keyword_splat, :default
-
-      def self.name
-        "Parameter"
-      end
-
       def initialize(*args, **_kargs, &_block)
         @raw = Dictionary.new(args.first.presence || {})
-        @name = String.new(@raw.code_get(String.new(:name)))
-        @keyword = Boolean.new(@raw.code_get(String.new(:keyword)))
-        @regular_splat = Boolean.new(@raw.code_get(String.new(:regular_splat)))
-        @keyword_splat = Boolean.new(@raw.code_get(String.new(:keyword_splat)))
-        @default = Code.new(@raw.code_get(String.new(:default)))
-        super
+      end
+
+      def code_name
+        String.new(raw.code_get(String.new(:name)))
+      end
+
+      def code_keyword
+        Boolean.new(raw.code_get(String.new(:keyword)))
+      end
+
+      def code_regular_splat
+        Boolean.new(raw.code_get(String.new(:regular_splat)))
+      end
+
+      def code_keyword_splat
+        Boolean.new(raw.code_get(String.new(:keyword_splat)))
+      end
+
+      def code_default
+        Code.new(raw.code_get(String.new(:default)))
       end
 
       def evaluate(...)
@@ -28,15 +36,15 @@ class Code
       end
 
       def keyword?
-        keyword.truthy?
+        code_keyword.truthy?
       end
 
       def regular_splat?
-        regular_splat.truthy?
+        code_regular_splat.truthy?
       end
 
       def keyword_splat?
-        keyword_splat.truthy?
+        code_keyword_splat.truthy?
       end
     end
   end

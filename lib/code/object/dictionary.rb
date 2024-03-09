@@ -4,14 +4,11 @@ class Code
   class Object
     class Dictionary < ::Code::Object
       def initialize(*args, **_kargs, &_block)
-        raw = args.first || {}
-        raw = raw.raw if raw.is_a?(Object)
-        @raw = raw.to_h
-        super
-      end
-
-      def self.name
-        "Dictionary"
+        @raw = (args.first.presence || {})
+          .as_json
+          .to_h
+          .transform_keys { |key| Json.to_code(key) }
+          .transform_values { |value| Json.to_code(value) }
       end
 
       def call(**args)
@@ -653,18 +650,6 @@ class Code
 
       def code_zero?
         code_size.code_zero?
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        "{#{raw.map { |key, value| "#{key.inspect} => #{value.inspect}" }.join(", ")}}"
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

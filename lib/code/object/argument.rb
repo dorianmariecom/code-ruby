@@ -8,7 +8,7 @@ class Code
       def initialize(*args, **_kargs, &_block)
         @value = args.first.presence || Nothing.new
         @name = args.second.present? ? String.new(args.second) : nil
-        super
+        @raw = List.new([@value, @name])
       end
 
       def keyword?

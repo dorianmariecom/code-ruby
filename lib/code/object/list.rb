@@ -7,11 +7,6 @@ class Code
         raw = args.first || Nothing.new
         raw = raw.raw if raw.is_an?(Object)
         @raw = raw.to_a
-        super
-      end
-
-      def self.name
-        "List"
       end
 
       def call(**args)
@@ -233,18 +228,6 @@ class Code
 
       def code_sum
         raw.inject(&:code_plus) || Nothing.new
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        "[#{raw.map(&:inspect).join(", ")}]"
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

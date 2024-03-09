@@ -3,10 +3,6 @@
 class Code
   class Object
     class Global < Object
-      def self.name
-        "Global"
-      end
-
       def initialize(...)
         super
       end

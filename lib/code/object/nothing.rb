@@ -7,24 +7,8 @@ class Code
         @raw = nil
       end
 
-      def self.name
-        "Nothing"
-      end
-
-      def inspect
-        "nothing"
-      end
-
-      def to_s
-        ""
-      end
-
       def truthy?
         false
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

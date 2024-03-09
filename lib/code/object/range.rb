@@ -8,14 +8,9 @@ class Code
       def initialize(*args, **_kargs, &_block)
         @left = args.first.presence || Integer.new(0)
         @right = args.second.presence || Integer.new(0)
-        @options = Dictionary.new(args.third.presence || Dictionary.new)
-        @exclude_end = Boolean.new(@options.code_get(String.new(:exclude_end)))
+        @options = Dictionary.new(args.third.presence || {})
+        @exclude_end = Boolean.new(options.code_get(String.new(:exclude_end)))
         @raw = ::Range.new(left, right, exclude_end?)
-        super
-      end
-
-      def self.name
-        "Range"
       end
 
       def call(**args)
@@ -131,18 +126,6 @@ class Code
 
       def code_to_list
         List.new(raw.to_a)
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        raw.to_s
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

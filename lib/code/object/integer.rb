@@ -13,10 +13,6 @@ class Code
         raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
-      def self.name
-        "Integer"
-      end
-
       def call(**args)
         operator = args.fetch(:operator, nil)
         arguments = args.fetch(:arguments, [])
@@ -390,22 +386,6 @@ class Code
 
       def code_days
         Duration.new(raw.days)
-      end
-
-      def inspect
-        to_s
-      end
-
-      def succ
-        Integer.new(raw + 1)
-      end
-
-      def to_s
-        raw.to_s
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

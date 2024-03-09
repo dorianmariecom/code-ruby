@@ -10,11 +10,6 @@ class Code
         raw = args.first.presence || ::Time.zone.now
         raw = raw.raw if raw.is_an?(Object)
         @raw = ::Time.zone.parse(raw.to_s)
-        super
-      end
-
-      def self.name
-        "Time"
       end
 
       def self.call(**args)
@@ -89,18 +84,6 @@ class Code
 
       def code_future?
         code_after?
-      end
-
-      def inspect
-        to_s
-      end
-
-      def to_s
-        raw.to_s
-      end
-
-      def as_json(...)
-        raw.as_json(...)
       end
     end
   end

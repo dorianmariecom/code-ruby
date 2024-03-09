@@ -5,15 +5,10 @@ class Code
     attr_reader :raw
 
     def initialize(*_args, **_kargs, &_block)
-      @raw = nil unless defined?(@raw)
     end
 
     def self.maybe
       Type::Maybe.new(self)
-    end
-
-    def self.name
-      "Object"
     end
 
     def self.repeat(minimum = 0, maximum = nil)
@@ -110,6 +105,12 @@ class Code
       when "to_time"
         sig(args)
         Time.new(self)
+      when "as_json"
+        sig(args)
+        code_as_json
+      when "to_json"
+        sig(args) { { pretty: Boolean.maybe } }
+        code_to_json(pretty: value&.code_get(String.new(:pretty)))
       when /=$/
         sig(args) { Object }
 
@@ -194,10 +195,6 @@ class Code
       nil
     end
 
-    def self.name
-      "Object"
-    end
-
     def self.to_s
       name
     end
@@ -208,6 +205,26 @@ class Code
 
     def self.truthy?
       true
+    end
+
+    def self.to_json(...)
+      as_json(...).to_json(...)
+    end
+
+    def self.as_json(...)
+      name.as_json(...)
+    end
+
+    def self.code_to_json(pretty: nil)
+      if Boolean.new(pretty).truthy?
+        String.new(::JSON.pretty_generate(self))
+      else
+        String.new(to_json)
+      end
+    end
+
+    def self.code_as_json
+      Json.to_code(as_json)
     end
 
     def <=>(other)
@@ -305,6 +322,12 @@ class Code
       when "to_time"
         sig(args)
         Time.new(self)
+      when "as_json"
+        sig(args)
+        code_as_json
+      when "to_json"
+        sig(args) { { pretty: Boolean.maybe } }
+        code_to_json(pretty: value&.code_get(String.new(:pretty)))
       when /=$/
         sig(args) { Object }
 
@@ -414,11 +437,31 @@ class Code
     end
 
     def to_json(...)
-      as_json(...).to_json
+      as_json(...).to_json(...)
     end
 
     def as_json(...)
-      raw.as_json
+      raw.as_json(...)
+    end
+
+    def code_to_json(pretty: nil)
+      if Boolean.new(pretty).truthy?
+        String.new(::JSON.pretty_generate(self))
+      else
+        String.new(to_json)
+      end
+    end
+
+    def code_as_json
+      Json.to_code(as_json)
+    end
+
+    def succ
+      if raw.respond_to?(:succ)
+        self.class.new(raw.succ)
+      else
+        self.class.new(self)
+      end
     end
   end
 end

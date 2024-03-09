@@ -3,10 +3,6 @@
 class Code
   class Object
     class IdentifierList < List
-      def self.name
-        "IdentifierList"
-      end
-
       def call(**args)
         operator = args.fetch(:operator, nil)
         arguments = args.fetch(:arguments, [])
