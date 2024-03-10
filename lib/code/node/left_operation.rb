@@ -34,12 +34,10 @@ class Code
           if right.call?
             right.statement.evaluate(**args, object: left)
           else
-            statement = right.statement.evaluate(**args)
-
             left.call(
               **args,
               operator: right.operator,
-              arguments: [::Code::Object::Argument.new(statement)]
+              arguments: List.new(right.statement.evaluate(**args))
             )
           end
         end

@@ -13,7 +13,7 @@ class Code
         end
 
         def evaluate(**_args)
-          Object::Argument.new(Object::Function.new(@parameters, @body))
+          Object::Function.new(@parameters, @body)
         end
       end
 
@@ -39,10 +39,8 @@ class Code
                 argument.evaluate(**args).value
               )
             else
-              arguments << Object::Argument.new(
-                Object::Dictionary.new(
-                  { argument.name => argument.evaluate(**args).value }
-                )
+              arguments << Object::Dictionary.new(
+                { argument.name => argument.evaluate(**args).value }
               )
             end
           else

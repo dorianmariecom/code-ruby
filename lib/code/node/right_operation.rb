@@ -54,7 +54,7 @@ class Code
 
           left.call(
             operator: @operator,
-            arguments: [Object::Argument.new(right)],
+            arguments: List.new(right),
             **args
           )
         else
@@ -63,7 +63,7 @@ class Code
 
           left.call(
             operator: @operator,
-            arguments: [Object::Argument.new(right)],
+            arguments: List.new(right),
             **args
           )
         end

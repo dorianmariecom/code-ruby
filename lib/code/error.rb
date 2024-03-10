@@ -17,9 +17,6 @@ class Code
     class UndefinedVariable < Error
     end
 
-    class ArgumentError < Error
-    end
-
     class IncompatibleContext < Error
     end
 

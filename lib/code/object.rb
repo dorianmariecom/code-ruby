@@ -123,8 +123,8 @@ class Code
             self,
             context.code_fetch(self).call(
               **args,
-              operator: operator[..-2],
-              arguments: [Argument.new(value)]
+              operator: operator.chop,
+              arguments: List.new(value)
             )
           )
         end
@@ -133,7 +133,7 @@ class Code
       else
         raise(
           Error::Undefined,
-          "#{operator} not defined on #{inspect}:Class"
+          "#{operator.inspect} not defined on #{inspect}:Class"
         )
       end
     end
@@ -340,8 +340,8 @@ class Code
             self,
             context.code_fetch(self).call(
               **args,
-              operator: operator[..-2],
-              arguments: [Argument.new(value)]
+              operator: operator.chop,
+              arguments: List.new(value)
             )
           )
         end

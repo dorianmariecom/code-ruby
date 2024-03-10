@@ -3,8 +3,8 @@
 class Code
   class Object
     class Dictionary < ::Code::Object
-      def initialize(*args, **_kargs, &_block)
-        @raw = (args.first.presence || {})
+      def initialize(*args, **kargs, &_block)
+        @raw = (args.compact_blank.reduce({}, &:merge).merge(kargs))
           .as_json
           .to_h
           .transform_keys { |key| Json.to_code(key) }
@@ -177,12 +177,7 @@ class Code
             raw.any? do |key, value|
               argument
                 .call(
-                  arguments: [
-                    Argument.new(key),
-                    Argument.new(value),
-                    Argument.new(self),
-                    Argument.new(Integer.new(index))
-                  ],
+                  arguments: List.new(key, value, self, Integer.new(index)),
                   **globals
                 )
                 .truthy?
@@ -224,11 +219,7 @@ class Code
           raw.delete(arguments.first) do
             if default
               default.call(
-                arguments: [
-                  Argument.new(arguments.first),
-                  Argument.new(self),
-                  Argument.new(index)
-                ],
+                arguments: List.new(arguments.first, self, index),
                 **globals
               )
             else
@@ -271,12 +262,12 @@ class Code
         else
           raw.delete_if.with_index do |(key, value), index|
             argument.call(
-              arguments: [
-                Argument.new(key),
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new(
+                key,
+                value,
+                self,
+                Integer.new(index)
+              ),
               **globals
             ).truthy?
           end
@@ -291,12 +282,12 @@ class Code
         else
           raw.delete_if.with_index do |(key, value), index|
             argument.call(
-              arguments: [
-                Argument.new(key),
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new(
+                key,
+                value,
+                self,
+                Integer.new(index)
+              ),
               **globals
             ).falsy?
           end
@@ -312,12 +303,12 @@ class Code
       def code_each(argument, **globals)
         raw.each.with_index do |(key, value), index|
           argument.call(
-            arguments: [
-              Argument.new(key),
-              Argument.new(value),
-              Argument.new(self),
-              Argument.new(Integer.new(index))
-            ],
+            arguments: List.new(
+              key,
+              value,
+              self,
+              Integer.new(index)
+            ),
             **globals
           )
         end

@@ -11,12 +11,11 @@ class Code
 
       def evaluate(**args)
         if @name
-          Object::Argument.new(
-            @value&.evaluate(**args) || Object::Nothing.new,
-            name:
+          Object::Dictionary.new(
+            name => @value&.evaluate(**args) || Object::Nothing.new,
           )
         else
-          Object::Argument.new(@value&.evaluate(**args) || Object::Nothing.new)
+          @value&.evaluate(**args) || Object::Nothing.new
         end
       end
 
