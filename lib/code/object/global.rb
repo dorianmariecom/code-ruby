@@ -43,7 +43,7 @@ class Code
           value ? Duration.new(*values) : Class.new(Duration)
         when "Function"
           sig(args)
-          Class.new(Function)
+          value ? Function.new(*values) : Class.new(Function)
         when "Integer"
           sig(args) { Object.repeat }
           value ? Integer.new(*values) : Class.new(Integer)
@@ -58,7 +58,7 @@ class Code
           context
         when "Object"
           sig(args)
-          Class.new(Object)
+          value ? Object.new(*values) : Class.new(Object)
         when "Range"
           sig(args) { Object.repeat }
           value ? Range.new(*values) : Class.new(Range)
