@@ -9,15 +9,15 @@ class Code
         whole = whole.raw if whole.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = whole.to_i * 10**exponent
-      rescue FloatDomainError => e
+      rescue FloatDomainError
         raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
+        arguments = args.fetch(:arguments, List.new)
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.first&.value
+        value = arguments.code_first
 
         case operator.to_s
         when "%", "modulo"
@@ -34,10 +34,10 @@ class Code
           code_power(value)
         when "+", "plus", "self"
           sig(args) { Object.maybe }
-          value ? code_plus(value) : code_self
+          arguments.any? ? code_plus(value) : code_self
         when "-", "minus", "unary_minus"
           sig(args) { Integer | Decimal.maybe }
-          value ? code_minus(value) : code_unary_minus
+          arguments.any? ? code_minus(value) : code_unary_minus
         when "/", "division", "÷"
           sig(args) { Integer | Decimal }
           code_division(value)
@@ -137,15 +137,6 @@ class Code
         when "times"
           sig(args) { Function }
           code_times(value, **globals)
-        when "to_decimal"
-          sig(args)
-          code_to_decimal
-        when "to_integer"
-          sig(args)
-          code_to_integer
-        when "to_string"
-          sig(args)
-          code_to_string
         when "truncate"
           sig(args) { Integer.maybe }
           code_truncate(value)
@@ -180,7 +171,7 @@ class Code
       end
 
       def code_ceil(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw.ceil(n.raw))
       end
 
@@ -193,13 +184,13 @@ class Code
       end
 
       def code_decrement!(n = nil)
-        n ||= Integer.new(1)
+        n = Integer.new(1) if n.nil? || n.is_a?(Nothing)
         @raw -= n.raw
         self
       end
 
       def code_decrement(n = nil)
-        n ||= Integer.new(1)
+        n = Integer.new(1) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw - n.raw)
       end
 
@@ -220,7 +211,7 @@ class Code
       end
 
       def code_floor(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw.floor(n.raw))
       end
 
@@ -229,13 +220,13 @@ class Code
       end
 
       def code_increment!(n = nil)
-        n ||= Integer.new(1)
+        n = Integer.new(1) if n.nil? || n.is_a?(Nothing)
         @raw += n.raw
         self
       end
 
       def code_increment(n = nil)
-        n ||= Integer.new(1)
+        n = Integer.new(1) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw + n.raw)
       end
 
@@ -312,7 +303,7 @@ class Code
       end
 
       def code_round(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw.round(n.raw))
       end
 
@@ -355,7 +346,7 @@ class Code
       def code_times(argument, **globals)
         raw.times do |element|
           argument.call(
-            arguments: [Argument.new(Integer.new(element))],
+            arguments: List.new([Integer.new(element), self]),
             **globals
           )
         end
@@ -364,7 +355,7 @@ class Code
       end
 
       def code_truncate(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Integer.new(raw.truncate(n.raw))
       end
 

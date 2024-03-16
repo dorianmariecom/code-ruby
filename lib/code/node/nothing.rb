@@ -5,6 +5,7 @@ class Code
     class Nothing < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @nothing = parsed.presence
       end
 

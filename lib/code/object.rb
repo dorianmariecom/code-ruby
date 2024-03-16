@@ -4,7 +4,7 @@ class Code
   class Object
     attr_reader :raw
 
-    def initialize(*_args, **_kargs, &_block)
+    def initialize(...)
     end
 
     def self.maybe
@@ -19,20 +19,15 @@ class Code
       Type::Or.new(self, other)
     end
 
-    def self.sig(args, &block)
-      Type::Sig.sig(args, object: self, &block)
-      nil
-    end
-
     def self.call(**args)
       operator = args.fetch(:operator, nil)
-      arguments = args.fetch(:arguments, [])
-      value = arguments.first&.value
+      arguments = args.fetch(:arguments, List.new)
+      value = arguments.code_first
 
       case operator.to_s
       when "new"
         sig(args) { Object.repeat }
-        code_new(*arguments.map(&:value))
+        code_new(*arguments.raw)
       when "!", "not"
         sig(args)
         code_exclamation_point
@@ -60,9 +55,6 @@ class Code
       when "falsy?"
         sig(args)
         Boolean.new(falsy?)
-      when "to_string"
-        sig(args)
-        code_to_string
       when "truthy?"
         sig(args)
         Boolean.new(truthy?)
@@ -124,7 +116,7 @@ class Code
             context.code_fetch(self).call(
               **args,
               operator: operator.chop,
-              arguments: List.new(value)
+              arguments: List.new([value])
             )
           )
         end
@@ -138,8 +130,8 @@ class Code
       end
     end
 
-    def self.code_new(*arguments)
-      new(*arguments)
+    def self.code_new(*)
+      new(*)
     end
 
     def self.code_and_operator(other)
@@ -178,10 +170,6 @@ class Code
       Boolean.new(self === other)
     end
 
-    def self.code_to_string
-      String.new(to_s)
-    end
-
     def self.falsy?
       !truthy?
     end
@@ -190,8 +178,8 @@ class Code
       keys.map { |key| [key, hash.fetch(key)] }.to_h
     end
 
-    def self.sig(args, &block)
-      Type::Sig.sig(args, object: self, &block)
+    def self.sig(args, &)
+      Type::Sig.sig(args, object: self, &)
       nil
     end
 
@@ -242,12 +230,12 @@ class Code
         other == self
       end
     end
-    alias eql? ==
+    alias_method :eql?, :==
 
     def call(**args)
       operator = args.fetch(:operator, nil)
-      arguments = args.fetch(:arguments, [])
-      value = arguments.first&.value
+      arguments = args.fetch(:arguments, List.new)
+      value = arguments.code_first
 
       case operator.to_s
       when "!", "not"
@@ -277,9 +265,6 @@ class Code
       when "falsy?"
         sig(args)
         Boolean.new(falsy?)
-      when "to_string"
-        sig(args)
-        code_to_string
       when "truthy?"
         sig(args)
         Boolean.new(truthy?)
@@ -327,7 +312,11 @@ class Code
         code_as_json
       when "to_json"
         sig(args) { { pretty: Boolean.maybe } }
-        code_to_json(pretty: value&.code_get(String.new(:pretty)))
+        if arguments.any?
+          code_to_json(pretty: value.code_get(String.new(:pretty)))
+        else
+          code_to_json
+        end
       when /=$/
         sig(args) { Object }
 
@@ -341,7 +330,7 @@ class Code
             context.code_fetch(self).call(
               **args,
               operator: operator.chop,
-              arguments: List.new(value)
+              arguments: List.new([value])
             )
           )
         end
@@ -375,9 +364,7 @@ class Code
       Range.new(
         self,
         value,
-        Dictionary.new({
-          String.new(:exclude_end) => Boolean.new(true)
-        })
+        Dictionary.new({ String.new(:exclude_end) => Boolean.new(true) })
       )
     end
 
@@ -385,9 +372,7 @@ class Code
       Range.new(
         self,
         value,
-        Dictionary.new({
-          String.new(:exclude_end) => Boolean.new(false)
-        })
+        Dictionary.new({ String.new(:exclude_end) => Boolean.new(false) })
       )
     end
 
@@ -403,10 +388,6 @@ class Code
       Boolean.new(self === other)
     end
 
-    def code_to_string
-      String.new(to_s)
-    end
-
     def falsy?
       !truthy?
     end
@@ -419,8 +400,8 @@ class Code
       keys.map { |key| [key, hash.fetch(key)] }.to_h
     end
 
-    def sig(args, &block)
-      Type::Sig.sig(args, object: self, &block)
+    def sig(args, &)
+      Type::Sig.sig(args, object: self, &)
       nil
     end
 
@@ -457,11 +438,7 @@ class Code
     end
 
     def succ
-      if raw.respond_to?(:succ)
-        self.class.new(raw.succ)
-      else
-        self.class.new(self)
-      end
+      raw.respond_to?(:succ) ? self.class.new(raw.succ) : self.class.new(self)
     end
   end
 end

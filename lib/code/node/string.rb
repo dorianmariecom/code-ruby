@@ -7,6 +7,7 @@ class Code
         class Code < Node
           def initialize(parsed)
             return if parsed.blank?
+
             @code = Node::Code.new(parsed.presence)
           end
 
@@ -18,6 +19,7 @@ class Code
         class Text < Node
           def initialize(parsed)
             return if parsed.blank?
+
             @text = parsed
           end
 
@@ -53,6 +55,7 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @parts =
           (parsed.presence || []).map { |part| Node::String::Part.new(part) }
       end

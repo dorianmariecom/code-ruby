@@ -8,6 +8,7 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @boolean = parsed.presence
       end
 

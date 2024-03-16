@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Code do
-
   %w[
     1.day.ago
     1.day.from_now
@@ -61,9 +60,6 @@ RSpec.describe Code do
     Time.tomorrow
     Code.new
     Parameter.new
-    Argument.new
-    Argument.new(1)
-    Argument.new(1,name:"index")
     IdentifierList.new
     IdentifierList.new([])
   ].each { |input| it(input) { Code.evaluate(input) } }
@@ -270,10 +266,10 @@ RSpec.describe Code do
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
     ['{ "first_name": "Dorian" }.as_json', '{"first_name" => "Dorian"}'],
-    ["nothing.to_json", ":null"],
-    ["1.to_json", ":1"],
-    ["1.0.to_json", ":1"],
-    ["1.1.to_json", %{'"1.1"'}],
+    %w[nothing.to_json :null],
+    %w[1.to_json :1],
+    %w[1.0.to_json :1],
+    %w[1.1.to_json 1.1],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

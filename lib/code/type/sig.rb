@@ -40,7 +40,7 @@ class Code
       end
 
       def actual_arguments
-        args.fetch(:arguments, []).map(&:value)
+        args[:arguments]&.raw || []
       end
 
       def operator
@@ -94,8 +94,6 @@ class Code
           Error::ArityError,
           "#{function}: Expected #{expected_count} but got #{actual_count}"
         )
-
-        nil
       end
 
       def valid_for?(expected:, actual:)

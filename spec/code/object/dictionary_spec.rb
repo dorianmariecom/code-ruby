@@ -7,20 +7,20 @@ RSpec.describe Code::Object::Dictionary do
 
   [
     [
-      "dictionary.select { |key, value, dictionnary, index| key == :first_name }",
+      "dictionary.select { |key| key == :first_name }",
       "{ first_name: :Dorian }"
     ],
     [
-      "dictionary.select { |key, value, dictionnary, index| value == :Dorian }",
+      "dictionary.select { |_, value| value == :Dorian }",
       "{ first_name: :Dorian }"
     ],
     [
-      "dictionary.select { |key, value, dictionnary, index| dictionnary.two? }",
+      "dictionary.select { |_, _, index, _| index.zero? }",
+      "{ first_name: :Dorian }"
+    ],
+    [
+      "dictionary.select { |_, _, _, dictionary| dictionary.two? }",
       "dictionary"
-    ],
-    [
-      "dictionary.select { |key, value, dictionnary, index| index.zero? }",
-      "{ first_name: :Dorian }"
     ],
     [
       "dictionary.fetch(:first_name, :last_name) { :Marié }",

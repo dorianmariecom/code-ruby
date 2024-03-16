@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-require "active_support"
-require "active_support/core_ext/date/conversions"
-require "active_support/core_ext/numeric/time"
-require "active_support/core_ext/object/json"
-require "active_support/core_ext/object/blank"
-require "active_support/core_ext/array/access"
+require "active_support/all"
 require "bigdecimal"
 require "bigdecimal/util"
 require "json"
@@ -19,5 +14,5 @@ loader.ignore("#{__dir__}/code-ruby.rb")
 loader.setup
 
 class Object
-  alias is_an? is_a?
+  alias_method :is_an?, :is_a?
 end

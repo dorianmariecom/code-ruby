@@ -5,9 +5,9 @@ class Code
     class IdentifierList < List
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
+        arguments = args.fetch(:arguments, List.new)
         context = args.fetch(:context)
-        value = arguments.first&.value
+        value = arguments.code_first
 
         case operator.to_s
         when /=$/
@@ -27,8 +27,8 @@ class Code
             else
               context.fetch(raw.last).call(
                 **args,
-                operator: operator[..-2],
-                arguments: [Argument.new(value)]
+                operator: operator.chop,
+                arguments: List.new([value])
               )
             end
           )

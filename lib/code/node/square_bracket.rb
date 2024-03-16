@@ -5,6 +5,7 @@ class Code
     class SquareBracket < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @left = Node::Statement.new(parsed.delete(:left).presence)
         @statements = parsed.delete(:statements).presence || []
         @statements.map! { |statement| Node::Statement.new(statement) }

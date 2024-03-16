@@ -4,18 +4,14 @@ class Code
   class Object
     class Dictionary < ::Code::Object
       def initialize(*args, **kargs, &_block)
-        @raw = (args.compact_blank.reduce({}, &:merge).merge(kargs))
-          .as_json
-          .to_h
-          .transform_keys { |key| Json.to_code(key) }
-          .transform_values { |value| Json.to_code(value) }
+        @raw = args.map(&:to_h).reduce({}, &:merge).merge(kargs)
       end
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
+        arguments = args.fetch(:arguments, List.new)
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.first&.value
+        value = arguments.code_first
 
         case operator.to_s
         when "<", "inferior"
@@ -50,7 +46,7 @@ class Code
           code_compact
         when "delete"
           sig(args) { Object.repeat(1) }
-          code_delete(*arguments.map(&:value), **globals)
+          code_delete(*arguments.raw, **globals)
         when "delete_if"
           sig(args) { Function | Class }
           code_delete_if(value, **globals)
@@ -59,7 +55,7 @@ class Code
           code_delete_unless(value, **globals)
         when "dig"
           sig(args) { Object.repeat(1) }
-          code_dig(*arguments.map(&:value))
+          code_dig(*arguments.raw)
         when "each"
           sig(args) { Function }
           code_each(value, **globals)
@@ -71,13 +67,13 @@ class Code
           code_empty?
         when "except"
           sig(args) { Object.repeat(1) }
-          code_except(*arguments.map(&:value))
+          code_except(*arguments.raw)
         when "fetch"
           sig(args) { Object.repeat(1) }
-          code_fetch(*arguments.map(&:value), **globals)
+          code_fetch(*arguments.raw, **globals)
         when "fetch_values"
           sig(args) { Object.repeat(1) }
-          code_fetch_values(*arguments.map(&:value))
+          code_fetch_values(*arguments.raw)
         when "five?"
           sig(args)
           code_five?
@@ -104,13 +100,13 @@ class Code
           code_keep_unless(value, **globals)
         when "key"
           sig(args) { [Object, Function.maybe] }
-          code_key(*arguments.map(&:value), **globals)
+          code_key(*arguments.raw, **globals)
         when "keys"
           sig(args)
           code_keys
         when "merge"
           sig(args) { [Dictionary.repeat, Function.maybe] }
-          code_merge(*arguments.map(&:value), **globals)
+          code_merge(*arguments.raw, **globals)
         when "nine?"
           sig(args)
           code_nine?
@@ -177,7 +173,7 @@ class Code
             raw.any? do |key, value|
               argument
                 .call(
-                  arguments: List.new(key, value, self, Integer.new(index)),
+                  arguments: List.new([key, value, self, Integer.new(index)]),
                   **globals
                 )
                 .truthy?
@@ -214,18 +210,16 @@ class Code
           )
 
         arguments = arguments[..-2] if default
+        first = arguments.first
 
         if arguments.one?
-          raw.delete(arguments.first) do
+          raw.delete(first) do
             if default
-              default.call(
-                arguments: List.new(arguments.first, self, index),
-                **globals
-              )
+              default.call(arguments: List.new([first, self, index]), **globals)
             else
               raise(
                 Code::Error::KeyNotFound,
-                "#{arguments.first.inspect} not found on #{inspect}"
+                "#{first.inspect} not found on #{inspect}"
               )
             end
           end
@@ -262,12 +256,7 @@ class Code
         else
           raw.delete_if.with_index do |(key, value), index|
             argument.call(
-              arguments: List.new(
-                key,
-                value,
-                self,
-                Integer.new(index)
-              ),
+              arguments: List.new([key, value, self, Integer.new(index)]),
               **globals
             ).truthy?
           end
@@ -282,12 +271,7 @@ class Code
         else
           raw.delete_if.with_index do |(key, value), index|
             argument.call(
-              arguments: List.new(
-                key,
-                value,
-                self,
-                Integer.new(index)
-              ),
+              arguments: List.new([key, value, self, Integer.new(index)]),
               **globals
             ).falsy?
           end
@@ -303,12 +287,7 @@ class Code
       def code_each(argument, **globals)
         raw.each.with_index do |(key, value), index|
           argument.call(
-            arguments: List.new(
-              key,
-              value,
-              self,
-              Integer.new(index)
-            ),
+            arguments: List.new([key, value, self, Integer.new(index)]),
             **globals
           )
         end
@@ -328,7 +307,7 @@ class Code
         self.class.new(raw.except(*))
       end
 
-      def code_fetch(*arguments, index: Integer.new(0), **globals)
+      def code_fetch(*arguments, index: 0, **globals)
         default =
           (
             if arguments.last.is_a?(Function) && arguments.size > 1
@@ -337,45 +316,31 @@ class Code
           )
 
         arguments = arguments[..-2] if default
+        first = arguments.first || Nothing.new
 
         if arguments.one?
-          raw.fetch(arguments.first) do
+          raw.fetch(first) do
             if default
               default.call(
-                arguments: [
-                  Argument.new(arguments.first),
-                  Argument.new(self),
-                  Argument.new(index)
-                ],
+                arguments: List.new([first, Integer.new(index), self]),
                 **globals
               )
             else
               raise(
                 Code::Error::KeyNotFound,
-                "#{arguments.first.inspect} not found on #{inspect}"
+                "#{first.inspect} not found on #{inspect}"
               )
             end
           end
         else
-          self.class.new(
+          Dictionary.new(
             arguments
               .map
               .with_index do |argument, index|
                 if default
-                  [
-                    argument,
-                    code_fetch(
-                      argument,
-                      default,
-                      index: Integer.new(index),
-                      **globals
-                    )
-                  ]
+                  [argument, code_fetch(argument, default, index:, **globals)]
                 else
-                  [
-                    argument,
-                    code_fetch(argument, index: Integer.new(index), **globals)
-                  ]
+                  [argument, code_fetch(argument, index:, **globals)]
                 end
               end
               .to_h
@@ -392,7 +357,7 @@ class Code
       end
 
       def code_flatten(level = nil)
-        level ||= Integer.new(-1)
+        level = Integer.new(-1) if level.nil? || level.falsy?
         code_to_list.code_flatten(level)
       end
 
@@ -430,12 +395,7 @@ class Code
         else
           raw.keep_if.with_index do |(key, value), index|
             argument.call(
-              arguments: [
-                Argument.new(key),
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).truthy?
           end
@@ -450,12 +410,7 @@ class Code
         else
           raw.keep_if.with_index do |(key, value), index|
             argument.call(
-              arguments: [
-                Argument.new(key),
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).falsy?
           rescue Error::Next => e
@@ -469,10 +424,7 @@ class Code
       def code_key(value, function = nil, **globals)
         if function
           raw.key(value) ||
-            function.call(
-              arguments: [Argument.new(value), Argument.new(self)],
-              **globals
-            )
+            function.call(arguments: List.new([value, self]), **globals)
         else
           raw.key(value) || Nothing.new
         end
@@ -501,13 +453,10 @@ class Code
             if conflict
               conflict
                 .call(
-                  arguments: [
-                    Argument.new(key),
-                    Argument.new(old_value),
-                    Argument.new(new_value),
-                    Argument.new(self),
-                    Argument.new(Integer.new(index))
-                  ],
+                  arguments:
+                    List.new(
+                      [key, old_value, new_value, Integer.new(index), self]
+                    ),
                   **globals
                 )
                 .tap { index += 1 }
@@ -535,12 +484,7 @@ class Code
         else
           raw.select!.with_index do |(key, value), index|
             argument.call(
-              arguments: [
-                Argument.new(key),
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).truthy?
           rescue Error::Next => e
@@ -558,12 +502,7 @@ class Code
           self.class.new(
             raw.select.with_index do |(key, value), index|
               argument.call(
-                arguments: [
-                  Argument.new(key),
-                  Argument.new(value),
-                  Argument.new(self),
-                  Argument.new(Integer.new(index))
-                ],
+                arguments: List.new([key, value, Integer.new(index), self]),
                 **globals
               ).truthy?
             rescue Error::Next => e
@@ -614,15 +553,15 @@ class Code
         List.new(raw.to_a.map { |key_value| List.new(key_value) })
       end
 
+      def to_h
+        raw
+      end
+
       def code_transform_values(function, **globals)
         self.class.new(
           raw.transform_values.with_index do |value, index|
             function.call(
-              arguments: [
-                Argument.new(value),
-                Argument.new(self),
-                Argument.new(Integer.new(index))
-              ],
+              arguments: List.new([value, Integer.new(index), self]),
               **globals
             )
           rescue Error::Next => e

@@ -6,15 +6,16 @@ class Code
       class KeyValue < Node
         def initialize(parsed)
           return if parsed.blank?
+
           if parsed.key?(:statement)
             @key = Node::Statement.new(parsed.delete(:statement).presence)
           elsif parsed.key?(:name)
             @key = Node::String.new([{ text: parsed.delete(:name).presence }])
           end
 
-          if parsed[:value].presence
-            @value = Node::Code.new(parsed.delete(:value).presence)
-          end
+          return unless parsed[:value].presence
+
+          @value = Node::Code.new(parsed.delete(:value).presence)
         end
 
         def evaluate(**args)
@@ -31,6 +32,7 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @key_values = parsed.presence || []
         @key_values.map! do |key_value|
           Node::Dictionary::KeyValue.new(key_value)

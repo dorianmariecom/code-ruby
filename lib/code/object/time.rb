@@ -47,8 +47,8 @@ class Code
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
-        value = arguments.first&.value
+        arguments = args.fetch(:arguments, List.new)
+        value = arguments.code_first
 
         case operator.to_s
         when "after?"
@@ -69,12 +69,12 @@ class Code
       end
 
       def code_after?(other = nil)
-        other ||= Time.code_now
+        other = Time.code_now if other.nil? || other.is_a?(Nothing)
         Boolean.new(raw.after?(other.raw))
       end
 
       def code_before?(other = nil)
-        other ||= Time.code_now
+        other = Time.code_now if other.nil? || other.is_a?(Nothing)
         Boolean.new(raw.before?(other.raw))
       end
 

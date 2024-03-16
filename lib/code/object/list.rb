@@ -4,16 +4,16 @@ class Code
   class Object
     class List < Object
       def initialize(*args, **_kargs, &_block)
-        raw = args.first || Nothing.new
+        raw = args.first
         raw = raw.raw if raw.is_an?(Object)
         @raw = raw.to_a
       end
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
+        arguments = args.fetch(:arguments, List.new)
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.first&.value
+        value = arguments.code_first
 
         case operator.to_s
         when "sort"
@@ -83,8 +83,11 @@ class Code
 
       def code_any?(argument, **globals)
         Boolean.new(
-          raw.any? do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          raw.any?.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            ).truthy?
           rescue Error::Next => e
             e.value || Nothing.new
           end
@@ -97,16 +100,22 @@ class Code
       end
 
       def code_detect(argument, **globals)
-        raw.detect do |element|
-          argument.call(arguments: [Argument.new(element)], **globals).truthy?
+        raw.detect.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          ).truthy?
         rescue Error::Next => e
           e.value || Nothing.new
         end || Nothing.new
       end
 
       def code_each(argument, **globals)
-        raw.each do |element|
-          argument.call(arguments: [Argument.new(element)], **globals)
+        raw.each.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          )
         rescue Error::Next => e
           e.value || Nothing.new
         end
@@ -118,7 +127,7 @@ class Code
       end
 
       def code_flatten(level = nil)
-        level ||= Integer.new(-1)
+        level = Integer.new(-1) if level.nil? || level.is_a?(Nothing)
         level = level.raw if level.is_a?(Integer)
 
         List.new(
@@ -148,8 +157,11 @@ class Code
 
       def code_map(argument, **globals)
         List.new(
-          raw.map do |element|
-            argument.call(arguments: [Argument.new(element)], **globals)
+          raw.map.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            )
           rescue Error::Next => e
             e.value || Nothing.new
           end
@@ -161,8 +173,11 @@ class Code
       end
 
       def code_max_by(argument, **globals)
-        raw.max_by do |element|
-          argument.call(arguments: [Argument.new(element)], **globals)
+        raw.max_by.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          )
         rescue Error::Next => e
           e.value || Nothing.new
         end || Nothing.new
@@ -170,8 +185,11 @@ class Code
 
       def code_none?(argument, **globals)
         Boolean.new(
-          raw.none? do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          raw.none?.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            ).truthy?
           rescue Error::Next => e
             (e.value || Nothing.new).truthy?
           end
@@ -179,9 +197,9 @@ class Code
       end
 
       def code_reduce(argument, **globals)
-        raw.reduce do |acc, element|
+        raw.reduce.with_index do |acc, element, index|
           argument.call(
-            arguments: [Argument.new(acc), Argument.new(element)],
+            arguments: List.new([acc, element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e
@@ -196,7 +214,10 @@ class Code
       def code_select(argument, **globals)
         List.new(
           raw.select do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            ).truthy?
           rescue Error::Next => e
             (e.value || Nothing.new).truthy?
           end
@@ -204,10 +225,12 @@ class Code
       end
 
       def code_select!(argument, **globals)
-        raw.select! do |element|
-          argument.call(arguments: [Argument.new(element)], **globals).truthy?
+        raw.select!.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          ).truthy?
         rescue Error::Next => e
-          p e.value
           (e.value || Nothing.new).truthy?
         end
 
@@ -228,6 +251,10 @@ class Code
 
       def code_sum
         raw.inject(&:code_plus) || Nothing.new
+      end
+
+      def any?
+        raw.any?
       end
     end
   end

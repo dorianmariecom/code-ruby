@@ -6,6 +6,7 @@ class Code
       class Block < Node
         def initialize(parsed)
           return if parsed.blank?
+
           @parameters = parsed.delete(:parameters) { [] }.presence || []
           @parameters.map! { |parameter| FunctionParameter.new(parameter) }
 
@@ -19,13 +20,14 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @name = parsed.delete(:name).presence
         @arguments = parsed.delete(:arguments).presence || []
         @arguments.map! { |argument| CallArgument.new(argument) }
 
-        if parsed.key?(:block)
-          @block = Call::Block.new(parsed.delete(:block).presence)
-        end
+        return unless parsed.key?(:block)
+
+        @block = Call::Block.new(parsed.delete(:block).presence)
       end
 
       def evaluate(**args)
@@ -33,15 +35,10 @@ class Code
 
         (@arguments || []).each do |argument|
           if argument.keyword?
-            if arguments.last&.value.is_a?(Object::Dictionary)
-              arguments.last.value.code_set(
-                argument.name,
-                argument.evaluate(**args).value
-              )
+            if arguments.last.is_a?(Object::Dictionary)
+              arguments.last.code_merge!(argument.evaluate(**args))
             else
-              arguments << Object::Dictionary.new(
-                { argument.name => argument.evaluate(**args).value }
-              )
+              arguments << argument.evaluate(**args)
             end
           else
             arguments << argument.evaluate(**args)
@@ -52,7 +49,11 @@ class Code
 
         name = Object::String.new(@name)
 
-        args.fetch(:object).call(operator: name, arguments:, **args)
+        args.fetch(:object).call(
+          operator: name,
+          arguments: Object::List.new(arguments),
+          **args
+        )
       end
 
       def resolve(**_args)

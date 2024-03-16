@@ -5,6 +5,7 @@ class Code
     class Base2 < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @base_2 = parsed.presence
       end
 

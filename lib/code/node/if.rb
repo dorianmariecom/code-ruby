@@ -13,22 +13,24 @@ class Code
 
         def initialize(parsed)
           return if parsed.blank?
+
           @operator = parsed.delete(:operator).presence
           @body = Node::Code.new(parsed.delete(:body).presence)
 
-          if parsed.key?(:statement)
-            @statement = Node::Statement.new(parsed.delete(:statement).presence)
-          end
+          return unless parsed.key?(:statement)
+
+          @statement = Node::Statement.new(parsed.delete(:statement).presence)
         end
       end
 
       def initialize(parsed)
         return if parsed.blank?
+
         @first_operator = parsed.delete(:first_operator).presence
         @first_statement =
           Node::Statement.new(parsed.delete(:first_statement).presence)
         @first_body = Node::Code.new(parsed.delete(:first_body).presence)
-        @elses = (parsed.delete(:elses).presence || [])
+        @elses = parsed.delete(:elses).presence || []
         @elses.map! { |elses| Node::If::Else.new(elses) }
       end
 

@@ -5,6 +5,7 @@ class Code
     class Negation < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @operator = parsed.delete(:operator).presence
         @right = Node::Statement.new(parsed.delete(:right).presence)
       end

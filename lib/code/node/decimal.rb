@@ -5,11 +5,12 @@ class Code
     class Decimal < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @decimal = parsed.delete(:decimal).presence
 
-        if parsed.key?(:exponent)
-          @exponent = Statement.new(parsed.delete(:exponent).presence)
-        end
+        return unless parsed.key?(:exponent)
+
+        @exponent = Statement.new(parsed.delete(:exponent).presence)
       end
 
       def evaluate(**args)

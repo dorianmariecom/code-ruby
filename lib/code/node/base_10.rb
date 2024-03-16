@@ -5,11 +5,12 @@ class Code
     class Base10 < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @whole = parsed.delete(:whole).presence
 
-        if parsed.key?(:exponent)
-          @exponent = Node::Statement.new(parsed.delete(:exponent).presence)
-        end
+        return unless parsed.key?(:exponent)
+
+        @exponent = Node::Statement.new(parsed.delete(:exponent).presence)
       end
 
       def evaluate(**args)

@@ -9,14 +9,14 @@ class Code
         decimal = decimal.raw if decimal.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
         @raw = decimal.to_d * 10**exponent.to_d
-      rescue FloatDomainError => e
+      rescue FloatDomainError
         raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
-        value = arguments.first&.value
+        arguments = args.fetch(:arguments, List.new)
+        value = arguments.code_first
 
         case operator.to_s
         when "%", "modulo"
@@ -33,10 +33,10 @@ class Code
           code_power(value)
         when "+", "plus"
           sig(args) { Object.maybe }
-          value ? code_plus(value) : self
+          arguments.any? ? code_plus(value) : self
         when "-", "minus"
           sig(args) { (Integer | Decimal).maybe }
-          value ? code_minus(value) : code_unary_minus
+          arguments.any? ? code_minus(value) : code_unary_minus
         when "/", "division"
           sig(args) { Integer | Decimal }
           code_division(value)
@@ -152,7 +152,7 @@ class Code
       end
 
       def code_ceil(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Decimal.new(raw.ceil(n.raw))
       end
 
@@ -177,7 +177,7 @@ class Code
       end
 
       def code_floor(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Decimal.new(raw.floor(n.raw))
       end
 
@@ -234,7 +234,7 @@ class Code
       end
 
       def code_round(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Decimal.new(raw.round(n.raw))
       end
 
@@ -279,7 +279,7 @@ class Code
       end
 
       def code_truncate(n = nil)
-        n ||= Integer.new(0)
+        n = Integer.new(0) if n.nil? || n.is_a?(Nothing)
         Decimal.new(raw.truncate(n.raw))
       end
 

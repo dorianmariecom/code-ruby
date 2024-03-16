@@ -6,8 +6,8 @@ gemspec
 
 ruby "3.3.0"
 
+gem "bundler-audit"
 gem "rake"
 gem "rspec"
+gem "rubocop-rails-omakase"
 gem "ruby-prof"
-gem "rubocop"
-gem "bundler-audit"

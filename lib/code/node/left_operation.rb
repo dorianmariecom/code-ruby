@@ -11,6 +11,7 @@ class Code
 
         def initialize(parsed)
           return if parsed.blank?
+
           @operator = parsed.delete(:operator).presence
           @statement = Statement.new(parsed.delete(:statement).presence)
         end
@@ -22,6 +23,7 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @first = Statement.new(parsed.delete(:first).presence)
         @others = parsed.delete(:others).presence || []
         @others.map! { |operator| Operator.new(operator) }
@@ -37,7 +39,7 @@ class Code
             left.call(
               **args,
               operator: right.operator,
-              arguments: List.new(right.statement.evaluate(**args))
+              arguments: Object::List.new([right.statement.evaluate(**args)])
             )
           end
         end

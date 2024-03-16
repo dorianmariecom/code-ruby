@@ -7,6 +7,7 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @left = Statement.new(parsed.delete(:left).presence)
         @operator = parsed.delete(:operator).presence
         @right = Statement.new(parsed.delete(:right).presence)
@@ -54,7 +55,7 @@ class Code
 
           left.call(
             operator: @operator,
-            arguments: List.new(right),
+            arguments: Object::List.new([right]),
             **args
           )
         else
@@ -63,7 +64,7 @@ class Code
 
           left.call(
             operator: @operator,
-            arguments: List.new(right),
+            arguments: Object::List.new([right]),
             **args
           )
         end

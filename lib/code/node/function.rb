@@ -5,6 +5,7 @@ class Code
     class Function < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @parameters = parsed.delete(:parameters).presence || []
         @parameters.map! { |parameter| FunctionParameter.new(parameter) }
 

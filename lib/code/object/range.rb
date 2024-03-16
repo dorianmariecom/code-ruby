@@ -15,9 +15,9 @@ class Code
 
       def call(**args)
         operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, [])
+        arguments = args.fetch(:arguments, List.new)
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.first&.value
+        value = arguments.code_first
 
         case operator.to_s
         when "all?"
@@ -53,24 +53,41 @@ class Code
       end
 
       def code_all?(argument, **globals)
+        index = 0
         Boolean.new(
           raw.all? do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+            argument
+              .call(
+                arguments: List.new([element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
           end
         )
       end
 
       def code_any?(argument, **globals)
+        index = 0
         Boolean.new(
           raw.any? do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+            argument
+              .call(
+                arguments: List.new([element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
           end
         )
       end
 
       def code_each(argument, **globals)
-        raw.each do |element|
-          argument.call(arguments: [Argument.new(element)], **globals)
+        raw.each.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          )
         end
         self
       end
@@ -85,16 +102,22 @@ class Code
 
       def code_map(argument, **globals)
         List.new(
-          raw.map do |element|
-            argument.call(arguments: [Argument.new(element)], **globals)
+          raw.map.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            )
           end
         )
       end
 
       def code_select(argument, **globals)
         List.new(
-          raw.select do |element|
-            argument.call(arguments: [Argument.new(element)], **globals).truthy?
+          raw.select.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            ).truthy?
           end
         )
       end

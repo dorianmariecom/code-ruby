@@ -9,10 +9,11 @@ class Code
 
       def initialize(parsed)
         return if parsed.blank?
+
         @operator = parsed.delete(:operator).presence
-        if parsed.key?(:statement)
-          @statement = Statement.new(parsed.delete(:statement))
-        end
+        @statement = Statement.new(parsed.delete(:statement)) if parsed.key?(
+          :statement
+        )
         @body = Code.new(parsed.delete(:body).presence)
       end
 

@@ -5,11 +5,12 @@ class Code
     class Ternary < Node
       def initialize(parsed)
         return if parsed.blank?
+
         @left = Node::Statement.new(parsed.delete(:left).presence)
         @middle = Node::Statement.new(parsed.delete(:middle).presence)
-        if parsed.key?(:right)
-          @right = Node::Statement.new(parsed.delete(:right).presence)
-        end
+        return unless parsed.key?(:right)
+
+        @right = Node::Statement.new(parsed.delete(:right).presence)
       end
 
       def evaluate(**args)

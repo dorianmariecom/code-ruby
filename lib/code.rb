@@ -18,9 +18,7 @@ class Code
   end
 
   def self.parse(input, timeout: DEFAULT_TIMEOUT)
-    Timeout.timeout(timeout) do
-      Parser.parse(input).to_raw
-    end
+    Timeout.timeout(timeout) { Parser.parse(input).to_raw }
   end
 
   def self.evaluate(

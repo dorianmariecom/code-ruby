@@ -11,16 +11,24 @@ class Code
         String.new(raw.code_get(String.new(:name)))
       end
 
-      def code_keyword
-        Boolean.new(raw.code_get(String.new(:keyword)))
+      def code_regular?
+        Boolean.new(raw.code_get(String.new(:regular?)))
       end
 
-      def code_regular_splat
-        Boolean.new(raw.code_get(String.new(:regular_splat)))
+      def code_keyword?
+        Boolean.new(raw.code_get(String.new(:keyword?)))
       end
 
-      def code_keyword_splat
-        Boolean.new(raw.code_get(String.new(:keyword_splat)))
+      def code_keyword?
+        Boolean.new(raw.code_get(String.new(:keyword?)))
+      end
+
+      def code_regular_splat?
+        Boolean.new(raw.code_get(String.new(:regular_splat?)))
+      end
+
+      def code_keyword_splat?
+        Boolean.new(raw.code_get(String.new(:keyword_splat?)))
       end
 
       def code_default
@@ -32,19 +40,19 @@ class Code
       end
 
       def regular?
-        !keyword?
+        code_regular?.truthy?
       end
 
       def keyword?
-        code_keyword.truthy?
+        code_keyword?.truthy?
       end
 
       def regular_splat?
-        code_regular_splat.truthy?
+        code_regular_splat?.truthy?
       end
 
       def keyword_splat?
-        code_keyword_splat.truthy?
+        code_keyword_splat?.truthy?
       end
     end
   end
