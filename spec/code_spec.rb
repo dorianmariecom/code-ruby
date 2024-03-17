@@ -62,6 +62,7 @@ RSpec.describe Code do
     Parameter.new
     IdentifierList.new
     IdentifierList.new([])
+    Time.new(nothing).before?
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [

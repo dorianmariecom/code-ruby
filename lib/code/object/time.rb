@@ -7,9 +7,10 @@ class Code
 
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
-        raw = args.first.presence || ::Time.zone.now
+        raw = args.first
         raw = raw.raw if raw.is_an?(Object)
-        @raw = ::Time.zone.parse(raw.to_s)
+        raw = raw.presence || ::Time.zone.now
+        @raw = ::Time.zone.parse(raw.to_s).presence || ::Time.zone.now
       end
 
       def self.call(**args)
