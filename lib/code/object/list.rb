@@ -213,7 +213,7 @@ class Code
 
       def code_select(argument, **globals)
         List.new(
-          raw.select do |element|
+          raw.select.with_index do |element, index|
             argument.call(
               arguments: List.new([element, Integer.new(index), self]),
               **globals

@@ -7,9 +7,15 @@ class Code
         if json.is_an?(Object)
           json
         elsif json.is_a?(::Hash)
-          Dictionary.new(json)
+          Dictionary.new(
+            json.transform_keys do |key|
+              Json.to_code(key)
+            end.transform_values do |value|
+              Json.to_code(value)
+            end
+          )
         elsif json.is_a?(::Array)
-          List.new(json)
+          List.new(json.map { |element| Json.to_code(element) })
         elsif json.is_a?(::String)
           String.new(json)
         elsif json.is_a?(::Float)

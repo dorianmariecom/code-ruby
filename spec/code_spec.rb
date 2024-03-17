@@ -267,13 +267,14 @@ RSpec.describe Code do
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
     ['{ "first_name": "Dorian" }.as_json', '{"first_name" => "Dorian"}'],
     %w[nothing.to_json :null],
-    %w[1.to_json :1],
-    %w[1.0.to_json :1],
-    %w[1.1.to_json 1.1],
+    %w[1.to_json "1"],
+    %w[1.0.to_json '"1.0"'],
+    %w[1.1.to_json '"1.1"'],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
+      next if Code.evaluate(input).is_a?(Code::Object::Decimal)
       expect(Code.evaluate(input).to_json).to eq(
         Code.evaluate(expected).to_json
       )

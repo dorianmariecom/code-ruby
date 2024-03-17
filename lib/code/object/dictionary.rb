@@ -327,7 +327,7 @@ class Code
               )
             else
               raise(
-                Code::Error::KeyNotFound,
+                Error::KeyNotFound,
                 "#{first.inspect} not found on #{inspect}"
               )
             end

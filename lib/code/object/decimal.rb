@@ -294,18 +294,6 @@ class Code
       def code_zero?
         Boolean.new(raw.zero?)
       end
-
-      def whole?
-        whole == raw
-      end
-
-      def whole
-        raw.round
-      end
-
-      def as_json(...)
-        whole? ? whole.as_json(...) : super
-      end
     end
   end
 end

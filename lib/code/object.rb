@@ -102,7 +102,11 @@ class Code
         code_as_json
       when "to_json"
         sig(args) { { pretty: Boolean.maybe } }
-        code_to_json(pretty: value&.code_get(String.new(:pretty)))
+        if arguments.any?
+          code_to_json(pretty: value.code_get(String.new(:pretty)))
+        else
+          code_to_json
+        end
       when /=$/
         sig(args) { Object }
 
