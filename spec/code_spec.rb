@@ -270,6 +270,8 @@ RSpec.describe Code do
     %w[1.to_json "1"],
     %w[1.0.to_json '"1.0"'],
     %w[1.1.to_json '"1.1"'],
+    ["a = {} a.merge!(a: 1) a", "{a: 1}"],
+    ["a = {} a.merge(a: 1) a", "{}"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

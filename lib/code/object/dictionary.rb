@@ -107,6 +107,9 @@ class Code
         when "merge"
           sig(args) { [Dictionary.repeat, Function.maybe] }
           code_merge(*arguments.raw, **globals)
+        when "merge!"
+          sig(args) { [Dictionary.repeat, Function.maybe] }
+          code_merge!(*arguments.raw, **globals)
         when "nine?"
           sig(args)
           code_nine?
@@ -468,6 +471,40 @@ class Code
             e.value || Nothing.new
           end
         )
+      end
+
+      def code_merge!(*arguments, **globals)
+        conflict =
+          (
+            if arguments.last.is_a?(Function) && arguments.size > 1
+              arguments.last
+            end
+          )
+
+        arguments = arguments[..-2] if conflict
+
+        index = 0
+
+        raw.merge!(*arguments.map(&:raw)) do |key, old_value, new_value|
+          if conflict
+            conflict
+              .call(
+                arguments:
+                  List.new(
+                    [key, old_value, new_value, Integer.new(index), self]
+                  ),
+                **globals
+              )
+              .tap { index += 1 }
+          else
+            new_value.tap { index += 1 }
+          end
+        rescue Error::Next => e
+          index += 1
+          e.value || Nothing.new
+        end
+
+        self
       end
 
       def code_nine?
