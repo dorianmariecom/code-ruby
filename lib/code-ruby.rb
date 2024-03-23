@@ -3,6 +3,7 @@
 require "active_support/all"
 require "bigdecimal"
 require "bigdecimal/util"
+require "did_you_mean"
 require "json"
 require "language-ruby"
 require "stringio"

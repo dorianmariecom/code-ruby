@@ -273,14 +273,27 @@ RSpec.describe Code do
     %w[1.1.to_json '"1.1"'],
     ["a = {} a.merge!(a: 1) a", "{a: 1}"],
     ["a = {} a.merge(a: 1) a", "{}"],
+    ["1&.even?", "false"],
+    ["nothing&.even? || 1", "1"],
+    ["nothing&.even? && 1", "nothing"],
+    ["2&.even?", "true"],
+    ["a = 1 a&.even?", "false"],
+    ["a = 2 a&.even?", "true"],
+    ["a = nothing a&.even?", "nothing"],
+    ["false && puts(:Hello)", "false"],
+    ["true || puts(:Hello)", "true"],
+    ["false and puts(:Hello)", "false"],
+    ["true or puts(:Hello)", "true"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
-      expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
-      next if Code.evaluate(input).is_a?(Code::Object::Decimal)
-      expect(Code.evaluate(input).to_json).to eq(
-        Code.evaluate(expected).to_json
-      )
+      output = StringIO.new
+      input = Code.evaluate(input, output:)
+      expected = Code.evaluate(expected)
+      expect(input).to eq(expected)
+      expect(output.string).to eq("")
+      next if input.is_a?(Code::Object::Decimal)
+      expect(input.to_json).to eq(expected.to_json)
     end
   end
 

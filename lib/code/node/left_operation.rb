@@ -6,6 +6,11 @@ class Code
       class Operator < Node
         DOT = "."
         COLON_COLON = "::"
+        AMPERSAND_DOT = "&."
+        OR_KEYWORD = "or"
+        PIPE_PIPE = "||"
+        AND_KEYWORD = "and"
+        AMPERSAND_AMPERSAND = "&&"
 
         attr_reader :operator, :statement
 
@@ -18,6 +23,18 @@ class Code
 
         def call?
           operator == DOT || operator == COLON_COLON
+        end
+
+        def safe_call?
+          operator == AMPERSAND_DOT
+        end
+
+        def or?
+          operator == OR_KEYWORD || operator == PIPE_PIPE
+        end
+
+        def and?
+          operator == AND_KEYWORD || operator == AMPERSAND_AMPERSAND
         end
       end
 
@@ -35,6 +52,16 @@ class Code
         @others.reduce(first) do |left, right|
           if right.call?
             right.statement.evaluate(**args, object: left)
+          elsif right.safe_call?
+            if left.is_an?(Object::Nothing)
+              Object::Nothing.new
+            else
+              right.statement.evaluate(**args, object: left)
+            end
+          elsif right.or? && left.truthy?
+            left
+          elsif right.and? && left.falsy?
+            left
           else
             left.call(
               **args,

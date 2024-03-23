@@ -20,7 +20,7 @@ class Code
       end
 
       def right_statement
-        Rescue
+        ChainedCall
       end
 
       def operator
