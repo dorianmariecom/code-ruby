@@ -11,7 +11,7 @@ jobs:
           bundler-cache: true
       - run: bin/bundler-audit check --update
   rspec:
-    name: RSpec
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
         with:
           ruby-version: 3.3.0
           bundler-cache: true
-      - run: bin/rspec
+      - run: bin/test
   rubocop:
     name: Rubocop
     runs-on: ubuntu-latest
@@ -29,3 +29,10 @@ jobs:
         with:
           bundler-cache: true
       - run: bin/rubocop
+  yarn-audit:
+    name: Yarn Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: yarn audit
