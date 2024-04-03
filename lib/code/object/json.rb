@@ -8,11 +8,9 @@ class Code
           json
         elsif json.is_a?(::Hash)
           Dictionary.new(
-            json.transform_keys do |key|
-              Json.to_code(key)
-            end.transform_values do |value|
-              Json.to_code(value)
-            end
+            json
+              .transform_keys { |key| Json.to_code(key) }
+              .transform_values { |value| Json.to_code(value) }
           )
         elsif json.is_a?(::Array)
           List.new(json.map { |element| Json.to_code(element) })
