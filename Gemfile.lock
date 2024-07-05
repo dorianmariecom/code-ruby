@@ -2,12 +2,12 @@ PATH
   remote: .
   specs:
     code-ruby (0.14.9)
-      activesupport (~> 7)
-      bigdecimal (~> 3)
-      did-you-mean (~> 0)
-      json (~> 2)
-      language-ruby (~> 0)
-      zeitwerk (~> 2)
+      activesupport
+      bigdecimal
+      did-you-mean
+      json
+      language-ruby
+      zeitwerk
 
 GEM
   remote: https://rubygems.org/

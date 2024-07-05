@@ -16,12 +16,10 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.executables = "code"
 
-  s.add_dependency "activesupport", "~> 7"
-  s.add_dependency "bigdecimal", "~> 3"
-  s.add_dependency "did-you-mean", "~> 0"
-  s.add_dependency "json", "~> 2"
-  s.add_dependency "language-ruby", "~> 0"
-  s.add_dependency "zeitwerk", "~> 2"
-
-  s.required_ruby_version = ">= 3.3.0"
+  s.add_dependency "activesupport"
+  s.add_dependency "bigdecimal"
+  s.add_dependency "did-you-mean"
+  s.add_dependency "json"
+  s.add_dependency "language-ruby"
+  s.add_dependency "zeitwerk"
 end
