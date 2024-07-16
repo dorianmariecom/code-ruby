@@ -11,7 +11,11 @@ RSpec.describe Code do
     2.days.ago
     2.days.from_now
     2.hours.ago
+    2.hours.ago.hour
     2.hours.from_now
+    2.hours.from_now.hour
+    Time.hour
+    Date.hour
     Boolean.new
     Boolean.new(true)
     Boolean.new(false)
@@ -21,10 +25,13 @@ RSpec.describe Code do
     Context.new
     Context.new(a:1)
     Date.new
+    Date.new.hour
     Date.new("2024-03-05")
+    Date.new("2024-03-05").hour
     Date.today
     Date.yesterday
     Date.tomorrow
+    Date.tomorrow.hour
     Decimal.new
     Decimal.new(0)
     Decimal.new(1.2)

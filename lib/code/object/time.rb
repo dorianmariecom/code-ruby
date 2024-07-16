@@ -26,9 +26,16 @@ class Code
         when "yesterday"
           sig(args)
           code_yesterday
+        when "hour"
+          sig(args)
+          code_hour
         else
           super
         end
+      end
+
+      def self.code_hour
+        code_now.code_hour
       end
 
       def self.code_tomorrow
@@ -64,6 +71,9 @@ class Code
         when "future?"
           sig(args)
           code_future?
+        when "hour"
+          sig(args)
+          code_hour
         else
           super
         end
@@ -85,6 +95,10 @@ class Code
 
       def code_future?
         code_after?
+      end
+
+      def code_hour
+        Integer.new(raw.hour)
       end
     end
   end

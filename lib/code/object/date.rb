@@ -26,9 +26,16 @@ class Code
         when "now"
           sig(args)
           code_now
+        when "hour"
+          sig(args)
+          code_hour
         else
           super
         end
+      end
+
+      def self.code_hour
+        code_today.code_hour
       end
 
       def self.code_now
@@ -49,6 +56,22 @@ class Code
       def self.code_yesterday
         ::Time.zone ||= Time::DEFAULT_ZONE
         new(::Time.zone.yesterday.beginning_of_day)
+      end
+
+      def call(**args)
+        operator = args.fetch(:operator, nil)
+
+        case operator.to_s
+        when "hour"
+          sig(args)
+          code_hour
+        else
+          super
+        end
+      end
+
+      def code_hour
+        Integer.new(0)
       end
     end
   end
