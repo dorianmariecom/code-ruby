@@ -7,6 +7,10 @@ class Code
         BitwiseOr
       end
 
+      def right_statement
+        Greater
+      end
+
       def greater
         str(">")
       end

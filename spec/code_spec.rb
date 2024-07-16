@@ -73,6 +73,10 @@ RSpec.describe Code do
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [
+    "Time.hour >= 6 and Time.hour <= 23"
+  ].each { |input| it(input) { Code.evaluate(input) } }
+
+  [
     [
       "user = { name: :Dorian, age: 31 } user.delete_if(String) user.keys",
       '["age"]'
