@@ -27,10 +27,8 @@ class Code
         text ||= Nothing.new
         href ||= Nothing.new
 
-        String.new(<<~LINK)
-          <a href=\"#{CGI.escape(href.raw.to_s)}\">
-            #{CGI.escape(text.raw.to_s)}
-          </a>
+        String.new(<<~LINK.strip)
+          <a href="#{CGI.escape(href.raw.to_s)}">#{CGI.escape(text.raw.to_s)}</a>
         LINK
       end
 
