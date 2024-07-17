@@ -295,6 +295,10 @@ RSpec.describe Code do
     ["true || puts(:Hello)", "true"],
     ["false and puts(:Hello)", "false"],
     ["true or puts(:Hello)", "true"],
+    ["[1, 2].join", "'12'"],
+    ["[1, 2].join(',')", "'1,2'"],
+    ["[nothing, 2].join(',')", "',2'"],
+    ["[nothing, nothing].join", "''"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

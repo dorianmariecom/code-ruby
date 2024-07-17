@@ -16,6 +16,9 @@ class Code
         value = arguments.code_first
 
         case operator.to_s
+        when "join"
+          sig(args) { String.maybe }
+          code_join(value)
         when "sort"
           sig(args)
           code_sort
@@ -235,6 +238,12 @@ class Code
         end
 
         self
+      end
+
+      def code_join(separator = nil)
+        separator ||= String.new("")
+
+        String.new(raw.join(separator.raw))
       end
 
       def code_sort
