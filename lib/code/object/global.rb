@@ -87,6 +87,13 @@ class Code
           else
             Class.new(IdentifierList)
           end
+        when "Html"
+          sig(args) { Object.repeat }
+          if arguments.any?
+            Html.new(*arguments.raw)
+          else
+            Class.new(Html)
+          end
         when "evaluate"
           sig(args) { Object }
           Code.evaluate(value.to_s)

@@ -70,6 +70,9 @@ RSpec.describe Code do
     IdentifierList.new
     IdentifierList.new([])
     Time.new(nothing).before?
+    Html.link_to
+    Html.link_to('/')
+    Html.link_to('Home','/')
   ].each { |input| it(input) { Code.evaluate(input) } }
 
   [
