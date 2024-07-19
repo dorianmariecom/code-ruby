@@ -13,10 +13,10 @@ class Code
 
         case operator.to_s
         when "link_to"
-          sig(args) { [String.maybe, String.maybe] }
+          sig(args) { [Object.maybe, Object.maybe] }
           code_link_to(*arguments.raw)
         when "escape"
-          sig(args) { String.maybe }
+          sig(args) { Object.maybe }
           code_escape(*arguments.raw)
         else
           super
