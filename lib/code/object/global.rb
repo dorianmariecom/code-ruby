@@ -89,11 +89,7 @@ class Code
           end
         when "Html"
           sig(args) { Object.repeat }
-          if arguments.any?
-            Html.new(*arguments.raw)
-          else
-            Class.new(Html)
-          end
+          arguments.any? ? Html.new(*arguments.raw) : Class.new(Html)
         when "evaluate"
           sig(args) { Object }
           Code.evaluate(value.to_s)

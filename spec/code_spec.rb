@@ -75,9 +75,9 @@ RSpec.describe Code do
     Html.link_to('Home','/')
   ].each { |input| it(input) { Code.evaluate(input) } }
 
-  [
-    "Time.hour >= 6 and Time.hour <= 23"
-  ].each { |input| it(input) { Code.evaluate(input) } }
+  ["Time.hour >= 6 and Time.hour <= 23"].each do |input|
+    it(input) { Code.evaluate(input) }
+  end
 
   [
     [
