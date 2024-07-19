@@ -18,7 +18,7 @@ class Code
 
         class Text < Node
           def initialize(parsed)
-            return if parsed.blank?
+            return if parsed.nil?
 
             @text = parsed
           end
@@ -39,12 +39,12 @@ class Code
         end
 
         def initialize(parsed)
-          return if parsed.blank?
+          return if parsed.nil?
 
           if parsed.key?(:text)
-            @part = Node::String::Part::Text.new(parsed.delete(:text).presence)
+            @part = Node::String::Part::Text.new(parsed.delete(:text))
           elsif parsed.key?(:code)
-            @part = Node::String::Part::Code.new(parsed.delete(:code).presence)
+            @part = Node::String::Part::Code.new(parsed.delete(:code))
           end
         end
 

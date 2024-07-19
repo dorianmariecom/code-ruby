@@ -302,6 +302,7 @@ RSpec.describe Code do
     ["[1, 2].join(',')", "'1,2'"],
     ["[nothing, 2].join(',')", "',2'"],
     ["[nothing, nothing].join", "''"],
+    ["'{1} {2}'", "'1 2'"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
