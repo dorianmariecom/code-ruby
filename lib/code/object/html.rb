@@ -28,14 +28,14 @@ class Code
         href ||= Nothing.new
 
         String.new(<<~LINK.strip)
-          <a href="#{CGI.escape(href.raw.to_s)}">#{CGI.escape(text.raw.to_s)}</a>
+          <a href="#{CGI.escapeHTML(href.raw.to_s)}">#{CGI.escapeHTML(text.raw.to_s)}</a>
         LINK
       end
 
       def self.code_escape(string = nil)
         string ||= Nothing.new
 
-        String.new(CGI.escape(string.raw.to_s))
+        String.new(CGI.escapeHTML(string.raw.to_s))
       end
     end
   end
