@@ -54,6 +54,10 @@ class Code
       def keyword_splat?
         code_keyword_splat?.truthy?
       end
+
+      def to_h
+        raw
+      end
     end
   end
 end
