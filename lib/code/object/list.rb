@@ -135,8 +135,6 @@ class Code
 
         List.new(
           raw.reduce([]) do |acc, element|
-            element = element.to_list if element.is_a?(Dictionary)
-
             if element.is_a?(List) && level != 0
               if level.positive?
                 acc + element.code_flatten(level - 1).raw
