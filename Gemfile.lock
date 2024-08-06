@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (0.15.9)
+    code-ruby (0.15.10)
       activesupport
       bigdecimal
       did-you-mean
