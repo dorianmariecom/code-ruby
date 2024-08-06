@@ -323,4 +323,19 @@ RSpec.describe Code do
       expect(output.string).to eq(expected)
     end
   end
+
+  it "doesn't crash with dictionnary as parameter" do
+    Code.evaluate(<<~INPUT)
+      [
+        {
+          videos: [{}]
+        },
+        {
+          videos: [{}]
+        }
+      ].map do |post|
+        post.videos.map { |video| }
+      end
+    INPUT
+  end
 end
