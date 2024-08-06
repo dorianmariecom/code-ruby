@@ -56,7 +56,7 @@ class Code
       end
 
       def to_h
-        raw
+        raw.raw
       end
     end
   end
