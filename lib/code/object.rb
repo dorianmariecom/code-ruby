@@ -7,6 +7,14 @@ class Code
     def initialize(...)
     end
 
+    def self.nothing?
+      false
+    end
+
+    def nothing?
+      false
+    end
+
     def self.maybe
       Type::Maybe.new(self)
     end

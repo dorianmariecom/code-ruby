@@ -10,6 +10,10 @@ class Code
       def truthy?
         false
       end
+
+      def nothing?
+        true
+      end
     end
   end
 end

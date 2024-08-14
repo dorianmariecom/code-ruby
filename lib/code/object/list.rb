@@ -26,7 +26,7 @@ class Code
           sig(args) { Object }
           code_append(value)
         when "any?"
-          sig(args) { Function }
+          sig(args) { Function.maybe }
           code_any?(value, **globals)
         when "detect"
           sig(args) { Function }
@@ -49,6 +49,9 @@ class Code
         when "map"
           sig(args) { Function }
           code_map(value, **globals)
+        when "map!"
+          sig(args) { Function }
+          code_map!(value, **globals)
         when "max"
           sig(args)
           code_max
@@ -56,7 +59,7 @@ class Code
           sig(args) { Function }
           code_max_by(value, **globals)
         when "none?"
-          sig(args) { Function }
+          sig(args) { Function.maybe }
           code_none?(value, **globals)
         when "reduce"
           sig(args) { Function }
@@ -70,6 +73,12 @@ class Code
         when "select!"
           sig(args) { Function }
           code_select!(value, **globals)
+        when "reject"
+          sig(args) { Function }
+          code_reject(value, **globals)
+        when "reject!"
+          sig(args) { Function }
+          code_reject!(value, **globals)
         when "size"
           sig(args)
           code_size
@@ -84,15 +93,24 @@ class Code
         end
       end
 
-      def code_any?(argument, **globals)
+      def code_any?(argument = nil, **globals)
+        argument ||= Nothing.new
+        index = 0
+
         Boolean.new(
-          raw.any?.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
-              **globals
-            ).truthy?
+          raw.any? do |element|
+            if argument.nothing?
+              element.truthy?
+            else
+              argument.call(
+                arguments: List.new([element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            end
           rescue Error::Next => e
             e.value || Nothing.new
+          ensure
+            index += 1
           end
         )
       end
@@ -169,6 +187,19 @@ class Code
         )
       end
 
+      def code_map!(argument, **globals)
+        raw.map!.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.value || Nothing.new
+        end
+
+        self
+      end
+
       def code_max
         raw.max || Nothing.new
       end
@@ -184,15 +215,24 @@ class Code
         end || Nothing.new
       end
 
-      def code_none?(argument, **globals)
+      def code_none?(argument = nil, **globals)
+        argument ||= Nothing.new
+        index = 0
+
         Boolean.new(
-          raw.none?.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
-              **globals
-            ).truthy?
+          raw.none? do |element|
+            if argument.nothing?
+              element.truthy?
+            else
+              argument.call(
+                arguments: List.new([element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            end
           rescue Error::Next => e
             (e.value || Nothing.new).truthy?
+          ensure
+            index += 1
           end
         )
       end
@@ -227,6 +267,32 @@ class Code
 
       def code_select!(argument, **globals)
         raw.select!.with_index do |element, index|
+          argument.call(
+            arguments: List.new([element, Integer.new(index), self]),
+            **globals
+          ).truthy?
+        rescue Error::Next => e
+          (e.value || Nothing.new).truthy?
+        end
+
+        self
+      end
+
+      def code_reject(argument, **globals)
+        List.new(
+          raw.reject.with_index do |element, index|
+            argument.call(
+              arguments: List.new([element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          rescue Error::Next => e
+            (e.value || Nothing.new).truthy?
+          end
+        )
+      end
+
+      def code_reject!(argument, **globals)
+        raw.reject!.with_index do |element, index|
           argument.call(
             arguments: List.new([element, Integer.new(index), self]),
             **globals

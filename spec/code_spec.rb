@@ -302,6 +302,16 @@ RSpec.describe Code do
     ["[1, 2].join(',')", "'1,2'"],
     ["[nothing, 2].join(',')", "',2'"],
     ["[nothing, nothing].join", "''"],
+    ["[1, 2].select(&:even?)", "[2]"],
+    ["[1, 2].reject(&:even?)", "[1]"],
+    ["a = [1, 2] a.select!(&:even?) a", "[2]"],
+    ["a = [1, 2] a.reject!(&:even?) a", "[1]"],
+    ["[1, 2].map(&:even?)", "[false, true]"],
+    ["a = [1, 2] a.map!(&:even?) a", "[false, true]"],
+    ["[1, 2, 3].any?", "true"],
+    ["[1, 2, 3].any?(&:even?)", "true"],
+    ["[1, 2, 3].none?", "false"],
+    ["[1, 2, 3].none?(&:even?)", "false"],
     ["'{1} {2}'", "'1 2'"],
     ["", ""]
   ].each do |input, expected|
