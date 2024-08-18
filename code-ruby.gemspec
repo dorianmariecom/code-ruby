@@ -6,8 +6,8 @@ require_relative "lib/code/version"
 Gem::Specification.new do |s|
   s.name = "code-ruby"
   s.version = ::Code::Version
-  s.summary = "A programming language"
-  s.description = 'A programming language, like Code.evaluate("1 + 1") # => 2'
+  s.summary = "a programming language for the internet"
+  s.description = s.summary
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.fr"
   s.files = `git ls-files`.lines.map(&:strip)
