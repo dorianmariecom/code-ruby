@@ -4,15 +4,31 @@
 require_relative "../lib/code-ruby"
 require "dorian/arguments"
 
-parsed = Dorian::Arguments.parse(
-  input: { type: :string, alias: :i },
-  parse: { type: :boolean, alias: :p },
-  profile: :boolean,
-  profiler: :string,
-  timeout: { type: :integer, alias: :t },
-  version: { type: :boolean, alias: :v },
-  help: { type: :boolean, alias: :h },
-)
+parsed =
+  Dorian::Arguments.parse(
+    input: {
+      type: :string,
+      alias: :i
+    },
+    parse: {
+      type: :boolean,
+      alias: :p
+    },
+    profile: :boolean,
+    profiler: :string,
+    timeout: {
+      type: :integer,
+      alias: :t
+    },
+    version: {
+      type: :boolean,
+      alias: :v
+    },
+    help: {
+      type: :boolean,
+      alias: :h
+    }
+  )
 
 abort Code::Version if parsed.options.version
 abort parsed.help if parsed.options.help
