@@ -30,7 +30,7 @@ parsed =
     }
   )
 
-abort Code::Version if parsed.options.version
+abort Code::Version.to_s if parsed.options.version
 abort parsed.help if parsed.options.help
 
 input = parsed.options.input.to_s
