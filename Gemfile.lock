@@ -39,7 +39,7 @@ GEM
       activesupport
       bigdecimal
       dorian-to_struct
-    dorian-to_struct (0.5.2)
+    dorian-to_struct (0.6.0)
     drb (2.2.1)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
