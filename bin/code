@@ -40,7 +40,7 @@ input += parsed.files.map { |file| File.read(file) }.join
 
 abort parsed.help if input.empty?
 
-profile = parsed.options.profile || parsed.options.profiler
+profile = parsed.options.profile || !parsed.options.profiler.empty?
 require "ruby-prof" if profile
 
 RubyProf.start if profile
