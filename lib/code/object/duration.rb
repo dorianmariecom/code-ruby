@@ -3,7 +3,7 @@
 class Code
   class Object
     class Duration < Object
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         raw = args.first || 0.seconds
         raw = raw.raw if raw.is_an?(Object)
         raw = raw.iso8601 if raw.is_an?(::ActiveSupport::Duration)
@@ -28,11 +28,11 @@ class Code
       end
 
       def code_ago
-        Time.new(raw.ago)
+        Time.zone.local(raw.ago)
       end
 
       def code_from_now
-        Time.new(raw.from_now)
+        Time.zone.local(raw.from_now)
       end
     end
   end

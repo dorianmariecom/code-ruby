@@ -5,7 +5,7 @@ class Code
     class Time < Object
       DEFAULT_ZONE = "Etc/UTC"
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         ::Time.zone ||= DEFAULT_ZONE
         raw = args.first
         raw = raw.raw if raw.is_an?(Object)

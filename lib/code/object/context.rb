@@ -5,7 +5,7 @@ class Code
     class Context < Dictionary
       attr_reader :parent
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         raw = args.first || Dictionary.new
         raw = raw.raw if raw.is_a?(Object)
         @raw = raw.to_h

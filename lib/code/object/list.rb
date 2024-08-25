@@ -3,7 +3,7 @@
 class Code
   class Object
     class List < Object
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         raw = args.first
         raw = raw.raw if raw.is_an?(Object)
         @raw = raw.to_a
@@ -305,7 +305,7 @@ class Code
       end
 
       def code_join(separator = nil)
-        separator ||= String.new("")
+        separator ||= +""
 
         String.new(raw.join(separator.raw))
       end
@@ -326,9 +326,7 @@ class Code
         raw.inject(&:code_plus) || Nothing.new
       end
 
-      def any?
-        raw.any?
-      end
+      delegate :any?, to: :raw
     end
   end
 end

@@ -17,13 +17,13 @@ RSpec.describe Code::Parser do
     "nothing nothing nothing"
   ].each do |input, _output|
     it input.inspect do
-      Code::Parser.parse(input)
+      described_class.parse(input)
     end
   end
 
   Dir["spec/fixtures/code/parser/**/*.code"].each do |filename|
     it "parses #{filename}" do
-      Code::Parser.parse(File.read(filename))
+      described_class.parse(File.read(filename))
     end
   end
 end

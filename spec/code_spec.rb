@@ -73,10 +73,10 @@ RSpec.describe Code do
     Html.link_to
     Html.link_to('/')
     Html.link_to('Home','/')
-  ].each { |input| it(input) { Code.evaluate(input) } }
+  ].each { |input| it(input) { described_class.evaluate(input) } }
 
   ["Time.hour >= 6 and Time.hour <= 23"].each do |input|
-    it(input) { Code.evaluate(input) }
+    it(input) { described_class.evaluate(input) }
   end
 
   [
@@ -282,9 +282,9 @@ RSpec.describe Code do
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
     ['{ "first_name": "Dorian" }.as_json', '{"first_name" => "Dorian"}'],
     %w[nothing.to_json :null],
-    %w[1.to_json "1"],
-    %w[1.0.to_json '"1.0"'],
-    %w[1.1.to_json '"1.1"'],
+    %w[1.to_json 1],
+    %w[1.0.to_json 1.0],
+    %w[1.1.to_json 1.1],
     ["a = {} a.merge!(a: 1) a", "{a: 1}"],
     ["a = {} a.merge(a: 1) a", "{}"],
     %w[1&.even? false],
@@ -317,11 +317,12 @@ RSpec.describe Code do
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       output = StringIO.new
-      input = Code.evaluate(input, output:)
-      expected = Code.evaluate(expected)
+      input = described_class.evaluate(input, output:)
+      expected = described_class.evaluate(expected)
       expect(input).to eq(expected)
       expect(output.string).to eq("")
       next if input.is_a?(Code::Object::Decimal)
+
       expect(input.to_json).to eq(expected.to_json)
     end
   end
@@ -329,13 +330,13 @@ RSpec.describe Code do
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do
       output = StringIO.new
-      Code.evaluate(input, output:)
+      described_class.evaluate(input, output:)
       expect(output.string).to eq(expected)
     end
   end
 
   it "doesn't crash with dictionnary as parameter" do
-    Code.evaluate(<<~INPUT)
+    described_class.evaluate(<<~INPUT)
       [
         {
           videos: [{}]

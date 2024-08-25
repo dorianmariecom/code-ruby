@@ -3,7 +3,7 @@
 class Code
   class Object
     class Html < Object
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*_args, **_kargs, &)
         @raw = nil
       end
 

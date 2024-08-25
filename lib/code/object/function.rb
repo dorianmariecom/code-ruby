@@ -5,7 +5,7 @@ class Code
     class Function < Object
       attr_reader :parameters, :body
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         @parameters = List.new(args.first.presence || [])
         @parameters.raw.map! { |parameter| Parameter.new(parameter) }
         @body = Code.new(args.second.presence || Nothing.new)

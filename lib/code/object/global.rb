@@ -70,7 +70,7 @@ class Code
           arguments.any? ? String.new(*arguments.raw) : Class.new(String)
         when "Time"
           sig(args) { Object.repeat }
-          arguments.any? ? Time.new(*arguments.raw) : Class.new(Time)
+          arguments.any? ? Time.zone.local(*arguments.raw) : Class.new(Time)
         when "Context"
           sig(args) { Object.repeat }
           arguments.any? ? Context.new(*arguments.raw) : Class.new(Context)

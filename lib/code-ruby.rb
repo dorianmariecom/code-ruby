@@ -15,5 +15,5 @@ loader.ignore("#{__dir__}/code-ruby.rb")
 loader.setup
 
 class Object
-  alias_method :is_an?, :is_a?
+  alias is_an? is_a?
 end

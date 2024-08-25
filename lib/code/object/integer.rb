@@ -3,12 +3,12 @@
 class Code
   class Object
     class Integer < Object
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         whole = args.first || 0
         exponent = args.second || 0
         whole = whole.raw if whole.is_an?(Object)
         exponent = exponent.raw if exponent.is_an?(Object)
-        @raw = whole.to_i * 10**exponent
+        @raw = whole.to_i * (10**exponent)
       rescue FloatDomainError
         raise Error, "#{decimal.inspect} * 10**#{exponent.inspect} is invalid"
       end

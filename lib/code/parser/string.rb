@@ -20,7 +20,7 @@ class Code
       end
 
       def backslash
-        str("\\")
+        str('\\')
       end
 
       def opening_curly_bracket
@@ -41,17 +41,17 @@ class Code
 
       def single_quoted_text_part
         (
-          backslash.ignore << opening_curly_bracket |
-            backslash.ignore << single_quote |
-            single_quote.absent << opening_curly_bracket.absent << any
+          (backslash.ignore << opening_curly_bracket) |
+            (backslash.ignore << single_quote) |
+            (single_quote.absent << opening_curly_bracket.absent << any)
         ).repeat(1)
       end
 
       def double_quoted_text_part
         (
-          backslash.ignore << opening_curly_bracket |
-            backslash.ignore << double_quote |
-            double_quote.absent << opening_curly_bracket.absent << any
+          (backslash.ignore << opening_curly_bracket) |
+            (backslash.ignore << double_quote) |
+            (double_quote.absent << opening_curly_bracket.absent << any)
         ).repeat(1)
       end
 

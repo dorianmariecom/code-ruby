@@ -22,17 +22,17 @@ class Code
         when WHILE_KEYWORD
           last = Object::Nothing.new
 
-          while (@statement&.evaluate(**args) || Object::Nothing.new).truthy?
-            last = @body&.evaluate(**args) || Object::Nothing.new
-          end
+          last = @body&.evaluate(**args) || Object::Nothing.new while (
+            @statement&.evaluate(**args) || Object::Nothing.new
+          ).truthy?
 
           last
         when UNTIL_KEYWORD
           last = Object::Nothing.new
 
-          while (@statement&.evaluate(**args) || Object::Nothing.new).falsy?
-            last = @body&.evaluate(**args) || Object::Nothing.new
-          end
+          last = @body&.evaluate(**args) || Object::Nothing.new while (
+            @statement&.evaluate(**args) || Object::Nothing.new
+          ).falsy?
 
           last
         when LOOP_KEYWORD

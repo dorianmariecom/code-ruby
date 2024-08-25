@@ -21,7 +21,7 @@ class Code
 
       def max_arguments
         max_arguments = max_arguments_of(clazz)
-        (max_arguments.nil? || maximum.nil?) ? nil : maximum * max_arguments
+        max_arguments.nil? || maximum.nil? ? nil : maximum * max_arguments
       end
 
       def name

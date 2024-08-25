@@ -5,7 +5,7 @@ class Code
     class Range < Object
       attr_reader :left, :right, :options, :exclude_end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         @left = args.first.presence || Integer.new(0)
         @right = args.second.presence || Integer.new(0)
         @options = Dictionary.new(args.third.presence || {})

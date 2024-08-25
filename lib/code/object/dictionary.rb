@@ -3,7 +3,7 @@
 class Code
   class Object
     class Dictionary < ::Code::Object
-      def initialize(*args, **kargs, &_block)
+      def initialize(*args, **kargs, &)
         @raw = args.map(&:to_h).reduce({}, &:merge).merge(kargs)
       end
 
@@ -298,9 +298,7 @@ class Code
         self
       end
 
-      def code_eight?
-        code_size.code_eight?
-      end
+      delegate :code_eight?, to: :code_size
 
       def code_empty?
         Boolean.new(raw.empty?)
@@ -355,18 +353,14 @@ class Code
         List.new(raw.fetch_values(*))
       end
 
-      def code_five?
-        code_size.code_five?
-      end
+      delegate :code_five?, to: :code_size
 
       def code_flatten(level = nil)
         level = Integer.new(-1) if level.nil? || level.falsy?
         code_to_list.code_flatten(level)
       end
 
-      def code_four?
-        code_size.code_four?
-      end
+      delegate :code_four?, to: :code_size
 
       def code_get(key)
         raw[key] || Nothing.new
@@ -507,13 +501,9 @@ class Code
         self
       end
 
-      def code_nine?
-        code_size.code_nine?
-      end
+      delegate :code_nine?, to: :code_size
 
-      def code_one?
-        code_size.code_one?
-      end
+      delegate :code_one?, to: :code_size
 
       def code_select!(argument, **globals)
         if argument.is_a?(Class)
@@ -554,13 +544,9 @@ class Code
         value
       end
 
-      def code_seven?
-        code_size.code_seven?
-      end
+      delegate :code_seven?, to: :code_size
 
-      def code_six?
-        code_size.code_six?
-      end
+      delegate :code_six?, to: :code_size
 
       def code_size
         Integer.new(raw.size)
@@ -574,13 +560,9 @@ class Code
         Boolean.new(raw >= other.raw)
       end
 
-      def code_ten?
-        code_size.code_ten?
-      end
+      delegate :code_ten?, to: :code_size
 
-      def code_three?
-        code_size.code_three?
-      end
+      delegate :code_three?, to: :code_size
 
       def code_to_context
         Context.new(raw)
@@ -607,17 +589,13 @@ class Code
         )
       end
 
-      def code_two?
-        code_size.code_two?
-      end
+      delegate :code_two?, to: :code_size
 
       def code_values
         List.new(raw.values)
       end
 
-      def code_zero?
-        code_size.code_zero?
-      end
+      delegate :code_zero?, to: :code_size
     end
   end
 end

@@ -30,17 +30,17 @@ class Code
         when "while"
           left = Object::Nothing.new
 
-          while (@right&.evaluate(**args) || Object::Nothing.new).truthy?
-            left = @left&.evaluate(**args) || Object::Nothing.new
-          end
+          left = @left&.evaluate(**args) || Object::Nothing.new while (
+            @right&.evaluate(**args) || Object::Nothing.new
+          ).truthy?
 
           left
         when "until"
           left = Object::Nothing.new
 
-          while (@right&.evaluate(**args) || Object::Nothing.new).falsy?
-            left = @left&.evaluate(**args) || Object::Nothing.new
-          end
+          left = @left&.evaluate(**args) || Object::Nothing.new while (
+            @right&.evaluate(**args) || Object::Nothing.new
+          ).falsy?
 
           left
         when "rescue"

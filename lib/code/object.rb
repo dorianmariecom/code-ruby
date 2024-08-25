@@ -104,7 +104,7 @@ class Code
         String.new(self)
       when "to_time"
         sig(args)
-        Time.new(self)
+        Time.zone.local(self)
       when "as_json"
         sig(args)
         code_as_json
@@ -187,7 +187,7 @@ class Code
     end
 
     def self.multi_fetch(hash, *keys)
-      keys.map { |key| [key, hash.fetch(key)] }.to_h
+      keys.to_h { |key| [key, hash.fetch(key)] }
     end
 
     def self.sig(args, &)
@@ -242,7 +242,7 @@ class Code
         other == self
       end
     end
-    alias_method :eql?, :==
+    alias eql? ==
 
     def call(**args)
       operator = args.fetch(:operator, nil)
@@ -318,7 +318,7 @@ class Code
         String.new(self)
       when "to_time"
         sig(args)
-        Time.new(self)
+        Time.zone.local(self)
       when "as_json"
         sig(args)
         code_as_json
@@ -409,7 +409,7 @@ class Code
     end
 
     def multi_fetch(hash, *keys)
-      keys.map { |key| [key, hash.fetch(key)] }.to_h
+      keys.to_h { |key| [key, hash.fetch(key)] }
     end
 
     def sig(args, &)
@@ -417,9 +417,7 @@ class Code
       nil
     end
 
-    def to_s
-      raw.to_s
-    end
+    delegate :to_s, to: :raw
 
     def inspect
       to_s

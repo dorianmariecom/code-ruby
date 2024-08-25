@@ -3,7 +3,7 @@
 class Code
   class Object
     class Date < Object
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         raw = args.map(&:to_s).join("-").presence || ::Date.current.to_s
         @raw = ::Date.parse(raw)
       rescue ::Date::Error
