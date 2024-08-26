@@ -200,7 +200,7 @@ class Code
     end
 
     def self.inspect
-      to_s
+      name
     end
 
     def self.truthy?
@@ -417,11 +417,7 @@ class Code
       nil
     end
 
-    delegate :to_s, to: :raw
-
-    def inspect
-      to_s
-    end
+    delegate :to_s, :inspect, to: :raw
 
     def truthy?
       true
