@@ -28,11 +28,11 @@ class Code
       end
 
       def code_ago
-        Time.zone.local(raw.ago)
+        Time.new(raw.ago)
       end
 
       def code_from_now
-        Time.zone.local(raw.from_now)
+        Time.new(raw.from_now)
       end
     end
   end

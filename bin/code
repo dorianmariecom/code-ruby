@@ -34,13 +34,11 @@ abort Code::Version.to_s if parsed.options.version
 abort parsed.help if parsed.options.help
 
 input = parsed.options.input.to_s
-input = File.read(input) if File.exist?(input)
+input += File.read(input) if File.exist?(input)
 input += parsed.arguments.join(" ")
 input += parsed.files.map { |file| File.read(file) }.join
 
-abort parsed.help if input.empty?
-
-profile = parsed.options.profile || !parsed.options.profiler.empty?
+profile = parsed.options.profile || parsed.options.profiler
 require "ruby-prof" if profile
 
 RubyProf.start if profile
