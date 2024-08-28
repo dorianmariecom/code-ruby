@@ -58,9 +58,7 @@ class Code
             else
               right.statement.evaluate(**args, object: left)
             end
-          elsif right.or? && left.truthy?
-            left
-          elsif right.and? && left.falsy?
+          elsif (right.or? && left.truthy?) || (right.and? && left.falsy?)
             left
           else
             left.call(

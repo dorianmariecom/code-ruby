@@ -20,14 +20,12 @@ class Code
           Decimal.new(json)
         elsif json.is_an?(::Integer)
           Integer.new(json)
-        elsif json.is_a?(::TrueClass)
-          Boolean.new(json)
-        elsif json.is_a?(::FalseClass)
+        elsif json.is_a?(::TrueClass) || json.is_a?(::FalseClass)
           Boolean.new(json)
         elsif json.is_a?(::NilClass)
           Nothing.new(json)
         else
-          Nothing.new
+          raise Error, "#{json.inspect} not supported"
         end
       end
     end

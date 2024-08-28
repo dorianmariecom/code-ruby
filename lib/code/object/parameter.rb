@@ -19,10 +19,6 @@ class Code
         Boolean.new(raw.code_get(String.new(:keyword?)))
       end
 
-      def code_keyword?
-        Boolean.new(raw.code_get(String.new(:keyword?)))
-      end
-
       def code_regular_splat?
         Boolean.new(raw.code_get(String.new(:regular_splat?)))
       end
