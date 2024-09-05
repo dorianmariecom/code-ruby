@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (1.1.0)
+    code-ruby (1.1.1)
       activesupport
       bigdecimal
       did-you-mean
@@ -35,13 +35,13 @@ GEM
     did-you-mean (0.1.1)
       levenshtein (>= 0.2.0)
     diff-lcs (1.5.1)
-    dorian-arguments (1.2.0)
+    dorian-arguments (1.1.0)
       bigdecimal
     drb (2.2.1)
     i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     json (2.7.2)
-    language-ruby (1.1.0)
+    language-ruby (1.0.1)
       dorian-arguments
       zeitwerk
     language_server-protocol (3.17.0.3)
@@ -130,7 +130,7 @@ DEPENDENCIES
   ruby-prof
 
 RUBY VERSION
-   ruby 3.3.4p94
+   ruby 3.3.5p100
 
 BUNDLED WITH
    2.5.18
