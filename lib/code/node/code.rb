@@ -14,7 +14,7 @@ class Code
         last = Object::Nothing.new
 
         (@statements || []).each do |statement|
-          last = statement.evaluate(**args.merge(object: Object::Global.new))
+          last = statement.evaluate(**args, object: Object::Global.new)
         end
 
         last

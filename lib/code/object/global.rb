@@ -110,7 +110,7 @@ class Code
           result = context.code_fetch(operator)
 
           if result.is_a?(Function)
-            result.call(**args.merge(operator: nil))
+            result.call(**args, operator: nil)
           else
             sig(args)
             result
