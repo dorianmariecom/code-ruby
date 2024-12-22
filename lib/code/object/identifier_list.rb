@@ -4,36 +4,36 @@ class Code
   class Object
     class IdentifierList < List
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
-        context = args.fetch(:context)
-        value = arguments.code_first
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, List.new).to_code
+        code_context = args.fetch(:context).to_code
+        code_value = arguments.first.to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when /=$/
           sig(args) { Object }
 
-          context = context.lookup!(raw.first)
+          code_context = code_context.lookup!(raw.first)
 
-          context =
-            raw[..-2].reduce(context) do |context, identifier|
-              context.code_fetch(identifier)
+          code_context =
+            raw[..-2].reduce(code_context) do |code_context, code_identifier|
+              code_context.code_fetch(code_identifier)
             end
 
-          context.code_set(
+          code_context.code_set(
             raw.last,
-            if operator == "="
-              value
+            if code_operator.to_s == "="
+              code_value
             else
-              context.fetch(raw.last).call(
+              code_context.fetch(raw.last).call(
                 **args,
-                operator: operator.chop,
-                arguments: List.new([value])
+                operator: code_operator.to_s.chop,
+                arguments: [code_value]
               )
             end
           )
 
-          context.code_fetch(raw.last)
+          code_context.code_fetch(raw.last)
         else
           super
         end
