@@ -20,6 +20,8 @@ Gem::Specification.new do |s|
   s.add_dependency "json"
   s.add_dependency "language-ruby"
   s.add_dependency "zeitwerk"
+  s.add_dependency "net-http"
+  s.add_dependency "uri"
   s.metadata["rubygems_mfa_required"] = "true"
   s.required_ruby_version = ">= 3.1"
 end

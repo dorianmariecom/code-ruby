@@ -6,8 +6,10 @@ require "bigdecimal/util"
 require "did_you_mean"
 require "json"
 require "language-ruby"
+require "net/http"
 require "stringio"
 require "timeout"
+require "uri"
 require "zeitwerk"
 
 loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)

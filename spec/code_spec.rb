@@ -315,13 +315,13 @@ RSpec.describe Code do
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       output = StringIO.new
-      input = described_class.evaluate(input, output:)
-      expected = described_class.evaluate(expected)
-      expect(input).to eq(expected)
+      code_input = described_class.evaluate(input, output:)
+      code_expected = described_class.evaluate(expected)
+      expect(code_input).to eq(code_expected)
       expect(output.string).to eq("")
-      next if input.is_a?(Code::Object::Decimal)
+      next if code_input.is_a?(Code::Object::Decimal)
 
-      expect(input.to_json).to eq(expected.to_json)
+      expect(code_input.to_json).to eq(code_expected.to_json)
     end
   end
 
