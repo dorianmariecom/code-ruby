@@ -4,16 +4,15 @@ class Code
   class Object
     class Date < Object
       def initialize(*args, **_kargs, &)
-        raw = args.map(&:to_s).join("-").presence || ::Date.current.to_s
-        @raw = ::Date.parse(raw)
+        @raw = ::Date.parse(args.first.to_s)
       rescue ::Date::Error
-        raise Error, "#{raw.inspect} is an invalid date"
+        @raw = ::Date.current
       end
 
       def self.call(**args)
-        operator = args.fetch(:operator, nil)
+        code_operator = args.fetch(:operator, nil).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "tomorrow"
           sig(args)
           code_tomorrow
@@ -59,18 +58,53 @@ class Code
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
+        code_operator = args.fetch(:operator, nil).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "hour"
           sig(args)
           code_hour
+        when "hours"
+          sig(args)
+          code_hours
+        when "minute"
+          sig(args)
+          code_minute
+        when "minutes"
+          sig(args)
+          code_minutes
+        when "second"
+          sig(args)
+          code_second
+        when "seconds"
+          sig(args)
+          code_seconds
         else
           super
         end
       end
 
       def code_hour
+        Integer.new(0)
+      end
+
+      def code_hours
+        Integer.new(0)
+      end
+
+      def code_minute
+        Integer.new(0)
+      end
+
+      def code_minutes
+        Integer.new(0)
+      end
+
+      def code_second
+        Integer.new(0)
+      end
+
+      def code_seconds
         Integer.new(0)
       end
     end

@@ -27,7 +27,7 @@ class Code
       end
 
       def code_call(*arguments, **globals)
-        context = Context.new({}, globals[:context])
+        context = Context.new([{}, globals[:context]])
 
         parameters.raw.each.with_index do |parameter, index|
           argument =
