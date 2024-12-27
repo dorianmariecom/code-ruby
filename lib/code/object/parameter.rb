@@ -8,31 +8,31 @@ class Code
       end
 
       def code_name
-        String.new(raw.code_get(String.new(:name)))
+        String.new(raw.code_get(:name))
       end
 
       def code_regular?
-        Boolean.new(raw.code_get(String.new(:regular?)))
+        Boolean.new(raw.code_get(:regular?))
       end
 
       def code_keyword?
-        Boolean.new(raw.code_get(String.new(:keyword?)))
+        Boolean.new(raw.code_get(:keyword?))
       end
 
       def code_regular_splat?
-        Boolean.new(raw.code_get(String.new(:regular_splat?)))
+        Boolean.new(raw.code_get(:regular_splat?))
       end
 
       def code_keyword_splat?
-        Boolean.new(raw.code_get(String.new(:keyword_splat?)))
+        Boolean.new(raw.code_get(:keyword_splat?))
       end
 
       def code_default
-        Code.new(raw.code_get(String.new(:default)))
+        Code.new(raw.code_get(:default))
       end
 
-      def evaluate(...)
-        default.evaluate(...)
+      def code_evaluate(...)
+        code_default.code_evaluate(...)
       end
 
       def regular?
@@ -49,10 +49,6 @@ class Code
 
       def keyword_splat?
         code_keyword_splat?.truthy?
-      end
-
-      def to_h
-        raw.raw
       end
     end
   end

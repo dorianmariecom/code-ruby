@@ -4,36 +4,34 @@ class Code
   class Object
     class List < Object
       def initialize(*args, **_kargs, &)
-        raw = args.first
-        raw = raw.raw if raw.is_an?(Object)
-        @raw = raw.to_a
+        @raw = args.first.to_a.map(&:to_code)
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.code_first
+        code_value = code_arguments.code_first
 
-        case operator.to_s
+        case code_operator.to_s
         when "join"
           sig(args) { String.maybe }
-          code_join(value)
+          code_join(code_value)
         when "sort"
           sig(args)
           code_sort
         when "<<", "append"
           sig(args) { Object }
-          code_append(value)
+          code_append(code_value)
         when "any?"
           sig(args) { Function.maybe }
-          code_any?(value, **globals)
+          code_any?(code_value, **globals)
         when "detect"
           sig(args) { Function }
-          code_detect(value, **globals)
+          code_detect(code_value, **globals)
         when "each"
           sig(args) { Function }
-          code_each(value, **globals)
+          code_each(code_value, **globals)
         when "first"
           sig(args)
           code_first
@@ -42,43 +40,43 @@ class Code
           code_flatten
         when "include?"
           sig(args) { Object }
-          code_include?(value)
+          code_include?(code_value)
         when "last"
           sig(args)
           code_last
         when "map"
           sig(args) { Function }
-          code_map(value, **globals)
+          code_map(code_value, **globals)
         when "map!"
           sig(args) { Function }
-          code_map!(value, **globals)
+          code_map!(code_value, **globals)
         when "max"
           sig(args)
           code_max
         when "max_by"
           sig(args) { Function }
-          code_max_by(value, **globals)
+          code_max_by(code_value, **globals)
         when "none?"
           sig(args) { Function.maybe }
-          code_none?(value, **globals)
+          code_none?(code_value, **globals)
         when "reduce"
           sig(args) { Function }
-          code_reduce(value, **globals)
+          code_reduce(code_value, **globals)
         when "reverse"
           sig(args)
           code_reverse
         when "select"
           sig(args) { Function }
-          code_select(value, **globals)
+          code_select(code_value, **globals)
         when "select!"
           sig(args) { Function }
-          code_select!(value, **globals)
+          code_select!(code_value, **globals)
         when "reject"
           sig(args) { Function }
-          code_reject(value, **globals)
+          code_reject(code_value, **globals)
         when "reject!"
           sig(args) { Function }
-          code_reject!(value, **globals)
+          code_reject!(code_value, **globals)
         when "size"
           sig(args)
           code_size
@@ -94,21 +92,22 @@ class Code
       end
 
       def code_any?(argument = nil, **globals)
-        argument ||= Nothing.new
+        code_argument = argument.to_code
+
         index = 0
 
         Boolean.new(
-          raw.any? do |element|
-            if argument.nothing?
-              element.truthy?
+          raw.any? do |code_element|
+            if code_argument.nothing?
+              code_element.truthy?
             else
-              argument.call(
-                arguments: List.new([element, Integer.new(index), self]),
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
               ).truthy?
             end
           rescue Error::Next => e
-            e.value || Nothing.new
+            e.code_value
           ensure
             index += 1
           end
@@ -116,30 +115,38 @@ class Code
       end
 
       def code_append(other)
-        raw << other
+        code_other = other.to_code
+
+        raw << code_other
+
         self
       end
 
       def code_detect(argument, **globals)
-        raw.detect.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.detect.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           ).truthy?
         rescue Error::Next => e
-          e.value || Nothing.new
+          e.code_value
         end || Nothing.new
       end
 
       def code_each(argument, **globals)
-        raw.each.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.each.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e
-          e.value || Nothing.new
+          e.code_value
         end
+
         self
       end
 
@@ -148,26 +155,29 @@ class Code
       end
 
       def code_flatten(level = nil)
-        level = Integer.new(-1) if level.nil? || level.is_a?(Nothing)
-        level = level.raw if level.is_a?(Integer)
+        code_level = level.to_code
+        code_level = Integer.new(-1) if code_level.nothing?
+        level = code_level.raw
 
         List.new(
-          raw.reduce([]) do |acc, element|
-            if element.is_a?(List) && level != 0
+          raw.reduce([]) do |acc, code_element|
+            if code_element.is_a?(List) && level != 0
               if level.positive?
-                acc + element.code_flatten(level - 1).raw
+                acc + code_element.code_flatten(level - 1).raw
               else
-                acc + element.code_flatten(level).raw
+                acc + code_element.code_flatten(level).raw
               end
             else
-              acc + [element]
+              acc + [code_element]
             end
           end
         )
       end
 
       def code_include?(other)
-        Boolean.new(raw.include?(other))
+        code_other = other.to_code
+
+        Boolean.new(raw.include?(code_other))
       end
 
       def code_last
@@ -175,26 +185,30 @@ class Code
       end
 
       def code_map(argument, **globals)
+        code_argument = argument.to_code
+
         List.new(
-          raw.map.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
+          raw.map.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             )
           rescue Error::Next => e
-            e.value || Nothing.new
+            e.code_value
           end
         )
       end
 
       def code_map!(argument, **globals)
-        raw.map!.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.map!.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e
-          e.value || Nothing.new
+          e.code_value
         end
 
         self
@@ -205,32 +219,35 @@ class Code
       end
 
       def code_max_by(argument, **globals)
-        raw.max_by.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.max_by.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e
-          e.value || Nothing.new
+          e.code_value
         end || Nothing.new
       end
 
       def code_none?(argument = nil, **globals)
-        argument ||= Nothing.new
+        code_argument = argument.to_code
+
         index = 0
 
         Boolean.new(
-          raw.none? do |element|
-            if argument.nothing?
-              element.truthy?
+          raw.none? do |code_element|
+            if code_argument.nothing?
+              code_element.truthy?
             else
-              argument.call(
-                arguments: List.new([element, Integer.new(index), self]),
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
               ).truthy?
             end
           rescue Error::Next => e
-            (e.value || Nothing.new).truthy?
+            e.code_value.truthy?
           ensure
             index += 1
           end
@@ -238,13 +255,15 @@ class Code
       end
 
       def code_reduce(argument, **globals)
-        raw.reduce.with_index do |acc, element, index|
-          argument.call(
-            arguments: List.new([acc, element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.reduce.with_index do |code_acc, code_element, index|
+          code_argument.call(
+            arguments: List.new([code_acc, code_element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e
-          e.value || Nothing.new
+          e.code_value
         end || Nothing.new
       end
 
@@ -253,61 +272,69 @@ class Code
       end
 
       def code_select(argument, **globals)
+        code_argument = argument.to_code
+
         List.new(
-          raw.select.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
+          raw.select.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             ).truthy?
           rescue Error::Next => e
-            (e.value || Nothing.new).truthy?
+            e.code_value.truthy?
           end
         )
       end
 
       def code_select!(argument, **globals)
-        raw.select!.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.select!.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           ).truthy?
         rescue Error::Next => e
-          (e.value || Nothing.new).truthy?
+          e.code_value.truthy?
         end
 
         self
       end
 
       def code_reject(argument, **globals)
+        code_argument = argument.to_code
+
         List.new(
-          raw.reject.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
+          raw.reject.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             ).truthy?
           rescue Error::Next => e
-            (e.value || Nothing.new).truthy?
+            e.code_value.truthy?
           end
         )
       end
 
       def code_reject!(argument, **globals)
-        raw.reject!.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.reject!.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           ).truthy?
         rescue Error::Next => e
-          (e.value || Nothing.new).truthy?
+          e.code_value.truthy?
         end
 
         self
       end
 
       def code_join(separator = nil)
-        separator ||= +""
+        code_separator = separator.to_s.to_code
 
-        String.new(raw.join(separator.raw))
+        String.new(raw.join(code_separator.raw))
       end
 
       def code_sort
@@ -326,7 +353,15 @@ class Code
         raw.inject(&:code_plus) || Nothing.new
       end
 
-      delegate :any?, to: :raw
+      def code_get(argument)
+        code_argument = argument.to_code
+
+        raw[code_argument] || Nothing.new
+      end
+
+      def any?
+        code_any?.truthy?
+      end
     end
   end
 end

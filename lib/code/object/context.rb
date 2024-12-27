@@ -6,19 +6,19 @@ class Code
       attr_reader :parent
 
       def initialize(*args, **_kargs, &)
-        raw = args.first || Dictionary.new
-        raw = raw.raw if raw.is_a?(Object)
-        @raw = raw.to_h
-        @parent = Context.new(args.second) if args.second
+        super(args.first)
+        @parent = Context.new(args.second) unless args.second.to_code.nothing?
       end
 
       def lookup!(identifier)
-        if code_has_key?(identifier).truthy?
+        code_identifier = identifier.to_code
+
+        if code_has_key?(code_identifier).truthy?
           self
         elsif parent?
-          parent.lookup!(identifier)
+          parent.lookup!(code_identifier)
         else
-          raise Error::Undefined, "#{identifier} is not defined"
+          raise Error, "#{code_identifier} is not defined"
         end
       end
 

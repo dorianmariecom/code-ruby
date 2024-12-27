@@ -42,7 +42,7 @@ class Code
           Object::Nothing.new
         end
       rescue Error::Break => e
-        e.value || Object::Nothing.new
+        e.code_value
       end
     end
   end

@@ -3,15 +3,11 @@
 class Code
   class Object
     class Html < Object
-      def initialize(*_args, **_kargs, &)
-        @raw = nil
-      end
-
       def self.call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "link_to"
           sig(args) { [Object.maybe, Object.maybe] }
           code_link_to(*arguments.raw)
@@ -24,18 +20,20 @@ class Code
       end
 
       def self.code_link_to(text = nil, href = nil)
-        text ||= Nothing.new
-        href ||= Nothing.new
+        code_text = text.to_code
+        code_href = href.to_code
 
         String.new(<<~LINK.strip)
-          <a href="#{CGI.escapeHTML(href.raw.to_s)}">#{CGI.escapeHTML(text.raw.to_s)}</a>
+          <a
+            href="#{CGI.escapeHTML(code_href.to_s)}"
+          >#{CGI.escapeHTML(code_text.to_s)}</a>
         LINK
       end
 
       def self.code_escape(string = nil)
-        string ||= Nothing.new
+        code_string = string.to_code
 
-        String.new(CGI.escapeHTML(string.raw.to_s))
+        String.new(CGI.escapeHTML(string.to_s))
       end
     end
   end

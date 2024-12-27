@@ -3,57 +3,68 @@
 class Code
   class Object
     class Function < Object
-      attr_reader :parameters, :body
+      attr_reader :code_parameters, :code_body
 
       def initialize(*args, **_kargs, &)
-        @parameters = List.new(args.first.presence || [])
-        @parameters.raw.map! { |parameter| Parameter.new(parameter) }
-        @body = Code.new(args.second.presence || Nothing.new)
-        @raw = List.new(parameters, body)
+        @code_parameters =
+          (args.first.presence || [])
+            .map { |parameter| Parameter.new(parameter) }
+            .to_ruby
+
+        @code_body = Code.new(args.second.presence)
+
+        @raw = List.new([code_parameters, code_body])
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, List.new).to_code
         globals = multi_fetch(args, *GLOBALS)
 
         case operator.to_s
         when "", "call"
           sig(args) { signature_for_call }
-          code_call(*arguments.raw, **globals)
+          code_call(*code_arguments.raw, **globals)
         else
           super
         end
       end
 
       def code_call(*arguments, **globals)
-        context = Context.new([{}, globals[:context]])
+        code_arguments = arguments.to_code
+        code_context = Context.new({}, globals[:context])
 
-        parameters.raw.each.with_index do |parameter, index|
-          argument =
-            if parameter.keyword?
-              arguments
-                .detect do |dictionary|
-                  dictionary.code_has_value?(parameter.code_name)
+        code_parameters.raw.each.with_index do |code_parameter, index|
+          code_argument =
+            if code_parameter.keyword?
+              code_arguments
+                .raw
+                .select { |code_argument| code_argument.is_a?(Dictionary) }
+                .detect do |code_dictionary|
+                  code_dictionary.code_has_value?(parameter.code_name).truthy?
                 end
                 &.code_get(parameter.code_name)
             else
-              arguments[index]
+              code_arguments.raw[index].to_code
             end
-          argument = parameter.evaluate(**globals) if argument.nil?
-          context.code_set(parameter.code_name, argument)
+
+          if code_argument.nothing?
+            code_argument = code_parameter.code_evaluate(**globals)
+          end
+
+          code_context.code_set(code_parameter.code_name, code_argument)
         end
 
-        body.evaluate(**globals, context:)
+        code_body.evaluate(**globals, context: code_context)
       end
 
       def signature_for_call
-        parameters
+        code_parameters
           .raw
-          .inject([]) do |signature, parameter|
-            if parameter.keyword?
+          .inject([]) do |signature, code_parameter|
+            if code_parameter.keyword?
               if signature.last.is_a?(::Hash)
-                signature.last.code_set(parameter.code_name, Object)
+                signature.last[parameter.code_name] = Object
                 signature
               else
                 signature + [{ parameter.code_name => Object }]

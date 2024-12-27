@@ -4,41 +4,49 @@ class Code
   class Object
     class Boolean < ::Code::Object
       def initialize(*args, **_kargs, &)
-        raw = args.first || Nothing.new
-        raw = raw.raw if raw.is_a?(Object)
-        @raw = !!raw
+        if args.first.is_an?(Object)
+          @raw = args.first.truthy?
+        else
+          @raw = !!args.first
+        end
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
-        value = arguments.code_first
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
 
-        case operator.to_s
+        case code_operator.to_s
         when "&", "bitwise_and"
           sig(args) { Boolean }
-          code_bitwise_and(value)
+          code_bitwise_and(code_value)
         when "^", "bitwise_xor"
           sig(args) { Boolean }
-          code_bitwise_xor(value)
+          code_bitwise_xor(code_value)
         when "|", "bitwise_or"
           sig(args) { Boolean }
-          code_bitwise_or(value)
+          code_bitwise_or(code_value)
         else
           super
         end
       end
 
-      def code_bitwise_and(value)
-        Boolean.new(raw & value.raw)
+      def code_bitwise_and(other)
+        code_other = other.to_code
+
+        Boolean.new(raw & code_other.raw)
       end
 
-      def code_bitwise_or(value)
-        Boolean.new(raw | value.raw)
+      def code_bitwise_or(other)
+        code_other = other.to_code
+
+        Boolean.new(raw | code_other.raw)
       end
 
-      def code_bitwise_xor(value)
-        Boolean.new(raw ^ value.raw)
+      def code_bitwise_xor(other)
+        code_other = other.to_code
+
+        Boolean.new(raw ^ code_other.raw)
       end
 
       def truthy?

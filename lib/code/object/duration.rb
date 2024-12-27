@@ -4,18 +4,21 @@ class Code
   class Object
     class Duration < Object
       def initialize(*args, **_kargs, &)
-        raw = args.first || 0.seconds
-        raw = raw.raw if raw.is_an?(Object)
-        raw = raw.iso8601 if raw.is_an?(::ActiveSupport::Duration)
-        @raw = ::ActiveSupport::Duration.parse(raw.to_s)
+        if args.first.is_an?(::ActiveSupport::Duration)
+          @raw = args.first
+        elsif args.first.is_a?(Duration)
+          @raw = args.first.raw
+        else
+          @raw = ::ActiveSupport::Duration.parse(args.first.to_s)
+        end
       rescue ::ActiveSupport::Duration::ISO8601Parser::ParsingError
-        raise Error, "#{raw.inspect} is not a valid duration"
+        @raw = 0.seconds
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
+        code_operator = args.fetch(:operator, nil).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "ago"
           sig(args)
           code_ago

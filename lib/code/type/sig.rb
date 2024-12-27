@@ -91,7 +91,7 @@ class Code
         return if expected_range.include?(actual_arguments.size)
 
         raise(
-          Error::ArityError,
+          Error,
           "#{function}: Expected #{expected_count} but got #{actual_count}"
         )
       end
@@ -118,7 +118,7 @@ class Code
               repeat_index = 0
             else
               raise(
-                Error::TypeError,
+                Error,
                 "#{function}: expected #{expected.name}, got #{actual.inspect}"
               )
             end
@@ -127,7 +127,7 @@ class Code
             repeat_index = 0
           else
             raise(
-              Error::TypeError,
+              Error,
               "#{function}: expected #{expected.name}, got #{actual.inspect}"
             )
           end

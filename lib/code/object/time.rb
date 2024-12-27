@@ -7,16 +7,13 @@ class Code
 
       def initialize(*args, **_kargs, &)
         ::Time.zone ||= DEFAULT_ZONE
-        raw = args.first
-        raw = raw.raw if raw.is_an?(Object)
-        raw = raw.presence || ::Time.zone.now
-        @raw = ::Time.zone.parse(raw.to_s).presence || ::Time.zone.now
+        @raw = ::Time.zone.parse(args.first.to_s)
       end
 
       def self.call(**args)
-        operator = args.fetch(:operator, nil)
+        code_operator = args.fetch(:operator, nil).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "now"
           sig(args)
           code_now
@@ -54,17 +51,17 @@ class Code
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
-        value = arguments.code_first
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
 
-        case operator.to_s
+        case code_operator.to_s
         when "after?"
           sig(args) { Time.maybe }
-          code_after?(value)
+          code_after?(code_value)
         when "before?"
           sig(args) { Time.maybe }
-          code_before?(value)
+          code_before?(code_value)
         when "past?"
           sig(args)
           code_past?
@@ -80,13 +77,17 @@ class Code
       end
 
       def code_after?(other = nil)
-        other = Time.code_now if other.nil? || other.is_a?(Nothing)
-        Boolean.new(raw.after?(other.raw))
+        code_other = other.to_code
+        code_other = TIme.code_now if code_other.nothing?
+
+        Boolean.new(raw.after?(code_other.raw))
       end
 
       def code_before?(other = nil)
-        other = Time.code_now if other.nil? || other.is_a?(Nothing)
-        Boolean.new(raw.before?(other.raw))
+        code_other = other.to_code
+        code_other = TIme.code_now if code_other.nothing?
+
+        Boolean.new(raw.before?(code_other.raw))
       end
 
       def code_past?

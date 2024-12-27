@@ -14,7 +14,7 @@ RSpec.describe Code::Type do
   describe "invalid" do
     ["1 - :a", "2 * true"].each do |input|
       it input do
-        expect { Code.evaluate(input) }.to raise_error(Code::Error::TypeError)
+        expect { Code.evaluate(input) }.to raise_error(Code::Error)
       end
     end
   end

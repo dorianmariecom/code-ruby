@@ -3,32 +3,50 @@
 class Code
   class Object
     class Range < Object
-      attr_reader :left, :right, :options, :exclude_end
+      attr_reader :code_left, :code_right, :code_options, :code_exclude_end
 
-      def initialize(*args, **_kargs, &)
-        @left = args.first.presence || Integer.new(0)
-        @right = args.second.presence || Integer.new(0)
-        @options = Dictionary.new(args.third.presence || {})
-        @exclude_end = Boolean.new(options.code_get(String.new(:exclude_end)))
-        @raw = ::Range.new(left, right, exclude_end?)
+      def initialize(*args, **kargs, &)
+        if args.first.is_a?(Range)
+          @code_left = args.first.code_left
+          @code_right = args.first.code_right
+          @code_options = args.first.code_options
+          @code_exclude_end = args.first.code_exclude_end
+        else
+          if args.first.to_code.nothing?
+            @code_left = Integer.new(0)
+          else
+            @code_left = args.first.to_code
+          end
+
+          if args.second.to_code.nothing?
+            @code_right = Integer.new(0)
+          else
+            @code_right = args.second.to_code
+          end
+
+          @code_options = Dictionary.new(args.third.presence || kargs)
+          @code_exclude_end = code_options.code_get(:code_exclude_end)
+        end
+
+        @raw = ::Range.new(code_left, code_right, exclude_end?)
       end
 
       def call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
         globals = multi_fetch(args, *GLOBALS)
-        value = arguments.code_first
+        code_value = code_arguments.code_first
 
-        case operator.to_s
+        case code_operator.to_s
         when "all?"
           sig(args) { Function }
-          code_all?(value, **globals)
+          code_all?(code_value, **globals)
         when "any?"
           sig(args) { Function }
-          code_any?(value, **globals)
+          code_any?(code_value, **globals)
         when "each"
           sig(args) { Function }
-          code_each(value, **globals)
+          code_each(code_value, **globals)
         when "first"
           sig(args)
           code_first
@@ -37,13 +55,13 @@ class Code
           code_last
         when "map"
           sig(args) { Function }
-          code_map(value, **globals)
+          code_map(code_value, **globals)
         when "select"
           sig(args) { Function }
-          code_select(value, **globals)
+          code_select(code_value, **globals)
         when "step"
           sig(args) { Integer | Decimal }
-          code_step(value)
+          code_step(code_value)
         when "to_list"
           sig(args)
           code_to_list
@@ -53,12 +71,15 @@ class Code
       end
 
       def code_all?(argument, **globals)
+        code_argument = argument.to_code
+
         index = 0
+
         Boolean.new(
-          raw.all? do |element|
-            argument
+          raw.all? do |code_element|
+            code_argument
               .call(
-                arguments: List.new([element, Integer.new(index), self]),
+                arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
               )
               .truthy?
@@ -68,12 +89,15 @@ class Code
       end
 
       def code_any?(argument, **globals)
+        code_argument = argument.to_code
+
         index = 0
+
         Boolean.new(
-          raw.any? do |element|
-            argument
+          raw.any? do |code_element|
+            code_argument
               .call(
-                arguments: List.new([element, Integer.new(index), self]),
+                arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
               )
               .truthy?
@@ -83,12 +107,15 @@ class Code
       end
 
       def code_each(argument, **globals)
-        raw.each.with_index do |element, index|
-          argument.call(
-            arguments: List.new([element, Integer.new(index), self]),
+        code_argument = argument.to_code
+
+        raw.each.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           )
         end
+
         self
       end
 
@@ -101,10 +128,12 @@ class Code
       end
 
       def code_map(argument, **globals)
+        code_argument = argument.to_code
+
         List.new(
-          raw.map.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
+          raw.map.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             )
           end
@@ -112,10 +141,12 @@ class Code
       end
 
       def code_select(argument, **globals)
+        code_argument = argument.to_code
+
         List.new(
-          raw.select.with_index do |element, index|
-            argument.call(
-              arguments: List.new([element, Integer.new(index), self]),
+          raw.select.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             ).truthy?
           end
@@ -123,28 +154,31 @@ class Code
       end
 
       def exclude_end?
-        exclude_end.truthy?
+        code_exclude_end.truthy?
       end
 
       def code_step(argument)
-        list = List.new
-        element = left
-        list.code_append(element)
+        code_argument = argument.to_code
 
-        element = element.code_plus(argument)
+        code_list = List.new
+        code_element = code_left
+        code_list.code_append(code_element)
+
+        code_element = code_element.code_plus(code_argument)
+
         if exclude_end?
-          while element.code_inferior(right).truthy?
-            list.code_append(element)
-            element = element.code_plus(argument)
+          while code_element.code_inferior(code_right).truthy?
+            code_list.code_append(code_element)
+            code_element = code_element.code_plus(code_argument)
           end
         else
-          while element.code_inferior_or_equal(right).truthy?
-            list.code_append(element)
-            element = element.code_plus(argument)
+          while code_element.code_inferior_or_equal(code_right).truthy?
+            code_list.code_append(code_element)
+            code_element = element.code_plus(code_argument)
           end
         end
 
-        list
+        code_list
       end
 
       def code_to_list

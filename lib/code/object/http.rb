@@ -8,7 +8,7 @@ class Code
         {
           headers: Dictionary.maybe,
           query: Dictionary.maybe,
-          body: String.maybe,
+          body: String.maybe
         }
       ]
 
@@ -75,93 +75,93 @@ class Code
         loop_detected: 508,
         bandwidth_limit_exceeded: 509,
         not_extended: 510,
-        network_authentication_required: 511,
+        network_authentication_required: 511
       }
 
-
       def self.call(**args)
-        operator = args.fetch(:operator, nil)
-        arguments = args.fetch(:arguments, List.new)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
 
-        case operator.to_s
+        case code_operator.to_s
         when "get"
           sig(args) { SIG }
-          code_get(*arguments.raw)
+          code_get(*code_arguments.raw)
         when "head"
           sig(args) { SIG }
-          code_head(*arguments.raw)
+          code_head(*code_arguments.raw)
         when "post"
           sig(args) { SIG }
-          code_post(*arguments.raw)
+          code_post(*code_arguments.raw)
         when "put"
           sig(args) { SIG }
-          code_put(*arguments.raw)
+          code_put(*code_arguments.raw)
         when "delete"
           sig(args) { SIG }
-          code_delete(*arguments.raw)
+          code_delete(*code_arguments.raw)
         when "connect"
           sig(args) { SIG }
-          code_connect(*arguments.raw)
+          code_connect(*code_arguments.raw)
         when "options"
           sig(args) { SIG }
-          code_options(*arguments.raw)
+          code_options(*code_arguments.raw)
         when "trace"
           sig(args) { SIG }
-          code_trace(*arguments.raw)
+          code_trace(*code_arguments.raw)
         when "patch"
           sig(args) { SIG }
-          code_patch(*arguments.raw)
+          code_patch(*code_arguments.raw)
         when "fetch"
           sig(args) { [String] + SIG }
-          code_fetch(*arguments.raw)
+          code_fetch(*code_arguments.raw)
         else
           super
         end
       end
 
       def self.code_get(...)
-        code_fetch(String.new("get"), ...)
+        code_fetch("get", ...)
       end
 
       def self.code_head(...)
-        code_fetch(String.new("head"), ...)
+        code_fetch("head", ...)
       end
 
       def self.code_post(...)
-        code_fetch(String.new("post"), ...)
+        code_fetch("post", ...)
       end
 
       def self.code_put(...)
-        code_fetch(String.new("put"), ...)
+        code_fetch("put", ...)
       end
 
       def self.code_delete(...)
-        code_fetch(String.new("delete"), ...)
+        code_fetch("delete", ...)
       end
 
       def self.code_connect(...)
-        code_fetch(String.new("connect"), ...)
+        code_fetch("connect", ...)
       end
 
       def self.code_options(...)
-        code_fetch(String.new("options"), ...)
+        code_fetch("options", ...)
       end
 
       def self.code_trace(...)
-        code_fetch(String.new("trace"), ...)
+        code_fetch("trace", ...)
       end
 
       def self.code_patch(...)
-        code_fetch(String.new("patch"), ...)
+        code_fetch("patch", ...)
       end
 
       def self.code_fetch(*arguments)
-        verb = (arguments.first || String.new).raw.downcase
-        url = (arguments.second || String.new).raw
-        options = arguments.third || {}
-        body = (options[String.new("body")] || String.new).raw
-        headers = (options[String.new("headers")] || Dictionary.new).raw
-        query = (options[String.new("query")] || Dictionary.new).raw
+        verb = arguments.first.to_code.to_s.downcase
+        url = arguments.second.to_code.to_s
+        options = arguments.third.to_code
+        options = Dictionary.new if options.nothing?
+        body = options.code_get("body").to_s
+        headers = options.code_get("headers").raw || {}
+        query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
         url = query.present? ? "#{url}?#{query}" : url
         uri = ::URI.parse(url)
@@ -200,11 +200,7 @@ class Code
         code = response.code.to_i
         status = STATUS_CODES.key(code) || :ok
 
-        Dictionary.new(
-          String.new("code") => Integer.new(code),
-          String.new("status") => String.new(status),
-          String.new("body") => String.new(response.body),
-        )
+        Dictionary.new(code: code, status: status, body: response.body)
       end
     end
   end

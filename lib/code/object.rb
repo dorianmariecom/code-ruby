@@ -2,7 +2,11 @@
 
 class Code
   class Object
+    NUMBER_CLASSES = [Integer, Decimal, String, ::Integer, ::Float, ::String, ::BigDecimal]
+
     attr_reader :raw
+
+    delegate :to_s, :inspect, to: :raw
 
     def initialize(...)
     end
@@ -28,38 +32,38 @@ class Code
     end
 
     def self.call(**args)
-      operator = args.fetch(:operator, nil)
-      arguments = args.fetch(:arguments, List.new)
-      value = arguments.code_first
+      code_operator = args.fetch(:operator, nil).to_code
+      code_arguments = args.fetch(:arguments, []).to_code
+      code_value = code_arguments.code_first
 
-      case operator.to_s
+      case code_operator.to_s
       when "new"
         sig(args) { Object.repeat }
-        code_new(*arguments.raw)
+        code_new(*code_arguments.raw)
       when "!", "not"
         sig(args)
         code_exclamation_point
       when "!=", "different"
         sig(args) { Object }
-        code_different(value)
+        code_different(code_value)
       when "&&", "and"
         sig(args) { Object }
-        code_and_operator(value)
+        code_and_operator(code_value)
       when "+", "self"
         sig(args)
         code_self
       when "..", "inclusive_range"
         sig(args) { Object }
-        code_inclusive_range(value)
+        code_inclusive_range(code_value)
       when "...", "exclusive_range"
         sig(args) { Object }
-        code_exclusive_range(value)
+        code_exclusive_range(code_value)
       when "==", "equal"
         sig(args) { Object }
-        code_equal_equal(value)
+        code_equal_equal(code_value)
       when "===", "strict_equal"
         sig(args) { Object }
-        code_equal_equal_equal(value)
+        code_equal_equal_equal(code_value)
       when "falsy?"
         sig(args)
         Boolean.new(falsy?)
@@ -68,7 +72,7 @@ class Code
         Boolean.new(truthy?)
       when "||", "or"
         sig(args) { Object }
-        code_or_operator(value)
+        code_or_operator(code_value)
       when "to_boolean"
         sig(args)
         Boolean.new(self)
@@ -104,31 +108,32 @@ class Code
         String.new(self)
       when "to_time"
         sig(args)
-        Time.zone.local(self)
+        Time.new(self)
       when "as_json"
         sig(args)
         code_as_json
       when "to_json"
         sig(args) { { pretty: Boolean.maybe } }
-        if arguments.any?
-          code_to_json(pretty: value.code_get(String.new(:pretty)))
+
+        if code_arguments.any?
+          code_to_json(pretty: code_value.code_get(:pretty))
         else
           code_to_json
         end
       when /=$/
         sig(args) { Object }
 
-        if operator == "="
-          context = args[:context]
-          context.code_set(self, value)
+        if code_operator.to_s == "="
+          code_context = args.fetch(:context)
+          code_context.code_set(self, value)
         else
-          context = args[:context].lookup!(self)
-          context.code_set(
+          code_context = args.fetch(:context).lookup!(self)
+          code_context.code_set(
             self,
-            context.code_fetch(self).call(
+            code_context.code_fetch(self).call(
               **args,
-              operator: operator.chop,
-              arguments: List.new([value])
+              operator: operator.to_s.chop,
+              arguments: List.new([code_value])
             )
           )
         end
@@ -136,26 +141,34 @@ class Code
         context.code_fetch(self)
       else
         raise(
-          Error::Undefined,
-          "#{operator.inspect} not defined on #{inspect}:Class"
+          Error,
+          "#{code_operator.inspect} not defined on #{inspect}:Class"
         )
       end
     end
 
-    def self.code_new(*)
-      new(*)
+    def self.code_new(*arguments)
+      code_arguments = arguments.to_code
+
+      new(*arguments.raw)
     end
 
     def self.code_and_operator(other)
-      truthy? ? other : self
+      code_other = other.to_code
+
+      truthy? ? code_other : self
     end
 
     def self.code_different(other)
-      Boolean.new(self != other)
+      code_other = other.to_code
+
+      Boolean.new(self != code_other)
     end
 
     def self.code_equal_equal(other)
-      Boolean.new(self == other)
+      code_other = other.to_code
+
+      Boolean.new(self == code_other)
     end
 
     def self.code_exclamation_point
@@ -163,15 +176,21 @@ class Code
     end
 
     def self.code_exclusive_range(value)
-      Range.new(self, value, exclude_end: true)
+      code_value = value.to_code
+
+      Range.new(self, code_value, exclude_end: true)
     end
 
     def self.code_inclusive_range(value)
-      Range.new(self, value, exclude_end: false)
+      code_value = value.to_code
+
+      Range.new(self, code_value, exclude_end: false)
     end
 
     def self.code_or_operator(other)
-      truthy? ? self : other
+      code_other = other.to_code
+
+      truthy? ? self : code_other
     end
 
     def self.code_self
@@ -179,7 +198,9 @@ class Code
     end
 
     def self.code_equal_equal_equal(other)
-      Boolean.new(self === other)
+      code_other = other.to_code
+
+      Boolean.new(self === code_other)
     end
 
     def self.falsy?
@@ -192,7 +213,8 @@ class Code
 
     def self.sig(args, &)
       Type::Sig.sig(args, object: self, &)
-      nil
+
+      Nothing.new
     end
 
     def self.to_s
@@ -224,56 +246,52 @@ class Code
     end
 
     def self.code_as_json
-      Json.to_code(as_json)
+      to_ruby.as_json.to_code
     end
 
     def <=>(other)
-      if respond_to?(:raw)
-        raw <=> (other.respond_to?(:raw) ? other.raw : other)
-      else
-        other <=> self
-      end
+      code_other = other.to_code
+
+      raw <=> code_other.raw
     end
 
     def ==(other)
-      if respond_to?(:raw)
-        raw == (other.respond_to?(:raw) ? other.raw : other)
-      else
-        other == self
-      end
+      code_other = other.to_code
+
+      raw == code_other.raw
     end
     alias eql? ==
 
     def call(**args)
-      operator = args.fetch(:operator, nil)
-      arguments = args.fetch(:arguments, List.new)
-      value = arguments.code_first
+      code_operator = args.fetch(:operator, nil).to_code
+      code_arguments = args.fetch(:arguments, []).to_code
+      code_value = code_arguments.code_first
 
-      case operator.to_s
+      case code_operator.to_s
       when "!", "not"
         sig(args)
         code_exclamation_point
       when "!=", "different"
         sig(args) { Object }
-        code_different(value)
+        code_different(code_value)
       when "&&", "and"
         sig(args) { Object }
-        code_and_operator(value)
+        code_and_operator(code_value)
       when "+", "self"
         sig(args)
         code_self
       when "..", "inclusive_range"
         sig(args) { Object }
-        code_inclusive_range(value)
+        code_inclusive_range(code_value)
       when "...", "exclusive_range"
         sig(args) { Object }
-        code_exclusive_range(value)
+        code_exclusive_range(code_value)
       when "==", "equal"
         sig(args) { Object }
-        code_equal_equal(value)
+        code_equal_equal(code_value)
       when "===", "strict_equal"
         sig(args) { Object }
-        code_equal_equal_equal(value)
+        code_equal_equal_equal(code_value)
       when "falsy?"
         sig(args)
         Boolean.new(falsy?)
@@ -282,7 +300,7 @@ class Code
         Boolean.new(truthy?)
       when "||", "or"
         sig(args) { Object }
-        code_or_operator(value)
+        code_or_operator(code_value)
       when "to_boolean"
         sig(args)
         Boolean.new(self)
@@ -318,54 +336,61 @@ class Code
         String.new(self)
       when "to_time"
         sig(args)
-        Time.zone.local(self)
+        Time.new(self)
       when "as_json"
         sig(args)
         code_as_json
       when "to_json"
         sig(args) { { pretty: Boolean.maybe } }
-        if arguments.any?
-          code_to_json(pretty: value.code_get(String.new(:pretty)))
+
+        if code_arguments.any?
+          code_to_json(pretty: code_value.code_get(:pretty))
         else
           code_to_json
         end
       when /=$/
         sig(args) { Object }
 
-        if operator == "="
-          context = args[:context]
-          context.code_set(self, value)
+        if code_operator.to_s == "="
+          code_context = args.fetch(:context)
+          code_context.code_set(self, code_value)
         else
-          context = args[:context].lookup!(self)
-          context.code_set(
+          code_context = args.fetch(:context).lookup!(self)
+          code_context.code_set(
             self,
-            context.code_fetch(self).call(
+            code_context.code_fetch(self).call(
               **args,
-              operator: operator.chop,
-              arguments: List.new([value])
+              operator: operator.to_s.chop,
+              arguments: List.new([code_value])
             )
           )
         end
 
-        context.code_fetch(self)
+        code_context.code_fetch(self)
       else
         raise(
-          Error::Undefined,
-          "#{operator.inspect} not defined on #{inspect}:#{self.class.name}"
+          Error,
+          "#{code_operator.inspect} not defined on #{inspect}:#{self.class.name}"
         )
       end
     end
 
     def code_and_operator(other)
-      truthy? ? other : self
+      code_other = other.to_code
+
+      truthy? ? code_other : self
     end
 
     def code_different(other)
-      Boolean.new(self != other)
+      code_other = other.to_code
+
+      Boolean.new(self != code_other)
     end
 
     def code_equal_equal(other)
-      Boolean.new(self == other)
+      code_other = other.to_code
+
+      Boolean.new(self == code_other)
     end
 
     def code_exclamation_point
@@ -373,23 +398,29 @@ class Code
     end
 
     def code_exclusive_range(value)
+      code_value = value.to_code
+
       Range.new(
         self,
-        value,
-        Dictionary.new({ String.new(:exclude_end) => Boolean.new(true) })
+        code_value,
+        exclude_end: true,
       )
     end
 
     def code_inclusive_range(value)
+      code_value = value.to_code
+
       Range.new(
         self,
-        value,
-        Dictionary.new({ String.new(:exclude_end) => Boolean.new(false) })
+        code_value,
+        exclude_end: false,
       )
     end
 
     def code_or_operator(other)
-      truthy? ? self : other
+      code_other = other.to_code
+
+      truthy? ? self : code_other
     end
 
     def code_self
@@ -397,7 +428,9 @@ class Code
     end
 
     def code_equal_equal_equal(other)
-      Boolean.new(self === other)
+      code_other = other.to_code
+
+      Boolean.new(self === code_other)
     end
 
     def falsy?
@@ -414,10 +447,9 @@ class Code
 
     def sig(args, &)
       Type::Sig.sig(args, object: self, &)
-      nil
-    end
 
-    delegate :to_s, :inspect, to: :raw
+      Nothing.new
+    end
 
     def truthy?
       true
@@ -440,11 +472,15 @@ class Code
     end
 
     def code_as_json
-      Json.to_code(as_json)
+      as_json.to_code
+    end
+
+    def to_code
+      self
     end
 
     def succ
-      raw.respond_to?(:succ) ? self.class.new(raw.succ) : self.class.new(self)
+      self.class.new(raw.succ)
     end
   end
 end

@@ -3,17 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::Http do
-  [
-    "get",
-    "head",
-    "post",
-    "put",
-    "delete",
-    "connect",
-    "options",
-    "trace",
-    "patch",
-  ].each do |verb|
+  %w[get head post put delete connect options trace patch].each do |verb|
     describe ".#{verb}" do
       {
         continue: 100,
@@ -78,7 +68,7 @@ RSpec.describe Code::Object::Http do
         loop_detected: 508,
         bandwidth_limit_exceeded: 509,
         not_extended: 510,
-        network_authentication_required: 511,
+        network_authentication_required: 511
       }.each do |status, code|
         it "returns #{code} as code and #{status} as status" do
           expect(Code.evaluate(<<~INPUT)).to eq(Code.evaluate(<<~OUTPUT))
