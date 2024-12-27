@@ -6,9 +6,12 @@ class Code
       attr_reader :code_parameters, :code_body
 
       def initialize(*args, **_kargs, &)
-        @code_parameters = List.new(args.first).raw.map do |parameter|
-          Parameter.new(parameter)
-        end.to_code
+        @code_parameters =
+          List
+            .new(args.first)
+            .raw
+            .map { |parameter| Parameter.new(parameter) }
+            .to_code
 
         @code_body = Code.new(args.second.presence)
 

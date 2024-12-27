@@ -4,15 +4,16 @@ class Code
   class Object
     class Class < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_a?(Class)
-          @raw = args.first.raw
-        elsif args.first.is_an?(Object)
-          @raw = args.first.class
-        elsif args.first && args.first < Object
-          @raw = args.first
-        else
-          @raw = Nothing
-        end
+        @raw =
+          if args.first.is_a?(Class)
+            args.first.raw
+          elsif args.first.is_an?(Object)
+            args.first.class
+          elsif args.first && args.first < Object
+            args.first
+          else
+            Nothing
+          end
       end
 
       def call(...)

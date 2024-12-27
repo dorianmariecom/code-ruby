@@ -62,7 +62,7 @@ class Code
         String.new(raw.reverse)
       end
 
-      def code_to_function(**globals)
+      def code_to_function(**_globals)
         Function.new([{ name: "_" }], "_.#{raw}")
       end
     end

@@ -52,7 +52,7 @@ else
       output: $stdout,
       error: $stderr,
       timeout: parsed.options.timeout
-    ).to_s
+    )
   )
 end
 

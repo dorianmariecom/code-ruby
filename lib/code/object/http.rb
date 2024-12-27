@@ -10,7 +10,7 @@ class Code
           query: Dictionary.maybe,
           body: String.maybe
         }
-      ]
+      ].freeze
 
       STATUS_CODES = {
         continue: 100,
@@ -76,7 +76,7 @@ class Code
         bandwidth_limit_exceeded: 509,
         not_extended: 510,
         network_authentication_required: 511
-      }
+      }.freeze
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -163,7 +163,7 @@ class Code
         headers = options.code_get("headers").raw || {}
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
-        url = query.present? ? "#{url}?#{query}" : url
+        url = "#{url}?#{query}" if query.present?
         uri = ::URI.parse(url)
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"

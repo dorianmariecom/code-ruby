@@ -4,15 +4,16 @@ class Code
   class Object
     class Integer < Object
       def initialize(*args, **_kargs, &)
-        if args.first.class.in?(NUMBER_CLASSES)
-          if args.second.class.in?(NUMBER_CLASSES)
-            @raw = (args.first.to_s.to_d * (10**args.second.to_s.to_d)).to_i
+        @raw =
+          if args.first.class.in?(NUMBER_CLASSES)
+            if args.second.class.in?(NUMBER_CLASSES)
+              (args.first.to_s.to_d * (10**args.second.to_s.to_d)).to_i
+            else
+              args.first.to_s.to_i
+            end
           else
-            @raw = args.first.to_s.to_i
+            0
           end
-        else
-          @raw = 0
-        end
       rescue FloatDomainError
         @raw = 0
       end

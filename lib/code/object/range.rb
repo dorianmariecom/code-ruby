@@ -12,17 +12,15 @@ class Code
           @code_options = args.first.code_options
           @code_exclude_end = args.first.code_exclude_end
         else
-          if args.first.to_code.nothing?
-            @code_left = Integer.new(0)
-          else
-            @code_left = args.first.to_code
-          end
+          @code_left =
+            (args.first.to_code.nothing? ? Integer.new(0) : args.first.to_code)
 
-          if args.second.to_code.nothing?
-            @code_right = Integer.new(0)
-          else
-            @code_right = args.second.to_code
-          end
+          @code_right =
+            if args.second.to_code.nothing?
+              Integer.new(0)
+            else
+              args.second.to_code
+            end
 
           @code_options = Dictionary.new(args.third.presence || kargs)
           @code_exclude_end = Boolean.new(code_options.code_get(:exclude_end))
