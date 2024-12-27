@@ -23,6 +23,8 @@ class Code
                 arg.transform_keys(&:to_code).transform_values(&:to_code)
               elsif arg.is_a?(Dictionary)
                 arg.raw.transform_keys(&:to_code).transform_values(&:to_code)
+              elsif arg.is_a?(Node::FunctionParameter)
+                arg.to_h.transform_keys(&:to_code).transform_values(&:to_code)
               else
                 {}
               end
@@ -70,7 +72,7 @@ class Code
           code_compact
         when "delete"
           sig(args) { Object.repeat(1) }
-          code_delete(*arguments.raw, **globals)
+          code_delete(*code_arguments.raw, **globals)
         when "delete_if"
           sig(args) { Function | Class }
           code_delete_if(code_value, **globals)
@@ -79,7 +81,7 @@ class Code
           code_delete_unless(code_value, **globals)
         when "dig"
           sig(args) { Object.repeat(1) }
-          code_dig(*arguments.raw)
+          code_dig(*code_arguments.raw)
         when "each"
           sig(args) { Function }
           code_each(code_value, **globals)
@@ -91,13 +93,13 @@ class Code
           code_empty?
         when "except"
           sig(args) { Object.repeat(1) }
-          code_except(*arguments.raw)
+          code_except(*code_arguments.raw)
         when "fetch"
           sig(args) { Object.repeat(1) }
-          code_fetch(*arguments.raw, **globals)
+          code_fetch(*code_arguments.raw, **globals)
         when "fetch_values"
           sig(args) { Object.repeat(1) }
-          code_fetch_values(*arguments.raw)
+          code_fetch_values(*code_arguments.raw)
         when "five?"
           sig(args)
           code_five?
@@ -124,16 +126,16 @@ class Code
           code_keep_unless(code_value, **globals)
         when "key"
           sig(args) { [Object, Function.maybe] }
-          code_key(*arguments.raw, **globals)
+          code_key(*code_arguments.raw, **globals)
         when "keys"
           sig(args)
           code_keys
         when "merge"
           sig(args) { [Dictionary.repeat, Function.maybe] }
-          code_merge(*arguments.raw, **globals)
+          code_merge(*code_arguments.raw, **globals)
         when "merge!"
           sig(args) { [Dictionary.repeat, Function.maybe] }
-          code_merge!(*arguments.raw, **globals)
+          code_merge!(*code_arguments.raw, **globals)
         when "nine?"
           sig(args)
           code_nine?
@@ -237,7 +239,7 @@ class Code
 
         code_default =
           (
-            if code_arguments.last.is_a?(Function) && arguments.many?
+            if arguments.last.is_a?(Function) && arguments.many?
               arguments.last
             end
           ).to_code
@@ -251,7 +253,7 @@ class Code
               Nothing.new
             else
               code_default.call(
-                arguments: List.new([first, self, code_index]),
+                arguments: List.new([code_first, self, code_index]),
                 **globals
               )
             end
@@ -313,10 +315,6 @@ class Code
       def code_dig(*arguments)
         code_arguments = arguments.to_code
 
-        code_get(arguments.first).code_get(arguments.second).code_get(
-          arguments.third
-        )
-
         code_arguments
           .raw
           .reduce(self) do |code_acc, code_element|
@@ -368,7 +366,7 @@ class Code
               Nothing.new
             else
               code_default.call(
-                arguments: List.new([first, code_index, self]),
+                arguments: List.new([code_first, code_index, self]),
                 **globals
               )
             end
@@ -379,10 +377,10 @@ class Code
               .map
               .with_index do |code_argument, index|
                 if code_default.nothing?
-                  [argument, code_fetch(code_argument, index:, **globals)]
+                  [code_argument, code_fetch(code_argument, index:, **globals)]
                 else
                   [
-                    argument,
+                    code_argument,
                     code_fetch(code_argument, code_default, index:, **globals)
                   ]
                 end

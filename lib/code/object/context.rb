@@ -7,16 +7,16 @@ class Code
 
       def initialize(*args, **_kargs, &)
         super(args.first)
-        @parent = Context.new(args.second) unless args.second.to_code.nothing?
+        @parent = args.second if args.second.is_a?(Dictionary)
       end
 
-      def lookup!(identifier)
+      def code_lookup!(identifier)
         code_identifier = identifier.to_code
 
         if code_has_key?(code_identifier).truthy?
           self
         elsif parent?
-          parent.lookup!(code_identifier)
+          parent.code_lookup!(code_identifier)
         else
           raise Error, "#{code_identifier} is not defined"
         end

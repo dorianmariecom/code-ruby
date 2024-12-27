@@ -8,7 +8,7 @@ class Code
           @raw = args.first.raw
         elsif args.first.is_an?(Object)
           @raw = args.first.class
-        elsif args.first < Object
+        elsif args.first && args.first < Object
           @raw = args.first
         else
           @raw = Nothing

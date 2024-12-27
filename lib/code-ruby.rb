@@ -16,6 +16,53 @@ loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.ignore("#{__dir__}/code-ruby.rb")
 loader.setup
 
+module WordNumberComparaisons
+  def zero?
+    self == 0
+  end
+
+  def one?
+    self == 1
+  end
+
+  def two?
+    self == 2
+  end
+
+  def three?
+    self == 3
+  end
+
+  def four?
+    self == 4
+  end
+
+  def five?
+    self == 5
+  end
+
+  def six?
+    self == 6
+  end
+
+  def seven?
+    self == 7
+  end
+
+  def eight?
+    self == 8
+  end
+
+  def nine?
+    self == 9
+  end
+
+  def ten?
+    self == 10
+  end
+end
+
+
 class Object
   alias is_an? is_a?
 
@@ -55,18 +102,24 @@ class Symbol
 end
 
 class Integer
+  include WordNumberComparaisons
+
   def to_code
     Code::Object::Integer.new(self)
   end
 end
 
 class Float
+  include WordNumberComparaisons
+
   def to_code
     Code::Object::Decimal.new(self)
   end
 end
 
 class BigDecimal
+  include WordNumberComparaisons
+
   def to_code
     Code::Object::Decimal.new(self)
   end

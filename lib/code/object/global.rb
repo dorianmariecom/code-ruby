@@ -104,7 +104,7 @@ class Code
           output.puts(*code_arguments.raw)
           Nothing.new
         else
-          code_context = code_context.lookup!(code_operator)
+          code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)
 
           if code_result.is_a?(Function)

@@ -41,7 +41,7 @@ class Code
           code_arguments.any? ? code_plus(code_value) : code_self
         when "-", "minus", "unary_minus"
           sig(args) { Integer | Decimal.maybe }
-          arguments.any? ? code_minus(code_value) : code_unary_minus
+          code_arguments.any? ? code_minus(code_value) : code_unary_minus
         when "/", "division", "÷"
           sig(args) { Integer | Decimal }
           code_division(code_value)

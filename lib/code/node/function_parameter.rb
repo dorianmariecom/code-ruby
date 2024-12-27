@@ -36,15 +36,17 @@ class Code
 
       def to_h
         {
-          Object::String.new(:name) => Object::String.new(name),
-          Object::String.new(:regular?) => Object::Boolean.new(regular?),
-          Object::String.new(:keyword?) => Object::Boolean.new(keyword?),
-          Object::String.new(:regular_splat?) =>
-            Object::Boolean.new(regular_splat?),
-          Object::String.new(:keyword_splat?) =>
-            Object::Boolean.new(keyword_splat?),
-          Object::String.new(:default) => Object::Code.new(default)
+          name:,
+          regular?: regular?,
+          keyword?: keyword?,
+          regular_splat?: regular_splat?,
+          keyword_splat?: keyword_splat?,
+          default: Object::Code.new(default),
         }
+      end
+
+      def to_code
+        self
       end
     end
   end

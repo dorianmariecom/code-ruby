@@ -127,7 +127,7 @@ class Code
           code_context = args.fetch(:context)
           code_context.code_set(self, value)
         else
-          code_context = args.fetch(:context).lookup!(self)
+          code_context = args.fetch(:context).code_lookup!(self)
           code_context.code_set(
             self,
             code_context.code_fetch(self).call(
@@ -150,7 +150,7 @@ class Code
     def self.code_new(*arguments)
       code_arguments = arguments.to_code
 
-      new(*arguments.raw)
+      new(*code_arguments.raw)
     end
 
     def self.code_and_operator(other)
@@ -355,12 +355,12 @@ class Code
           code_context = args.fetch(:context)
           code_context.code_set(self, code_value)
         else
-          code_context = args.fetch(:context).lookup!(self)
+          code_context = args.fetch(:context).code_lookup!(self)
           code_context.code_set(
             self,
             code_context.code_fetch(self).call(
               **args,
-              operator: operator.to_s.chop,
+              operator: code_operator.to_s.chop,
               arguments: List.new([code_value])
             )
           )

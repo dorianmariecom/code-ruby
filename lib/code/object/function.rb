@@ -6,10 +6,9 @@ class Code
       attr_reader :code_parameters, :code_body
 
       def initialize(*args, **_kargs, &)
-        @code_parameters =
-          (args.first.presence || [])
-            .map { |parameter| Parameter.new(parameter) }
-            .to_ruby
+        @code_parameters = List.new(args.first).raw.map do |parameter|
+          Parameter.new(parameter)
+        end.to_code
 
         @code_body = Code.new(args.second.presence)
 
@@ -21,7 +20,7 @@ class Code
         code_arguments = args.fetch(:arguments, List.new).to_code
         globals = multi_fetch(args, *GLOBALS)
 
-        case operator.to_s
+        case code_operator.to_s
         when "", "call"
           sig(args) { signature_for_call }
           code_call(*code_arguments.raw, **globals)
@@ -55,7 +54,7 @@ class Code
           code_context.code_set(code_parameter.code_name, code_argument)
         end
 
-        code_body.evaluate(**globals, context: code_context)
+        code_body.code_evaluate(**globals, context: code_context)
       end
 
       def signature_for_call
@@ -64,10 +63,10 @@ class Code
           .inject([]) do |signature, code_parameter|
             if code_parameter.keyword?
               if signature.last.is_a?(::Hash)
-                signature.last[parameter.code_name] = Object
+                signature.last[code_parameter.code_name] = Object
                 signature
               else
-                signature + [{ parameter.code_name => Object }]
+                signature + [{ code_parameter.code_name => Object }]
               end
             else
               signature + [Object]

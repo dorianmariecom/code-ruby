@@ -4,7 +4,13 @@ class Code
   class Object
     class List < Object
       def initialize(*args, **_kargs, &)
-        @raw = args.first.to_a.map(&:to_code)
+        if args.first.is_a?(List)
+          @raw = args.first.raw.map(&:to_code)
+        elsif args.first.is_an?(::Array)
+          @raw = args.first.map(&:to_code)
+        else
+          @raw = []
+        end
       end
 
       def call(**args)
@@ -99,7 +105,7 @@ class Code
         Boolean.new(
           raw.any? do |code_element|
             if code_argument.nothing?
-              code_element.truthy?
+              true
             else
               code_argument.call(
                 arguments: List.new([code_element, Integer.new(index), self]),

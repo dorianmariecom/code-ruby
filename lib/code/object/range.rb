@@ -25,7 +25,7 @@ class Code
           end
 
           @code_options = Dictionary.new(args.third.presence || kargs)
-          @code_exclude_end = code_options.code_get(:code_exclude_end)
+          @code_exclude_end = Boolean.new(code_options.code_get(:exclude_end))
         end
 
         @raw = ::Range.new(code_left, code_right, exclude_end?)
@@ -174,7 +174,7 @@ class Code
         else
           while code_element.code_inferior_or_equal(code_right).truthy?
             code_list.code_append(code_element)
-            code_element = element.code_plus(code_argument)
+            code_element = code_element.code_plus(code_argument)
           end
         end
 

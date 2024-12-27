@@ -5,15 +5,15 @@ class Code
     class IdentifierList < List
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
-        code_arguments = args.fetch(:arguments, List.new).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
         code_context = args.fetch(:context).to_code
-        code_value = arguments.first.to_code
+        code_value = code_arguments.code_first
 
         case code_operator.to_s
         when /=$/
           sig(args) { Object }
 
-          code_context = code_context.lookup!(raw.first)
+          code_context = code_context.code_lookup!(raw.first)
 
           code_context =
             raw[..-2].reduce(code_context) do |code_context, code_identifier|

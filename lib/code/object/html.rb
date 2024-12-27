@@ -10,10 +10,10 @@ class Code
         case code_operator.to_s
         when "link_to"
           sig(args) { [Object.maybe, Object.maybe] }
-          code_link_to(*arguments.raw)
+          code_link_to(*code_arguments.raw)
         when "escape"
           sig(args) { Object.maybe }
-          code_escape(*arguments.raw)
+          code_escape(*code_arguments.raw)
         else
           super
         end

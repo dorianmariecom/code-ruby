@@ -63,29 +63,7 @@ class Code
       end
 
       def code_to_function(**globals)
-        Node::Code.new(
-          [
-            {
-              function: {
-                parameters: [{ name: "_" }],
-                body: [
-                  {
-                    left_operation: {
-                      first: {
-                        call: {
-                          name: "_"
-                        }
-                      },
-                      others: [
-                        { operator: ".", statement: { call: { name: raw } } }
-                      ]
-                    }
-                  }
-                ]
-              }
-            }
-          ]
-        ).evaluate(**globals)
+        Function.new([{ name: "_" }], "_.#{raw}")
       end
     end
   end
