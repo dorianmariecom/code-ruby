@@ -46,7 +46,7 @@ class Code
       end
 
       def to_code
-        self
+        to_h.to_code
       end
     end
   end
