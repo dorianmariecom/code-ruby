@@ -36,7 +36,7 @@ class Code
       end
 
       def code_part
-        opening_curly_bracket << code << closing_curly_bracket.maybe
+        opening_curly_bracket.ignore << code << closing_curly_bracket.maybe.ignore
       end
 
       def single_quoted_text_part

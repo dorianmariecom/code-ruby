@@ -88,6 +88,9 @@ class Code
         when "Http"
           sig(args) { Object.repeat }
           code_arguments.any? ? Http.new(*code_arguments.raw) : Class.new(Http)
+        when "Json"
+          sig(args) { Object.repeat }
+          code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)
         when "evaluate"
           sig(args) { Object }
           Code.evaluate(code_value.to_s)

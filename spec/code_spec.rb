@@ -74,6 +74,10 @@ RSpec.describe Code do
       Html.link_to
       Html.link_to('/')
       Html.link_to('Home','/')
+      Json.parse('1')
+      Json.parse('[]')
+      Json.parse('{}')
+      Json.parse('random-string')
     ] + ["Time.hour >= 6 and Time.hour <= 23"]
   ).each { |input| it(input) { described_class.evaluate(input) } }
 
@@ -311,6 +315,7 @@ RSpec.describe Code do
     ["[1, 2, 3].none?", "false"],
     ["[1, 2, 3].none?(&:even?)", "false"],
     ["'{1} {2}'", "'1 2'"],
+    ['Json.parse("1")', "1"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
