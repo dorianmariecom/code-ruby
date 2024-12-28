@@ -22,6 +22,9 @@ Gem::Specification.new do |s|
   s.add_dependency "zeitwerk"
   s.add_dependency "net-http"
   s.add_dependency "uri"
+  s.add_dependency "base64"
+
   s.metadata["rubygems_mfa_required"] = "true"
+
   s.required_ruby_version = ">= 3.1"
 end

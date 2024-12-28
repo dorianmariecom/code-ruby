@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/all"
+require "base64"
 require "bigdecimal"
 require "bigdecimal/util"
 require "did_you_mean"

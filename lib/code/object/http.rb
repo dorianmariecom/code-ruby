@@ -8,7 +8,10 @@ class Code
         {
           headers: Dictionary.maybe,
           query: Dictionary.maybe,
-          body: String.maybe
+          body: String.maybe,
+          username: String.maybe,
+          password: String.maybe,
+          data: Dictionary.maybe,
         }
       ]
 
@@ -159,12 +162,22 @@ class Code
         url = arguments.second.to_code.to_s
         options = arguments.third.to_code
         options = Dictionary.new if options.nothing?
+        username = options.code_get("username").to_s
+        password = options.code_get("password").to_s
         body = options.code_get("body").to_s
         headers = options.code_get("headers").raw || {}
+        data = options.code_get("data").raw || {}
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
         url = query.present? ? "#{url}?#{query}" : url
+
+        if username.present? || password.present?
+          headers["Authorization"] =
+            "Basic #{::Base64.strict_encode64("#{username}:#{password}")}"
+        end
+
         uri = ::URI.parse(url)
+
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"
 
@@ -194,7 +207,8 @@ class Code
 
         request = request_class.new(uri)
         headers.each { |key, value| request[key.to_s] = value.to_s }
-        request.body = body
+        request.body = body if body.present?
+        request.set_form_data(**data.as_json) if data.present?
 
         response = http.request(request)
         code = response.code.to_i

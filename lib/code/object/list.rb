@@ -39,8 +39,8 @@ class Code
           sig(args) { Function }
           code_each(code_value, **globals)
         when "first"
-          sig(args)
-          code_first
+          sig(args) { Integer.maybe }
+          code_first(code_value)
         when "flatten"
           sig(args) { Integer.maybe }
           code_flatten
@@ -156,8 +156,14 @@ class Code
         self
       end
 
-      def code_first
-        raw.first || Nothing.new
+      def code_first(value = nil)
+        code_value = value.to_code
+
+        if code_value.nothing?
+          raw.first || Nothing.new
+        else
+          List.new(raw.first(code_value.raw))
+        end
       end
 
       def code_flatten(level = nil)
