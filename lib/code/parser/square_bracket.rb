@@ -27,7 +27,7 @@ class Code
         (
           statement.aka(:left) << (
             left_square_bracket << whitespace? << Statement <<
-            (whitespace? << right_square_bracket).maybe
+              (whitespace? << right_square_bracket).maybe
           ).repeat(1).aka(:statements).maybe
         )
           .aka(:square_bracket)

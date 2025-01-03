@@ -94,7 +94,7 @@ class Code
             {
               year: (String | Integer).maybe,
               month: (String | Integer).maybe,
-              day: (String | Integer).maybe,
+              day: (String | Integer).maybe
             }
           end
 
@@ -104,7 +104,7 @@ class Code
             code_change(
               year: code_value.code_get(:year),
               month: code_value.code_get(:month),
-              day: code_value.code_get(:day),
+              day: code_value.code_get(:day)
             )
           end
         else
@@ -141,11 +141,13 @@ class Code
         code_month = month.to_code
         code_day = day.to_code
 
-        raw.change(**{
-          year: code_year.raw,
-          month: code_month.raw,
-          day: code_day.raw
-        }.compact)
+        raw.change(
+          **{
+            year: code_year.raw,
+            month: code_month.raw,
+            day: code_day.raw
+          }.compact
+        )
 
         self
       end
