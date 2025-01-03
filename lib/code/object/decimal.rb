@@ -4,15 +4,16 @@ class Code
   class Object
     class Decimal < Object
       def initialize(*args, **_kargs, &)
-        if args.first.class.in?(NUMBER_CLASSES)
-          if args.second.class.in?(NUMBER_CLASSES)
-            @raw = args.first.to_s.to_d * (10**args.second.to_s.to_d)
+        @raw =
+          if args.first.class.in?(NUMBER_CLASSES)
+            if args.second.class.in?(NUMBER_CLASSES)
+              args.first.to_s.to_d * (10**args.second.to_s.to_d)
+            else
+              args.first.to_s.to_d
+            end
           else
-            @raw = args.first.to_s.to_d
+            0.to_d
           end
-        else
-          @raw = 0.to_d
-        end
       rescue FloatDomainError
         @raw = 0.to_d
       end

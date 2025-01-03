@@ -14,15 +14,15 @@ Gem::Specification.new do |s|
   s.executables = "code"
 
   s.add_dependency "activesupport"
+  s.add_dependency "base64"
   s.add_dependency "bigdecimal"
   s.add_dependency "did-you-mean"
   s.add_dependency "dorian-arguments"
   s.add_dependency "json"
   s.add_dependency "language-ruby"
-  s.add_dependency "zeitwerk"
   s.add_dependency "net-http"
   s.add_dependency "uri"
-  s.add_dependency "base64"
+  s.add_dependency "zeitwerk"
 
   s.metadata["rubygems_mfa_required"] = "true"
 

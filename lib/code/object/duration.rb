@@ -4,13 +4,14 @@ class Code
   class Object
     class Duration < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_an?(::ActiveSupport::Duration)
-          @raw = args.first
-        elsif args.first.is_a?(Duration)
-          @raw = args.first.raw
-        else
-          @raw = ::ActiveSupport::Duration.parse(args.first.to_s)
-        end
+        @raw =
+          if args.first.is_an?(::ActiveSupport::Duration)
+            args.first
+          elsif args.first.is_a?(Duration)
+            args.first.raw
+          else
+            ::ActiveSupport::Duration.parse(args.first.to_s)
+          end
       rescue ::ActiveSupport::Duration::ISO8601Parser::ParsingError
         @raw = 0.seconds
       end

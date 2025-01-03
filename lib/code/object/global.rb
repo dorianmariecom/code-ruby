@@ -13,7 +13,11 @@ class Code
         case code_operator.to_s
         when "Boolean"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Boolean.new(*code_arguments.raw) : Class.new(Boolean)
+          if code_arguments.any?
+            Boolean.new(*code_arguments.raw)
+          else
+            Class.new(Boolean)
+          end
         when "break"
           sig(args) { Object.repeat }
           raise Error::Break, code_value || Nothing.new
@@ -22,13 +26,21 @@ class Code
           raise Error::Next, code_value || Nothing.new
         when "Class"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Class.new(*code_arguments.raw) : Class.new(Class)
+          if code_arguments.any?
+            Class.new(*code_arguments.raw)
+          else
+            Class.new(Class)
+          end
         when "Date"
           sig(args) { Object.repeat }
           code_arguments.any? ? Date.new(*code_arguments.raw) : Class.new(Date)
         when "Decimal"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Decimal.new(*code_arguments.raw) : Class.new(Decimal)
+          if code_arguments.any?
+            Decimal.new(*code_arguments.raw)
+          else
+            Class.new(Decimal)
+          end
         when "Dictionary"
           sig(args) { Object.repeat }
           if code_arguments.any?
@@ -38,43 +50,83 @@ class Code
           end
         when "Duration"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Duration.new(*code_arguments.raw) : Class.new(Duration)
+          if code_arguments.any?
+            Duration.new(*code_arguments.raw)
+          else
+            Class.new(Duration)
+          end
         when "Function"
           sig(args)
-          code_arguments.any? ? Function.new(*code_arguments.raw) : Class.new(Function)
+          if code_arguments.any?
+            Function.new(*code_arguments.raw)
+          else
+            Class.new(Function)
+          end
         when "Integer"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Integer.new(*code_arguments.raw) : Class.new(Integer)
+          if code_arguments.any?
+            Integer.new(*code_arguments.raw)
+          else
+            Class.new(Integer)
+          end
         when "List"
           sig(args) { Object.repeat }
           code_arguments.any? ? List.new(*code_arguments.raw) : Class.new(List)
         when "Nothing"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Nothing.new(*code_arguments.raw) : Class.new(Nothing)
+          if code_arguments.any?
+            Nothing.new(*code_arguments.raw)
+          else
+            Class.new(Nothing)
+          end
         when "context"
           sig(args)
           context
         when "Object"
           sig(args)
-          code_arguments.any? ? Object.new(*code_arguments.raw) : Class.new(Object)
+          if code_arguments.any?
+            Object.new(*code_arguments.raw)
+          else
+            Class.new(Object)
+          end
         when "Range"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Range.new(*code_arguments.raw) : Class.new(Range)
+          if code_arguments.any?
+            Range.new(*code_arguments.raw)
+          else
+            Class.new(Range)
+          end
         when "String"
           sig(args) { Object.repeat }
-          code_arguments.any? ? String.new(*code_arguments.raw) : Class.new(String)
+          if code_arguments.any?
+            String.new(*code_arguments.raw)
+          else
+            Class.new(String)
+          end
         when "Time"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Time.zone.local(*code_arguments.raw) : Class.new(Time)
+          if code_arguments.any?
+            Time.zone.local(*code_arguments.raw)
+          else
+            Class.new(Time)
+          end
         when "Context"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Context.new(*code_arguments.raw) : Class.new(Context)
+          if code_arguments.any?
+            Context.new(*code_arguments.raw)
+          else
+            Class.new(Context)
+          end
         when "Code"
           sig(args) { Object.repeat }
           code_arguments.any? ? Code.new(*code_arguments.raw) : Class.new(Code)
         when "Parameter"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Parameter.new(*code_arguments.raw) : Class.new(Parameter)
+          if code_arguments.any?
+            Parameter.new(*code_arguments.raw)
+          else
+            Class.new(Parameter)
+          end
         when "IdentifierList"
           sig(args) { Object.repeat }
           if code_arguments.any?

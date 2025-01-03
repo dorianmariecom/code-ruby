@@ -239,9 +239,7 @@ class Code
 
         code_default =
           (
-            if arguments.last.is_a?(Function) && arguments.many?
-              arguments.last
-            end
+            arguments.last if arguments.last.is_a?(Function) && arguments.many?
           ).to_code
 
         arguments = arguments[...-1] unless code_default.nothing?

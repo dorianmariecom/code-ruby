@@ -4,13 +4,14 @@ class Code
   class Object
     class List < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_a?(List)
-          @raw = args.first.raw.map(&:to_code)
-        elsif args.first.is_an?(::Array)
-          @raw = args.first.map(&:to_code)
-        else
-          @raw = []
-        end
+        @raw =
+          if args.first.is_a?(List)
+            args.first.raw.map(&:to_code)
+          elsif args.first.is_an?(::Array)
+            args.first.map(&:to_code)
+          else
+            []
+          end
       end
 
       def call(**args)
@@ -271,7 +272,8 @@ class Code
 
         raw.reduce.with_index do |code_acc, code_element, index|
           code_argument.call(
-            arguments: List.new([code_acc, code_element, Integer.new(index), self]),
+            arguments:
+              List.new([code_acc, code_element, Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e

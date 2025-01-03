@@ -2,7 +2,15 @@
 
 class Code
   class Object
-    NUMBER_CLASSES = [Integer, Decimal, String, ::Integer, ::Float, ::String, ::BigDecimal]
+    NUMBER_CLASSES = [
+      Integer,
+      Decimal,
+      String,
+      ::Integer,
+      ::Float,
+      ::String,
+      ::BigDecimal
+    ].freeze
 
     attr_reader :raw
 
@@ -140,10 +148,7 @@ class Code
 
         context.code_fetch(self)
       else
-        raise(
-          Error,
-          "#{code_operator.inspect} not defined on #{inspect}:Class"
-        )
+        raise(Error, "#{code_operator.inspect} not defined on #{inspect}:Class")
       end
     end
 
@@ -400,21 +405,13 @@ class Code
     def code_exclusive_range(value)
       code_value = value.to_code
 
-      Range.new(
-        self,
-        code_value,
-        exclude_end: true,
-      )
+      Range.new(self, code_value, exclude_end: true)
     end
 
     def code_inclusive_range(value)
       code_value = value.to_code
 
-      Range.new(
-        self,
-        code_value,
-        exclude_end: false,
-      )
+      Range.new(self, code_value, exclude_end: false)
     end
 
     def code_or_operator(other)

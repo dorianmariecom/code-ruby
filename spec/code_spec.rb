@@ -315,7 +315,7 @@ RSpec.describe Code do
     ["[1, 2, 3].none?", "false"],
     ["[1, 2, 3].none?(&:even?)", "false"],
     ["'{1} {2}'", "'1 2'"],
-    ['Json.parse("1")', "1"],
+    %w[Json.parse("1") 1],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

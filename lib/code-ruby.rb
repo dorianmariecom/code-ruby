@@ -19,7 +19,7 @@ loader.setup
 
 module WordNumberComparaisons
   def zero?
-    self == 0
+    zero?
   end
 
   def one?
@@ -62,7 +62,6 @@ module WordNumberComparaisons
     self == 10
   end
 end
-
 
 class Object
   alias is_an? is_a?

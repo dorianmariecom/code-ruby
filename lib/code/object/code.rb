@@ -4,11 +4,12 @@ class Code
   class Object
     class Code < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_a?(Node)
-          @raw = args.first
-        else
-          @raw = Node::Code.new(::Code.parse(args.first.to_s))
-        end
+        @raw =
+          if args.first.is_a?(Node)
+            args.first
+          else
+            Node::Code.new(::Code.parse(args.first.to_s))
+          end
       end
 
       def code_evaluate(...)

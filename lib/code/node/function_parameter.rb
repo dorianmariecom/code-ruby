@@ -41,7 +41,7 @@ class Code
           keyword?: keyword?,
           regular_splat?: regular_splat?,
           keyword_splat?: keyword_splat?,
-          default: Object::Code.new(default),
+          default: Object::Code.new(default)
         }
       end
 
