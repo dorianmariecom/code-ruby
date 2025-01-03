@@ -7,10 +7,6 @@ class Code
         UnaryMinus
       end
 
-      def square_bracket
-        SquareBracket
-      end
-
       def whitespace
         Whitespace
       end
@@ -30,8 +26,8 @@ class Code
       def root
         (
           statement.aka(:left) << (
-            left_square_bracket << whitespace? << square_bracket <<
-              (whitespace? << right_square_bracket).maybe
+            left_square_bracket << whitespace? << Statement <<
+            (whitespace? << right_square_bracket).maybe
           ).repeat(1).aka(:statements).maybe
         )
           .aka(:square_bracket)

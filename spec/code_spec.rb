@@ -78,6 +78,7 @@ RSpec.describe Code do
       Json.parse('[]')
       Json.parse('{}')
       Json.parse('random-string')
+      {}["".to_string]
     ] + ["Time.hour >= 6 and Time.hour <= 23"]
   ).each { |input| it(input) { described_class.evaluate(input) } }
 
