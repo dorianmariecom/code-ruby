@@ -11,7 +11,7 @@ class Code
           body: String.maybe,
           username: String.maybe,
           password: String.maybe,
-          data: Dictionary.maybe,
+          data: Dictionary.maybe
         }
       ].freeze
 
@@ -175,8 +175,9 @@ class Code
         http.use_ssl = true if uri.scheme == "https"
 
         if username.present? || password.present?
-          headers["Authorization"] =
-            "Basic #{::Base64.strict_encode64("#{username}:#{password}")}"
+          headers[
+            "Authorization"
+          ] = "Basic #{::Base64.strict_encode64("#{username}:#{password}")}"
         end
 
         request_class =
