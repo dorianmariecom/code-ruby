@@ -42,6 +42,9 @@ class Code
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
+        when "sample"
+          sig(args) { Integer.maybe }
+          code_sample(code_value)
         when "flatten"
           sig(args) { Integer.maybe }
           code_flatten
@@ -164,6 +167,16 @@ class Code
           raw.first || Nothing.new
         else
           List.new(raw.first(code_value.raw))
+        end
+      end
+
+      def code_sample(value = nil)
+        code_value = value.to_code
+
+        if code_value.nothing?
+          raw.sample || Nothing.new
+        else
+          List.new(raw.sample(code_value.raw))
         end
       end
 
