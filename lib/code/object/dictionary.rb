@@ -396,7 +396,7 @@ class Code
 
       def code_flatten(level = nil)
         code_level = level.to_code
-        code_level = Integer.new(-1) if level.nothing?
+        code_level = Integer.new(-1) if code_level.nothing?
         code_to_list.code_flatten(code_level)
       end
 

@@ -31,6 +31,9 @@ class Code
         when "include?"
           sig(args) { String }
           code_include?(code_value)
+        when "first"
+          sig(args) { Integer.maybe }
+          code_first(code_value)
         when "reverse"
           sig(args)
           code_reverse
@@ -64,6 +67,12 @@ class Code
 
       def code_to_function(**_globals)
         Function.new([{ name: "_" }], "_.#{raw}")
+      end
+
+      def code_first(n = nil)
+        code_n = n.to_code
+        code_n = Integer.new(1) if code_n.nothing?
+        String.new(raw.first(code_n.raw))
       end
     end
   end

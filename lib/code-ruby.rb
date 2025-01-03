@@ -8,6 +8,7 @@ require "did_you_mean"
 require "json"
 require "language-ruby"
 require "net/http"
+require "nokogiri"
 require "stringio"
 require "timeout"
 require "uri"
@@ -134,5 +135,11 @@ end
 class Hash
   def to_code
     Code::Object::Dictionary.new(self)
+  end
+end
+
+class Nokogiri::XML::Element
+  def to_code
+    Code::Object::Html.new(self)
   end
 end

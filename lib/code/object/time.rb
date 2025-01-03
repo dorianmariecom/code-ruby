@@ -71,6 +71,9 @@ class Code
         when "hour"
           sig(args)
           code_hour
+        when "format"
+          sig(args) { String }
+          code_format(code_value)
         else
           super
         end
@@ -100,6 +103,12 @@ class Code
 
       def code_hour
         Integer.new(raw.hour)
+      end
+
+      def code_format(format)
+        code_format = format.to_code
+
+        String.new(raw.strftime(code_format.raw))
       end
     end
   end

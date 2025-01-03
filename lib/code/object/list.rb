@@ -81,6 +81,12 @@ class Code
         when "select!"
           sig(args) { Function }
           code_select!(code_value, **globals)
+        when "compact"
+          sig(args) { Function.maybe }
+          code_compact(code_value, **globals)
+        when "compact!"
+          sig(args) { Function.maybe }
+          code_compact!(code_value, **globals)
         when "reject"
           sig(args) { Function }
           code_reject(code_value, **globals)
@@ -296,6 +302,52 @@ class Code
 
       def code_reverse
         List.new(raw.reverse)
+      end
+
+      def code_compact(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        index = 0
+
+        List.new(
+          raw.compact do |code_element|
+            if code_argument.nothing?
+              code_element.falsy?
+            else
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).falsy?
+            end
+          rescue Error::Next => e
+            e.code_value.falsy?
+          ensure
+            index += 1
+          end
+        )
+      end
+
+      def code_compact!(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        index = 0
+
+        raw.compact! do |code_element|
+          if code_argument.nothing?
+            code_element.falsy?
+          else
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).falsy?
+          end
+        rescue Error::Next => e
+          e.code_value.falsy?
+        ensure
+          index += 1
+        end
+
+        self
       end
 
       def code_select(argument, **globals)

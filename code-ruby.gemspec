@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency "json"
   s.add_dependency "language-ruby"
   s.add_dependency "net-http"
+  s.add_dependency "nokogiri"
   s.add_dependency "uri"
   s.add_dependency "zeitwerk"
 

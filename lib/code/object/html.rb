@@ -3,6 +3,18 @@
 class Code
   class Object
     class Html < Object
+      def initialize(*args, **_kargs, &)
+        if args.first.is_an?(Html)
+          @raw = args.first.raw
+        elsif args.first.is_a?(::Nokogiri::XML::NodeSet)
+          @raw = args.first
+        elsif args.first.is_a?(Nokogiri::XML::Node)
+          @raw = args.first
+        else
+          @raw = Nokogiri::HTML(args.first.to_s)
+        end
+      end
+
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
@@ -34,6 +46,52 @@ class Code
         code_string = string.to_code
 
         String.new(CGI.escapeHTML(string.to_s))
+      end
+
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
+        globals = multi_fetch(args, *GLOBALS)
+
+        case code_operator.to_s
+        when "css"
+          sig(args) { String }
+          code_css(code_value)
+        when "map"
+          sig(args) { Function }
+          code_map(code_value, **globals)
+        when "to_string"
+          sig(args)
+          code_to_string
+        else
+          super
+        end
+      end
+
+      def code_css(query)
+        code_query = query.to_code
+
+        Html.new(raw.css(code_query.raw))
+      end
+
+      def code_map(argument, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.map.with_index do |element, index|
+            code_argument.call(
+              arguments: List.new([element.to_code, Integer.new(index), self]),
+              **globals
+            )
+          rescue Error::Next => e
+            e.code_value
+          end
+        )
+      end
+
+      def code_to_string
+        String.new(raw.text)
       end
     end
   end
