@@ -4,15 +4,16 @@ class Code
   class Object
     class Html < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_an?(Html)
-          @raw = args.first.raw
-        elsif args.first.is_a?(::Nokogiri::XML::NodeSet)
-          @raw = args.first
-        elsif args.first.is_a?(Nokogiri::XML::Node)
-          @raw = args.first
-        else
-          @raw = Nokogiri::HTML(args.first.to_s)
-        end
+        @raw =
+          if args.first.is_an?(Html)
+            args.first.raw
+          elsif args.first.is_a?(::Nokogiri::XML::NodeSet)
+            args.first
+          elsif args.first.is_a?(Nokogiri::XML::Node)
+            args.first
+          else
+            Nokogiri.HTML(args.first.to_s)
+          end
       end
 
       def self.call(**args)
