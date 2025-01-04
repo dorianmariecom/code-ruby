@@ -117,10 +117,13 @@ class Code
             if code_argument.nothing?
               true.tap { index += 1 }
             else
-              code_argument.call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              ).truthy?.tap { index += 1 }
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.tap { index += 1 }
@@ -271,10 +274,13 @@ class Code
             if code_argument.nothing?
               code_element.truthy?.tap { index += 1 }
             else
-              code_argument.call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              ).truthy?.tap { index += 1 }
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.truthy?.tap { index += 1 }
@@ -310,10 +316,13 @@ class Code
             if code_argument.nothing?
               code_element.truthy?.tap { index += 1 }
             else
-              code_argument.call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              ).truthy?.tap { index += 1 }
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.truhty?.tap { index += 1 }
@@ -330,10 +339,13 @@ class Code
           if code_argument.nothing?
             code_element.truthy?.tap { index += 1 }
           else
-            code_argument.call(
-              arguments: List.new([code_element, Integer.new(index), self]),
-              **globals
-            ).truthy?.tap { index += 1 }
+            code_argument
+              .call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
           end
         rescue Error::Next => e
           e.code_value.truhty?.tap { index += 1 }
