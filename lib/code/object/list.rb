@@ -115,17 +115,15 @@ class Code
         Boolean.new(
           raw.any? do |code_element|
             if code_argument.nothing?
-              true
+              true.tap { index += 1 }
             else
               code_argument.call(
                 arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
-              ).truthy?
+              ).truthy?.tap { index += 1 }
             end
           rescue Error::Next => e
-            e.code_value
-          ensure
-            index += 1
+            e.code_value.tap { index += 1 }
           end
         )
       end
@@ -271,17 +269,15 @@ class Code
         Boolean.new(
           raw.none? do |code_element|
             if code_argument.nothing?
-              code_element.truthy?
+              code_element.truthy?.tap { index += 1 }
             else
               code_argument.call(
                 arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
-              ).truthy?
+              ).truthy?.tap { index += 1 }
             end
           rescue Error::Next => e
-            e.code_value.truthy?
-          ensure
-            index += 1
+            e.code_value.truthy?.tap { index += 1 }
           end
         )
       end
@@ -310,19 +306,17 @@ class Code
         index = 0
 
         List.new(
-          raw.compact do |code_element|
+          raw.select do |code_element|
             if code_argument.nothing?
-              code_element.falsy?
+              code_element.truthy?.tap { index += 1 }
             else
               code_argument.call(
                 arguments: List.new([code_element, Integer.new(index), self]),
                 **globals
-              ).falsy?
+              ).truthy?.tap { index += 1 }
             end
           rescue Error::Next => e
-            e.code_value.falsy?
-          ensure
-            index += 1
+            e.code_value.truhty?.tap { index += 1 }
           end
         )
       end
@@ -332,19 +326,17 @@ class Code
 
         index = 0
 
-        raw.compact! do |code_element|
+        raw.select! do |code_element|
           if code_argument.nothing?
-            code_element.falsy?
+            code_element.truthy?.tap { index += 1 }
           else
             code_argument.call(
               arguments: List.new([code_element, Integer.new(index), self]),
               **globals
-            ).falsy?
+            ).truthy?.tap { index += 1 }
           end
         rescue Error::Next => e
-          e.code_value.falsy?
-        ensure
-          index += 1
+          e.code_value.truhty?.tap { index += 1 }
         end
 
         self

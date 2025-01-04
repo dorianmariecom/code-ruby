@@ -68,9 +68,42 @@ class Code
         when "future?"
           sig(args)
           code_future?
+        when "year"
+          sig(args)
+          code_year
+        when "years"
+          sig(args)
+          code_years
+        when "month"
+          sig(args)
+          code_month
+        when "months"
+          sig(args)
+          code_months
+        when "day"
+          sig(args)
+          code_day
+        when "days"
+          sig(args)
+          code_days
         when "hour"
           sig(args)
           code_hour
+        when "hours"
+          sig(args)
+          code_hours
+        when "minute"
+          sig(args)
+          code_minute
+        when "minutes"
+          sig(args)
+          code_minutes
+        when "second"
+          sig(args)
+          code_second
+        when "seconds"
+          sig(args)
+          code_seconds
         when "format"
           sig(args) { String }
           code_format(code_value)
@@ -101,8 +134,52 @@ class Code
         code_after?
       end
 
+      def code_year
+        Integer.new(raw.year)
+      end
+
+      def code_years
+        Integer.new(raw.year)
+      end
+
+      def code_month
+        Integer.new(raw.month)
+      end
+
+      def code_months
+        Integer.new(raw.month)
+      end
+
+      def code_day
+        Integer.new(raw.day)
+      end
+
+      def code_days
+        Integer.new(raw.day)
+      end
+
       def code_hour
         Integer.new(raw.hour)
+      end
+
+      def code_hours
+        Integer.new(raw.hour)
+      end
+
+      def code_minute
+        Integer.new(raw.min)
+      end
+
+      def code_minutes
+        Integer.new(raw.min)
+      end
+
+      def code_second
+        Integer.new(raw.sec)
+      end
+
+      def code_seconds
+        Integer.new(raw.sec)
       end
 
       def code_format(format)

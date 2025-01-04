@@ -5,6 +5,18 @@ require "spec_helper"
 RSpec.describe Code do
   (
     %w[
+      Time.now.second
+      Time.now.seconds
+      Time.now.minute
+      Time.now.minutes
+      Time.now.hour
+      Time.now.hours
+      Time.now.day
+      Time.now.days
+      Time.now.month
+      Time.now.months
+      Time.now.year
+      Time.now.years
       1.day.ago
       1.day.from_now
       1.hour.ago
