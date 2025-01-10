@@ -22,7 +22,7 @@ class Code
         end
 
         def call?
-          operator == DOT || operator == COLON_COLON
+          [DOT, COLON_COLON].include?(operator)
         end
 
         def safe_call?
@@ -30,11 +30,11 @@ class Code
         end
 
         def or?
-          operator == OR_KEYWORD || operator == PIPE_PIPE
+          [OR_KEYWORD, PIPE_PIPE].include?(operator)
         end
 
         def and?
-          operator == AND_KEYWORD || operator == AMPERSAND_AMPERSAND
+          [AND_KEYWORD, AMPERSAND_AMPERSAND].include?(operator)
         end
       end
 
