@@ -17,6 +17,18 @@ RSpec.describe Code do
       Time.now.months
       Time.now.year
       Time.now.years
+      Time.second
+      Time.seconds
+      Time.minute
+      Time.minutes
+      Time.hour
+      Time.hours
+      Time.day
+      Time.days
+      Time.month
+      Time.months
+      Time.year
+      Time.years
       1.day.ago
       1.day.from_now
       1.hour.ago

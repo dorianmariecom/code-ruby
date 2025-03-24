@@ -101,9 +101,6 @@ class Code
         when "delete"
           sig(args) { SIG }
           code_delete(*code_arguments.raw)
-        when "connect"
-          sig(args) { SIG }
-          code_connect(*code_arguments.raw)
         when "options"
           sig(args) { SIG }
           code_options(*code_arguments.raw)
@@ -139,10 +136,6 @@ class Code
 
       def self.code_delete(...)
         code_fetch("delete", ...)
-      end
-
-      def self.code_connect(...)
-        code_fetch("connect", ...)
       end
 
       def self.code_options(...)
@@ -192,8 +185,6 @@ class Code
             ::Net::HTTP::Put
           when "delete"
             ::Net::HTTP::Delete
-          when "connect"
-            ::Net::HTTP::Get
           when "options"
             ::Net::HTTP::Options
           when "trace"

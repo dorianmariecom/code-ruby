@@ -23,9 +23,57 @@ class Code
         when "yesterday"
           sig(args)
           code_yesterday
+        when "year"
+          sig(args)
+          code_year
+        when "years"
+          sig(args)
+          code_years
+        when "month"
+          sig(args)
+          code_month
+        when "months"
+          sig(args)
+          code_months
+        when "week"
+          sig(args)
+          code_week
+        when "weeks"
+          sig(args)
+          code_weeks
+        when "week_day"
+          sig(args)
+          code_week_day
+        when "week_days"
+          sig(args)
+          code_week_days
+        when "day"
+          sig(args)
+          code_day
+        when "days"
+          sig(args)
+          code_days
         when "hour"
           sig(args)
           code_hour
+        when "hours"
+          sig(args)
+          code_hours
+        when "minute"
+          sig(args)
+          code_minute
+        when "minutes"
+          sig(args)
+          code_minutes
+        when "second"
+          sig(args)
+          code_second
+        when "seconds"
+          sig(args)
+          code_seconds
+        when "format"
+          sig(args) { String }
+          code_format(code_value)
         else
           super
         end
@@ -48,6 +96,74 @@ class Code
       def self.code_now
         ::Time.zone ||= DEFAULT_ZONE
         new(::Time.zone.now)
+      end
+
+      def self.code_year
+        code_now.code_year
+      end
+
+      def self.code_years
+        code_now.code_years
+      end
+
+      def self.code_month
+        code_now.code_month
+      end
+
+      def self.code_months
+        code_now.code_months
+      end
+
+      def self.code_week
+        code_now.code_week
+      end
+
+      def self.code_weeks
+        code_now.code_weeks
+      end
+
+      def self.code_week_day
+        code_now.code_week_day
+      end
+
+      def self.code_week_days
+        code_now.code_week_days
+      end
+
+      def self.code_day
+        code_now.code_day
+      end
+
+      def self.code_days
+        code_now.code_days
+      end
+
+      def self.code_hour
+        code_now.code_hour
+      end
+
+      def self.code_hours
+        code_now.code_hours
+      end
+
+      def self.code_minute
+        code_now.code_minute
+      end
+
+      def self.code_minutes
+        code_now.code_minutes
+      end
+
+      def self.code_second
+        code_now.code_second
+      end
+
+      def self.code_seconds
+        code_now.code_seconds
+      end
+
+      def self.code_format(format)
+        code_now.code_format(format)
       end
 
       def call(**args)
@@ -80,6 +196,18 @@ class Code
         when "months"
           sig(args)
           code_months
+        when "week"
+          sig(args)
+          code_week
+        when "weeks"
+          sig(args)
+          code_weeks
+        when "week_day"
+          sig(args)
+          code_week_day
+        when "week_days"
+          sig(args)
+          code_week_days
         when "day"
           sig(args)
           code_day
@@ -148,6 +276,22 @@ class Code
 
       def code_months
         Integer.new(raw.month)
+      end
+
+      def code_week
+        Integer.new(raw.to_date.cweek)
+      end
+
+      def code_weeks
+        Integer.new(raw.to_date.cweek)
+      end
+
+      def code_week_day
+        Integer.new(raw.wday)
+      end
+
+      def code_week_days
+        Integer.new(raw.wday)
       end
 
       def code_day
