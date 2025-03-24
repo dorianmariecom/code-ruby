@@ -341,6 +341,7 @@ RSpec.describe Code do
     ["[1, 2, 3].none?(&:even?)", "false"],
     ["'{1} {2}'", "'1 2'"],
     %w[Json.parse("1") 1],
+    %w[{a:1}.to_query "a=1"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

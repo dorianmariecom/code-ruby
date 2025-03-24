@@ -169,6 +169,9 @@ class Code
         when "transform_values"
           sig(args) { Function }
           code_transform_values(code_value, **globals)
+        when "to_query"
+          sig(args) { String.maybe }
+          code_to_query(code_value)
         when "two?"
           sig(args)
           code_two?
@@ -630,6 +633,12 @@ class Code
 
       def code_to_list
         List.new(raw.to_a.map { |key_value| List.new(key_value) })
+      end
+
+      def code_to_query(namespace = nil)
+        code_namespace = namespace.to_code
+
+        String.new(raw.to_query(code_namespace.raw))
       end
 
       def code_transform_values(function, **globals)
