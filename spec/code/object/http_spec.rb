@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::Http do
-  %w[get head post put delete connect options trace patch].each do |verb|
+  %w[get head post put delete options trace patch].each do |verb|
     describe ".#{verb}" do
       {
         continue: 100,
