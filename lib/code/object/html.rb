@@ -59,6 +59,9 @@ class Code
         when "css"
           sig(args) { String }
           code_css(code_value)
+        when "at_css"
+          sig(args) { String }
+          code_at_css(code_value)
         when "map"
           sig(args) { Function }
           code_map(code_value, **globals)
@@ -76,6 +79,12 @@ class Code
         Html.new(raw.css(code_query.raw))
       end
 
+      def code_at_css(query)
+        code_query = query.to_code
+
+        Html.new(raw.at_css(code_query.raw))
+      end
+
       def code_map(argument, **globals)
         code_argument = argument.to_code
 
@@ -89,6 +98,10 @@ class Code
             e.code_value
           end
         )
+      end
+
+      def to_s
+        raw.text
       end
 
       def code_to_string
