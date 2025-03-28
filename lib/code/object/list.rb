@@ -436,10 +436,27 @@ class Code
         raw.inject(&:code_plus) || Nothing.new
       end
 
+      def code_deep_duplicate
+        List.new(raw.dup.map { |element| element.code_deep_duplicate })
+      end
+
       def code_get(argument)
         code_argument = argument.to_code
 
         raw[code_argument] || Nothing.new
+      end
+
+      def code_set(key, value)
+        code_key = key.to_code.code_to_integer
+        code_value = value.to_code
+        raw[code_key.raw] = code_value
+        code_value
+      end
+
+      def code_fetch(key)
+        code_key = key.to_code.code_to_integer
+
+        raw.fetch(code_key.raw, Nothing.new)
       end
 
       def any?

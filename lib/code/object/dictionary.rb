@@ -659,6 +659,12 @@ class Code
       def code_values
         List.new(raw.values)
       end
+
+      def code_deep_duplicate
+        Dictionary.new(
+          raw.dup.to_h { |key, value| [key, value].map(&:code_deep_duplicate) }
+        )
+      end
     end
   end
 end

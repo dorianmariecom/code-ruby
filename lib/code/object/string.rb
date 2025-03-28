@@ -4,9 +4,17 @@ class Code
   class Object
     class String < Object
       def initialize(*args, **_kargs, &)
-        raw = args.first || Nothing.new
-        raw = raw.raw if raw.is_a?(Object)
-        @raw = raw.to_s
+        if args.first.is_an?(Class)
+          @raw = args.first.raw.name
+        elsif args.first.is_an?(Object)
+          @raw = args.first.raw.to_s
+        elsif args.first.is_a?(::Class)
+          @raw = args.first.name
+        elsif args.first
+          @raw = args.first.to_s
+        else
+          @raw = ""
+        end
       end
 
       def call(**args)
@@ -37,6 +45,9 @@ class Code
         when "reverse"
           sig(args)
           code_reverse
+        when "parameterize"
+          sig(args)
+          code_parameterize
         else
           super
         end
@@ -67,6 +78,14 @@ class Code
 
       def code_to_function(**_globals)
         Function.new([{ name: "_" }], "_.#{raw}")
+      end
+
+      def code_inspect
+        String.new(raw.inspect)
+      end
+
+      def code_parameterize
+        String.new(raw.parameterize)
       end
 
       def code_first(n = nil)

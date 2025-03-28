@@ -14,6 +14,14 @@ class Code
       def nothing?
         true
       end
+
+      def code_to_string
+        String.new
+      end
+
+      def code_inspect
+        String.new("nothing")
+      end
     end
   end
 end

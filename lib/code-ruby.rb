@@ -72,6 +72,18 @@ class Object
   end
 end
 
+class Class
+  def to_code
+    Code::Object::Class.new(self)
+  end
+end
+
+class Module
+  def to_code
+    Code::Object::Class.new(self)
+  end
+end
+
 class NilClass
   def to_code
     Code::Object::Nothing.new(self)
