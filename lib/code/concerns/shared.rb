@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Code
   module Concerns
     module Shared
@@ -124,7 +126,10 @@ class Code
 
           code_context.code_fetch(self)
         else
-          raise(Error, "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}")
+          raise(
+            Error,
+            "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}"
+          )
         end
       end
 

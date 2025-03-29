@@ -34,8 +34,8 @@ class Code
       super.split("::")[2..].join("::")
     end
 
-    def self.code_new(*args)
-      new(*args)
+    def self.code_new(*)
+      new(*)
     end
 
     def name
