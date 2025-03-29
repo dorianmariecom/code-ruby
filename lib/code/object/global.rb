@@ -145,7 +145,7 @@ class Code
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)
         when "evaluate"
           sig(args) { Object }
-          Code.evaluate(code_value.to_s)
+          Code.code_evaluate(code_value.code_to_string)
         when "p"
           sig(args) { Object.repeat }
           output.puts(*code_arguments.raw.map(&:inspect))
