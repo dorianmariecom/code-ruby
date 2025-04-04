@@ -353,6 +353,8 @@ RSpec.describe Code do
       next if code_input.is_a?(Code::Object::Decimal)
 
       expect(code_input.to_json).to eq(code_expected.to_json)
+      YAML.unsafe_load(code_input.to_yaml)
+      YAML.unsafe_load(code_expected.to_yaml)
     end
   end
 

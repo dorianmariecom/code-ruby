@@ -59,6 +59,10 @@ class Code
         str("do")
       end
 
+      def begin_keyword
+        str("do")
+      end
+
       def end_keyword
         str("end")
       end
@@ -107,8 +111,9 @@ class Code
 
       def block
         (
-          do_keyword << whitespace? << parameters.aka(:parameters).maybe <<
-            code.aka(:body) << end_keyword.maybe
+          (do_keyword | begin_keyword) << whitespace? <<
+            parameters.aka(:parameters).maybe << code.aka(:body) <<
+            end_keyword.maybe
         ) |
           (
             opening_curly_bracket << whitespace? <<

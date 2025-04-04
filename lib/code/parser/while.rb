@@ -35,6 +35,10 @@ class Code
         str("do")
       end
 
+      def begin_keyword
+        str("begin")
+      end
+
       def loop_keyword
         str("loop")
       end
@@ -47,6 +51,11 @@ class Code
         str("}")
       end
 
+      def body
+        ((do_keyword | begin_keyword) << code << end_keyword.maybe) |
+          (opening_curly_bracket << code << closing_curly_bracket) | code
+      end
+
       def root
         (
           (
@@ -54,12 +63,7 @@ class Code
               (while_keyword | until_keyword).aka(:operator) << whitespace <<
                 statement.aka(:statement)
             ) | (loop_keyword.aka(:operator) << whitespace)
-          ) << (
-            (
-              whitespace? << (opening_curly_bracket | do_keyword)
-            ).maybe << code.aka(:body) <<
-              (closing_curly_bracket | end_keyword).maybe
-          )
+          ) << body.aka(:body)
         ).aka(:while) | statement
       end
     end

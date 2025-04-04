@@ -23,6 +23,22 @@ class Code
         whitespace.maybe
       end
 
+      def do_keyword
+        str("do")
+      end
+
+      def begin_keyword
+        str("begin")
+      end
+
+      def opening_curly_bracket
+        str("{")
+      end
+
+      def closing_curly_bracket
+        str("{")
+      end
+
       def if_keyword
         str("if")
       end
@@ -43,20 +59,25 @@ class Code
         str("end")
       end
 
+      def body
+        ((begin_keyword | do_keyword) << code << end_keyword.maybe) |
+          (opening_curly_bracket << code << closing_curly_bracket.maybe) | code
+      end
+
       def root
         (
           (if_keyword | unless_keyword).aka(:first_operator) << whitespace <<
-            statement.aka(:first_statement) << code.aka(:first_body) <<
+            statement.aka(:first_statement) << body.aka(:first_body) <<
             (
               (
                 elsif_keyword.aka(:operator) << whitespace <<
-                  statement.aka(:statement) << code.aka(:body)
+                  statement.aka(:statement) << body.aka(:body)
               ) |
                 (
                   else_keyword << whitespace <<
                     (if_keyword | unless_keyword).aka(:operator) <<
-                    whitespace << statement.aka(:statement) << code.aka(:body)
-                ) | (else_keyword.aka(:operator) << code.aka(:body))
+                    whitespace << statement.aka(:statement) << body.aka(:body)
+                ) | (else_keyword.aka(:operator) << body.aka(:body))
             ).repeat(1).aka(:elses).maybe << end_keyword.maybe
         ).aka(:if) | statement
       end

@@ -91,8 +91,16 @@ class Code
         str("elsif")
       end
 
+      def begin_keyword
+        str("begin")
+      end
+
       def else_keyword
         str("else")
+      end
+
+      def begin_keyword
+        str("begin")
       end
 
       def special_character
@@ -113,8 +121,9 @@ class Code
 
       def root
         (do_keyword << separator).absent << (
-          else_keyword << separator
-        ).absent << (elsif_keyword << separator).absent <<
+          begin_keyword << separator
+        ).absent << (else_keyword << separator).absent <<
+          (elsif_keyword << separator).absent <<
           (end_keyword << separator).absent << character.repeat(1)
       end
     end

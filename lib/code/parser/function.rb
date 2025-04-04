@@ -23,6 +23,18 @@ class Code
         whitespace.maybe
       end
 
+      def do_keyword
+        str("do")
+      end
+
+      def begin_keyword
+        str("begin")
+      end
+
+      def end_keyword
+        str("end")
+      end
+
       def opening_parenthesis
         str("(")
       end
@@ -88,11 +100,15 @@ class Code
           (whitespace? << closing_parenthesis.ignore).maybe
       end
 
+      def body
+        ((begin_keyword | do_keyword) << code << end_keyword.maybe) |
+          (opening_curly_bracket << code << closing_curly_bracket.maybe) | code
+      end
+
       def root
         (
           parameters.aka(:parameters) << whitespace? << equal << greater <<
-            whitespace? << opening_curly_bracket << code.aka(:body) <<
-            closing_curly_bracket.maybe
+            whitespace? << body.aka(:body)
         ).aka(:function) | Dictionary
       end
     end
