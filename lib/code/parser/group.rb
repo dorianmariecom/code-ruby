@@ -30,8 +30,7 @@ class Code
       def root
         (opening_parenthesis << code << closing_parenthesis.maybe).aka(:group) |
           (begin_keyword << code << end_keyword.maybe).aka(:group) |
-          (do_keyword << code << end_keyword.maybe).aka(:group) |
-          Call
+          (do_keyword << code << end_keyword.maybe).aka(:group) | Call
       end
     end
   end
