@@ -43,6 +43,8 @@ require "ruby-prof" if profile
 
 RubyProf.start if profile
 
+input = 'loop { print("> ") puts(evaluate(read)) }' if input.blank?
+
 if parsed.options.parse
   pp Code::Parser.parse(input).to_raw
 else
@@ -51,6 +53,7 @@ else
       input,
       output: $stdout,
       error: $stderr,
+      input: $stdin,
       timeout: parsed.options.timeout
     )
   )

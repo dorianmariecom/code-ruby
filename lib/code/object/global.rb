@@ -7,8 +7,10 @@ class Code
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
         output = args.fetch(:output)
+        input = args.fetch(:input)
         code_context = args.fetch(:context).to_code
         code_value = code_arguments.code_first
+        globals = multi_fetch(args, *GLOBALS)
 
         case code_operator.to_s
         when "Boolean"
@@ -145,7 +147,7 @@ class Code
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)
         when "evaluate"
           sig(args) { Object }
-          Code.code_evaluate(code_value.code_to_string)
+          Code.code_evaluate(code_value.code_to_string, **globals)
         when "p"
           sig(args) { Object.repeat }
           output.puts(*code_arguments.raw.map(&:inspect))
@@ -154,6 +156,9 @@ class Code
           sig(args) { Object.repeat }
           output.print(*code_arguments.raw)
           Nothing.new
+        when "read"
+          sig(args) { Object.repeat }
+          input.gets.to_code
         when "puts"
           sig(args) { Object.repeat }
           output.puts(*code_arguments.raw)

@@ -124,7 +124,10 @@ class Code
 
           code_context.code_fetch(self)
         else
-          raise(Error, "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}")
+          raise(
+            Error,
+            "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}"
+          )
         end
       end
 
@@ -411,7 +414,7 @@ class Code
       end
 
       def code_name
-        Object::String.new(name)
+        Object::String.new(name.to_s.split("::")[2..].join("::"))
       end
     end
   end

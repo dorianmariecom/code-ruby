@@ -1,43 +1,50 @@
 # frozen_string_literal: true
 
 class Code
-  GLOBALS = %i[output error context object].freeze
+  GLOBALS = %i[context error input object output source object].freeze
   DEFAULT_TIMEOUT = 0
 
   def initialize(
-    input,
-    output: StringIO.new,
+    source,
+    context: Object::Context.new,
     error: StringIO.new,
+    input: StringIO.new,
+    object: Object::Global.new,
+    output: StringIO.new,
     timeout: DEFAULT_TIMEOUT
   )
-    @input = input
-    @output = output
+    @context = context
     @error = error
-    @timeout = timeout || DEFAULT_TIMEOUT
-    @context = Object::Context.new
+    @input = input
+    @object = object
+    @output = output
+    @source = source
+    @timeout = timeout
   end
 
-  def self.parse(input, timeout: DEFAULT_TIMEOUT)
-    Timeout.timeout(timeout) { Parser.parse(input).to_raw }
+  def self.parse(source, timeout: DEFAULT_TIMEOUT)
+    Timeout.timeout(timeout) { Parser.parse(source).to_raw }
   end
 
-  def self.evaluate(
-    input,
-    output: StringIO.new,
-    error: StringIO.new,
-    timeout: DEFAULT_TIMEOUT
-  )
-    new(input, output:, error:, timeout:).evaluate
+  def self.evaluate(...)
+    new(...).evaluate
   end
 
   def evaluate
     Timeout.timeout(timeout) do
-      parsed = Code.parse(input)
-      Node::Code.new(parsed).evaluate(context:, output:, error:)
+      Node::Code.new(Code.parse(source)).evaluate(
+        context:,
+        error:,
+        input:,
+        object:,
+        output:,
+        source:,
+        timeout:
+      )
     end
   end
 
   private
 
-  attr_reader :input, :timeout, :output, :error, :context
+  attr_reader :context, :error, :input, :object, :output, :source, :timeout
 end

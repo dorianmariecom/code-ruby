@@ -30,10 +30,6 @@ class Code
       Type::Or.new(self, other)
     end
 
-    def self.name
-      super.split("::")[2..].join("::")
-    end
-
     def self.code_new(*args)
       new(*args)
     end

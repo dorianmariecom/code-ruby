@@ -11,6 +11,10 @@ class Code
         Whitespace
       end
 
+      def whitespace?
+        whitespace.maybe
+      end
+
       def code
         Code
       end
@@ -27,8 +31,20 @@ class Code
         str("end")
       end
 
+      def do_keyword
+        str("do")
+      end
+
       def loop_keyword
         str("loop")
+      end
+
+      def opening_curly_bracket
+        str("{")
+      end
+
+      def closing_curly_bracket
+        str("}")
       end
 
       def root
@@ -38,7 +54,12 @@ class Code
               (while_keyword | until_keyword).aka(:operator) << whitespace <<
                 statement.aka(:statement)
             ) | (loop_keyword.aka(:operator) << whitespace)
-          ) << code.aka(:body) << end_keyword.maybe
+          ) << (
+            (
+              whitespace? << (opening_curly_bracket | do_keyword)
+            ).maybe << code.aka(:body) <<
+              (closing_curly_bracket | end_keyword).maybe
+          )
         ).aka(:while) | statement
       end
     end

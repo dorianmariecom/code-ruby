@@ -12,6 +12,12 @@ class Code
           end
       end
 
+      def self.code_evaluate(*args, **globals)
+        code_args = args.to_code
+
+        new(*code_args.raw).code_evaluate(**globals)
+      end
+
       def code_evaluate(...)
         raw.evaluate(...)
       end
