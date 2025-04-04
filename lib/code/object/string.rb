@@ -4,17 +4,18 @@ class Code
   class Object
     class String < Object
       def initialize(*args, **_kargs, &)
-        if args.first.is_an?(Class)
-          @raw = args.first.raw.name
-        elsif args.first.is_an?(Object)
-          @raw = args.first.raw.to_s
-        elsif args.first.is_a?(::Class)
-          @raw = args.first.name
-        elsif args.first
-          @raw = args.first.to_s
-        else
-          @raw = ""
-        end
+        @raw =
+          if args.first.is_an?(Class)
+            args.first.raw.name
+          elsif args.first.is_an?(Object)
+            args.first.raw.to_s
+          elsif args.first.is_a?(::Class)
+            args.first.name
+          elsif args.first
+            args.first.to_s
+          else
+            ""
+          end
       end
 
       def call(**args)

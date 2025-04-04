@@ -437,7 +437,7 @@ class Code
       end
 
       def code_deep_duplicate
-        List.new(raw.dup.map { |element| element.code_deep_duplicate })
+        List.new(raw.dup.map(&:code_deep_duplicate))
       end
 
       def code_get(argument)
