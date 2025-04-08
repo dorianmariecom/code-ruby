@@ -4,29 +4,51 @@ class Code
   class Node
     class Dictionary < Node
       class KeyValue < Node
+        attr_reader :resolve_key
+
         def initialize(parsed)
           return if parsed.blank?
 
-          if parsed.key?(:statement)
-            @key = Node::Statement.new(parsed.delete(:statement).presence)
-          elsif parsed.key?(:name)
-            @key = Node::String.new([{ text: parsed.delete(:name).presence }])
+          if name_code = parsed.delete(:name_code)
+            if name_code.key?(:code)
+              @key = Node::String.new([{ text: name_code.delete(:name).presence }])
+              @value = Node::Code.new(name_code.delete(:code).presence)
+              @resolve_key = false
+            else
+              @key = Node::Call.new({ name: name_code.delete(:name).presence })
+              @value = @key
+              @resolve_key = true
+            end
+          elsif statement_code = parsed.delete(:statement_code)
+            if statement_code.key?(:code)
+              @key = Node::Statement.new(statement_code.delete(:statement).presence)
+              @value = Node::Code.new(statement_code.delete(:code).presence)
+              @resolve_key = false
+            else
+              @key = Node::Statement.new(statement_code.delete(:statement).presence)
+              @value = @key
+              @resolve_key = true
+            end
+          else
+            @key = @value = Node::Code.new(parsed.delete(:code).presence)
+            @resolve_key = true
           end
-
-          return unless parsed[:value].presence
-
-          @value = Node::Code.new(parsed.delete(:value).presence)
         end
 
         def evaluate(**args)
-          key = @key&.evaluate(**args) || Object::Nothing.new
-
-          if @value
-            value = @value.evaluate(**args)
-            [key, value]
+          if resolve_key?
+            key = @key&.resolve(**args) || Object::Nothing.new
           else
-            [key, key]
+            key = @key&.evaluate(**args) || Object::Nothing.new
           end
+
+          value = @value.evaluate(**args)
+
+          [key, value]
+        end
+
+        def resolve_key?
+          !!resolve_key
         end
       end
 

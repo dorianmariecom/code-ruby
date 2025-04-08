@@ -48,15 +48,19 @@ input = 'loop { print("> ") puts(evaluate(read)) }' if input.blank?
 if parsed.options.parse
   pp Code::Parser.parse(input).to_raw
 else
-  print(
-    Code.evaluate(
-      input,
-      output: $stdout,
-      error: $stderr,
-      input: $stdin,
-      timeout: parsed.options.timeout
+  begin
+    print(
+      Code.evaluate(
+        input,
+        output: $stdout,
+        error: $stderr,
+        input: $stdin,
+        timeout: parsed.options.timeout
+      )
     )
-  )
+  rescue Code::Error => e
+    warn e.message
+  end
 end
 
 if profile

@@ -108,7 +108,7 @@ class Code
         when "Time"
           sig(args) { Object.repeat }
           if code_arguments.any?
-            Time.zone.local(*code_arguments.raw)
+            Time.new(*code_arguments.raw)
           else
             Class.new(Time)
           end

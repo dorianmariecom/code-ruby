@@ -52,8 +52,9 @@ class Code
       end
 
       def body
-        ((do_keyword | begin_keyword) << code << end_keyword.maybe) |
-          (opening_curly_bracket << code << closing_curly_bracket) | code
+        ((begin_keyword | do_keyword) << code << end_keyword.maybe) |
+          (opening_curly_bracket << code << closing_curly_bracket.maybe) |
+          (code << (whitespace? << end_keyword).maybe)
       end
 
       def root

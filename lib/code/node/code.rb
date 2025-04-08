@@ -19,6 +19,16 @@ class Code
 
         last
       end
+
+      def resolve(**args)
+        last = Object::Nothing.new
+
+        (@statements || []).each do |statement|
+          last = statement.resolve(**args, object: Object::Global.new)
+        end
+
+        last
+      end
     end
   end
 end
