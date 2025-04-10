@@ -287,62 +287,6 @@ class Code
         code_to_string.code_parameterize
       end
 
-      def code_falsy?
-        Object::Boolean.new(falsy?)
-      end
-
-      def code_truthy?
-        Object::Boolean.new(truthy?)
-      end
-
-      def code_to_boolean
-        Object::Boolean.new(self)
-      end
-
-      def code_to_class
-        Object::Class.new(self)
-      end
-
-      def code_to_date
-        Object::Date.new(self)
-      end
-
-      def code_to_decimal
-        Object::Decimal.new(self)
-      end
-
-      def code_to_dictionary
-        Object::Dictionary.new(self)
-      end
-
-      def code_to_duration
-        Object::Duration.new(self)
-      end
-
-      def code_to_integer
-        Object::Integer.new(self)
-      end
-
-      def code_to_list
-        Object::List.new(self)
-      end
-
-      def code_to_nothing
-        Object::Nothing.new(self)
-      end
-
-      def code_to_range
-        Object::Range.new(self)
-      end
-
-      def code_to_string
-        Object::String.new(self)
-      end
-
-      def code_to_time
-        Object::Time.new(self)
-      end
-
       def to_s
         code_to_string.raw
       end
