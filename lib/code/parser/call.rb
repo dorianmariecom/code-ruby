@@ -119,10 +119,7 @@ class Code
             opening_curly_bracket << whitespace? <<
               parameters.aka(:parameters).maybe << code.aka(:body) <<
               closing_curly_bracket.maybe
-          ) | (
-            parameters.aka(:parameters).maybe << code.aka(:body) <<
-            end_keyword.maybe
-        )
+          )
       end
 
       def root
