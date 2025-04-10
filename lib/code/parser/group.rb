@@ -7,6 +7,14 @@ class Code
         Code
       end
 
+      def whitespace
+        Whitespace
+      end
+
+      def whitespace?
+        whitespace.maybe
+      end
+
       def opening_parenthesis
         str("(")
       end
@@ -28,9 +36,18 @@ class Code
       end
 
       def root
-        (opening_parenthesis << code << closing_parenthesis.maybe).aka(:group) |
-          (begin_keyword << code << end_keyword.maybe).aka(:group) |
-          (do_keyword << code << end_keyword.maybe).aka(:group) | Call
+        (
+          opening_parenthesis << whitespace? << code <<
+            (whitespace? << closing_parenthesis).maybe
+        ).aka(:group) |
+          (
+            begin_keyword << whitespace << code <<
+              (whitespace? << end_keyword).maybe
+          ).aka(:group) |
+          (
+            do_keyword << whitespace << code <<
+              (whitespace? << end_keyword).maybe
+          ).aka(:group) | Call
       end
     end
   end

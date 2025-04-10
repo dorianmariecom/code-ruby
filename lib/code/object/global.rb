@@ -107,11 +107,7 @@ class Code
           end
         when "Time"
           sig(args) { Object.repeat }
-          if code_arguments.any?
-            Time.new(*code_arguments.raw)
-          else
-            Class.new(Time)
-          end
+          code_arguments.any? ? Time.new(*code_arguments.raw) : Class.new(Time)
         when "Context"
           sig(args) { Object.repeat }
           if code_arguments.any?

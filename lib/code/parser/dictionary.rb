@@ -48,7 +48,9 @@ class Code
       end
 
       def key_value
-        (name.aka(:name) << colon << code_present.aka(:code).maybe).aka(:name_code) |
+        (name.aka(:name) << colon << code_present.aka(:code).maybe).aka(
+          :name_code
+        ) |
           (
             statement.aka(:statement) << colon << code_present.aka(:code).maybe
           ).aka(:statement_code) |

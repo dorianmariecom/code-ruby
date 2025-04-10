@@ -11,7 +11,8 @@ class Code
 
           if name_code = parsed.delete(:name_code)
             if name_code.key?(:code)
-              @key = Node::String.new([{ text: name_code.delete(:name).presence }])
+              @key =
+                Node::String.new([{ text: name_code.delete(:name).presence }])
               @value = Node::Code.new(name_code.delete(:code).presence)
               @resolve_key = false
             else
@@ -21,11 +22,13 @@ class Code
             end
           elsif statement_code = parsed.delete(:statement_code)
             if statement_code.key?(:code)
-              @key = Node::Statement.new(statement_code.delete(:statement).presence)
+              @key =
+                Node::Statement.new(statement_code.delete(:statement).presence)
               @value = Node::Code.new(statement_code.delete(:code).presence)
               @resolve_key = false
             else
-              @key = Node::Statement.new(statement_code.delete(:statement).presence)
+              @key =
+                Node::Statement.new(statement_code.delete(:statement).presence)
               @value = @key
               @resolve_key = true
             end
