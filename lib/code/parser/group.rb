@@ -37,16 +37,16 @@ class Code
 
       def root
         (
-          opening_parenthesis << whitespace? << code <<
-            (whitespace? << closing_parenthesis).maybe
+          opening_parenthesis.ignore << whitespace? << code <<
+            (whitespace? << closing_parenthesis).maybe.ignore
         ).aka(:group) |
           (
-            begin_keyword << whitespace << code <<
-              (whitespace? << end_keyword).maybe
+            begin_keyword.ignore << whitespace << code <<
+              (whitespace? << end_keyword).maybe.ignore
           ).aka(:group) |
           (
-            do_keyword << whitespace << code <<
-              (whitespace? << end_keyword).maybe
+            do_keyword.ignore << whitespace << code <<
+              (whitespace? << end_keyword).maybe.ignore
           ).aka(:group) | Call
       end
     end

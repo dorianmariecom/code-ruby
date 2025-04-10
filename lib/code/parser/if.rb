@@ -61,13 +61,13 @@ class Code
 
       def body
         (
-          (begin_keyword | do_keyword) << whitespace << code <<
-            (whitespace? << end_keyword).maybe
+          (begin_keyword | do_keyword).ignore << whitespace << code <<
+            (whitespace? << end_keyword).maybe.ignore
         ) |
           (
-            opening_curly_bracket << whitespace? << code <<
-              (whitespace? << closing_curly_bracket).maybe
-          ) | (code << (whitespace? << end_keyword).maybe)
+            opening_curly_bracket.ignore << whitespace? << code <<
+              (whitespace? << closing_curly_bracket).maybe.ignore
+          ) | (code << (whitespace? << end_keyword).maybe.ignore)
       end
 
       def root

@@ -111,14 +111,15 @@ class Code
 
       def block
         (
-          (do_keyword | begin_keyword) << whitespace <<
-            parameters.aka(:parameters).maybe << code.aka(:body) <<
-            end_keyword.maybe
+          (do_keyword | begin_keyword).ignore << whitespace <<
+            parameters.aka(:parameters).maybe << whitespace? <<
+            code.aka(:body) << (whitespace? << end_keyword).maybe.ignore
         ) |
           (
-            opening_curly_bracket << whitespace? <<
-              parameters.aka(:parameters).maybe << code.aka(:body) <<
-              closing_curly_bracket.maybe
+            opening_curly_bracket.ignore << whitespace? <<
+              parameters.aka(:parameters).maybe << whitespace? <<
+              code.aka(:body) <<
+              (whitespace? << closing_curly_bracket).maybe.ignore
           )
       end
 
