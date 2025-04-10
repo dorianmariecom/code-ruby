@@ -3,13 +3,12 @@
 class Code
   class Object
     class Html < Object
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         @raw =
           if args.first.is_an?(Html)
             args.first.raw
-          elsif args.first.is_a?(::Nokogiri::XML::NodeSet)
-            args.first
-          elsif args.first.is_a?(Nokogiri::XML::Node)
+          elsif args.first.is_a?(::Nokogiri::XML::NodeSet) ||
+                args.first.is_a?(Nokogiri::XML::Node)
             args.first
           else
             Nokogiri.HTML(args.first.to_s)

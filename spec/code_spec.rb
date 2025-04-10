@@ -348,7 +348,7 @@ RSpec.describe Code do
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       output = StringIO.new
-      code_input = described_class.evaluate(input, output:)
+      code_input = described_class.evaluate(input, output: output)
       code_expected = described_class.evaluate(expected)
       expect(code_input).to eq(code_expected)
       expect(output.string).to eq("")
@@ -363,7 +363,7 @@ RSpec.describe Code do
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do
       output = StringIO.new
-      described_class.evaluate(input, output:)
+      described_class.evaluate(input, output: output)
       expect(output.string).to eq(expected)
     end
   end

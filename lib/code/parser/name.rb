@@ -83,6 +83,10 @@ class Code
         str("do")
       end
 
+      def begin_keyword
+        str("begin")
+      end
+
       def end_keyword
         str("end")
       end
@@ -91,16 +95,8 @@ class Code
         str("elsif")
       end
 
-      def begin_keyword
-        str("begin")
-      end
-
       def else_keyword
         str("else")
-      end
-
-      def begin_keyword
-        str("begin")
       end
 
       def special_character

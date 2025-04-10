@@ -175,8 +175,6 @@ class Code
 
         request_class =
           case verb
-          when "get"
-            ::Net::HTTP::Get
           when "head"
             ::Net::HTTP::Head
           when "post"

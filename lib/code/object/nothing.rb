@@ -3,7 +3,7 @@
 class Code
   class Object
     class Nothing < Object
-      def initialize(*_args, **_kargs, &)
+      def initialize(*_args, **_kargs, &_block)
         @raw = nil
       end
 

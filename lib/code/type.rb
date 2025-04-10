@@ -7,7 +7,7 @@ class Code
     end
 
     def repeat(minimum = 0, maximum = nil)
-      Repeat.new(self, minimum:, maximum:)
+      Repeat.new(self, minimum: minimum, maximum: maximum)
     end
 
     def |(other)

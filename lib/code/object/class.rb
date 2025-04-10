@@ -3,7 +3,7 @@
 class Code
   class Object
     class Class < Object
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         @raw =
           if args.first.is_a?(Class)
             args.first.raw

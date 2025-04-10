@@ -5,7 +5,7 @@ class Code
     class Range < Object
       attr_reader :code_left, :code_right, :code_options, :code_exclude_end
 
-      def initialize(*args, **kargs, &)
+      def initialize(*args, **kargs, &_block)
         if args.first.is_a?(Range)
           @code_left = args.first.code_left
           @code_right = args.first.code_right

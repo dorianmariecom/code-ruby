@@ -5,7 +5,7 @@ class Code
     class Function < Object
       attr_reader :code_parameters, :code_body
 
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         @code_parameters =
           List
             .new(args.first)

@@ -5,7 +5,7 @@ class Code
     class Time < Object
       DEFAULT_ZONE = "Etc/UTC"
 
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
         @raw = ::Time.zone.parse(args.first.to_s) || ::Time.zone.now
       end
@@ -77,10 +77,6 @@ class Code
         else
           super
         end
-      end
-
-      def self.code_hour
-        code_now.code_hour
       end
 
       def self.code_tomorrow

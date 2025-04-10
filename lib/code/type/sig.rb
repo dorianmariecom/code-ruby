@@ -111,7 +111,7 @@ class Code
         actual_arguments.each do |actual|
           expected = expected_arguments[expected_index]
           if expected.is_a?(Repeat)
-            if valid_for?(expected:, actual:)
+            if valid_for?(expected: expected, actual: actual)
               repeat_index += 1
             elsif repeat_index >= expected.min_arguments
               expected_index += 1
@@ -122,7 +122,7 @@ class Code
                 "#{function}: expected #{expected.name}, got #{actual.inspect}"
               )
             end
-          elsif valid_for?(expected:, actual:)
+          elsif valid_for?(expected: expected, actual: actual)
             expected_index += 1
             repeat_index = 0
           else

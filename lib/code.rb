@@ -33,13 +33,13 @@ class Code
   def evaluate
     Timeout.timeout(timeout) do
       Node::Code.new(Code.parse(source)).evaluate(
-        context:,
-        error:,
-        input:,
-        object:,
-        output:,
-        source:,
-        timeout:
+        context: context,
+        error: error,
+        input: input,
+        object: object,
+        output: output,
+        source: source,
+        timeout: timeout
       )
     end
   end

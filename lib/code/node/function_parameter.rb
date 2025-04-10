@@ -36,7 +36,7 @@ class Code
 
       def to_h
         {
-          name:,
+          name: name,
           regular?: regular?,
           keyword?: keyword?,
           regular_splat?: regular_splat?,

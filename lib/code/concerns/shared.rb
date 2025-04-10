@@ -213,8 +213,8 @@ class Code
         keys.to_h { |key| [key, hash.fetch(key)] }
       end
 
-      def sig(args, &)
-        Type::Sig.sig(args, object: self, &)
+      def sig(args, &block)
+        Type::Sig.sig(args, object: self, &block)
 
         Object::Nothing.new
       end

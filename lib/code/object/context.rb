@@ -5,7 +5,7 @@ class Code
     class Context < Dictionary
       attr_reader :parent
 
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         super(args.first)
         @parent = args.second if args.second.is_a?(Dictionary)
       end

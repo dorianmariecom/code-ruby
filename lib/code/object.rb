@@ -23,23 +23,23 @@ class Code
     end
 
     def self.repeat(minimum = 0, maximum = nil)
-      Type::Repeat.new(self, minimum:, maximum:)
+      Type::Repeat.new(self, minimum: minimum, maximum: maximum)
     end
 
     def self.|(other)
       Type::Or.new(self, other)
     end
 
-    def self.code_new(*)
-      new(*)
+    def self.code_new(*args)
+      new(*args)
     end
 
     def name
       self.class.name
     end
 
-    def code_new(*)
-      self.class.code_new(*)
+    def code_new(*args)
+      self.class.code_new(*args)
     end
   end
 end

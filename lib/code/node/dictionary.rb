@@ -9,7 +9,7 @@ class Code
         def initialize(parsed)
           return if parsed.blank?
 
-          if name_code = parsed.delete(:name_code)
+          if (name_code = parsed.delete(:name_code))
             if name_code.key?(:code)
               @key =
                 Node::String.new([{ text: name_code.delete(:name).presence }])
@@ -20,15 +20,14 @@ class Code
               @value = @key
               @resolve_key = true
             end
-          elsif statement_code = parsed.delete(:statement_code)
+          elsif (statement_code = parsed.delete(:statement_code))
+            @key =
+              Node::Statement.new(statement_code.delete(:statement).presence)
+
             if statement_code.key?(:code)
-              @key =
-                Node::Statement.new(statement_code.delete(:statement).presence)
               @value = Node::Code.new(statement_code.delete(:code).presence)
               @resolve_key = false
             else
-              @key =
-                Node::Statement.new(statement_code.delete(:statement).presence)
               @value = @key
               @resolve_key = true
             end
@@ -39,14 +38,9 @@ class Code
         end
 
         def evaluate(**args)
-          if resolve_key?
-            key = @key&.resolve(**args) || Object::Nothing.new
-          else
-            key = @key&.evaluate(**args) || Object::Nothing.new
-          end
-
+          key = resolve_key? ? @key&.resolve(**args) : @key&.evaluate(**args)
+          key ||= Object::Nothing.new
           value = @value.evaluate(**args)
-
           [key, value]
         end
 

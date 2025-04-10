@@ -3,7 +3,7 @@
 class Code
   class Object
     class Decimal < Object
-      def initialize(*args, **_kargs, &)
+      def initialize(*args, **_kargs, &_block)
         @raw =
           if args.first.class.in?(NUMBER_CLASSES)
             if args.second.class.in?(NUMBER_CLASSES)
