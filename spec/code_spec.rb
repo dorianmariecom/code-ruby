@@ -5,6 +5,20 @@ require "spec_helper"
 RSpec.describe Code do
   (
     %w[
+      Time.monday?
+      Time.tuesday?
+      Time.wednesday?
+      Time.thursday?
+      Time.friday?
+      Time.saturday?
+      Time.sunday?
+      Time.now.monday?
+      Time.now.tuesday?
+      Time.now.wednesday?
+      Time.now.thursday?
+      Time.now.friday?
+      Time.now.saturday?
+      Time.now.sunday?
       Time.now.second
       Time.now.seconds
       Time.now.minute

@@ -71,6 +71,27 @@ class Code
         when "seconds"
           sig(args)
           code_seconds
+        when "monday?"
+          sig(args)
+          code_monday?
+        when "tuesday?"
+          sig(args)
+          code_tuesday?
+        when "wednesday?"
+          sig(args)
+          code_wednesday?
+        when "thursday?"
+          sig(args)
+          code_thursday?
+        when "friday?"
+          sig(args)
+          code_friday?
+        when "saturday?"
+          sig(args)
+          code_saturday?
+        when "sunday?"
+          sig(args)
+          code_sunday?
         when "format"
           sig(args) { String }
           code_format(code_value)
@@ -158,6 +179,34 @@ class Code
         code_now.code_seconds
       end
 
+      def self.code_monday?
+        code_week_day.code_one?
+      end
+
+      def self.code_tuesday?
+        code_week_day.code_two?
+      end
+
+      def self.code_wednesday?
+        code_week_day.code_three?
+      end
+
+      def self.code_thursday?
+        code_week_day.code_four?
+      end
+
+      def self.code_friday?
+        code_week_day.code_five?
+      end
+
+      def self.code_saturday?
+        code_week_day.code_six?
+      end
+
+      def self.code_sunday?
+        code_week_day.code_zero?
+      end
+
       def self.code_format(format)
         code_now.code_format(format)
       end
@@ -228,6 +277,27 @@ class Code
         when "seconds"
           sig(args)
           code_seconds
+        when "monday?"
+          sig(args)
+          code_monday?
+        when "tuesday?"
+          sig(args)
+          code_tuesday?
+        when "wednesday?"
+          sig(args)
+          code_wednesday?
+        when "thursday?"
+          sig(args)
+          code_thursday?
+        when "friday?"
+          sig(args)
+          code_friday?
+        when "saturday?"
+          sig(args)
+          code_saturday?
+        when "sunday?"
+          sig(args)
+          code_sunday?
         when "format"
           sig(args) { String }
           code_format(code_value)
@@ -320,6 +390,34 @@ class Code
 
       def code_seconds
         Integer.new(raw.sec)
+      end
+
+      def code_monday?
+        code_week_day.code_one?
+      end
+
+      def code_tuesday?
+        code_week_day.code_two?
+      end
+
+      def code_wednesday?
+        code_week_day.code_three?
+      end
+
+      def code_thursday?
+        code_week_day.code_four?
+      end
+
+      def code_friday?
+        code_week_day.code_five?
+      end
+
+      def code_saturday?
+        code_week_day.code_six?
+      end
+
+      def code_sunday?
+        code_week_day.code_zero?
       end
 
       def code_format(format)
