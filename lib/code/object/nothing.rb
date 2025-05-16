@@ -4,7 +4,7 @@ class Code
   class Object
     class Nothing < Object
       def initialize(*_args, **_kargs, &_block)
-        @raw = nil
+        self.raw = nil
       end
 
       def truthy?

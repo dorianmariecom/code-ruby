@@ -4,7 +4,7 @@ class Code
   class Object
     class Duration < Object
       def initialize(*args, **_kargs, &_block)
-        @raw =
+        self.raw =
           if args.first.is_an?(::ActiveSupport::Duration)
             args.first
           elsif args.first.is_a?(Duration)
@@ -13,7 +13,7 @@ class Code
             ::ActiveSupport::Duration.parse(args.first.to_s)
           end
       rescue ::ActiveSupport::Duration::ISO8601Parser::ParsingError
-        @raw = 0.seconds
+        self.raw = 0.seconds
       end
 
       def call(**args)

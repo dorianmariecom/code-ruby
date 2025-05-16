@@ -4,7 +4,7 @@ class Code
   class Object
     class Integer < Object
       def initialize(*args, **_kargs, &_block)
-        @raw =
+        self.raw =
           if args.first.class.in?(NUMBER_CLASSES)
             if args.second.class.in?(NUMBER_CLASSES)
               (args.first.to_s.to_d * (10**args.second.to_s.to_d)).to_i
@@ -15,7 +15,7 @@ class Code
             0
           end
       rescue FloatDomainError
-        @raw = 0
+        self.raw = 0
       end
 
       def call(**args)

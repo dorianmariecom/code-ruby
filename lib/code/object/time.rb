@@ -7,7 +7,7 @@ class Code
 
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
-        @raw = ::Time.zone.parse(args.first.to_s) || ::Time.zone.now
+        self.raw = ::Time.zone.parse(args.first.to_s) || ::Time.zone.now
       end
 
       def self.call(**args)

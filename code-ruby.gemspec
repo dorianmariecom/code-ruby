@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.summary = "a programming language for the internet"
   s.description = s.summary
   s.authors = ["Dorian Marié"]
-  s.email = "dorian@dorianmarie.fr"
+  s.email = "dorian@dorianmarie.com"
   s.files = `git ls-files`.lines.map(&:strip)
   s.require_paths = ["lib"]
   s.homepage = "https://github.com/dorianmariecom/code-ruby"

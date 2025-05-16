@@ -4,7 +4,7 @@ class Code
   class Object
     class List < Object
       def initialize(*args, **_kargs, &_block)
-        @raw =
+        self.raw =
           if args.first.is_a?(List)
             args.first.raw.map(&:to_code)
           elsif args.first.is_an?(::Array)
@@ -45,6 +45,9 @@ class Code
         when "sample"
           sig(args) { Integer.maybe }
           code_sample(code_value)
+        when "shuffle"
+          sig(args)
+          code_shuffle
         when "flatten"
           sig(args) { Integer.maybe }
           code_flatten
@@ -185,6 +188,10 @@ class Code
         else
           List.new(raw.sample(code_value.raw))
         end
+      end
+
+      def code_shuffle
+        List.new(raw.shuffle)
       end
 
       def code_flatten(level = nil)

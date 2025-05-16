@@ -15,7 +15,7 @@ class Code
 
         @code_body = Code.new(args.second.presence)
 
-        @raw = List.new([code_parameters, code_body])
+        self.raw = List.new([code_parameters, code_body])
       end
 
       def call(**args)

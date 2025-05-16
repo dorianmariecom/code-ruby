@@ -16,7 +16,7 @@ class Code
       delegate :code_zero?, to: :code_size
 
       def initialize(*args, **kargs, &_block)
-        @raw =
+        self.raw =
           args
             .map do |arg|
               if arg.is_an?(::Hash)
@@ -218,7 +218,7 @@ class Code
       end
 
       def code_clear
-        @raw = {}
+        self.raw = {}
         self
       end
 

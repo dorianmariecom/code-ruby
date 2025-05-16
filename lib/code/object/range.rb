@@ -26,7 +26,7 @@ class Code
           @code_exclude_end = Boolean.new(code_options.code_get(:exclude_end))
         end
 
-        @raw = ::Range.new(code_left, code_right, exclude_end?)
+        self.raw = ::Range.new(code_left, code_right, exclude_end?)
       end
 
       def call(**args)

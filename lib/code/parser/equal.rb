@@ -51,10 +51,6 @@ class Code
         str("^")
       end
 
-      def dot
-        str(".")
-      end
-
       def right_statement
         OrKeyword
       end

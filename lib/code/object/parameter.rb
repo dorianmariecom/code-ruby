@@ -4,7 +4,7 @@ class Code
   class Object
     class Parameter < Object
       def initialize(*args, **_kargs, &_block)
-        @raw = Dictionary.new(args.first)
+        self.raw = Dictionary.new(args.first)
       end
 
       def code_name

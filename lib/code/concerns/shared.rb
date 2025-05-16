@@ -3,7 +3,7 @@
 class Code
   module Concerns
     module Shared
-      attr_reader :raw
+      attr_accessor :raw, :methods
 
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -103,6 +103,9 @@ class Code
           else
             code_to_json
           end
+        when "methods"
+          sig(args)
+          code_methods
         when "name"
           sig(args)
           code_name
@@ -361,6 +364,10 @@ class Code
 
       def code_name
         Object::String.new(name.to_s.split("::")[2..].join("::"))
+      end
+
+      def code_methods
+        Object::List.new(methods)
       end
     end
   end

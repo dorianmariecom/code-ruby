@@ -4,7 +4,7 @@ class Code
   class Object
     class Decimal < Object
       def initialize(*args, **_kargs, &_block)
-        @raw =
+        self.raw =
           if args.first.class.in?(NUMBER_CLASSES)
             if args.second.class.in?(NUMBER_CLASSES)
               args.first.to_s.to_d * (10**args.second.to_s.to_d)
@@ -15,7 +15,7 @@ class Code
             0.to_d
           end
       rescue FloatDomainError
-        @raw = 0.to_d
+        self.raw = 0.to_d
       end
 
       def call(**args)

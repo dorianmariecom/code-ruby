@@ -4,7 +4,7 @@ class Code
   class Object
     class Html < Object
       def initialize(*args, **_kargs, &_block)
-        @raw =
+        self.raw =
           if args.first.is_an?(Html)
             args.first.raw
           elsif args.first.is_a?(::Nokogiri::XML::NodeSet) ||

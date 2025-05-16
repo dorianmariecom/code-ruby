@@ -4,9 +4,9 @@ class Code
   class Object
     class Date < Object
       def initialize(*args, **_kargs, &_block)
-        @raw = ::Date.parse(args.map(&:to_s).join("-"))
+        self.raw = ::Date.parse(args.map(&:to_s).join("-"))
       rescue ::Date::Error
-        @raw = ::Date.current
+        self.raw = ::Date.current
       end
 
       def self.call(**args)

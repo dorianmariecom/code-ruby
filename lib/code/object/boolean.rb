@@ -4,7 +4,7 @@ class Code
   class Object
     class Boolean < ::Code::Object
       def initialize(*args, **_kargs, &_block)
-        @raw = (args.first.is_an?(Object) ? args.first.truthy? : !!args.first)
+        self.raw = (args.first.is_an?(Object) ? args.first.truthy? : !!args.first)
       end
 
       def call(**args)
