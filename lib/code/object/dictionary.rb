@@ -265,11 +265,19 @@ class Code
               .map
               .with_index do |code_argument, index|
                 if code_default.nothing?
-                  [code_argument, code_delete(code_argument, index: index, **globals)]
+                  [
+                    code_argument,
+                    code_delete(code_argument, index: index, **globals)
+                  ]
                 else
                   [
                     code_argument,
-                    code_delete(code_argument, code_default, index: index, **globals)
+                    code_delete(
+                      code_argument,
+                      code_default,
+                      index: index,
+                      **globals
+                    )
                   ]
                 end
               end
@@ -378,11 +386,19 @@ class Code
               .map
               .with_index do |code_argument, index|
                 if code_default.nothing?
-                  [code_argument, code_fetch(code_argument, index: index, **globals)]
+                  [
+                    code_argument,
+                    code_fetch(code_argument, index: index, **globals)
+                  ]
                 else
                   [
                     code_argument,
-                    code_fetch(code_argument, code_default, index: index, **globals)
+                    code_fetch(
+                      code_argument,
+                      code_default,
+                      index: index,
+                      **globals
+                    )
                   ]
                 end
               end

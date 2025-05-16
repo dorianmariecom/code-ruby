@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::Http do
-  VERBS = %w[get head post put delete options trace patch]
+  VERBS = %w[get head post put delete options trace patch].freeze
 
   RESPONSE_CODES = {
     continue: 100,
@@ -69,7 +69,7 @@ RSpec.describe Code::Object::Http do
     bandwidth_limit_exceeded: 509,
     not_extended: 510,
     network_authentication_required: 511
-  }
+  }.freeze
 
   VERBS.each do |verb|
     describe ".#{verb}" do
