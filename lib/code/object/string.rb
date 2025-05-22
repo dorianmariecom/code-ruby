@@ -49,6 +49,9 @@ class Code
         when "parameterize"
           sig(args)
           code_parameterize
+        when "substitute"
+          sig(args) { [String, String.maybe] }
+          code_substitute(*code_arguments.raw)
         else
           super
         end
@@ -87,6 +90,13 @@ class Code
 
       def code_parameterize
         String.new(raw.parameterize)
+      end
+
+      def code_substitute(from = nil, to = nil)
+        code_from = from.to_code
+        code_to = to.to_code
+
+        String.new(raw.gsub(code_from.to_s, code_to.to_s))
       end
 
       def code_first(n = nil)
