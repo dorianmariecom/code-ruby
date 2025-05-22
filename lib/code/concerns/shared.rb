@@ -294,6 +294,10 @@ class Code
         code_to_string.raw
       end
 
+      def to_i
+        code_to_integer.raw
+      end
+
       def inspect
         code_inspect.raw
       end

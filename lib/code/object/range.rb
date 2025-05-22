@@ -60,6 +60,9 @@ class Code
         when "step"
           sig(args) { Integer | Decimal }
           code_step(code_value)
+        when "sample"
+          sig(args)
+          code_sample
         when "to_list"
           sig(args)
           code_to_list
@@ -181,6 +184,10 @@ class Code
 
       def code_to_list
         List.new(raw.to_a)
+      end
+
+      def code_sample
+        code_to_list.code_sample
       end
     end
   end

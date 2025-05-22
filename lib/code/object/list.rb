@@ -30,6 +30,9 @@ class Code
         when "<<", "append"
           sig(args) { Object }
           code_append(code_value)
+        when "-", "minus"
+          sig(args) { List }
+          code_minus(code_value)
         when "any?"
           sig(args) { Function.maybe }
           code_any?(code_value, **globals)
@@ -50,7 +53,13 @@ class Code
           code_shuffle
         when "flatten"
           sig(args) { Integer.maybe }
-          code_flatten
+          code_flatten(code_value)
+        when "pop"
+          sig(args) { Integer.maybe }
+          code_pop(code_value)
+        when "shift"
+          sig(args) { Integer.maybe }
+          code_shift(code_value)
         when "include?"
           sig(args) { Object }
           code_include?(code_value)
@@ -142,6 +151,12 @@ class Code
         self
       end
 
+      def code_minus(other)
+        code_other = other.to_code
+
+        List.new(raw - code_other.raw)
+      end
+
       def code_detect(argument, **globals)
         code_argument = argument.to_code
 
@@ -212,6 +227,28 @@ class Code
             end
           end
         )
+      end
+
+      def code_pop(n = nil)
+        code_n = n.to_code
+        n = code_n.raw
+
+        if code_n.nothing?
+          raw.pop || Nothing.new
+        else
+          List.new(raw.pop(n))
+        end
+      end
+
+      def code_shift(n = nil)
+        code_n = n.to_code
+        n = code_n.raw
+
+        if code_n.nothing?
+          raw.shift || Nothing.new
+        else
+          List.new(raw.shift(n))
+        end
       end
 
       def code_include?(other)

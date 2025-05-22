@@ -138,6 +138,9 @@ class Code
         when "Http"
           sig(args) { Object.repeat }
           code_arguments.any? ? Http.new(*code_arguments.raw) : Class.new(Http)
+        when "Smtp"
+          sig(args) { Object.repeat }
+          code_arguments.any? ? Smtp.new(*code_arguments.raw) : Class.new(Smtp)
         when "Json"
           sig(args) { Object.repeat }
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)

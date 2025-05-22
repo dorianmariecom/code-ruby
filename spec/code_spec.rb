@@ -5,6 +5,8 @@ require "spec_helper"
 RSpec.describe Code do
   (
     %w[
+      Smtp
+      Smtp.new
       Time.monday?
       Time.tuesday?
       Time.wednesday?
