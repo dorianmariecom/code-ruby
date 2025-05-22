@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (1.5.2)
+    code-ruby (1.5.3)
       activesupport
       base64
       bigdecimal
@@ -9,6 +9,7 @@ PATH
       dorian-arguments
       json
       language-ruby
+      mail
       net-http
       net-smtp
       nokogiri
@@ -47,6 +48,7 @@ GEM
       bigdecimal
       rexml
     csv (3.3.4)
+    date (3.4.1)
     did-you-mean (0.1.1)
       levenshtein (>= 0.2.0)
     diff-lcs (1.6.2)
@@ -105,6 +107,12 @@ GEM
     libv8-node (23.6.1.0-x86_64-linux)
     lint_roller (1.1.0)
     logger (1.7.0)
+    mail (2.8.1)
+      mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
+    mini_mime (1.1.5)
     mini_racer (0.18.1)
       libv8-node (~> 23.6.1.0)
     minitest (5.25.5)
@@ -112,6 +120,11 @@ GEM
       ruby2_keywords (~> 0.0.1)
     net-http (0.6.0)
       uri
+    net-imap (0.5.8)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
     net-protocol (0.2.2)
       timeout
     net-smtp (0.5.1)
