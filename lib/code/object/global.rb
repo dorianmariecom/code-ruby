@@ -141,6 +141,9 @@ class Code
         when "Smtp"
           sig(args) { Object.repeat }
           code_arguments.any? ? Smtp.new(*code_arguments.raw) : Class.new(Smtp)
+        when "Base64"
+          sig(args) { Object.repeat }
+          code_arguments.any? ? Base64.new(*code_arguments.raw) : Class.new(Base64)
         when "Json"
           sig(args) { Object.repeat }
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)

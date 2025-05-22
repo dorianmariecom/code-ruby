@@ -5,6 +5,8 @@ require "spec_helper"
 RSpec.describe Code do
   (
     %w[
+      Base64
+      Base64.new
       Smtp
       Smtp.new
       Time.monday?
