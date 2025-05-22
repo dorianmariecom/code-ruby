@@ -233,22 +233,14 @@ class Code
         code_n = n.to_code
         n = code_n.raw
 
-        if code_n.nothing?
-          raw.pop || Nothing.new
-        else
-          List.new(raw.pop(n))
-        end
+        code_n.nothing? ? raw.pop || Nothing.new : List.new(raw.pop(n))
       end
 
       def code_shift(n = nil)
         code_n = n.to_code
         n = code_n.raw
 
-        if code_n.nothing?
-          raw.shift || Nothing.new
-        else
-          List.new(raw.shift(n))
-        end
+        code_n.nothing? ? raw.shift || Nothing.new : List.new(raw.shift(n))
       end
 
       def code_include?(other)
