@@ -3,7 +3,7 @@
 class Code
   class Parser
     class Negation < Language
-      def exclamation_point
+      def exclamation_mark
         str("!")
       end
 
@@ -16,7 +16,7 @@ class Code
       end
 
       def operator
-        exclamation_point | tilde | plus
+        exclamation_mark | tilde | plus
       end
 
       def negation

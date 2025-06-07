@@ -99,7 +99,15 @@ class Code
         str("else")
       end
 
-      def special_character
+      def exclamation_mark
+        str("!")
+      end
+
+      def question_mark
+        str("?")
+      end
+
+      def reserved_character
         ampersand | equal | pipe | dot | colon | comma | space | newline |
           opening_curly_bracket | closing_curly_bracket | opening_parenthesis |
           closing_parenthesis | opening_square_bracket |
@@ -108,11 +116,15 @@ class Code
       end
 
       def character
-        special_character.absent << any
+        reserved_character.absent << any
       end
 
       def separator
-        special_character | any.absent
+        reserved_character | any.absent
+      end
+
+      def special_characters
+        exclamation_mark | question_mark
       end
 
       def root
@@ -120,7 +132,8 @@ class Code
           begin_keyword << separator
         ).absent << (else_keyword << separator).absent <<
           (elsif_keyword << separator).absent <<
-          (end_keyword << separator).absent << character.repeat(1)
+          (end_keyword << separator).absent <<
+          special_characters.absent << character.repeat(1)
       end
     end
   end

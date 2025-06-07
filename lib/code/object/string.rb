@@ -52,6 +52,9 @@ class Code
         when "substitute"
           sig(args) { [String, String.maybe] }
           code_substitute(*code_arguments.raw)
+        when "upcase"
+          sig(args)
+          code_upcase
         else
           super
         end
@@ -59,6 +62,10 @@ class Code
 
       def code_downcase
         String.new(raw.downcase)
+      end
+
+      def code_upcase
+        String.new(raw.upcase)
       end
 
       def code_include?(value)

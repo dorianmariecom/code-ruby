@@ -16,7 +16,7 @@ class Code
           code_new(*code_arguments.raw)
         when "!", "not"
           sig(args)
-          code_exclamation_point
+          code_exclamation_mark
         when "!=", "different"
           sig(args) { Object }
           code_different(code_value)
@@ -34,10 +34,13 @@ class Code
           code_exclusive_range(code_value)
         when "==", "equal"
           sig(args) { Object }
-          code_equal_equal(code_value)
+          code_equal(code_value)
         when "===", "strict_equal"
           sig(args) { Object }
-          code_equal_equal_equal(code_value)
+          code_strict_equal(code_value)
+        when "!==", "strict_different"
+          sig(args) { Object }
+          code_strict_different(code_value)
         when "falsy?"
           sig(args)
           code_falsy?
@@ -109,6 +112,12 @@ class Code
         when "name"
           sig(args)
           code_name
+        when "nothing?"
+          sig(args)
+          code_nothing?
+        when "something?"
+          sig(args)
+          code_something?
         when /=$/
           sig(args) { Object }
 
@@ -166,13 +175,13 @@ class Code
         Object::Boolean.new(self != code_other)
       end
 
-      def code_equal_equal(other)
+      def code_equal(other)
         code_other = other.to_code
 
         Object::Boolean.new(self == code_other)
       end
 
-      def code_exclamation_point
+      def code_exclamation_mark
         Object::Boolean.new(falsy?)
       end
 
@@ -198,10 +207,16 @@ class Code
         self
       end
 
-      def code_equal_equal_equal(other)
+      def code_strict_equal(other)
         code_other = other.to_code
 
         Object::Boolean.new(self === code_other)
+      end
+
+      def code_strict_different(other)
+        code_other = other.to_code
+
+        Object::Boolean.new(!(self === code_other))
       end
 
       def falsy?
@@ -302,8 +317,20 @@ class Code
         code_inspect.raw
       end
 
+      def code_nothing?
+        Boolean.new(nothing?)
+      end
+
+      def code_something?
+        Boolean.new(something?)
+      end
+
       def nothing?
         false
+      end
+
+      def something?
+        !nothing?
       end
 
       def code_falsy?

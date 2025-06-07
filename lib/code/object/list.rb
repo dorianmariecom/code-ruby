@@ -528,7 +528,7 @@ class Code
       def code_get(argument)
         code_argument = argument.to_code
 
-        raw[code_argument] || Nothing.new
+        raw[code_argument.raw] || Nothing.new
       end
 
       def code_set(key, value)

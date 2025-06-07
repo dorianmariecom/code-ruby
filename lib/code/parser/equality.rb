@@ -19,7 +19,7 @@ class Code
         str("<")
       end
 
-      def exclamation_point
+      def exclamation_mark
         str("!")
       end
 
@@ -32,9 +32,10 @@ class Code
       end
 
       def operator
-        (equal << equal << equal) | (equal << equal) |
-          (lesser << equal << greater) | (exclamation_point << equal) |
-          (equal << tilde) | (tilde << equal) | (exclamation_point << tilde)
+        (exclamation_mark  << equal << equal) | (equal << equal << equal) |
+          (equal << equal) | (lesser << equal << greater) |
+          (exclamation_mark << equal) | (equal << tilde) | (tilde << equal) |
+          (exclamation_mark << tilde)
       end
     end
   end

@@ -141,13 +141,15 @@ class Code
         code_month = month.to_code
         code_day = day.to_code
 
-        raw.change(
-          **{
-            year: code_year.raw,
-            month: code_month.raw,
-            day: code_day.raw
-          }.compact
-        )
+        if code_year.something? || code_month.something? || code_day.something?
+          raw.change(
+            **{
+              year: code_year.raw,
+              month: code_month.raw,
+              day: code_day.raw
+            }.compact
+          )
+        end
 
         self
       end

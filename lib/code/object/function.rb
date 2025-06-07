@@ -41,9 +41,9 @@ class Code
             if code_parameter.regular_splat?
               code_arguments
             elsif code_parameter.keyword_splat?
-              code_arguments
-                .raw
-                .detect { |code_argument| code_argument.is_a?(Dictionary) } || Dictionary.new
+              code_arguments.raw.detect do |code_argument|
+                code_argument.is_a?(Dictionary)
+              end || Dictionary.new
             elsif code_parameter.keyword?
               code_arguments
                 .raw
@@ -52,6 +52,7 @@ class Code
                   code_dictionary.code_has_value?(parameter.code_name).truthy?
                 end
                 &.code_get(parameter.code_name)
+                .to_code
             else
               code_arguments.raw[index].to_code
             end

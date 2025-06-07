@@ -210,7 +210,7 @@ class Code
             raw.any? do |key, value|
               code_argument
                 .call(
-                  arguments: List.new([key, value, self, Integer.new(index)]),
+                  arguments: List.new([key, value, Integer.new(index), self]),
                   **globals
                 )
                 .truthy?
@@ -257,7 +257,7 @@ class Code
               Nothing.new
             else
               code_default.call(
-                arguments: List.new([code_first, self, code_index]),
+                arguments: List.new([code_first, code_index, self]),
                 **globals
               )
             end
@@ -298,7 +298,7 @@ class Code
           raw.delete_if.with_index do |(code_key, code_value), index|
             argument.call(
               arguments:
-                List.new([code_key, code_value, self, Integer.new(index)]),
+                List.new([code_key, code_value, Integer.new(index), self]),
               **globals
             ).truthy?
           end
@@ -315,7 +315,7 @@ class Code
         else
           raw.delete_if.with_index do |(key, value), index|
             code_argument.call(
-              arguments: List.new([key, value, self, Integer.new(index)]),
+              arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).falsy?
           end
@@ -343,7 +343,7 @@ class Code
 
         raw.each.with_index do |(key, value), index|
           code_argument.call(
-            arguments: List.new([key, value, self, Integer.new(index)]),
+            arguments: List.new([key, value, Integer.new(index), self]),
             **globals
           )
         end
@@ -660,17 +660,21 @@ class Code
         code_function = function.to_code
 
         Dictionary.new(
-          raw.map.with_index do |(key, value), index|
-            [
-              key.to_code,
-              code_function.call(
-                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
-                **globals
-              )
-            ]
-          rescue Error::Next => e
-            [key.to_code, e.code_value]
-          end.to_h
+          raw
+            .map
+            .with_index do |(key, value), index|
+              [
+                key.to_code,
+                code_function.call(
+                  arguments:
+                    List.new([key.to_code, value.to_code, index.to_code, self]),
+                  **globals
+                )
+              ]
+            rescue Error::Next => e
+              [key.to_code, e.code_value]
+            end
+            .to_h
         )
       end
 
