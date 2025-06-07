@@ -38,7 +38,13 @@ class Code
 
         code_parameters.raw.each.with_index do |code_parameter, index|
           code_argument =
-            if code_parameter.keyword?
+            if code_parameter.regular_splat?
+              code_arguments
+            elsif code_parameter.keyword_splat?
+              code_arguments
+                .raw
+                .detect { |code_argument| code_argument.is_a?(Dictionary) } || Dictionary.new
+            elsif code_parameter.keyword?
               code_arguments
                 .raw
                 .select { |code_argument| code_argument.is_a?(Dictionary) }
@@ -64,15 +70,28 @@ class Code
         code_parameters
           .raw
           .inject([]) do |signature, code_parameter|
-            if code_parameter.keyword?
+            if code_parameter.keyword_splat?
+              signature + [Dictionary.maybe]
+            elsif code_parameter.regular_splat?
+              signature + [Object.repeat]
+            elsif code_parameter.keyword? && code_parameter.required?
               if signature.last.is_a?(::Hash)
                 signature.last[code_parameter.code_name] = Object
                 signature
               else
                 signature + [{ code_parameter.code_name => Object }]
               end
-            else
+            elsif code_parameter.keyword?
+              if signature.last.is_a?(::Hash)
+                signature.last[code_parameter.code_name] = Object.maybe
+                signature
+              else
+                signature + [{ code_parameter.code_name => Object.maybe }]
+              end
+            elsif code_parameter.required?
               signature + [Object]
+            else
+              signature + [Object.maybe]
             end
           end + [Object.repeat]
       end

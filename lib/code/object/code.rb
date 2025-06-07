@@ -5,7 +5,7 @@ class Code
     class Code < Object
       def initialize(*args, **_kargs, &_block)
         self.raw =
-          if args.first.is_a?(Node)
+          if args.first.is_a?(Node::Code)
             args.first
           else
             Node::Code.new(::Code.parse(args.first.to_s))

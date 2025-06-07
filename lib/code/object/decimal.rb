@@ -75,9 +75,6 @@ class Code
         when "ceil"
           sig(args) { Integer.maybe }
           code_ceil(code_value)
-        when "clone"
-          sig(args)
-          code_clone
         when "eight?"
           sig(args)
           code_eight?
@@ -114,15 +111,6 @@ class Code
         when "three?"
           sig(args)
           code_three?
-        when "to_decimal"
-          sig(args)
-          code_to_decimal
-        when "to_integer"
-          sig(args)
-          code_to_integer
-        when "to_string"
-          sig(args)
-          code_to_string
         when "truncate"
           sig(args) { Integer.maybe }
           code_truncate(code_value)
@@ -135,6 +123,12 @@ class Code
         when "|", "bitwise_or"
           sig(args) { Integer | Decimal }
           code_bitwise_or(code_value)
+        when "many?"
+          sig(args)
+          code_many?
+        when "any?"
+          sig(args)
+          code_any?
         else
           super
         end
@@ -167,10 +161,6 @@ class Code
         code_n = Integer.new(0) if code_n.nothing?
 
         Decimal.new(raw.ceil(code_n.raw))
-      end
-
-      def code_clone
-        Decimal.new(raw)
       end
 
       def code_compare(other)
@@ -309,14 +299,6 @@ class Code
         Boolean.new(raw == 3)
       end
 
-      def code_to_decimal
-        Decimal.new(raw)
-      end
-
-      def code_to_integer
-        Integer.new(raw.to_i)
-      end
-
       def code_to_string
         String.new(raw.to_s("F"))
       end
@@ -338,6 +320,14 @@ class Code
 
       def code_zero?
         Boolean.new(raw.zero?)
+      end
+
+      def code_many?
+        Boolean.new(raw > 1)
+      end
+
+      def code_any?
+        Boolean.new(raw > 0)
       end
     end
   end

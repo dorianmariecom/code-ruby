@@ -154,6 +154,12 @@ class Code
         when "|", "bitwise_or"
           sig(args) { Integer | Decimal }
           code_bitwise_or(code_value)
+        when "many?"
+          sig(args)
+          code_many?
+        when "any?"
+          sig(args)
+          code_any?
         else
           super
         end
@@ -409,6 +415,14 @@ class Code
 
       def code_zero?
         Boolean.new(raw.zero?)
+      end
+
+      def code_many?
+        Boolean.new(raw > 1)
+      end
+
+      def code_any?
+        Boolean.new(raw > 0)
       end
 
       def code_hours

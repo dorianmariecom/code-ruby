@@ -27,12 +27,28 @@ class Code
         Boolean.new(raw.code_get(:keyword_splat?))
       end
 
+      def code_required?
+        code_default.code_falsy?
+      end
+
+      def code_optional?
+        code_default.code_truthy?
+      end
+
       def code_default
-        Code.new(raw.code_get(:default))
+        raw.code_get(:default).to_code
       end
 
       def code_evaluate(...)
         code_default.code_evaluate(...)
+      end
+
+      def required?
+        code_required?.truthy?
+      end
+
+      def optional?
+        code_optional?.truthy?
       end
 
       def regular?

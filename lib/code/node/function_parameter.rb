@@ -3,11 +3,16 @@
 class Code
   class Node
     class FunctionParameter < Node
+      attr_reader :default
+
       def initialize(parsed)
         return if parsed.blank?
 
         @name = parsed.delete(:name).presence
         @keyword = parsed.delete(:keyword).present?
+        @regular_splat = parsed.delete(:regular_splat).present?
+        @keyword_splat = parsed.delete(:keyword_splat).present?
+        @default = Code.new(parsed.delete(:default)) if parsed.key?(:default)
       end
 
       def name
@@ -23,15 +28,11 @@ class Code
       end
 
       def regular_splat?
-        false
+        !!@regular_splat
       end
 
       def keyword_splat?
-        false
-      end
-
-      def default
-        nil
+        !!@keyword_splat
       end
 
       def to_h
@@ -41,7 +42,7 @@ class Code
           keyword?: keyword?,
           regular_splat?: regular_splat?,
           keyword_splat?: keyword_splat?,
-          default: Object::Code.new(default)
+          default: default
         }
       end
 

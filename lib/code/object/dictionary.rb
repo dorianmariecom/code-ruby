@@ -14,6 +14,7 @@ class Code
       delegate :code_three?, to: :code_size
       delegate :code_two?, to: :code_size
       delegate :code_zero?, to: :code_size
+      delegate :code_many?, to: :code_size
 
       def initialize(*args, **kargs, &_block)
         self.raw =
@@ -59,7 +60,7 @@ class Code
           sig(args) { Object }
           code_get(code_value)
         when "any?"
-          sig(args) { Function | Class }
+          sig(args) { (Function | Class).maybe }
           code_any?(code_value, **globals)
         when "clear"
           sig(args)
@@ -163,9 +164,6 @@ class Code
         when "three?"
           sig(args)
           code_three?
-        when "to_list"
-          sig(args)
-          code_to_list
         when "transform_values"
           sig(args) { Function }
           code_transform_values(code_value, **globals)
@@ -181,6 +179,9 @@ class Code
         when "zero?"
           sig(args)
           code_zero?
+        when "many?"
+          sig(args)
+          code_many?
         when ->(code_operator) { code_has_key?(code_operator).truthy? }
           result = code_fetch(code_operator)
 
@@ -198,7 +199,9 @@ class Code
       def code_any?(argument, **globals)
         code_argument = argument.to_code
 
-        if code_argument.is_a?(Class)
+        if code_argument.nothing?
+          Boolean.new(raw.any?)
+        elsif code_argument.is_a?(Class)
           Boolean.new(raw.any? { |_, value| value.is_a?(code_argument.raw) })
         else
           index = 0
@@ -647,10 +650,6 @@ class Code
         Context.new(raw)
       end
 
-      def code_to_list
-        List.new(raw.to_a.map { |key_value| List.new(key_value) })
-      end
-
       def code_to_query(namespace = nil)
         code_namespace = namespace.to_code
 
@@ -661,14 +660,17 @@ class Code
         code_function = function.to_code
 
         Dictionary.new(
-          raw.transform_values.with_index do |value, index|
-            code_function.call(
-              arguments: List.new([value.to_code, index.to_code, self]),
-              **globals
-            )
+          raw.map.with_index do |(key, value), index|
+            [
+              key.to_code,
+              code_function.call(
+                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                **globals
+              )
+            ]
           rescue Error::Next => e
-            e.code_value
-          end
+            [key.to_code, e.code_value]
+          end.to_h
         )
       end
 

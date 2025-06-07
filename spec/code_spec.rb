@@ -5,6 +5,18 @@ require "spec_helper"
 RSpec.describe Code do
   (
     %w[
+      {}.zero?
+      {}.any?
+      {}.many?
+      1.zero?
+      1.any?
+      1.many?
+      1.0.zero?
+      1.0.any?
+      1.0.many?
+      [].zero?
+      [].any?
+      [].many?
       Base64
       Base64.new
       Smtp

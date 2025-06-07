@@ -29,6 +29,10 @@ class Code
 
         last
       end
+
+      def to_code
+        @statements.blank? ? Object::Nothing.new : Object::Code.new(self)
+      end
     end
   end
 end

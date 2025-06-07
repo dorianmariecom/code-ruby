@@ -3,6 +3,19 @@
 class Code
   class Object
     class List < Object
+      delegate :code_eight?, to: :code_size
+      delegate :code_five?, to: :code_size
+      delegate :code_four?, to: :code_size
+      delegate :code_nine?, to: :code_size
+      delegate :code_one?, to: :code_size
+      delegate :code_seven?, to: :code_size
+      delegate :code_six?, to: :code_size
+      delegate :code_ten?, to: :code_size
+      delegate :code_three?, to: :code_size
+      delegate :code_two?, to: :code_size
+      delegate :code_zero?, to: :code_size
+      delegate :code_many?, to: :code_size
+
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.is_a?(List)
@@ -114,6 +127,42 @@ class Code
         when "uniq"
           sig(args)
           code_uniq
+        when "zero?"
+          sig(args)
+          code_zero?
+        when "one?"
+          sig(args)
+          code_one?
+        when "two?"
+          sig(args)
+          code_two?
+        when "three?"
+          sig(args)
+          code_three?
+        when "four?"
+          sig(args)
+          code_four?
+        when "five?"
+          sig(args)
+          code_five?
+        when "six?"
+          sig(args)
+          code_six?
+        when "seven?"
+          sig(args)
+          code_seven?
+        when "eight?"
+          sig(args)
+          code_eight?
+        when "nine?"
+          sig(args)
+          code_nine?
+        when "ten?"
+          sig(args)
+          code_ten?
+        when "many?"
+          sig(args)
+          code_many?
         else
           super
         end
