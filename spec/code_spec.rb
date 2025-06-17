@@ -13,6 +13,7 @@ RSpec.describe Code do
       "Object.new !== Object.new",
     ] +
       %w[
+        :abc.size
         Date.new.change
         {}.zero?
         {}.any?

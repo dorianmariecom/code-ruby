@@ -55,6 +55,9 @@ class Code
         when "upcase"
           sig(args)
           code_upcase
+        when "size"
+          sig(args)
+          code_size
         else
           super
         end
@@ -110,6 +113,10 @@ class Code
         code_n = n.to_code
         code_n = Integer.new(1) if code_n.nothing?
         String.new(raw.first(code_n.raw))
+      end
+
+      def code_size
+        Integer.new(raw.size)
       end
     end
   end
