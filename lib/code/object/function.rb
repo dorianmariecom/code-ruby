@@ -25,6 +25,7 @@ class Code
 
         case code_operator.to_s
         when "", "call"
+          p signature_for_call
           sig(args) { signature_for_call }
           code_call(*code_arguments.raw, **globals)
         else

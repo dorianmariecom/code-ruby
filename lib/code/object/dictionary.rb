@@ -15,6 +15,8 @@ class Code
       delegate :code_two?, to: :code_size
       delegate :code_zero?, to: :code_size
       delegate :code_many?, to: :code_size
+      delegate :code_postive?, to: :code_size
+      delegate :code_negative?, to: :code_size
 
       def initialize(*args, **kargs, &_block)
         self.raw =
@@ -182,6 +184,12 @@ class Code
         when "many?"
           sig(args)
           code_many?
+        when "positive?"
+          sig(args)
+          code_positive?
+        when "negative?"
+          sig(args)
+          code_negative?
         when ->(code_operator) { code_has_key?(code_operator).truthy? }
           result = code_fetch(code_operator)
 

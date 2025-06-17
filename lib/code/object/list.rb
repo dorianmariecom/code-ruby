@@ -15,6 +15,8 @@ class Code
       delegate :code_two?, to: :code_size
       delegate :code_zero?, to: :code_size
       delegate :code_many?, to: :code_size
+      delegate :code_postive?, to: :code_size
+      delegate :code_negative?, to: :code_size
 
       def initialize(*args, **_kargs, &_block)
         self.raw =
@@ -51,13 +53,13 @@ class Code
           sig(args) { List }
           code_minus(code_value)
         when "any?"
-          sig(args) { Function.maybe }
+          sig(args) { (Function | Class).maybe }
           code_any?(code_value, **globals)
         when "detect"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_detect(code_value, **globals)
         when "each"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_each(code_value, **globals)
         when "first"
           sig(args) { Integer.maybe }
@@ -87,40 +89,40 @@ class Code
           sig(args)
           code_last
         when "map"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_map(code_value, **globals)
         when "map!"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_map!(code_value, **globals)
         when "max"
-          sig(args) { Function.maybe }
+          sig(args) { (Function | Class).maybe }
           code_max(code_value, **globals)
         when "none?"
-          sig(args) { Function.maybe }
+          sig(args) { (Function | Class).maybe }
           code_none?(code_value, **globals)
         when "reduce"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_reduce(code_value, **globals)
         when "reverse"
           sig(args)
           code_reverse
         when "select"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_select(code_value, **globals)
         when "select!"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_select!(code_value, **globals)
         when "compact"
-          sig(args) { Function.maybe }
+          sig(args) { (Function | Class).maybe }
           code_compact(code_value, **globals)
         when "compact!"
-          sig(args) { Function.maybe }
+          sig(args) { (Function | Class).maybe }
           code_compact!(code_value, **globals)
         when "reject"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_reject(code_value, **globals)
         when "reject!"
-          sig(args) { Function }
+          sig(args) { (Function | Class).maybe }
           code_reject!(code_value, **globals)
         when "size"
           sig(args)
@@ -167,6 +169,12 @@ class Code
         when "many?"
           sig(args)
           code_many?
+        when "positive?"
+          sig(args)
+          code_positive?
+        when "negative?"
+          sig(args)
+          code_negative?
         else
           super
         end
@@ -179,9 +187,7 @@ class Code
 
         Boolean.new(
           raw.any? do |code_element|
-            if code_argument.nothing?
-              true.tap { index += 1 }
-            else
+            if code_argument.is_a?(Function)
               code_argument
                 .call(
                   arguments: List.new([code_element, Integer.new(index), self]),
@@ -189,6 +195,10 @@ class Code
                 )
                 .truthy?
                 .tap { index += 1 }
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw).tap { index += 1 }
+            else
+              true.tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.tap { index += 1 }
@@ -210,27 +220,37 @@ class Code
         List.new(raw - code_other.raw)
       end
 
-      def code_detect(argument, **globals)
+      def code_detect(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.detect.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          ).truthy?
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          elsif code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw)
+          else
+            false
+          end
         rescue Error::Next => e
           e.code_value
         end || Nothing.new
       end
 
-      def code_each(argument, **globals)
+      def code_each(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.each.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          )
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          elsif code_argument.is_a?(Class)
+            code_argument.raw.new(code_element)
+          end
         rescue Error::Next => e
           e.code_value
         end
@@ -313,29 +333,41 @@ class Code
         raw.last || Nothing.new
       end
 
-      def code_map(argument, **globals)
+      def code_map(argument = nil, **globals)
         code_argument = argument.to_code
 
         List.new(
           raw.map.with_index do |code_element, index|
-            code_argument.call(
-              arguments: List.new([code_element, Integer.new(index), self]),
-              **globals
-            )
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+            elsif code_argument.is_a?(Class)
+              code_argument.raw.new(code_element)
+            else
+              Nothing.new
+            end
           rescue Error::Next => e
             e.code_value
           end
         )
       end
 
-      def code_map!(argument, **globals)
+      def code_map!(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.map!.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          )
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          elsif code_argument.is_a?(Class)
+            code_argument.raw.new(code_element)
+          else
+            Nothing.new
+          end
         rescue Error::Next => e
           e.code_value
         end
@@ -347,13 +379,13 @@ class Code
         code_argument = argument.to_code
 
         raw.max_by.with_index do |code_element, index|
-          if code_argument.nothing?
-            code_element
-          else
+          if code_argument.is_a?(Function)
             code_argument.call(
               arguments: List.new([code_element, Integer.new(index), self]),
               **globals
-            )
+            ).truthy?
+          else
+            code_element
           end
         rescue Error::Next => e
           e.code_value
@@ -367,16 +399,15 @@ class Code
 
         Boolean.new(
           raw.none? do |code_element|
-            if code_argument.nothing?
-              code_element.truthy?.tap { index += 1 }
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?.tap { index += 1 }
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw).tap { index += 1 }
             else
-              code_argument
-                .call(
-                  arguments: List.new([code_element, Integer.new(index), self]),
-                  **globals
-                )
-                .truthy?
-                .tap { index += 1 }
+              false.tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.truthy?.tap { index += 1 }
@@ -384,17 +415,23 @@ class Code
         )
       end
 
-      def code_reduce(argument, **globals)
+      def code_reduce(argument = nil, **globals)
         code_argument = argument.to_code
 
-        raw.reduce.with_index do |code_acc, code_element, index|
-          code_argument.call(
-            arguments:
-              List.new([code_acc, code_element, Integer.new(index), self]),
-            **globals
-          )
+        index = 0
+
+        raw.reduce do |code_acc, code_element|
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments:
+                List.new([code_acc, code_element, Integer.new(index), self]),
+              **globals
+            ).tap { index += 1 }
+          else
+            code_acc.tap { index += 1 }
+          end
         rescue Error::Next => e
-          e.code_value
+          e.code_value.tap { index += 1 }
         end || Nothing.new
       end
 
@@ -409,16 +446,15 @@ class Code
 
         List.new(
           raw.select do |code_element|
-            if code_argument.nothing?
-              code_element.truthy?.tap { index += 1 }
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?.tap { index += 1 }
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw).tap { index += 1 }
             else
-              code_argument
-                .call(
-                  arguments: List.new([code_element, Integer.new(index), self]),
-                  **globals
-                )
-                .truthy?
-                .tap { index += 1 }
+              code_element.truthy?.tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.truhty?.tap { index += 1 }
@@ -432,16 +468,15 @@ class Code
         index = 0
 
         raw.select! do |code_element|
-          if code_argument.nothing?
-            code_element.truthy?.tap { index += 1 }
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?.tap { index += 1 }
+          elsif code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw).tap { index += 1 }
           else
-            code_argument
-              .call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              )
-              .truthy?
-              .tap { index += 1 }
+            code_element.truthy?.tap { index += 1 }
           end
         rescue Error::Next => e
           e.code_value.truhty?.tap { index += 1 }
@@ -450,29 +485,41 @@ class Code
         self
       end
 
-      def code_select(argument, **globals)
+      def code_select(argument = nil, **globals)
         code_argument = argument.to_code
 
         List.new(
           raw.select.with_index do |code_element, index|
-            code_argument.call(
-              arguments: List.new([code_element, Integer.new(index), self]),
-              **globals
-            ).truthy?
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw)
+            else
+              false
+            end
           rescue Error::Next => e
             e.code_value.truthy?
           end
         )
       end
 
-      def code_select!(argument, **globals)
+      def code_select!(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.select!.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          ).truthy?
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          elsif code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw)
+          else
+            false
+          end
         rescue Error::Next => e
           e.code_value.truthy?
         end
@@ -480,29 +527,41 @@ class Code
         self
       end
 
-      def code_reject(argument, **globals)
+      def code_reject(argument = nil, **globals)
         code_argument = argument.to_code
 
         List.new(
           raw.reject.with_index do |code_element, index|
-            code_argument.call(
-              arguments: List.new([code_element, Integer.new(index), self]),
-              **globals
-            ).truthy?
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw)
+            else
+              false
+            end
           rescue Error::Next => e
             e.code_value.truthy?
           end
         )
       end
 
-      def code_reject!(argument, **globals)
+      def code_reject!(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.reject!.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          ).truthy?
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          elsif code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw)
+          else
+            false
+          end
         rescue Error::Next => e
           e.code_value.truthy?
         end

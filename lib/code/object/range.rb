@@ -11,6 +11,11 @@ class Code
           @code_right = args.first.code_right
           @code_options = args.first.code_options
           @code_exclude_end = args.first.code_exclude_end
+        elsif args.first.is_a?(List)
+          @code_left = args.first.code_first
+          @code_right = args.first.code_last
+          @code_options = Dictionary.new(args.second.presence || kargs)
+          @code_exclude_end = Boolean.new(code_options.code_get(:exclude_end))
         else
           @code_left =
             (args.first.to_code.nothing? ? Integer.new(0) : args.first.to_code)

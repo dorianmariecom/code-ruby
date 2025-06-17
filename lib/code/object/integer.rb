@@ -2,7 +2,7 @@
 
 class Code
   class Object
-    class Integer < Object
+    class Integer < Number
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.class.in?(NUMBER_CLASSES)
@@ -157,6 +157,12 @@ class Code
         when "any?"
           sig(args)
           code_any?
+        when "positive?"
+          sig(args)
+          code_positive?
+        when "negative?"
+          sig(args)
+          code_negative?
         else
           super
         end
@@ -424,6 +430,14 @@ class Code
 
       def code_days
         Duration.new(raw.days)
+      end
+
+      def code_positive?
+        Boolean.new(raw > 0)
+      end
+
+      def code_negative?
+        Boolean.new(raw < 0)
       end
     end
   end

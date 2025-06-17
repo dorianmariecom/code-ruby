@@ -169,6 +169,9 @@ class Code
           sig(args) { Object.repeat }
           output.puts(*code_arguments.raw)
           Nothing.new
+        when "Number"
+          sig(args) { Object.repeat }
+          code_arguments.any? ? Number.new(*code_arguments.raw) : Class.new(Number)
         else
           code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)
