@@ -37,7 +37,7 @@ class Code
         when "**", "power"
           sig(args) { Integer | Decimal }
           code_power(code_value)
-        when "+", "plus", "self"
+        when "+", "plus"
           sig(args) { Object.maybe }
           code_arguments.any? ? code_plus(code_value) : code_self
         when "-", "minus", "unary_minus"
@@ -76,9 +76,6 @@ class Code
         when "ceil"
           sig(args) { Integer.maybe }
           code_ceil(code_value)
-        when "clone"
-          sig(args)
-          code_clone
         when "day", "days"
           sig(args)
           code_days
@@ -188,10 +185,6 @@ class Code
         code_n = n.to_code
         code_n = Integer.new(0) if code_n.nothing?
         Integer.new(raw.ceil(code_n.raw))
-      end
-
-      def code_clone
-        Integer.new(raw)
       end
 
       def code_compare(other)

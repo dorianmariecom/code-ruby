@@ -6,6 +6,7 @@ class Code
       IF_KEYWORD = "if"
       UNLESS_KEYWORD = "unless"
       ELSIF_KEYWORD = "elsif"
+      ELSUNLESS_KEYWORD = "elsunless"
       ELSE_KEYWORD = "else"
 
       class Else < Node
@@ -50,6 +51,10 @@ class Code
                  elses.operator == ELSIF_KEYWORD &&
                    elses.statement.evaluate(**args).truthy?
                ) ||
+                 (
+                   elses.operator == ELSUNLESS_KEYWORD &&
+                     elses.statement.evaluate(**args).falsy?
+                 ) ||
                  (
                    elses.operator == IF_KEYWORD &&
                      elses.statement.evaluate(**args).truthy?

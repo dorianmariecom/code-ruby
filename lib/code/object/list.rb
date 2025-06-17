@@ -20,8 +20,12 @@ class Code
         self.raw =
           if args.first.is_a?(List)
             args.first.raw.map(&:to_code)
+          elsif args.first.is_a?(Dictionary)
+            args.first.raw.to_a.map(&:to_code)
           elsif args.first.is_an?(::Array)
             args.first.map(&:to_code)
+          elsif args.first.is_a?(::Hash)
+            args.first.to_a.map(&:to_code)
           else
             []
           end
@@ -70,6 +74,9 @@ class Code
         when "pop"
           sig(args) { Integer.maybe }
           code_pop(code_value)
+        when "pop!"
+          sig(args) { Integer.maybe }
+          code_pop!(code_value)
         when "shift"
           sig(args) { Integer.maybe }
           code_shift(code_value)
@@ -86,11 +93,8 @@ class Code
           sig(args) { Function }
           code_map!(code_value, **globals)
         when "max"
-          sig(args)
-          code_max
-        when "max_by"
-          sig(args) { Function }
-          code_max_by(code_value, **globals)
+          sig(args) { Function.maybe }
+          code_max(code_value, **globals)
         when "none?"
           sig(args) { Function.maybe }
           code_none?(code_value, **globals)
@@ -282,6 +286,13 @@ class Code
         code_n = n.to_code
         n = code_n.raw
 
+        code_n.nothing? ? raw.dup.pop || Nothing.new : List.new(raw.dup.pop(n))
+      end
+
+      def code_pop!(n = nil)
+        code_n = n.to_code
+        n = code_n.raw
+
         code_n.nothing? ? raw.pop || Nothing.new : List.new(raw.pop(n))
       end
 
@@ -332,18 +343,18 @@ class Code
         self
       end
 
-      def code_max
-        raw.max || Nothing.new
-      end
-
-      def code_max_by(argument, **globals)
+      def code_max(argument = nil, **globals)
         code_argument = argument.to_code
 
         raw.max_by.with_index do |code_element, index|
-          code_argument.call(
-            arguments: List.new([code_element, Integer.new(index), self]),
-            **globals
-          )
+          if code_argument.nothing?
+            code_element
+          else
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          end
         rescue Error::Next => e
           e.code_value
         end || Nothing.new

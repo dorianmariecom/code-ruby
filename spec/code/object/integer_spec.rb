@@ -24,7 +24,6 @@ RSpec.describe Code::Object::Integer do
     %w[1234.floor(-2) 1200],
     %w[1.round 1],
     %w[1234.round(-2) 1200],
-    %w[1.clone 1],
     %w[0.zero? true],
     %w[1.truncate 1],
     %w[1234.truncate(-2) 1200],

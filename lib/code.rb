@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Code
-  GLOBALS = %i[context error input object output source object].freeze
+  GLOBALS = %i[context error input object output source].freeze
   DEFAULT_TIMEOUT = 0
 
   def initialize(

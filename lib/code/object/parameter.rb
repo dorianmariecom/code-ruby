@@ -2,29 +2,25 @@
 
 class Code
   class Object
-    class Parameter < Object
-      def initialize(*args, **_kargs, &_block)
-        self.raw = Dictionary.new(args.first)
-      end
-
+    class Parameter < Dictionary
       def code_name
-        String.new(raw.code_get(:name))
+        String.new(code_get(:name))
       end
 
       def code_regular?
-        Boolean.new(raw.code_get(:regular?))
+        Boolean.new(code_get(:regular?))
       end
 
       def code_keyword?
-        Boolean.new(raw.code_get(:keyword?))
+        Boolean.new(code_get(:keyword?))
       end
 
       def code_regular_splat?
-        Boolean.new(raw.code_get(:regular_splat?))
+        Boolean.new(code_get(:regular_splat?))
       end
 
       def code_keyword_splat?
-        Boolean.new(raw.code_get(:keyword_splat?))
+        Boolean.new(code_get(:keyword_splat?))
       end
 
       def code_required?
@@ -36,7 +32,7 @@ class Code
       end
 
       def code_default
-        raw.code_get(:default).to_code
+        code_get(:default).to_code
       end
 
       def code_evaluate(...)

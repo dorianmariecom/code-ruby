@@ -51,6 +51,10 @@ class Code
         str("elsif")
       end
 
+      def elsunless_keyword
+        str("elsunless")
+      end
+
       def else_keyword
         str("else")
       end
@@ -76,7 +80,7 @@ class Code
             statement.aka(:first_statement) << body.aka(:first_body) <<
             (
               (
-                elsif_keyword.aka(:operator) << whitespace <<
+                (elsif_keyword | elsunless_keyword).aka(:operator) << whitespace <<
                   statement.aka(:statement) << body.aka(:body)
               ) |
                 (

@@ -99,6 +99,38 @@ class Code
         str("else")
       end
 
+      def while_keyword
+        str("while")
+      end
+
+      def until_keyword
+        str("until")
+      end
+
+      def if_keyword
+        str("if")
+      end
+
+      def unless_keyword
+        str("unless")
+      end
+
+      def elsunless_keyword
+        str("elsunless")
+      end
+
+      def true_keyword
+        str("true")
+      end
+
+      def false_keyword
+        str("false")
+      end
+
+      def nothing_keyword
+        str("nothing")
+      end
+
       def exclamation_mark
         str("!")
       end
@@ -127,13 +159,14 @@ class Code
         exclamation_mark | question_mark
       end
 
+      def keyword
+        do_keyword | begin_keyword | end_keyword | while_keyword | until_keyword |
+          if_keyword | elsif_keyword | else_keyword | unless_keyword | elsunless_keyword |
+          true_keyword | false_keyword | nothing_keyword
+      end
+
       def root
-        (do_keyword << separator).absent << (
-          begin_keyword << separator
-        ).absent << (else_keyword << separator).absent <<
-          (elsif_keyword << separator).absent <<
-          (end_keyword << separator).absent <<
-          special_characters.absent << character.repeat(1)
+        (keyword << separator).absent << special_characters.absent << character.repeat(1)
       end
     end
   end

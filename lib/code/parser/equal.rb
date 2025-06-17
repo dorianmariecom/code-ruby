@@ -52,7 +52,7 @@ class Code
       end
 
       def right_statement
-        OrKeyword
+        Equal
       end
 
       def operator

@@ -10,7 +10,7 @@ RSpec.describe Code do
       "{ a: 1, b: 2 }.transform_values { |key, value, index| index * 2 }",
       "{ a: 1, b: 2 }.transform_values { |key, value, index, dictionary| dictionary.a }",
       "sum = (a, b: 2) => { a + b } sum(1)",
-      "Object.new !== Object.new"
+      "Object.new !== Object.new",
     ] +
       %w[
         Date.new.change

@@ -24,7 +24,6 @@ RSpec.describe Code::Object::Decimal do
     %w[-1.123.floor(2) -1.13],
     %w[1.1.round 1],
     %w[1.123.round(2) 1.12],
-    %w[1.2.clone 1.2],
     %w[0.0.zero? true],
     %w[1.2.truncate 1],
     %w[1.234.truncate(2) 1.23],
