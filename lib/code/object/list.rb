@@ -407,7 +407,7 @@ class Code
             elsif code_argument.is_a?(Class)
               code_element.is_a?(code_argument.raw).tap { index += 1 }
             else
-              false.tap { index += 1 }
+              true.tap { index += 1 }
             end
           rescue Error::Next => e
             e.code_value.truthy?.tap { index += 1 }

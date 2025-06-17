@@ -52,7 +52,7 @@ class Code
       end
 
       def right_statement
-        Equal
+        Statement
       end
 
       def operator
