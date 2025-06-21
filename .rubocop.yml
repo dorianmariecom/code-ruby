@@ -30,6 +30,8 @@ Lint/MissingSuper:
   Enabled: false
 Lint/PercentStringArray:
   Enabled: false
+Lint/SafeNavigationChain:
+  Enabled: false
 Lint/ShadowingOuterLocalVariable:
   Enabled: false
 Lint/SuppressedException:
@@ -119,8 +121,6 @@ Style/QuotedSymbols:
 Style/StringLiterals:
   Enabled: false
 Style/StringLiteralsInInterpolation:
-  Enabled: false
-Lint/SafeNavigationChain:
   Enabled: false
 plugins:
 - rubocop-factory_bot
