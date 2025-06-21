@@ -837,13 +837,25 @@ class Code
         year = code_years.code_to_integer.raw + code_year.code_to_integer.raw
         month = code_months.code_to_integer.raw + code_month.code_to_integer.raw
         day = code_days.code_to_integer.raw + code_day.code_to_integer.raw
-        week_day = code_week_days.code_to_integer.raw + code_week_day.code_to_integer.raw
+        week_day =
+          code_week_days.code_to_integer.raw + code_week_day.code_to_integer.raw
         week = code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
         hour = code_hours.code_to_integer.raw + code_hour.code_to_integer.raw
-        minute = code_minutes.code_to_integer.raw + code_minute.code_to_integer.raw
-        second = code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
+        minute =
+          code_minutes.code_to_integer.raw + code_minute.code_to_integer.raw
+        second =
+          code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
 
-        code_change(year:, month:, day:, week_day:, week:, hour:, minute:, second:)
+        code_change(
+          year:,
+          month:,
+          day:,
+          week_day:,
+          week:,
+          hour:,
+          minute:,
+          second:
+        )
       end
 
       def code_substract(
@@ -877,13 +889,25 @@ class Code
         year = code_years.code_to_integer.raw - code_year.code_to_integer.raw
         month = code_months.code_to_integer.raw - code_month.code_to_integer.raw
         day = code_days.code_to_integer.raw - code_day.code_to_integer.raw
-        week_day = code_week_days.code_to_integer.raw - code_week_day.code_to_integer.raw
+        week_day =
+          code_week_days.code_to_integer.raw - code_week_day.code_to_integer.raw
         week = code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
         hour = code_hours.code_to_integer.raw - code_hour.code_to_integer.raw
-        minute = code_minutes.code_to_integer.raw - code_minute.code_to_integer.raw
-        second = code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
+        minute =
+          code_minutes.code_to_integer.raw - code_minute.code_to_integer.raw
+        second =
+          code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
 
-        code_change(year:, month:, day:, week_day:, week:, hour:, minute:, second:)
+        code_change(
+          year:,
+          month:,
+          day:,
+          week_day:,
+          week:,
+          hour:,
+          minute:,
+          second:
+        )
       end
 
       def code_change(
