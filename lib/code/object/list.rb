@@ -5,7 +5,7 @@ class Code
     class List < Object
       delegate(
         :code_many?,
-        :code_postive?,
+        :code_positive?,
         :code_negative?,
         :code_zero?,
         :code_one?,
