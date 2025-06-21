@@ -7,6 +7,7 @@ class Code
 
       class << self
         delegate(
+          :code_format,
           :code_add,
           :code_substract,
           :code_past?,
@@ -619,14 +620,14 @@ class Code
 
       def code_after?(other = nil)
         code_other = other.to_code
-        code_other = Time.code_now if code_other.nothing?
+        code_other = Time.new if code_other.nothing?
 
         Boolean.new(raw.after?(code_other.raw))
       end
 
       def code_before?(other = nil)
         code_other = other.to_code
-        code_other = Time.code_now if code_other.nothing?
+        code_other = Time.new if code_other.nothing?
 
         Boolean.new(raw.before?(code_other.raw))
       end

@@ -202,7 +202,7 @@ class Code
         code = response.code.to_i
         status = STATUS_CODES.key(code) || :ok
 
-        Dictionary.new(code: code, status: status, body: response.body)
+        Dictionary.new(code: code, status: status, body: response.body.to_s)
       end
     end
   end

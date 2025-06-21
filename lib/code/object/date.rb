@@ -7,6 +7,9 @@ class Code
 
       class << self
         delegate(
+          :code_format,
+          :code_past?,
+          :code_future?,
           :code_add,
           :code_substract,
           :code_before?,
@@ -76,8 +79,25 @@ class Code
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "after?"
+          sig(args) { (Date | Time).maybe }
+          code_after?(code_value)
+        when "before?"
+          sig(args) { (Date | Time).maybe }
+          code_before?(code_value)
+        when "past?"
+          sig(args)
+          code_past?
+        when "future?"
+          sig(args)
+          code_future?
+        when "format"
+          sig(args) { String }
+          code_format(code_value)
         when "tomorrow"
           sig(args)
           code_tomorrow
@@ -276,10 +296,10 @@ class Code
 
         case code_operator.to_s
         when "after?"
-          sig(args) { Time.maybe }
+          sig(args) { (Date | Time).maybe }
           code_after?(code_value)
         when "before?"
-          sig(args) { Time.maybe }
+          sig(args) { (Date | Time).maybe }
           code_before?(code_value)
         when "past?"
           sig(args)
@@ -468,14 +488,14 @@ class Code
 
       def code_after?(other = nil)
         code_other = other.to_code
-        code_other = Date.code_now if code_other.nothing?
+        code_other = Date.new if code_other.nothing?
 
         Boolean.new(raw.after?(code_other.raw))
       end
 
       def code_before?(other = nil)
         code_other = other.to_code
-        code_other = Date.code_now if code_other.nothing?
+        code_other = Date.new if code_other.nothing?
 
         Boolean.new(raw.before?(code_other.raw))
       end
