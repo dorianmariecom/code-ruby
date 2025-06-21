@@ -32,7 +32,7 @@ class Code
       end
 
       def operator
-        (exclamation_mark  << equal << equal) | (equal << equal << equal) |
+        (exclamation_mark << equal << equal) | (equal << equal << equal) |
           (equal << equal) | (lesser << equal << greater) |
           (exclamation_mark << equal) | (equal << tilde) | (tilde << equal) |
           (exclamation_mark << tilde)

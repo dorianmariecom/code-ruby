@@ -3,20 +3,113 @@
 class Code
   class Object
     class List < Object
-      delegate :code_eight?, to: :code_size
-      delegate :code_five?, to: :code_size
-      delegate :code_four?, to: :code_size
-      delegate :code_nine?, to: :code_size
-      delegate :code_one?, to: :code_size
-      delegate :code_seven?, to: :code_size
-      delegate :code_six?, to: :code_size
-      delegate :code_ten?, to: :code_size
-      delegate :code_three?, to: :code_size
-      delegate :code_two?, to: :code_size
-      delegate :code_zero?, to: :code_size
-      delegate :code_many?, to: :code_size
-      delegate :code_postive?, to: :code_size
-      delegate :code_negative?, to: :code_size
+      delegate(
+        :code_many?,
+        :code_postive?,
+        :code_negative?,
+        :code_zero?,
+        :code_one?,
+        :code_two?,
+        :code_three?,
+        :code_four?,
+        :code_five?,
+        :code_six?,
+        :code_seven?,
+        :code_eight?,
+        :code_nine?,
+        :code_ten?,
+        :code_eleven?,
+        :code_twelve?,
+        :code_thirteen?,
+        :code_fourteen?,
+        :code_fifteen?,
+        :code_sixteen?,
+        :code_seventeen?,
+        :code_eighteen?,
+        :code_nineteen?,
+        :code_twenty?,
+        :code_twenty_one?,
+        :code_twenty_two?,
+        :code_twenty_three?,
+        :code_twenty_four?,
+        :code_twenty_five?,
+        :code_twenty_six?,
+        :code_twenty_seven?,
+        :code_twenty_eight?,
+        :code_twenty_nine?,
+        :code_thirty?,
+        :code_thirty_one?,
+        :code_thirty_two?,
+        :code_thirty_three?,
+        :code_thirty_four?,
+        :code_thirty_five?,
+        :code_thirty_six?,
+        :code_thirty_seven?,
+        :code_thirty_eight?,
+        :code_thirty_nine?,
+        :code_forty?,
+        :code_forty_one?,
+        :code_forty_two?,
+        :code_forty_three?,
+        :code_forty_four?,
+        :code_forty_five?,
+        :code_forty_six?,
+        :code_forty_seven?,
+        :code_forty_eight?,
+        :code_forty_nine?,
+        :code_fifty?,
+        :code_fifty_one?,
+        :code_fifty_two?,
+        :code_fifty_three?,
+        :code_fifty_four?,
+        :code_fifty_five?,
+        :code_fifty_six?,
+        :code_fifty_seven?,
+        :code_fifty_eight?,
+        :code_fifty_nine?,
+        :code_sixty?,
+        :code_sixty_one?,
+        :code_sixty_two?,
+        :code_sixty_three?,
+        :code_sixty_four?,
+        :code_sixty_five?,
+        :code_sixty_six?,
+        :code_sixty_seven?,
+        :code_sixty_eight?,
+        :code_sixty_nine?,
+        :code_seventy?,
+        :code_seventy_one?,
+        :code_seventy_two?,
+        :code_seventy_three?,
+        :code_seventy_four?,
+        :code_seventy_five?,
+        :code_seventy_six?,
+        :code_seventy_seven?,
+        :code_seventy_eight?,
+        :code_seventy_nine?,
+        :code_eighty?,
+        :code_eighty_one?,
+        :code_eighty_two?,
+        :code_eighty_three?,
+        :code_eighty_four?,
+        :code_eighty_five?,
+        :code_eighty_six?,
+        :code_eighty_seven?,
+        :code_eighty_eight?,
+        :code_eighty_nine?,
+        :code_ninety?,
+        :code_ninety_one?,
+        :code_ninety_two?,
+        :code_ninety_three?,
+        :code_ninety_four?,
+        :code_ninety_five?,
+        :code_ninety_six?,
+        :code_ninety_seven?,
+        :code_ninety_eight?,
+        :code_ninety_nine?,
+        :code_one_hundred?,
+        to: :code_size
+      )
 
       def initialize(*args, **_kargs, &_block)
         self.raw =
@@ -133,6 +226,15 @@ class Code
         when "uniq"
           sig(args)
           code_uniq
+        when "many?"
+          sig(args)
+          code_many?
+        when "positive?"
+          sig(args)
+          code_positive?
+        when "negative?"
+          sig(args)
+          code_negative?
         when "zero?"
           sig(args)
           code_zero?
@@ -166,15 +268,276 @@ class Code
         when "ten?"
           sig(args)
           code_ten?
-        when "many?"
+        when "eleven?"
           sig(args)
-          code_many?
-        when "positive?"
+          code_eleven?
+        when "twelve?"
           sig(args)
-          code_positive?
-        when "negative?"
+          code_twelve?
+        when "thirteen?"
           sig(args)
-          code_negative?
+          code_thirteen?
+        when "fourteen?"
+          sig(args)
+          code_fourteen?
+        when "fifteen?"
+          sig(args)
+          code_fifteen?
+        when "sixteen?"
+          sig(args)
+          code_sixteen?
+        when "seventeen?"
+          sig(args)
+          code_seventeen?
+        when "eighteen?"
+          sig(args)
+          code_eighteen?
+        when "nineteen?"
+          sig(args)
+          code_nineteen?
+        when "twenty?"
+          sig(args)
+          code_twenty?
+        when "twenty_one?"
+          sig(args)
+          code_twenty_one?
+        when "twenty_two?"
+          sig(args)
+          code_twenty_two?
+        when "twenty_three?"
+          sig(args)
+          code_twenty_three?
+        when "twenty_four?"
+          sig(args)
+          code_twenty_four?
+        when "twenty_five?"
+          sig(args)
+          code_twenty_five?
+        when "twenty_six?"
+          sig(args)
+          code_twenty_six?
+        when "twenty_seven?"
+          sig(args)
+          code_twenty_seven?
+        when "twenty_eight?"
+          sig(args)
+          code_twenty_eight?
+        when "twenty_nine?"
+          sig(args)
+          code_twenty_nine?
+        when "thirty?"
+          sig(args)
+          code_thirty?
+        when "thirty_one?"
+          sig(args)
+          code_thirty_one?
+        when "thirty_two?"
+          sig(args)
+          code_thirty_two?
+        when "thirty_three?"
+          sig(args)
+          code_thirty_three?
+        when "thirty_four?"
+          sig(args)
+          code_thirty_four?
+        when "thirty_five?"
+          sig(args)
+          code_thirty_five?
+        when "thirty_six?"
+          sig(args)
+          code_thirty_six?
+        when "thirty_seven?"
+          sig(args)
+          code_thirty_seven?
+        when "thirty_eight?"
+          sig(args)
+          code_thirty_eight?
+        when "thirty_nine?"
+          sig(args)
+          code_thirty_nine?
+        when "forty?"
+          sig(args)
+          code_forty?
+        when "forty_one?"
+          sig(args)
+          code_forty_one?
+        when "forty_two?"
+          sig(args)
+          code_forty_two?
+        when "forty_three?"
+          sig(args)
+          code_forty_three?
+        when "forty_four?"
+          sig(args)
+          code_forty_four?
+        when "forty_five?"
+          sig(args)
+          code_forty_five?
+        when "forty_six?"
+          sig(args)
+          code_forty_six?
+        when "forty_seven?"
+          sig(args)
+          code_forty_seven?
+        when "forty_eight?"
+          sig(args)
+          code_forty_eight?
+        when "forty_nine?"
+          sig(args)
+          code_forty_nine?
+        when "fifty?"
+          sig(args)
+          code_fifty?
+        when "fifty_one?"
+          sig(args)
+          code_fifty_one?
+        when "fifty_two?"
+          sig(args)
+          code_fifty_two?
+        when "fifty_three?"
+          sig(args)
+          code_fifty_three?
+        when "fifty_four?"
+          sig(args)
+          code_fifty_four?
+        when "fifty_five?"
+          sig(args)
+          code_fifty_five?
+        when "fifty_six?"
+          sig(args)
+          code_fifty_six?
+        when "fifty_seven?"
+          sig(args)
+          code_fifty_seven?
+        when "fifty_eight?"
+          sig(args)
+          code_fifty_eight?
+        when "fifty_nine?"
+          sig(args)
+          code_fifty_nine?
+        when "sixty?"
+          sig(args)
+          code_sixty?
+        when "sixty_one?"
+          sig(args)
+          code_sixty_one?
+        when "sixty_two?"
+          sig(args)
+          code_sixty_two?
+        when "sixty_three?"
+          sig(args)
+          code_sixty_three?
+        when "sixty_four?"
+          sig(args)
+          code_sixty_four?
+        when "sixty_five?"
+          sig(args)
+          code_sixty_five?
+        when "sixty_six?"
+          sig(args)
+          code_sixty_six?
+        when "sixty_seven?"
+          sig(args)
+          code_sixty_seven?
+        when "sixty_eight?"
+          sig(args)
+          code_sixty_eight?
+        when "sixty_nine?"
+          sig(args)
+          code_sixty_nine?
+        when "seventy?"
+          sig(args)
+          code_seventy?
+        when "seventy_one?"
+          sig(args)
+          code_seventy_one?
+        when "seventy_two?"
+          sig(args)
+          code_seventy_two?
+        when "seventy_three?"
+          sig(args)
+          code_seventy_three?
+        when "seventy_four?"
+          sig(args)
+          code_seventy_four?
+        when "seventy_five?"
+          sig(args)
+          code_seventy_five?
+        when "seventy_six?"
+          sig(args)
+          code_seventy_six?
+        when "seventy_seven?"
+          sig(args)
+          code_seventy_seven?
+        when "seventy_eight?"
+          sig(args)
+          code_seventy_eight?
+        when "seventy_nine?"
+          sig(args)
+          code_seventy_nine?
+        when "eighty?"
+          sig(args)
+          code_eighty?
+        when "eighty_one?"
+          sig(args)
+          code_eighty_one?
+        when "eighty_two?"
+          sig(args)
+          code_eighty_two?
+        when "eighty_three?"
+          sig(args)
+          code_eighty_three?
+        when "eighty_four?"
+          sig(args)
+          code_eighty_four?
+        when "eighty_five?"
+          sig(args)
+          code_eighty_five?
+        when "eighty_six?"
+          sig(args)
+          code_eighty_six?
+        when "eighty_seven?"
+          sig(args)
+          code_eighty_seven?
+        when "eighty_eight?"
+          sig(args)
+          code_eighty_eight?
+        when "eighty_nine?"
+          sig(args)
+          code_eighty_nine?
+        when "ninety?"
+          sig(args)
+          code_ninety?
+        when "ninety_one?"
+          sig(args)
+          code_ninety_one?
+        when "ninety_two?"
+          sig(args)
+          code_ninety_two?
+        when "ninety_three?"
+          sig(args)
+          code_ninety_three?
+        when "ninety_four?"
+          sig(args)
+          code_ninety_four?
+        when "ninety_five?"
+          sig(args)
+          code_ninety_five?
+        when "ninety_six?"
+          sig(args)
+          code_ninety_six?
+        when "ninety_seven?"
+          sig(args)
+          code_ninety_seven?
+        when "ninety_eight?"
+          sig(args)
+          code_ninety_eight?
+        when "ninety_nine?"
+          sig(args)
+          code_ninety_nine?
+        when "one_hundred?"
+          sig(args)
+          code_one_hundred?
         else
           super
         end
@@ -400,10 +763,13 @@ class Code
         Boolean.new(
           raw.none? do |code_element|
             if code_argument.is_a?(Function)
-              code_argument.call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              ).truthy?.tap { index += 1 }
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
             elsif code_argument.is_a?(Class)
               code_element.is_a?(code_argument.raw).tap { index += 1 }
             else
@@ -422,11 +788,13 @@ class Code
 
         raw.reduce do |code_acc, code_element|
           if code_argument.is_a?(Function)
-            code_argument.call(
-              arguments:
-                List.new([code_acc, code_element, Integer.new(index), self]),
-              **globals
-            ).tap { index += 1 }
+            code_argument
+              .call(
+                arguments:
+                  List.new([code_acc, code_element, Integer.new(index), self]),
+                **globals
+              )
+              .tap { index += 1 }
           else
             code_acc.tap { index += 1 }
           end
@@ -447,10 +815,13 @@ class Code
         List.new(
           raw.select do |code_element|
             if code_argument.is_a?(Function)
-              code_argument.call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              ).truthy?.tap { index += 1 }
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
             elsif code_argument.is_a?(Class)
               code_element.is_a?(code_argument.raw).tap { index += 1 }
             else
@@ -469,10 +840,13 @@ class Code
 
         raw.select! do |code_element|
           if code_argument.is_a?(Function)
-            code_argument.call(
-              arguments: List.new([code_element, Integer.new(index), self]),
-              **globals
-            ).truthy?.tap { index += 1 }
+            code_argument
+              .call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
           elsif code_argument.is_a?(Class)
             code_element.is_a?(code_argument.raw).tap { index += 1 }
           else

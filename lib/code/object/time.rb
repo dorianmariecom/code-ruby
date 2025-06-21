@@ -5,15 +5,89 @@ class Code
     class Time < Object
       DEFAULT_ZONE = "Etc/UTC"
 
+      class << self
+        delegate(
+          :code_add,
+          :code_substract,
+          :code_past?,
+          :code_future?,
+          :code_before?,
+          :code_after?,
+          :code_tomorrow,
+          :code_yesterday,
+          :code_now,
+          :code_today,
+          :code_current,
+          :code_year,
+          :code_years,
+          :code_month,
+          :code_months,
+          :code_week,
+          :code_weeks,
+          :code_week_day,
+          :code_week_days,
+          :code_day,
+          :code_days,
+          :code_hour,
+          :code_hours,
+          :code_minute,
+          :code_minutes,
+          :code_second,
+          :code_seconds,
+          :code_monday?,
+          :code_tuesday?,
+          :code_wednesday?,
+          :code_thursday?,
+          :code_friday?,
+          :code_saturday?,
+          :code_sunday?,
+          :code_january?,
+          :code_february?,
+          :code_march?,
+          :code_april?,
+          :code_may?,
+          :code_june?,
+          :code_july?,
+          :code_august?,
+          :code_september?,
+          :code_october?,
+          :code_november?,
+          :code_december?,
+          :code_change,
+          to: :new
+        )
+      end
+
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
-        self.raw = ::Time.zone.parse(args.first.to_s) || ::Time.zone.now
+
+        if args.first.is_a?(String) || args.first.is_a?(::String)
+          self.raw = ::Time.zone.parse(args.first.to_s) || raise(Error)
+        elsif args.first.is_a?(Time)
+          self.raw = args.first.raw.dup
+        elsif args.first.is_a?(::Time)
+          self.raw = args.first.dup
+        elsif args.first.is_a?(Date)
+          self.raw = args.first.raw.to_time
+        elsif args.first.is_a?(::Date)
+          self.raw = args.first.to_time
+        else
+          self.raw = ::Time.zone.now
+        end
       end
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "after?"
+          sig(args) { (Date | Time).maybe }
+          code_after?(code_value)
+        when "before?"
+          sig(args) { (Date | Time).maybe }
+          code_before?(code_value)
         when "now"
           sig(args)
           code_now
@@ -23,206 +97,6 @@ class Code
         when "yesterday"
           sig(args)
           code_yesterday
-        when "year"
-          sig(args)
-          code_year
-        when "years"
-          sig(args)
-          code_years
-        when "month"
-          sig(args)
-          code_month
-        when "months"
-          sig(args)
-          code_months
-        when "week"
-          sig(args)
-          code_week
-        when "weeks"
-          sig(args)
-          code_weeks
-        when "week_day"
-          sig(args)
-          code_week_day
-        when "week_days"
-          sig(args)
-          code_week_days
-        when "day"
-          sig(args)
-          code_day
-        when "days"
-          sig(args)
-          code_days
-        when "hour"
-          sig(args)
-          code_hour
-        when "hours"
-          sig(args)
-          code_hours
-        when "minute"
-          sig(args)
-          code_minute
-        when "minutes"
-          sig(args)
-          code_minutes
-        when "second"
-          sig(args)
-          code_second
-        when "seconds"
-          sig(args)
-          code_seconds
-        when "monday?"
-          sig(args)
-          code_monday?
-        when "tuesday?"
-          sig(args)
-          code_tuesday?
-        when "wednesday?"
-          sig(args)
-          code_wednesday?
-        when "thursday?"
-          sig(args)
-          code_thursday?
-        when "friday?"
-          sig(args)
-          code_friday?
-        when "saturday?"
-          sig(args)
-          code_saturday?
-        when "sunday?"
-          sig(args)
-          code_sunday?
-        when "format"
-          sig(args) { String }
-          code_format(code_value)
-        else
-          super
-        end
-      end
-
-      def self.code_tomorrow
-        ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.tomorrow)
-      end
-
-      def self.code_yesterday
-        ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.yesterday)
-      end
-
-      def self.code_now
-        ::Time.zone ||= DEFAULT_ZONE
-        new(::Time.zone.now)
-      end
-
-      def self.code_year
-        code_now.code_year
-      end
-
-      def self.code_years
-        code_now.code_years
-      end
-
-      def self.code_month
-        code_now.code_month
-      end
-
-      def self.code_months
-        code_now.code_months
-      end
-
-      def self.code_week
-        code_now.code_week
-      end
-
-      def self.code_weeks
-        code_now.code_weeks
-      end
-
-      def self.code_week_day
-        code_now.code_week_day
-      end
-
-      def self.code_week_days
-        code_now.code_week_days
-      end
-
-      def self.code_day
-        code_now.code_day
-      end
-
-      def self.code_days
-        code_now.code_days
-      end
-
-      def self.code_hour
-        code_now.code_hour
-      end
-
-      def self.code_hours
-        code_now.code_hours
-      end
-
-      def self.code_minute
-        code_now.code_minute
-      end
-
-      def self.code_minutes
-        code_now.code_minutes
-      end
-
-      def self.code_second
-        code_now.code_second
-      end
-
-      def self.code_seconds
-        code_now.code_seconds
-      end
-
-      def self.code_monday?
-        code_week_day.code_one?
-      end
-
-      def self.code_tuesday?
-        code_week_day.code_two?
-      end
-
-      def self.code_wednesday?
-        code_week_day.code_three?
-      end
-
-      def self.code_thursday?
-        code_week_day.code_four?
-      end
-
-      def self.code_friday?
-        code_week_day.code_five?
-      end
-
-      def self.code_saturday?
-        code_week_day.code_six?
-      end
-
-      def self.code_sunday?
-        code_week_day.code_zero?
-      end
-
-      def self.code_format(format)
-        code_now.code_format(format)
-      end
-
-      def call(**args)
-        code_operator = args.fetch(:operator, nil).to_code
-        code_arguments = args.fetch(:arguments, []).to_code
-        code_value = code_arguments.code_first
-
-        case code_operator.to_s
-        when "after?"
-          sig(args) { Time.maybe }
-          code_after?(code_value)
-        when "before?"
-          sig(args) { Time.maybe }
-          code_before?(code_value)
         when "past?"
           sig(args)
           code_past?
@@ -301,6 +175,443 @@ class Code
         when "format"
           sig(args) { String }
           code_format(code_value)
+        when "january?"
+          sig(args)
+          code_january?
+        when "february?"
+          sig(args)
+          code_february?
+        when "march?"
+          sig(args)
+          code_march?
+        when "april?"
+          sig(args)
+          code_april?
+        when "may?"
+          sig(args)
+          code_may?
+        when "june?"
+          sig(args)
+          code_june?
+        when "july?"
+          sig(args)
+          code_july?
+        when "august?"
+          sig(args)
+          code_august?
+        when "september?"
+          sig(args)
+          code_september?
+        when "october?"
+          sig(args)
+          code_october?
+        when "november?"
+          sig(args)
+          code_november?
+        when "december?"
+          sig(args)
+          code_december?
+        when "add"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_add
+          else
+            code_add(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
+        when "substract"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_substract
+          else
+            code_substract(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
+        when "change"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_change
+          else
+            code_change(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
+        else
+          super
+        end
+      end
+
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, []).to_code
+        code_value = code_arguments.code_first
+
+        case code_operator.to_s
+        when "after?"
+          sig(args) { (Date | Time).maybe }
+          code_after?(code_value)
+        when "before?"
+          sig(args) { (Date | Time).maybe }
+          code_before?(code_value)
+        when "tomorrow"
+          sig(args)
+          code_tomorrow
+        when "yesterday"
+          sig(args)
+          code_yesterday
+        when "past?"
+          sig(args)
+          code_past?
+        when "future?"
+          sig(args)
+          code_future?
+        when "year"
+          sig(args)
+          code_year
+        when "years"
+          sig(args)
+          code_years
+        when "month"
+          sig(args)
+          code_month
+        when "months"
+          sig(args)
+          code_months
+        when "week"
+          sig(args)
+          code_week
+        when "weeks"
+          sig(args)
+          code_weeks
+        when "week_day"
+          sig(args)
+          code_week_day
+        when "week_days"
+          sig(args)
+          code_week_days
+        when "day"
+          sig(args)
+          code_day
+        when "days"
+          sig(args)
+          code_days
+        when "hour"
+          sig(args)
+          code_hour
+        when "hours"
+          sig(args)
+          code_hours
+        when "minute"
+          sig(args)
+          code_minute
+        when "minutes"
+          sig(args)
+          code_minutes
+        when "second"
+          sig(args)
+          code_second
+        when "seconds"
+          sig(args)
+          code_seconds
+        when "monday?"
+          sig(args)
+          code_monday?
+        when "tuesday?"
+          sig(args)
+          code_tuesday?
+        when "wednesday?"
+          sig(args)
+          code_wednesday?
+        when "thursday?"
+          sig(args)
+          code_thursday?
+        when "friday?"
+          sig(args)
+          code_friday?
+        when "saturday?"
+          sig(args)
+          code_saturday?
+        when "sunday?"
+          sig(args)
+          code_sunday?
+        when "format"
+          sig(args) { String }
+          code_format(code_value)
+        when "january?"
+          sig(args)
+          code_january?
+        when "february?"
+          sig(args)
+          code_february?
+        when "march?"
+          sig(args)
+          code_march?
+        when "april?"
+          sig(args)
+          code_april?
+        when "may?"
+          sig(args)
+          code_may?
+        when "june?"
+          sig(args)
+          code_june?
+        when "july?"
+          sig(args)
+          code_july?
+        when "august?"
+          sig(args)
+          code_august?
+        when "september?"
+          sig(args)
+          code_september?
+        when "october?"
+          sig(args)
+          code_october?
+        when "november?"
+          sig(args)
+          code_november?
+        when "december?"
+          sig(args)
+          code_december?
+        when "add"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_add
+          else
+            code_add(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
+        when "substract"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_substract
+          else
+            code_substract(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
+        when "change"
+          sig(args) do
+            {
+              year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
+              month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
+              day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
+              week_day: (String | Integer).maybe,
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe,
+              hour: (String | Integer).maybe,
+              hours: (String | Integer).maybe,
+              minute: (String | Integer).maybe,
+              minutes: (String | Integer).maybe,
+              second: (String | Integer).maybe,
+              seconds: (String | Integer).maybe
+            }
+          end
+
+          if code_value.nothing?
+            code_change
+          else
+            code_change(
+              year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
+              month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
+              day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
+              week_day: code_value.code_get(:week_day),
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks),
+              hour: code_value.code_get(:hour),
+              hours: code_value.code_get(:hours),
+              minute: code_value.code_get(:minute),
+              minutes: code_value.code_get(:minutes),
+              second: code_value.code_get(:second),
+              seconds: code_value.code_get(:seconds)
+            )
+          end
         else
           super
         end
@@ -420,10 +731,229 @@ class Code
         code_week_day.code_zero?
       end
 
+      def code_january?
+        code_month.code_one?
+      end
+
+      def code_february?
+        code_month.code_two?
+      end
+
+      def code_march?
+        code_month.code_three?
+      end
+
+      def code_april?
+        code_month.code_four?
+      end
+
+      def code_may?
+        code_month.code_five?
+      end
+
+      def code_june?
+        code_month.code_six?
+      end
+
+      def code_july?
+        code_month.code_seven?
+      end
+
+      def code_august?
+        code_month.code_eight?
+      end
+
+      def code_september?
+        code_month.code_nine?
+      end
+
+      def code_october?
+        code_month.code_ten?
+      end
+
+      def code_november?
+        code_month.code_eleven?
+      end
+
+      def code_december?
+        code_month.code_twelve?
+      end
+
       def code_format(format)
         code_format = format.to_code
 
         String.new(raw.strftime(code_format.raw))
+      end
+
+      def code_today
+        Time.new
+      end
+
+      def code_now
+        Time.new
+      end
+
+      def code_current
+        Time.new
+      end
+
+      def code_tomorrow
+        code_add(day: 1)
+      end
+
+      def code_yesterday
+        code_substract(day: 1)
+      end
+
+      def code_add(
+        year: nil,
+        years: nil,
+        month: nil,
+        months: nil,
+        day: nil,
+        days: nil,
+        week_day: nil,
+        week_days: nil,
+        week: nil,
+        weeks: nil,
+        hour: nil,
+        hours: nil,
+        minute: nil,
+        minutes: nil,
+        second: nil,
+        seconds: nil
+      )
+        code_year = year.to_code.nothing? ? years.to_code : year.to_code
+        code_month = month.to_code.nothing? ? months.to_code : month.to_code
+        code_day = day.to_code.nothing? ? days.to_code : day.to_code
+        code_week_day =
+          week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
+        code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
+        code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
+        code_minute =
+          minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second =
+          second.to_code.nothing? ? seconds.to_code : second.to_code
+
+        Time.new(
+          raw.change(
+            year: code_years.code_to_integer.raw + code_year.code_to_integer.raw,
+            month:
+              code_months.code_to_integer.raw + code_month.code_to_integer.raw,
+            day: code_days.code_to_integer.raw + code_day.code_to_integer.raw,
+            wday:
+              code_week_days.code_to_integer.raw +
+                code_week_day.code_to_integer.raw,
+            cweek: code_weeks.code_to_integer.raw + code_week.code_to_integer.raw,
+            hour: code_hours.code_to_integer.raw + code_hour.code_to_integer.raw,
+            min:
+              code_minutes.code_to_integer.raw + code_minute.code_to_integer.raw,
+            sec:
+              code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
+          )
+        )
+      end
+
+      def code_substract(
+        year: nil,
+        years: nil,
+        month: nil,
+        months: nil,
+        day: nil,
+        days: nil,
+        week_day: nil,
+        week_days: nil,
+        week: nil,
+        weeks: nil,
+        hour: nil,
+        hours: nil,
+        minute: nil,
+        minutes: nil,
+        second: nil,
+        seconds: nil
+      )
+        code_year = year.to_code.nothing? ? years.to_code : year.to_code
+        code_month = month.to_code.nothing? ? months.to_code : month.to_code
+        code_day = day.to_code.nothing? ? days.to_code : day.to_code
+        code_week_day =
+          week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
+        code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
+        code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
+        code_minute =
+          minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second =
+          second.to_code.nothing? ? seconds.to_code : second.to_code
+
+        Time.new(
+          raw.change(
+            year: code_years.code_to_integer.raw - code_year.code_to_integer.raw,
+            month:
+              code_months.code_to_integer.raw - code_month.code_to_integer.raw,
+            day: code_days.code_to_integer.raw - code_day.code_to_integer.raw,
+            wday:
+              code_week_days.code_to_integer.raw -
+                code_week_day.code_to_integer.raw,
+            cweek: code_weeks.code_to_integer.raw - code_week.code_to_integer.raw,
+            hour: code_hours.code_to_integer.raw - code_hour.code_to_integer.raw,
+            min:
+              code_minutes.code_to_integer.raw - code_minute.code_to_integer.raw,
+            sec:
+              code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
+          )
+        )
+      end
+
+      def code_change(
+        year: nil,
+        years: nil,
+        month: nil,
+        months: nil,
+        day: nil,
+        days: nil,
+        week_day: nil,
+        week_days: nil,
+        week: nil,
+        weeks: nil,
+        hour: nil,
+        hours: nil,
+        minute: nil,
+        minutes: nil,
+        second: nil,
+        seconds: nil
+      )
+        code_year = year.to_code.nothing? ? years.to_code : year.to_code
+        code_month = month.to_code.nothing? ? months.to_code : month.to_code
+        code_day = day.to_code.nothing? ? days.to_code : day.to_code
+        code_week_day =
+          week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
+        code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
+        code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
+        code_minute =
+          minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second =
+          second.to_code.nothing? ? seconds.to_code : second.to_code
+
+        if code_year.something? || code_month.something? ||
+             code_day.something? || code_week_day.something? ||
+             code_week.something? || code_hour.something? ||
+             code_minute.something? || code_second.something?
+          Time.new(
+            raw.change(
+              **{
+                year: code_year.raw,
+                month: code_month.raw,
+                day: code_day.raw,
+                wday: code_week_day.raw,
+                cweek: code_week.raw,
+                hour: code_hour.raw,
+                min: code_minute.raw,
+                sec: code_second.raw
+              }.compact
+            )
+          )
+        else
+          Time.new(self)
+        end
       end
     end
   end

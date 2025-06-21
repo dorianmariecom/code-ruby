@@ -160,13 +160,15 @@ class Code
       end
 
       def keyword
-        do_keyword | begin_keyword | end_keyword | while_keyword | until_keyword |
-          if_keyword | elsif_keyword | else_keyword | unless_keyword | elsunless_keyword |
-          true_keyword | false_keyword | nothing_keyword
+        do_keyword | begin_keyword | end_keyword | while_keyword |
+          until_keyword | if_keyword | elsif_keyword | else_keyword |
+          unless_keyword | elsunless_keyword | true_keyword | false_keyword |
+          nothing_keyword
       end
 
       def root
-        (keyword << separator).absent << special_characters.absent << character.repeat(1)
+        (keyword << separator).absent << special_characters.absent <<
+          character.repeat(1)
       end
     end
   end

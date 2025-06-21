@@ -10,7 +10,7 @@ RSpec.describe Code do
       "{ a: 1, b: 2 }.transform_values { |key, value, index| index * 2 }",
       "{ a: 1, b: 2 }.transform_values { |key, value, index, dictionary| dictionary.a }",
       "sum = (a, b: 2) => { a + b } sum(1)",
-      "Object.new !== Object.new",
+      "Object.new !== Object.new"
     ] +
       %w[
         :abc.size
@@ -268,8 +268,8 @@ RSpec.describe Code do
     ["Class(true, 1)", "Boolean"],
     ["Class.new(Boolean, Time)", "Boolean"],
     ["Class.new(Time, Boolean)", "Time"],
-    ["Date(2024, 3, 2).to_string", ":2024-03-02"],
-    ["Date(2024,3, 2).to_string", ":2024-03-02"],
+    ['Date("2024-3-2").to_string', ":2024-03-02"],
+    ['Date("2024-3-2").to_string', ":2024-03-02"],
     ["Decimal(1, :2)", "100"],
     ["Decimal(:1, 2)", "100.0"],
     ["Decimal.new(1, :2)", "100"],

@@ -171,7 +171,11 @@ class Code
           Nothing.new
         when "Number"
           sig(args) { Object.repeat }
-          code_arguments.any? ? Number.new(*code_arguments.raw) : Class.new(Number)
+          if code_arguments.any?
+            Number.new(*code_arguments.raw)
+          else
+            Class.new(Number)
+          end
         else
           code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)

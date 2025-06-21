@@ -80,8 +80,9 @@ class Code
             statement.aka(:first_statement) << body.aka(:first_body) <<
             (
               (
-                (elsif_keyword | elsunless_keyword).aka(:operator) << whitespace <<
-                  statement.aka(:statement) << body.aka(:body)
+                (elsif_keyword | elsunless_keyword).aka(
+                  :operator
+                ) << whitespace << statement.aka(:statement) << body.aka(:body)
               ) |
                 (
                   else_keyword << whitespace <<
