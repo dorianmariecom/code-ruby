@@ -693,18 +693,13 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
 
-        Date.new(
-          raw.change(
-            year: code_years.code_to_integer.raw + code_year.code_to_integer.raw,
-            month:
-              code_months.code_to_integer.raw + code_month.code_to_integer.raw,
-            day: code_days.code_to_integer.raw + code_day.code_to_integer.raw,
-            wday:
-              code_week_days.code_to_integer.raw +
-                code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
-          )
-        )
+        year = code_years.code_to_integer.raw + code_year.code_to_integer.raw
+        month = code_months.code_to_integer.raw + code_month.code_to_integer.raw
+        day = code_days.code_to_integer.raw + code_day.code_to_integer.raw
+        week_day = code_week_days.code_to_integer.raw + code_week_day.code_to_integer.raw
+        week = code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
+
+        code_change(year:, month:, day:, week_day:, week:)
       end
 
       def code_substract(
@@ -726,18 +721,13 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
 
-        Date.new(
-          raw.change(
-            year: code_years.code_to_integer.raw - code_year.code_to_integer.raw,
-            month:
-              code_months.code_to_integer.raw - code_month.code_to_integer.raw,
-            day: code_days.code_to_integer.raw - code_day.code_to_integer.raw,
-            wday:
-              code_week_days.code_to_integer.raw -
-                code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
-          )
-        )
+        year = code_years.code_to_integer.raw - code_year.code_to_integer.raw
+        month = code_months.code_to_integer.raw - code_month.code_to_integer.raw
+        day = code_days.code_to_integer.raw - code_day.code_to_integer.raw
+        week_day = code_week_days.code_to_integer.raw - code_week_day.code_to_integer.raw
+        week = code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
+
+        code_change(year:, month:, day:, week_day:, week:)
       end
 
       def code_change(
@@ -759,23 +749,20 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
 
-        if code_year.something? || code_month.something? ||
-             code_day.something? || code_week_day.something? ||
-             code_week.something?
-          Date.new(
-            raw.change(
-              **{
-                year: code_year.raw,
-                month: code_month.raw,
-                day: code_day.raw,
-                wday: code_week_day.raw,
-                cweek: code_week.raw
-              }.compact
-            )
-          )
-        else
-          Date.new(self)
-        end
+        year = code_year.raw || code_years.raw
+        month = code_month.raw || code_months.raw
+        day = code_day.raw || code_days.raw
+        wday = code_week_day.raw || code_week_days.raw
+        cweek = code_week.raw || code_weeks.raw
+
+        dup = raw.dup
+        dup += (year - raw.year).years
+        dup += (month - raw.month).months
+        dup += (day - raw.day).days
+        dup += (wday - raw.wday).days
+        dup += (cweek - raw.to_date.cweek).weeks
+
+        Date.new(dup)
       end
     end
   end

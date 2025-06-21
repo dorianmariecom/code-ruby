@@ -831,28 +831,19 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
         code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
-        code_minute =
-          minute.to_code.nothing? ? minutes.to_code : minute.to_code
-        code_second =
-          second.to_code.nothing? ? seconds.to_code : second.to_code
+        code_minute = minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second = second.to_code.nothing? ? seconds.to_code : second.to_code
 
-        Time.new(
-          raw.change(
-            year: code_years.code_to_integer.raw + code_year.code_to_integer.raw,
-            month:
-              code_months.code_to_integer.raw + code_month.code_to_integer.raw,
-            day: code_days.code_to_integer.raw + code_day.code_to_integer.raw,
-            wday:
-              code_week_days.code_to_integer.raw +
-                code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw + code_week.code_to_integer.raw,
-            hour: code_hours.code_to_integer.raw + code_hour.code_to_integer.raw,
-            min:
-              code_minutes.code_to_integer.raw + code_minute.code_to_integer.raw,
-            sec:
-              code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
-          )
-        )
+        year = code_years.code_to_integer.raw + code_year.code_to_integer.raw
+        month = code_months.code_to_integer.raw + code_month.code_to_integer.raw
+        day = code_days.code_to_integer.raw + code_day.code_to_integer.raw
+        week_day = code_week_days.code_to_integer.raw + code_week_day.code_to_integer.raw
+        week = code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
+        hour = code_hours.code_to_integer.raw + code_hour.code_to_integer.raw
+        minute = code_minutes.code_to_integer.raw + code_minute.code_to_integer.raw
+        second = code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
+
+        code_change(year:, month:, day:, week_day:, week:, hour:, minute:, second:)
       end
 
       def code_substract(
@@ -880,28 +871,19 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
         code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
-        code_minute =
-          minute.to_code.nothing? ? minutes.to_code : minute.to_code
-        code_second =
-          second.to_code.nothing? ? seconds.to_code : second.to_code
+        code_minute = minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second = second.to_code.nothing? ? seconds.to_code : second.to_code
 
-        Time.new(
-          raw.change(
-            year: code_years.code_to_integer.raw - code_year.code_to_integer.raw,
-            month:
-              code_months.code_to_integer.raw - code_month.code_to_integer.raw,
-            day: code_days.code_to_integer.raw - code_day.code_to_integer.raw,
-            wday:
-              code_week_days.code_to_integer.raw -
-                code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw - code_week.code_to_integer.raw,
-            hour: code_hours.code_to_integer.raw - code_hour.code_to_integer.raw,
-            min:
-              code_minutes.code_to_integer.raw - code_minute.code_to_integer.raw,
-            sec:
-              code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
-          )
-        )
+        year = code_years.code_to_integer.raw - code_year.code_to_integer.raw
+        month = code_months.code_to_integer.raw - code_month.code_to_integer.raw
+        day = code_days.code_to_integer.raw - code_day.code_to_integer.raw
+        week_day = code_week_days.code_to_integer.raw - code_week_day.code_to_integer.raw
+        week = code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
+        hour = code_hours.code_to_integer.raw - code_hour.code_to_integer.raw
+        minute = code_minutes.code_to_integer.raw - code_minute.code_to_integer.raw
+        second = code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
+
+        code_change(year:, month:, day:, week_day:, week:, hour:, minute:, second:)
       end
 
       def code_change(
@@ -929,32 +911,29 @@ class Code
           week_day.to_code.nothing? ? week_days.to_code : week_day.to_code
         code_week = week.to_code.nothing? ? weeks.to_code : week.to_code
         code_hour = hour.to_code.nothing? ? hours.to_code : hour.to_code
-        code_minute =
-          minute.to_code.nothing? ? minutes.to_code : minute.to_code
-        code_second =
-          second.to_code.nothing? ? seconds.to_code : second.to_code
+        code_minute = minute.to_code.nothing? ? minutes.to_code : minute.to_code
+        code_second = second.to_code.nothing? ? seconds.to_code : second.to_code
 
-        if code_year.something? || code_month.something? ||
-             code_day.something? || code_week_day.something? ||
-             code_week.something? || code_hour.something? ||
-             code_minute.something? || code_second.something?
-          Time.new(
-            raw.change(
-              **{
-                year: code_year.raw,
-                month: code_month.raw,
-                day: code_day.raw,
-                wday: code_week_day.raw,
-                cweek: code_week.raw,
-                hour: code_hour.raw,
-                min: code_minute.raw,
-                sec: code_second.raw
-              }.compact
-            )
-          )
-        else
-          Time.new(self)
-        end
+        year = code_year.raw || code_years.raw
+        month = code_month.raw || code_months.raw
+        day = code_day.raw || code_days.raw
+        wday = code_week_day.raw || code_week_days.raw
+        cweek = code_week.raw || code_weeks.raw
+        hour = code_hour.raw || code_hours.raw
+        min = code_minute.raw || code_minutes.raw
+        sec = code_second.raw || code_seconds.raw
+
+        dup = raw.dup
+        dup += (year - raw.year).years
+        dup += (month - raw.month).months
+        dup += (day - raw.day).days
+        dup += (wday - raw.wday).days
+        dup += (cweek - raw.to_date.cweek).weeks
+        dup += (hour - raw.hour).hours
+        dup += (min - raw.min).minutes
+        dup += (sec - raw.sec).seconds
+
+        Time.new(dup)
       end
     end
   end
