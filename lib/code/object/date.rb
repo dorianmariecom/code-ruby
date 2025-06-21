@@ -62,19 +62,21 @@ class Code
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
 
-        if args.first.is_a?(String) || args.first.is_a?(::String)
-          self.raw = ::Date.parse(args.first.to_s)
-        elsif args.first.is_a?(Time)
-          self.raw = args.first.raw.to_date
-        elsif args.first.is_a?(::Time)
-          self.raw = args.first.to_date
-        elsif args.first.is_a?(Date)
-          self.raw = args.first.raw.dup
-        elsif args.first.is_a?(::Date)
-          self.raw = args.first.dup
-        else
-          self.raw = ::Date.current
-        end
+        self.raw =
+          case args.first
+          when String, ::String
+            ::Date.parse(args.first.to_s)
+          when Time
+            args.first.raw.to_date
+          when ::Time
+            args.first.to_date
+          when Date
+            args.first.raw.dup
+          when ::Date
+            args.first.dup
+          else
+            ::Date.current
+          end
       end
 
       def self.call(**args)
@@ -695,14 +697,16 @@ class Code
 
         Date.new(
           raw.change(
-            year: code_years.code_to_integer.raw + code_year.code_to_integer.raw,
+            year:
+              code_years.code_to_integer.raw + code_year.code_to_integer.raw,
             month:
               code_months.code_to_integer.raw + code_month.code_to_integer.raw,
             day: code_days.code_to_integer.raw + code_day.code_to_integer.raw,
             wday:
               code_week_days.code_to_integer.raw +
                 code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
+            cweek:
+              code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
           )
         )
       end
@@ -728,14 +732,16 @@ class Code
 
         Date.new(
           raw.change(
-            year: code_years.code_to_integer.raw - code_year.code_to_integer.raw,
+            year:
+              code_years.code_to_integer.raw - code_year.code_to_integer.raw,
             month:
               code_months.code_to_integer.raw - code_month.code_to_integer.raw,
             day: code_days.code_to_integer.raw - code_day.code_to_integer.raw,
             wday:
               code_week_days.code_to_integer.raw -
                 code_week_day.code_to_integer.raw,
-            cweek: code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
+            cweek:
+              code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
           )
         )
       end
