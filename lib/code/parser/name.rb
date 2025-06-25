@@ -139,6 +139,10 @@ class Code
         str("?")
       end
 
+      def special_name
+        str("...") | str("..") | str(".") | str("**") | str("*") | str("&")
+      end
+
       def reserved_character
         ampersand | equal | pipe | dot | colon | comma | space | newline |
           opening_curly_bracket | closing_curly_bracket | opening_parenthesis |
@@ -167,8 +171,13 @@ class Code
       end
 
       def root
-        (keyword << separator).absent << special_characters.absent <<
-          character.repeat(1)
+        (
+          special_name |
+            (
+              (keyword << separator).absent << special_characters.absent <<
+                character.repeat(1)
+            )
+        )
       end
     end
   end

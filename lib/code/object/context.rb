@@ -18,6 +18,7 @@ class Code
         elsif parent?
           parent.code_lookup!(code_identifier)
         else
+          binding.irb
           raise Error, "#{code_identifier} is not defined"
         end
       end

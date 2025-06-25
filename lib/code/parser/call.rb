@@ -67,6 +67,18 @@ class Code
         str("end")
       end
 
+      def asterisk
+        str("*")
+      end
+
+      def ampersand
+        str("&")
+      end
+
+      def spread_operator
+        str("...") | str("..") | str(".")
+      end
+
       def keyword_argument
         name.aka(:name) << whitespace? << colon << code.aka(:value)
       end
@@ -87,13 +99,19 @@ class Code
           ).repeat << whitespace? << closing_parenthesis.ignore.maybe
       end
 
+      def prefix
+        (asterisk << asterisk).aka(:keyword_splat) |
+          asterisk.aka(:regular_splat) | ampersand.aka(:block) |
+          spread_operator.aka(:spread)
+      end
+
       def keyword_parameter
         name.aka(:name) << whitespace? << colon.aka(:keyword) <<
           code_present.aka(:default).maybe
       end
 
       def regular_parameter
-        name.aka(:name) << whitespace? <<
+        ((prefix.maybe << name.aka(:name)) | prefix) << whitespace? <<
           (equal << whitespace? << code_present.aka(:default)).maybe
       end
 

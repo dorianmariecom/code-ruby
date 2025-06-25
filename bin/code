@@ -46,7 +46,11 @@ RubyProf.start if profile
 input = 'loop { print("> ") puts(evaluate(read)) }' if input.blank?
 
 if parsed.options.parse
-  pp Code::Parser.parse(input).to_raw
+  begin
+    pp Code::Parser.parse(input).to_raw
+  rescue Exception => e
+    warn e.message
+  end
 else
   begin
     print(
@@ -58,7 +62,7 @@ else
         timeout: parsed.options.timeout
       )
     )
-  rescue Code::Error => e
+  rescue Exception => e
     warn e.message
   end
 end

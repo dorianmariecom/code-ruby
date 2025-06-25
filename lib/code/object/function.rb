@@ -38,12 +38,19 @@ class Code
 
         code_parameters.raw.each.with_index do |code_parameter, index|
           code_argument =
-            if code_parameter.regular_splat?
+            if code_parameter.spread?
+              code_arguments
+            elsif code_parameter.regular_splat?
               code_arguments
             elsif code_parameter.keyword_splat?
               code_arguments.raw.detect do |code_argument|
                 code_argument.is_a?(Dictionary)
               end || Dictionary.new
+            elsif code_parameter.block?
+              code_arguments
+                .raw
+                .detect { |code_argument| code_argument.is_a?(Function) }
+                .to_code
             elsif code_parameter.keyword?
               code_arguments
                 .raw
@@ -71,7 +78,11 @@ class Code
         code_parameters
           .raw
           .inject([]) do |signature, code_parameter|
-            if code_parameter.keyword_splat?
+            if code_parameter.spread?
+              signature + [Object.repeat]
+            elsif code_parameter.block?
+              signature + [Function]
+            elsif code_parameter.keyword_splat?
               signature + [Dictionary.maybe]
             elsif code_parameter.regular_splat?
               signature + [Object.repeat]

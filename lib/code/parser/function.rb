@@ -35,6 +35,10 @@ class Code
         str("end")
       end
 
+      def spread_operator
+        str("...") | str("..") | str(".")
+      end
+
       def opening_parenthesis
         str("(")
       end
@@ -77,7 +81,8 @@ class Code
 
       def prefix
         (asterisk << asterisk).aka(:keyword_splat) |
-          asterisk.aka(:regular_splat) | ampersand.aka(:block)
+          asterisk.aka(:regular_splat) | ampersand.aka(:block) |
+          spread_operator.aka(:spread)
       end
 
       def keyword_parameter
@@ -86,7 +91,7 @@ class Code
       end
 
       def regular_parameter
-        prefix.maybe << name.aka(:name) << whitespace? <<
+        ((prefix.maybe << name.aka(:name)) | prefix) << whitespace? <<
           (equal << whitespace? << code_present.aka(:default)).maybe
       end
 

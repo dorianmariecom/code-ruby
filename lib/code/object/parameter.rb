@@ -23,6 +23,14 @@ class Code
         Boolean.new(code_get(:keyword_splat?))
       end
 
+      def code_block?
+        Boolean.new(code_get(:block?))
+      end
+
+      def code_spread?
+        Boolean.new(code_get(:spread?))
+      end
+
       def code_required?
         code_default.code_falsy?
       end
@@ -61,6 +69,14 @@ class Code
 
       def keyword_splat?
         code_keyword_splat?.truthy?
+      end
+
+      def spread?
+        code_spread?.truthy?
+      end
+
+      def block?
+        code_block?.truthy?
       end
     end
   end
