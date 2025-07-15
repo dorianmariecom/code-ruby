@@ -172,7 +172,7 @@ class Code
 
       def root
         (
-          special_name |
+          (special_name << separator.ignore) |
             (
               (keyword << separator).absent << special_characters.absent <<
                 character.repeat(1)
