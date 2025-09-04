@@ -424,4 +424,15 @@ RSpec.describe Code do
       end
     INPUT
   end
+
+  it "doesn't crash with functions" do
+    described_class.evaluate(<<~INPUT)
+      send! = (subject:) => { subject }
+
+      send!(subject: "pomodoro start")
+      send!(subject: "pomodoro break")
+      send!(subject: "pomodoro start")
+      send!(subject: "pomodoro break")
+    INPUT
+  end
 end

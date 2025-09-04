@@ -56,16 +56,16 @@ class Code
                 .raw
                 .select { |code_argument| code_argument.is_a?(Dictionary) }
                 .detect do |code_dictionary|
-                  code_dictionary.code_has_value?(parameter.code_name).truthy?
+                  code_dictionary.code_has_key?(code_parameter.code_name).truthy?
                 end
-                &.code_get(parameter.code_name)
+                &.code_get(code_parameter.code_name)
                 .to_code
             else
               code_arguments.raw[index].to_code
             end
 
           if code_argument.nothing?
-            code_argument = code_parameter.code_evaluate(**globals)
+            code_argument = code_parameter.code_default
           end
 
           code_context.code_set(code_parameter.code_name, code_argument)

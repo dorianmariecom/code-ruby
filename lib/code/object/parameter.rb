@@ -43,10 +43,6 @@ class Code
         code_get(:default).to_code
       end
 
-      def code_evaluate(...)
-        code_default.code_evaluate(...)
-      end
-
       def required?
         code_required?.truthy?
       end
