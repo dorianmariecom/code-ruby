@@ -65,13 +65,15 @@ class Code
         if args.first.is_a?(String) || args.first.is_a?(::String)
           self.raw = ::Time.zone.parse(args.first.to_s) || raise(Error)
         elsif args.first.is_a?(Time)
-          self.raw = args.first.raw.dup
+          self.raw = args.first.raw.dup.in_time_zone(::Time.zone)
         elsif args.first.is_a?(::Time)
-          self.raw = args.first.dup
+          self.raw = args.first.dup.in_time_zone(::Time.zone)
         elsif args.first.is_a?(Date)
-          self.raw = args.first.raw.to_time
+          self.raw = args.first.raw.to_time.in_time_zone(::Time.zone)
         elsif args.first.is_a?(::Date)
-          self.raw = args.first.to_time
+          self.raw = args.first.to_time.in_time_zone(::Time.zone)
+        elsif args.first.is_a?(::ActiveSupport::TimeWithZone)
+          self.raw = args.first.dup
         else
           self.raw = ::Time.zone.now
         end
