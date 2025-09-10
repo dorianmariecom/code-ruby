@@ -137,8 +137,8 @@ class Code
           sig(args) { String.maybe }
           code_join(code_value)
         when "sort"
-          sig(args)
-          code_sort
+          sig(args) { Function.maybe }
+          code_sort(code_value, **globals)
         when "<<", "append"
           sig(args) { Object }
           code_append(code_value)
@@ -949,8 +949,24 @@ class Code
         String.new(raw.join(code_separator.raw))
       end
 
-      def code_sort
-        List.new(raw.sort)
+      def code_sort(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.sort_by.with_index do |code_element, index|
+            if code_argument.is_a?(Function)
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+            else
+              code_element
+            end
+          rescue Error::Next => e
+            e.code_value
+          end
+        )
       end
 
       def code_size

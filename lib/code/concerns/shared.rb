@@ -35,6 +35,21 @@ class Code
         when "==", "equal"
           sig(args) { Object }
           code_equal(code_value)
+        when ">", "greater_or_equal"
+          sig(args) { Object }
+          code_greater(code_value)
+        when ">=", "greater"
+          sig(args) { Object }
+          code_greater_or_equal(code_value)
+        when "<=>", "compare"
+          sig(args) { Object }
+          code_compare(code_value)
+        when "<", "less"
+          sig(args) { Object }
+          code_less(code_value)
+        when "<=", "less_or_equal"
+          sig(args) { Object }
+          code_less_or_equal(code_value)
         when "===", "strict_equal"
           sig(args) { Object }
           code_strict_equal(code_value)
@@ -179,6 +194,36 @@ class Code
         code_other = other.to_code
 
         Object::Boolean.new(self == code_other)
+      end
+
+      def code_compare(other)
+        code_other = other.to_code
+
+        Object::Integer.new(self <=> code_other)
+      end
+
+      def code_greater(other)
+        code_other = other.to_code
+
+        Object::Boolean.new((self <=> code_other) > 0)
+      end
+
+      def code_greater_or_equal(other)
+        code_other = other.to_code
+
+        Object::Boolean.new((self <=> code_other) >= 0)
+      end
+
+      def code_less(other)
+        code_other = other.to_code
+
+        Object::Boolean.new((self <=> code_other) < 0)
+      end
+
+      def code_less_or_equal(other)
+        code_other = other.to_code
+
+        Object::Boolean.new((self <=> code_other) <= 0)
       end
 
       def code_exclamation_mark

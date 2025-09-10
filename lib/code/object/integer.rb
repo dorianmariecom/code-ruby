@@ -46,24 +46,9 @@ class Code
         when "/", "division", "÷"
           sig(args) { Integer | Decimal }
           code_division(code_value)
-        when "<", "inferior"
-          sig(args) { Integer | Decimal }
-          code_inferior(code_value)
         when "<<", "left_shift"
           sig(args) { Integer | Decimal }
           code_left_shift(code_value)
-        when "<=", "inferior_or_equal"
-          sig(args) { Integer | Decimal }
-          code_inferior_or_equal(code_value)
-        when "<=>", "compare"
-          sig(args) { Integer | Decimal }
-          code_compare(code_value)
-        when ">", "superior"
-          sig(args) { Integer | Decimal }
-          code_superior(code_value)
-        when ">=", "superior_or_equal"
-          sig(args) { Integer | Decimal }
-          code_superior_or_equal(code_value)
         when ">>", "right_shift"
           sig(args) { Integer | Decimal }
           code_right_shift(code_value)
@@ -463,11 +448,6 @@ class Code
         Integer.new(raw.ceil(code_n.raw))
       end
 
-      def code_compare(other)
-        code_other = other.to_code
-        Integer.new(raw <=> code_other.raw)
-      end
-
       def code_decrement!(n = nil)
         code_n = n.to_code
         code_n = Integer.new(1) if code_n.nothing?
@@ -507,16 +487,6 @@ class Code
         code_n = n.to_code
         code_n = Integer.new(1) if code_n.nothing?
         Integer.new(raw + code_n.raw)
-      end
-
-      def code_inferior(other)
-        code_other = other.to_code
-        Boolean.new(raw < code_other.raw)
-      end
-
-      def code_inferior_or_equal(other)
-        code_other = other.to_code
-        Boolean.new(raw <= code_other.raw)
       end
 
       def code_left_shift(other)
@@ -596,18 +566,6 @@ class Code
 
       def code_sqrt
         Decimal.new(Math.sqrt(raw).to_s)
-      end
-
-      def code_superior(other)
-        code_other = other.to_code
-
-        Boolean.new(raw > code_other.raw)
-      end
-
-      def code_superior_or_equal(other)
-        code_other = other.to_code
-
-        Boolean.new(raw >= code_other.raw)
       end
 
       def code_to_decimal

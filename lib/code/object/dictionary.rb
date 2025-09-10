@@ -136,21 +136,6 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
-        when "<", "inferior"
-          sig(args) { Dictionary }
-          code_inferior(code_value)
-        when "<=", "inferior_or_equal"
-          sig(args) { Dictionary }
-          code_inferior_or_equal(code_value)
-        when "<=>", "compare"
-          sig(args) { Dictionary }
-          code_compare(code_value)
-        when ">", "superior"
-          sig(args) { Dictionary }
-          code_superior(code_value)
-        when ">=", "superior_or_equal"
-          sig(args) { Dictionary }
-          code_superior_or_equal(code_value)
         when "[]", "at", "get"
           sig(args) { Object }
           code_get(code_value)
@@ -605,11 +590,6 @@ class Code
         self
       end
 
-      def code_compare(other)
-        code_other = other.to_code
-        Integer.new(raw <=> code_other.raw)
-      end
-
       def code_delete(*arguments, index: 0, **globals)
         arguments = arguments.to_code.raw
         code_index = index.to_code
@@ -808,16 +788,6 @@ class Code
         Boolean.new(raw.value?(code_key))
       end
 
-      def code_inferior(other)
-        code_other = other.to_code
-        Boolean.new(raw < code_other.raw)
-      end
-
-      def code_inferior_or_equal(other)
-        code_other = other.to_code
-        Boolean.new(raw <= code_other.raw)
-      end
-
       def code_invert
         Dictionary.new(raw.invert)
       end
@@ -1005,16 +975,6 @@ class Code
 
       def code_size
         Integer.new(raw.size)
-      end
-
-      def code_superior(other)
-        code_other = other.to_code
-        Boolean.new(raw > code_other.raw)
-      end
-
-      def code_superior_or_equal(other)
-        code_other = other.to_code
-        Boolean.new(raw >= code_other.raw)
       end
 
       def code_to_context

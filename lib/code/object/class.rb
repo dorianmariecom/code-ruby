@@ -9,7 +9,7 @@ class Code
             args.first.raw
           elsif args.first.is_an?(Object)
             args.first.class
-          elsif args.first && args.first < Object
+          elsif args.first && args.first.ancestors.include?(Object)
             args.first
           else
             Nothing
