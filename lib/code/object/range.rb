@@ -173,12 +173,12 @@ class Code
         code_element = code_element.code_plus(code_argument)
 
         if exclude_end?
-          while code_element.code_inferior(code_right).truthy?
+          while code_element.code_less(code_right).truthy?
             code_list.code_append(code_element)
             code_element = code_element.code_plus(code_argument)
           end
         else
-          while code_element.code_inferior_or_equal(code_right).truthy?
+          while code_element.code_less_or_equal(code_right).truthy?
             code_list.code_append(code_element)
             code_element = code_element.code_plus(code_argument)
           end
