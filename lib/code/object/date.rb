@@ -222,10 +222,15 @@ class Code
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -234,20 +239,30 @@ class Code
           else
             code_add(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         when "substract"
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -256,20 +271,30 @@ class Code
           else
             code_substract(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         when "change"
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -278,10 +303,15 @@ class Code
           else
             code_change(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         else
@@ -419,10 +449,15 @@ class Code
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -431,20 +466,30 @@ class Code
           else
             code_add(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         when "substract"
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -453,20 +498,30 @@ class Code
           else
             code_substract(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         when "change"
           sig(args) do
             {
               year: (String | Integer).maybe,
+              years: (String | Integer).maybe,
               month: (String | Integer).maybe,
+              months: (String | Integer).maybe,
               day: (String | Integer).maybe,
+              days: (String | Integer).maybe,
               week_day: (String | Integer).maybe,
-              week: (String | Integer).maybe
+              week_days: (String | Integer).maybe,
+              week: (String | Integer).maybe,
+              weeks: (String | Integer).maybe
             }
           end
 
@@ -475,10 +530,15 @@ class Code
           else
             code_change(
               year: code_value.code_get(:year),
+              years: code_value.code_get(:years),
               month: code_value.code_get(:month),
+              months: code_value.code_get(:months),
               day: code_value.code_get(:day),
+              days: code_value.code_get(:days),
               week_day: code_value.code_get(:week_day),
-              week: code_value.code_get(:week)
+              week_days: code_value.code_get(:week_days),
+              week: code_value.code_get(:week),
+              weeks: code_value.code_get(:weeks)
             )
           end
         else
