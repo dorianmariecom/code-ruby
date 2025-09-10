@@ -208,7 +208,7 @@ class Code
       def code_greater(other)
         code_other = other.to_code
 
-        Object::Boolean.new((self <=> code_other) > 0)
+        Object::Boolean.new((self <=> code_other).positive?)
       end
 
       def code_greater_or_equal(other)
@@ -220,7 +220,7 @@ class Code
       def code_less(other)
         code_other = other.to_code
 
-        Object::Boolean.new((self <=> code_other) < 0)
+        Object::Boolean.new((self <=> code_other).negative?)
       end
 
       def code_less_or_equal(other)
