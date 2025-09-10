@@ -1025,6 +1025,7 @@ class Code
         return 0 if raw == code_other.raw
         return -1 if raw < code_other.raw
         return 1 if raw > code_other.raw
+
         -1
       end
     end
