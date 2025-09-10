@@ -955,11 +955,10 @@ class Code
         List.new(
           raw.sort_by.with_index do |code_element, index|
             if code_argument.is_a?(Function)
-              code_argument
-                .call(
-                  arguments: List.new([code_element, Integer.new(index), self]),
-                  **globals
-                )
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
             else
               code_element
             end
