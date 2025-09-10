@@ -162,20 +162,23 @@ class Code
 
       def <=>(other)
         code_other = other.to_code
+        return -1 if self.class != code_other.class
 
-        [raw, self.class] <=> [code_other.raw, code_other.class]
+        raw <=> code_other.raw
       end
 
       def ==(other)
         code_other = other.to_code
+        return false if self.class != code_other.class
 
-        [raw, self.class] == [code_other.raw, code_other.class]
+        raw == code_other.raw
       end
 
       def eql?(other)
         code_other = other.to_code
+        return false if self.class != code_other.class
 
-        [raw, self.class].eql?([code_other.raw, code_other.class])
+        raw.eql?(code_other.raw)
       end
 
       def code_and(other)

@@ -1018,6 +1018,15 @@ class Code
           raw.dup.to_h { |key, value| [key, value].map(&:code_deep_duplicate) }
         )
       end
+
+      def <=>(other)
+        code_other = other.to_code
+        return -1 if self.class != code_other.class
+        return 0 if raw == code_other.raw
+        return -1 if raw < code_other.raw
+        return 1 if raw > code_other.raw
+        -1
+      end
     end
   end
 end
