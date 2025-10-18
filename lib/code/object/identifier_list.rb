@@ -25,7 +25,7 @@ class Code
             if code_operator.to_s == "="
               code_value
             else
-              code_context.fetch(raw.last).call(
+              code_context.code_fetch(raw.last).call(
                 **args,
                 operator: code_operator.to_s.chop,
                 arguments: [code_value]

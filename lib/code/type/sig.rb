@@ -40,7 +40,7 @@ class Code
       end
 
       def actual_arguments
-        args[:arguments]&.raw || []
+        args[:arguments].to_code.raw || []
       end
 
       def operator
