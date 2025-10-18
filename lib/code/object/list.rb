@@ -193,6 +193,9 @@ class Code
         when "none?"
           sig(args) { (Function | Class).maybe }
           code_none?(code_value, **globals)
+        when "all?"
+          sig(args) { (Function | Class).maybe }
+          code_all?(code_value, **globals)
         when "reduce"
           sig(args) { (Function | Class).maybe }
           code_reduce(code_value, **globals)
@@ -762,6 +765,32 @@ class Code
 
         Boolean.new(
           raw.none? do |code_element|
+            if code_argument.is_a?(Function)
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .truthy?
+                .tap { index += 1 }
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw).tap { index += 1 }
+            else
+              true.tap { index += 1 }
+            end
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
+          end
+        )
+      end
+
+      def code_all?(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        index = 0
+
+        Boolean.new(
+          raw.all? do |code_element|
             if code_argument.is_a?(Function)
               code_argument
                 .call(
