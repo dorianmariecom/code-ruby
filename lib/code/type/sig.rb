@@ -67,7 +67,7 @@ class Code
 
       def max_actual_arguments
         actual_arguments.sum do |argument|
-          argument.is_an?(Object::Dictionary) ? argument.code_size.raw : 1
+          argument.is_an?(Object::Dictionary) ? [1, argument.code_size.raw].max : 1
         end
       end
 
