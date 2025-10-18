@@ -61,11 +61,27 @@ class Code
         max_arguments.include?(nil) ? nil : max_arguments.sum
       end
 
+      def min_actual_arguments
+        actual_arguments.size
+      end
+
+      def max_actual_arguments
+        actual_arguments.sum do |argument|
+          argument.is_an?(Object::Dictionary) ? argument.code_size.raw : 1
+        end
+      end
+
       def actual_count
-        if actual_arguments.one?
-          "1 argument"
+        if min_actual_arguments == max_actual_arguments
+          if min_actual_arguments == 1
+            "1 actual argument"
+          else
+            "#{min_actual_arguments} actual arguments"
+          end
+        elsif max_actual_arguments.nil?
+          "#{min_actual_arguments}+ actual arguments"
         else
-          "#{actual_arguments.size} arguments"
+          "#{min_actual_arguments}-#{max_actual_arguments} actual arguments"
         end
       end
 
@@ -87,8 +103,12 @@ class Code
         max_arguments.nil? ? min_arguments.. : min_arguments..max_arguments
       end
 
+      def actual_range
+        min_actual_arguments..max_actual_arguments
+      end
+
       def check_number_of_arguments!
-        return if expected_range.include?(actual_arguments.size)
+        return if expected_range.overlaps?(actual_range)
 
         raise(
           Error,
