@@ -150,9 +150,9 @@ class Code
         code_fetch("patch", ...)
       end
 
-      def self.code_fetch(*arguments)
+      def self.code_fetch(*arguments, redirects: 10)
         verb = arguments.first.to_code.to_s.downcase
-        url = arguments.second.to_code.to_s
+        original_url = arguments.second.to_code.to_s
         options = arguments.third.to_code
         options = Dictionary.new if options.nothing?
         username = options.code_get("username").to_s
@@ -162,16 +162,18 @@ class Code
         data = options.code_get("data").raw || {}
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
+
+        url = original_url
         url = "#{url}?#{query}" if query.present?
+
+        if username.present? || password.present?
+          authorization = ::Base64.strict_encode64("#{username}:#{password}")
+          headers["Authorization"] = "Basic #{authorization}"
+        end
+
         uri = ::URI.parse(url)
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"
-
-        if username.present? || password.present?
-          headers[
-            "Authorization"
-          ] = "Basic #{::Base64.strict_encode64("#{username}:#{password}")}"
-        end
 
         request_class =
           case verb
@@ -197,12 +199,32 @@ class Code
         headers.each { |key, value| request[key.to_s] = value.to_s }
         request.body = body if body.present?
         request.set_form_data(**data.as_json) if data.present?
-
         response = http.request(request)
-        code = response.code.to_i
-        status = STATUS_CODES.key(code) || :ok
 
-        Dictionary.new(code: code, status: status, body: response.body.to_s)
+        code = response.code.to_i
+        location = response["location"].to_s
+
+        if (300..399).cover?(code) && location.present? && redirects > 0
+          new_uri = ::URI.join(uri, location)
+
+          if new_uri.host == uri.host
+            code_fetch(
+              "get",
+              new_uri.to_s,
+              {
+                username: username,
+                password: password,
+                headers: headers
+              },
+              redirects: redirects - 1
+            )
+          else
+            code_fetch("get", new_uri.to_s, redirects: redirects - 1)
+          end
+        else
+          status = STATUS_CODES.key(code) || :ok
+          Dictionary.new(code: code, status: status, body: response.body.to_s)
+        end
       end
     end
   end
