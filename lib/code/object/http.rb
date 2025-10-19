@@ -211,11 +211,7 @@ class Code
             code_fetch(
               "get",
               new_uri.to_s,
-              {
-                username: username,
-                password: password,
-                headers: headers
-              },
+              { username: username, password: password, headers: headers },
               redirects: redirects - 1
             )
           else
