@@ -204,7 +204,7 @@ class Code
         code = response.code.to_i
         location = response["location"].to_s
 
-        if (300..399).cover?(code) && location.present? && redirects > 0
+        if (300..399).cover?(code) && location.present? && redirects.positive?
           new_uri = ::URI.join(uri, location)
 
           if new_uri.host == uri.host
