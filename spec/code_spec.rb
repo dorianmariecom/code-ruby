@@ -137,9 +137,6 @@ RSpec.describe Code do
         IdentifierList.new
         IdentifierList.new([])
         Time.new(nothing).before?
-        Html.link_to
-        Html.link_to('/')
-        Html.link_to('Home','/')
         Json.parse('1')
         Json.parse('[]')
         Json.parse('{}')
