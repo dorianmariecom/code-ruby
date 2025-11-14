@@ -195,7 +195,7 @@ class Code
             ::Net::HTTP::Get
           end
 
-        request = request_class.new(uri.request_uri)
+        request = request_class.new(uri)
         headers.each { |key, value| request[key.to_s] = value.to_s }
         request.body = body if body.present?
         request.set_form_data(**data.as_json) if data.present?

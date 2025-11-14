@@ -7,7 +7,7 @@ require "webmock/rspec"
 class FakeHttpBin < Sinatra::Base
   set :host_authorization, { permitted_hosts: ["httpbin.org"] }
 
-  %w[GET HEAD POST PUT DELETE CONNECT OPTIONS TRACE PATCH].each do |verb|
+  %w[GET HEAD POST PUT DELETE OPTIONS TRACE PATCH].each do |verb|
     route verb, "/status/:status" do
       status params[:status].to_i
     end
