@@ -199,7 +199,12 @@ class Code
         headers.each { |key, value| request[key.to_s] = value.to_s }
         request.body = body if body.present?
         request.set_form_data(**data.as_json) if data.present?
-        response = http.request(request)
+
+        begin
+          response = http.request(request)
+        rescue ::Timeout::Error, ::Net::OpenTimeout, ::Net::ReadTimeout, ::Errno::ETIMEDOUT
+          raise(::Code::Error.new("timeout"))
+        end
 
         code = response.code.to_i
         location = response["location"].to_s
