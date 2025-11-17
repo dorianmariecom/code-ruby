@@ -202,8 +202,11 @@ class Code
 
         begin
           response = http.request(request)
-        rescue ::Timeout::Error, ::Net::OpenTimeout, ::Net::ReadTimeout, ::Errno::ETIMEDOUT
-          raise(::Code::Error.new("timeout"))
+        rescue ::Timeout::Error,
+               ::Net::OpenTimeout,
+               ::Net::ReadTimeout,
+               ::Errno::ETIMEDOUT
+          raise ::Code::Error, "timeout"
         end
 
         code = response.code.to_i
