@@ -202,7 +202,10 @@ class Code
 
         begin
           response = http.request(request)
-        rescue ::Timeout::Error, ::Net::OpenTimeout, ::Net::ReadTimeout, ::Errno::ETIMEDOUT
+        rescue ::Timeout::Error,
+               ::Net::OpenTimeout,
+               ::Net::ReadTimeout,
+               ::Errno::ETIMEDOUT
           raise(::Code::Error.new("http timeout"))
         rescue OpenSSL::SSL::SSLError, IOError, EOFError
           raise(::Code::Error.new("http error"))

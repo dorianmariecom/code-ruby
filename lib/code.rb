@@ -25,7 +25,7 @@ class Code
   def self.parse(source, timeout: DEFAULT_TIMEOUT)
     Timeout.timeout(timeout) { Parser.parse(source).to_raw }
   rescue Timeout::Error
-    raise(Error.new("timeout"))
+    raise Error, "timeout"
   end
 
   def self.evaluate(...)
@@ -45,7 +45,7 @@ class Code
       )
     end
   rescue Timeout::Error
-    raise(Error.new("timeout"))
+    raise Error, "timeout"
   end
 
   private
