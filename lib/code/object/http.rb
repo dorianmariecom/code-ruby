@@ -206,9 +206,9 @@ class Code
                ::Net::OpenTimeout,
                ::Net::ReadTimeout,
                ::Errno::ETIMEDOUT
-          raise(::Code::Error.new("http timeout"))
+          raise ::Code::Error, "http timeout"
         rescue OpenSSL::SSL::SSLError, IOError, EOFError
-          raise(::Code::Error.new("http error"))
+          raise ::Code::Error, "http error"
         end
 
         code = response.code.to_i
