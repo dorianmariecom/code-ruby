@@ -46,6 +46,8 @@ class Code
     end
   rescue Timeout::Error
     raise Error, "timeout"
+  rescue Interrupt
+    raise Error, "interrupt"
   end
 
   private
