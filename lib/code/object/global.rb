@@ -176,6 +176,13 @@ class Code
           else
             Class.new(Number)
           end
+        when "Url"
+          sig(args) { Object.repeat }
+          if code_arguments.any?
+            Url.new(*code_arguments.raw)
+          else
+            Class.new(Url)
+          end
         else
           code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)
