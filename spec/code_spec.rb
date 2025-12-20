@@ -374,9 +374,29 @@ RSpec.describe Code do
     ["a = [1, 2] a.reject!(&:even?) a", "[1]"],
     ["[1, 2].map(&:even?)", "[false, true]"],
     ["a = [1, 2] a.map!(&:even?) a", "[false, true]"],
-    ["Html.p { \"Hello\" }", "'<p>Hello</p>'"],
-    ["Html.br", "'<br>'"],
-    ["Html.div { Html.div { Html.span { :Nested } } }", "'<div><div><span>Nested</span></div></div>'"],
+    ["Html.p { \"Hello\" }.to_html", "'<p>Hello</p>'"],
+    ["Html.br.to_html", "'<br>'"],
+    [
+      "Html.div { Html.div { Html.span { :Nested } } }.to_html",
+      "'<div><div><span>Nested</span></div></div>'"
+    ],
+    [
+      "Html.div { Html.p { Html.span { :hello } } }.to_html",
+      "'<div><p><span>hello</span></p></div>'"
+    ],
+    [
+      "Html.join(Html.p { :hello }, Html.p { :world }).to_html",
+      "'<p>hello</p><p>world</p>'"
+    ],
+    ["Html.join.to_html", "''"],
+    [
+      "Html.div { Html.text(\"<span>\") }.to_html",
+      "'<div>&lt;span&gt;</div>'"
+    ],
+    [
+      "Html.div { Html.raw(\"<span>ok</span>\") }.to_html",
+      "'<div><span>ok</span></div>'"
+    ],
     ["[1, 2, 3].any?", "true"],
     ["[1, 2, 3].any?(&:even?)", "true"],
     ["[1, 2, 3].none?", "false"],

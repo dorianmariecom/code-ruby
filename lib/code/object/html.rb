@@ -35,7 +35,16 @@ class Code
         case code_operator.to_s
         when "escape"
           sig(args) { Object.maybe }
-          code_escape(*code_arguments.raw)
+          code_escape(*code_arguments.raw, **globals)
+        when "join"
+          sig(args) { Object.repeat }
+          code_join(*code_arguments.raw, **globals)
+        when "text"
+          sig(args) { Object.maybe }
+          code_text(code_arguments.code_first, **globals)
+        when "raw"
+          sig(args) { Object.maybe }
+          code_raw(code_arguments.code_first, **globals)
         else
           if TAGS.include?(code_operator.to_s.downcase)
             sig(args) { [Dictionary.maybe, Function.maybe] }
@@ -73,18 +82,77 @@ class Code
             **globals
           )
 
-          node.inner_html = code_content.to_s
+          if code_content.is_an?(Html)
+            content = Nokogiri::HTML::DocumentFragment.parse(code_content.to_html)
+          else
+            content = Nokogiri::XML::Text.new(code_content.to_s, fragment.document)
+          end
+
+          node.add_child(content)
         end
 
         fragment.add_child(node)
 
-        String.new(fragment.to_html)
+        Html.new(fragment)
       end
 
-      def self.code_escape(string = nil)
-        code_string = string.to_code
+      def self.code_escape(value_or_function = nil, **globals)
+        if value_or_function.is_a?(Function)
+          code_value = value_or_function.to_code.call(**globals)
+        else
+          code_value = value_or_function.to_code
+        end
 
-        String.new(CGI.escapeHTML(string.to_s))
+        String.new(CGI.escapeHTML(value.to_s))
+      end
+
+      def self.code_join(*contents_or_function, **globals)
+        if contents_or_function.is_a?(Function)
+          code_contents = contents_or_function.to_code.call(**globals)
+        else
+          code_contents = contents_or_function.to_code
+        end
+
+        fragment = Nokogiri::HTML::DocumentFragment.parse("")
+
+        code_contents.raw.each do |code_content|
+          if code_content.is_an?(Html)
+            content = Nokogiri::HTML::DocumentFragment.parse(code_content.to_html)
+          else
+            content = Nokogiri::XML::Text.new(code_content.to_s, fragment.document)
+          end
+
+          fragment.add_child(content)
+        end
+
+        Html.new(fragment)
+      end
+
+      def self.code_text(value_or_function = nil, **globals)
+        if value_or_function.is_a?(Function)
+          code_value = value_or_function.to_code.call(**globals)
+        else
+          code_value = value_or_function.to_code
+        end
+
+        fragment = Nokogiri::HTML::DocumentFragment.parse("")
+        fragment.add_child(Nokogiri::XML::Text.new(code_value.to_s, fragment.document))
+
+        Html.new(fragment)
+      end
+
+      def self.code_raw(value_or_function = nil, **globals)
+        if value_or_function.is_a?(Function)
+          code_value = value_or_function.to_code.call(**globals)
+        else
+          code_value = value_or_function.to_code
+        end
+
+        if code_value.is_an?(Html)
+          Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_html))
+        else
+          Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_s))
+        end
       end
 
       def call(**args)
@@ -143,6 +211,10 @@ class Code
 
       def to_s
         raw.text
+      end
+
+      def to_html
+        raw.to_html
       end
 
       def code_to_html
