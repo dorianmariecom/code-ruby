@@ -385,8 +385,8 @@ RSpec.describe Code do
       "'<div><p><span>hello</span></p></div>'"
     ],
     [
-      "Html.join(Html.p { :hello }, Html.p { :world }).to_html",
-      "'<p>hello</p><p>world</p>'"
+      "Html.join([Html.p { :hello }, Html.p { :world }], Html.br).to_html",
+      "'<p>hello</p><br><p>world</p>'"
     ],
     ["Html.join.to_html", "''"],
     [

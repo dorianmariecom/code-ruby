@@ -37,7 +37,7 @@ class Code
           sig(args) { Object.maybe }
           code_escape(*code_arguments.raw, **globals)
         when "join"
-          sig(args) { Object.repeat }
+          sig(args) { [Object.maybe, Object.maybe] }
           code_join(*code_arguments.raw, **globals)
         when "text"
           sig(args) { Object.maybe }
@@ -106,22 +106,34 @@ class Code
         String.new(CGI.escapeHTML(value.to_s))
       end
 
-      def self.code_join(*contents_or_function, **globals)
-        if contents_or_function.is_a?(Function)
-          code_contents = contents_or_function.to_code.call(**globals)
+      def self.code_join(first = nil, second = nil, **globals)
+        if second.is_a?(Function)
+          code_contents = second.to_code.call(**globals)
+          code_separator = first.to_code
         else
-          code_contents = contents_or_function.to_code
+          code_contents = first.to_code
+          code_separator = second.to_code
         end
 
         fragment = Nokogiri::HTML::DocumentFragment.parse("")
 
-        code_contents.raw.each do |code_content|
+        return Html.new(fragment) if code_contents.nothing?
+        return Html.new(fragment) unless code_contents.is_a?(List)
+
+        code_contents.raw.each.with_index do |code_content, index|
           if code_content.is_an?(Html)
             content = Nokogiri::HTML::DocumentFragment.parse(code_content.to_html)
           else
             content = Nokogiri::XML::Text.new(code_content.to_s, fragment.document)
           end
 
+          if code_separator.is_an?(Html)
+            separator = Nokogiri::HTML::DocumentFragment.parse(code_separator.to_html)
+          else
+            separator = Nokogiri::XML::Text.new(code_separator.to_s, fragment.document)
+          end
+
+          fragment.add_child(separator) unless index.zero?
           fragment.add_child(content)
         end
 
