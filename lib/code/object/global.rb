@@ -178,11 +178,7 @@ class Code
           end
         when "Url"
           sig(args) { Object.repeat }
-          if code_arguments.any?
-            Url.new(*code_arguments.raw)
-          else
-            Class.new(Url)
-          end
+          code_arguments.any? ? Url.new(*code_arguments.raw) : Class.new(Url)
         else
           code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)
