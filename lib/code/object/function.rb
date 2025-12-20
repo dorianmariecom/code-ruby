@@ -107,6 +107,10 @@ class Code
             end
           end + [Object.repeat]
       end
+
+      def code_to_string
+        String.new("<#{self.class.name} #{raw}>")
+      end
     end
   end
 end
