@@ -118,6 +118,10 @@ class Code
       def code_size
         Integer.new(raw.size)
       end
+
+      def present?
+        raw.present?
+      end
     end
   end
 end

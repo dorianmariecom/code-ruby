@@ -1028,6 +1028,10 @@ class Code
 
         -1
       end
+
+      def present?
+        raw.present?
+      end
     end
   end
 end

@@ -11,6 +11,18 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "present?"
+          sig(args)
+          code_present?
+        when "blank?"
+          sig(args)
+          code_blank?
+        when "presence"
+          sig(args)
+          code_presence
+        when "presence_in"
+          sig(args) { Object::List }
+          code_presence_in(code_value)
         when "new"
           sig(args) { Object.repeat }
           code_new(*code_arguments.raw)
@@ -98,6 +110,9 @@ class Code
         when "to_string"
           sig(args)
           code_to_string
+        when "inspect"
+          sig(args)
+          code_inspect
         when "to_time"
           sig(args)
           code_to_time
@@ -447,6 +462,32 @@ class Code
 
       def code_methods
         Object::List.new(methods)
+      end
+
+      def present?
+        true
+      end
+
+      def blank?
+        !present?
+      end
+
+      def code_present?
+        Object::Boolean.new(present?)
+      end
+
+      def code_blank?
+        Object::Boolean.new(blank?)
+      end
+
+      def code_presence
+        present? ? self : Object::Nothing.new
+      end
+
+      def code_presence_in(list = [])
+        code_list = list.to_code
+
+        code_list.code_include?(self).truthy? ? self : Object::Nothing.new
       end
     end
   end

@@ -11,6 +11,10 @@ class Code
         false
       end
 
+      def present?
+        false
+      end
+
       def nothing?
         true
       end

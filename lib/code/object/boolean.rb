@@ -49,6 +49,10 @@ class Code
       def truthy?
         raw
       end
+
+      def present?
+        raw.present?
+      end
     end
   end
 end

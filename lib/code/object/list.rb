@@ -1035,6 +1035,10 @@ class Code
       def any?
         code_any?.truthy?
       end
+
+      def present?
+        raw.present?
+      end
     end
   end
 end
