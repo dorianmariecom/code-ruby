@@ -58,6 +58,12 @@ class Code
         when "size"
           sig(args)
           code_size
+        when "strip"
+          sig(args)
+          code_strip
+        when "split"
+          sig(args) { String }
+          code_split(code_value)
         else
           super
         end
@@ -117,6 +123,16 @@ class Code
 
       def code_size
         Integer.new(raw.size)
+      end
+
+      def code_strip
+        String.new(raw.strip)
+      end
+
+      def code_split(value)
+        code_value = value.to_code
+
+        List.new(raw.split(code_value.to_s))
       end
 
       def present?

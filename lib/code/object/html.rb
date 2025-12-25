@@ -189,6 +189,9 @@ class Code
         when "to_html"
           sig(args)
           code_to_html
+        when "attribute"
+          sig(args) { String }
+          code_attribute(code_value)
         else
           super
         end
@@ -235,6 +238,11 @@ class Code
 
       def code_to_string
         String.new(raw.text)
+      end
+
+      def code_attribute(value = nil)
+        code_value = value.to_code
+        String.new(raw.attr(code_value.to_s))
       end
     end
   end
