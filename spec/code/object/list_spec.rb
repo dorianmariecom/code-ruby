@@ -3,7 +3,14 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::List do
-  [["[] == []", "true"], ["[1, 2, 3].sum", "6"]].each do |input, expected|
+  [
+    ["[] == []", "true"],
+    ["[1, 2, 3].sum", "6"],
+    ["[1, 2] + [3, 4]", "[1, 2, 3, 4]"],
+    ["[] + []", "[]"],
+    ["[1].any", "true"],
+    ["[].any", "false"]
+  ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
     end

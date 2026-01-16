@@ -142,6 +142,9 @@ class Code
         when "<<", "append"
           sig(args) { Object }
           code_append(code_value)
+        when "+", "plus"
+          sig(args) { List.maybe }
+          code_arguments.any? ? code_plus(code_value) : code_self
         when "-", "minus"
           sig(args) { List }
           code_minus(code_value)
@@ -578,6 +581,12 @@ class Code
         raw << code_other
 
         self
+      end
+
+      def code_plus(other)
+        code_other = other.to_code
+
+        List.new(raw + code_other.raw)
       end
 
       def code_minus(other)
