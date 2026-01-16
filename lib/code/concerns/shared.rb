@@ -381,11 +381,11 @@ class Code
       end
 
       def code_nothing?
-        ::Object::Boolean.new(nothing?)
+        Object::Boolean.new(nothing?)
       end
 
       def code_something?
-        ::Object::Boolean.new(something?)
+        Object::Boolean.new(something?)
       end
 
       def nothing?
