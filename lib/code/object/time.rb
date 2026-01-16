@@ -74,6 +74,17 @@ class Code
           self.raw = args.first.to_time.in_time_zone(::Time.zone)
         elsif args.first.is_a?(::ActiveSupport::TimeWithZone)
           self.raw = args.first.dup
+        elsif args.first.is_a?(Integer) || args.first.is_a?(Decimal) ||
+            args.first.is_a?(::Integer) || args.first.is_a?(::Float) ||
+            args.first.is_a?(::BigDecimal)
+          code_value = args.first.to_code
+          timestamp =
+            if code_value.is_a?(Decimal)
+              code_value.raw.to_r
+            else
+              code_value.raw
+            end
+          self.raw = ::Time.zone.at(timestamp)
         else
           self.raw = ::Time.zone.now
         end

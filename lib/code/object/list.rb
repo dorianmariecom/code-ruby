@@ -227,8 +227,8 @@ class Code
           sig(args)
           code_sum
         when "uniq"
-          sig(args)
-          code_uniq
+          sig(args) { (Function | Class).maybe }
+          code_uniq(code_value, **globals)
         when "many?"
           sig(args)
           code_many?
@@ -1001,8 +1001,39 @@ class Code
         Integer.new(raw.size)
       end
 
-      def code_uniq
-        List.new(raw.uniq)
+      def code_uniq(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        unless code_argument.is_a?(Function) || code_argument.is_a?(Class)
+          return List.new(raw.uniq)
+        end
+
+        if code_argument.is_a?(Class)
+          return List.new(
+            raw
+              .select { |code_element| code_element.is_a?(code_argument.raw) }
+              .uniq
+          )
+        end
+
+        index = 0
+
+        List.new(
+          raw.uniq do |code_element|
+            if code_argument.is_a?(Function)
+              code_argument
+                .call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+                .tap { index += 1 }
+            else
+              code_element.tap { index += 1 }
+            end
+          rescue Error::Next => e
+            e.code_value.tap { index += 1 }
+          end
+        )
       end
 
       def code_sum
