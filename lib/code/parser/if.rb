@@ -23,12 +23,16 @@ class Code
         whitespace.maybe
       end
 
+      def separator
+        Name.new.separator
+      end
+
       def do_keyword
-        str("do")
+        str("do") << separator.present
       end
 
       def begin_keyword
-        str("begin")
+        str("begin") << separator.present
       end
 
       def opening_curly_bracket
@@ -36,31 +40,31 @@ class Code
       end
 
       def closing_curly_bracket
-        str("{")
+        str("}")
       end
 
       def if_keyword
-        str("if")
+        str("if") << separator.present
       end
 
       def unless_keyword
-        str("unless")
+        str("unless") << separator.present
       end
 
       def elsif_keyword
-        str("elsif")
+        str("elsif") << separator.present
       end
 
       def elsunless_keyword
-        str("elsunless")
+        str("elsunless") << separator.present
       end
 
       def else_keyword
-        str("else")
+        str("else") << separator.present
       end
 
       def end_keyword
-        str("end")
+        str("end") << separator.present
       end
 
       def body

@@ -23,16 +23,20 @@ class Code
         whitespace.maybe
       end
 
+      def separator
+        Name.new.separator
+      end
+
       def do_keyword
-        str("do")
+        str("do") << separator.present
       end
 
       def begin_keyword
-        str("begin")
+        str("begin") << separator.present
       end
 
       def end_keyword
-        str("end")
+        str("end") << separator.present
       end
 
       def spread_operator

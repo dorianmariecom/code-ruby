@@ -11,8 +11,12 @@ class Code
         Whitespace
       end
 
+      def separator
+        Name.new.separator
+      end
+
       def not_keyword
-        str("not")
+        str("not") << separator.present
       end
 
       def root

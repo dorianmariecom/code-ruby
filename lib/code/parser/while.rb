@@ -19,28 +19,32 @@ class Code
         Code
       end
 
+      def separator
+        Name.new.separator
+      end
+
       def while_keyword
-        str("while")
+        str("while") << separator.present
       end
 
       def until_keyword
-        str("until")
+        str("until") << separator.present
       end
 
       def end_keyword
-        str("end")
+        str("end") << separator.present
       end
 
       def do_keyword
-        str("do")
+        str("do") << separator.present
       end
 
       def begin_keyword
-        str("begin")
+        str("begin") << separator.present
       end
 
       def loop_keyword
-        str("loop")
+        str("loop") << separator.present
       end
 
       def opening_curly_bracket

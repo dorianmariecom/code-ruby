@@ -3,12 +3,16 @@
 class Code
   class Parser
     class Boolean < Language
+      def separator
+        Name.new.separator
+      end
+
       def true_keyword
-        str("true")
+        str("true") << separator.present
       end
 
       def false_keyword
-        str("false")
+        str("false") << separator.present
       end
 
       def root

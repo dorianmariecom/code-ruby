@@ -3,8 +3,12 @@
 class Code
   class Parser
     class Nothing < Language
+      def separator
+        Name.new.separator
+      end
+
       def nothing_keyword
-        str("nothing")
+        str("nothing") << separator.present
       end
 
       def root

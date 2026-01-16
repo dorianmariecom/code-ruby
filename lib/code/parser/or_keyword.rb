@@ -7,12 +7,16 @@ class Code
         NotKeyword
       end
 
+      def separator
+        Name.new.separator
+      end
+
       def or_keyword
-        str("or")
+        str("or") << separator.present
       end
 
       def and_keyword
-        str("and")
+        str("and") << separator.present
       end
 
       def operator
