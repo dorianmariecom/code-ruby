@@ -43,6 +43,15 @@ class Code
         when "starts_with?"
           sig(args) { String }
           code_starts_with?(code_value)
+        when "start_with?"
+          sig(args) { String }
+          code_start_with?(code_value)
+        when "ends_with?"
+          sig(args) { String }
+          code_ends_with?(code_value)
+        when "end_with?"
+          sig(args) { String }
+          code_end_with?(code_value)
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
@@ -93,6 +102,19 @@ class Code
       def code_starts_with?(value)
         code_value = value.to_code
         Boolean.new(raw.start_with?(code_value.raw))
+      end
+
+      def code_start_with?(value)
+        code_starts_with?(value)
+      end
+
+      def code_end_with?(value)
+        code_value = value.to_code
+        Boolean.new(raw.end_with?(code_value.raw))
+      end
+
+      def code_ends_with?(value)
+        code_end_with?(value)
       end
 
       def code_plus(other)
