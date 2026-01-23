@@ -148,6 +148,13 @@ class Code
           else
             Class.new(Base64)
           end
+        when "Cryptography"
+          sig(args) { Object.repeat }
+          if code_arguments.any?
+            Cryptography.new(*code_arguments.raw)
+          else
+            Class.new(Cryptography)
+          end
         when "Json"
           sig(args) { Object.repeat }
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)
