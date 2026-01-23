@@ -40,6 +40,9 @@ class Code
         when "include?"
           sig(args) { String }
           code_include?(code_value)
+        when "starts_with?"
+          sig(args) { String }
+          code_starts_with?(code_value)
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
@@ -85,6 +88,11 @@ class Code
       def code_multiplication(other)
         code_other = other.to_code
         String.new(raw * code_other.raw)
+      end
+
+      def code_starts_with?(value)
+        code_value = value.to_code
+        Boolean.new(raw.start_with?(code_value.raw))
       end
 
       def code_plus(other)

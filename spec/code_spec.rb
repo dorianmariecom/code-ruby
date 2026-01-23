@@ -188,6 +188,8 @@ RSpec.describe Code do
     %w[2.days.from_now.future? true],
     %w[2.days.from_now.past? false],
     %w[9975×14÷8 17456.25],
+    %w["Hello".starts_with?("He") true],
+    %w["Hello".starts_with?("lo") false],
     %w[:Hello.include?(:H) true],
     %w[:admin? :admin?],
     %w[:hello :hello],
