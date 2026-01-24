@@ -36,6 +36,9 @@ class Code
         when "escape"
           sig(args) { Object.maybe }
           code_escape(*code_arguments.raw, **globals)
+        when "unescape"
+          sig(args) { Object.maybe }
+          code_unescape(*code_arguments.raw, **globals)
         when "join"
           sig(args) { [Object.maybe, Object.maybe] }
           code_join(*code_arguments.raw, **globals)
@@ -103,7 +106,17 @@ class Code
           code_value = value_or_function.to_code
         end
 
-        String.new(CGI.escapeHTML(value.to_s))
+        String.new(CGI.escapeHTML(code_value.to_s))
+      end
+
+      def self.code_unescape(value_or_function = nil, **globals)
+        if value_or_function.is_a?(Function)
+          code_value = value_or_function.to_code.call(**globals)
+        else
+          code_value = value_or_function.to_code
+        end
+
+        String.new(Nokogiri::HTML.fragment(code_value.to_s).text)
       end
 
       def self.code_join(first = nil, second = nil, **globals)

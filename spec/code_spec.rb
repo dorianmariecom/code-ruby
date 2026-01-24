@@ -424,6 +424,14 @@ RSpec.describe Code do
       "Html.div { Html.raw(\"<span>ok</span>\") }.to_html",
       "'<div><span>ok</span></div>'"
     ],
+    [
+      "Html.escape(\"<span>&</span>\")",
+      "'&lt;span&gt;&amp;&lt;/span&gt;'"
+    ],
+    [
+      "Html.unescape(\"A&nbsp;&nbsp;B &amp; C\")",
+      "'A  B & C'"
+    ],
     ["[1, 2, 3].any?", "true"],
     ["[1, 2, 3].any?(&:even?)", "true"],
     ["[1, 2, 3].none?", "false"],
