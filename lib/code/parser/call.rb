@@ -11,6 +11,10 @@ class Code
         Whitespace
       end
 
+      def whiltespace_without_newline?
+        Whitespace.new.without_newline.maybe
+      end
+
       def whitespace?
         whitespace.maybe
       end
@@ -148,7 +152,7 @@ class Code
       def root
         (
           name.aka(:name) << (whitespace? << arguments.aka(:arguments)).maybe <<
-            (whitespace? << block.aka(:block)).maybe
+            (whiltespace_without_newline? << block.aka(:block)).maybe
         ).aka(:call)
       end
     end
