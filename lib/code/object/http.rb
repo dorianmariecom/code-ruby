@@ -84,6 +84,7 @@ class Code
         not_extended: 510,
         network_authentication_required: 511
       }.freeze
+      DEFAULT_TIMEOUT = 1.hour.to_f
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -182,7 +183,7 @@ class Code
         uri = ::URI.parse(url)
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"
-        default_timeout = timeout.nothing? ? Float::INFINITY : timeout.to_f
+        default_timeout = timeout.nothing? ? DEFAULT_TIMEOUT : timeout.to_f
         open_timeout_value = open_timeout.nothing? ? default_timeout : open_timeout.to_f
         read_timeout_value = read_timeout.nothing? ? default_timeout : read_timeout.to_f
         write_timeout_value = write_timeout.nothing? ? default_timeout : write_timeout.to_f
