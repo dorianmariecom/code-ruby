@@ -11,7 +11,11 @@ class Code
           body: String.maybe,
           username: String.maybe,
           password: String.maybe,
-          data: Dictionary.maybe
+          data: Dictionary.maybe,
+          timeout: (Integer | Decimal).maybe,
+          open_timeout: (Integer | Decimal).maybe,
+          read_timeout: (Integer | Decimal).maybe,
+          write_timeout: (Integer | Decimal).maybe
         }
       ].freeze
 
@@ -160,6 +164,10 @@ class Code
         body = options.code_get("body").to_s
         headers = options.code_get("headers").raw || {}
         data = options.code_get("data").raw || {}
+        timeout = options.code_get("timeout")
+        open_timeout = options.code_get("open_timeout")
+        read_timeout = options.code_get("read_timeout")
+        write_timeout = options.code_get("write_timeout")
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
 
@@ -174,6 +182,16 @@ class Code
         uri = ::URI.parse(url)
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"
+        default_timeout = timeout.nothing? ? Float::INFINITY : timeout.to_f
+        open_timeout_value = open_timeout.nothing? ? default_timeout : open_timeout.to_f
+        read_timeout_value = read_timeout.nothing? ? default_timeout : read_timeout.to_f
+        write_timeout_value = write_timeout.nothing? ? default_timeout : write_timeout.to_f
+
+        http.open_timeout = open_timeout_value if open_timeout_value
+        http.read_timeout = read_timeout_value if read_timeout_value
+        if http.respond_to?(:write_timeout=) && write_timeout_value
+          http.write_timeout = write_timeout_value
+        end
 
         request_class =
           case verb
