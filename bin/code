@@ -6,6 +6,10 @@ require "dorian/arguments"
 
 parsed =
   Dorian::Arguments.parse(
+    format: {
+      type: :boolean,
+      alias: :f
+    },
     input: {
       type: :string,
       alias: :i
@@ -43,13 +47,19 @@ require "ruby-prof" if profile
 
 RubyProf.start if profile
 
-input = 'loop { print("> ") puts(evaluate(read)) }' if input.blank?
+input = STDIN.each_line.to_a.join if input.empty?
 
 if parsed.options.parse
   begin
     pp Code::Parser.parse(input).to_raw
-  rescue Exception => e
+  rescue StandardError => e
     warn e.message
+  end
+elsif parsed.options.format
+  begin
+    print(Code.format(input, timeout: parsed.options.timeout))
+  rescue Code::Error => e
+    warn "#{e.class}: #{e.message}"
   end
 else
   begin

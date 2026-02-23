@@ -3,6 +3,16 @@
 require "spec_helper"
 
 RSpec.describe Code do
+  def format_input(input)
+    Code::Format.format(described_class.parse(input))
+  end
+
+  def evaluate_with_output(input)
+    output = StringIO.new
+    result = described_class.evaluate(input, output: output)
+    [result, output.string]
+  end
+
   (
     [
       "{ a: 1, b: 2 }.transform_values { |key| key.upcase }",
@@ -143,7 +153,16 @@ RSpec.describe Code do
         Json.parse('random-string')
         {}["".to_string]
       ] + ["Time.hour >= 6 and Time.hour <= 23"]
-  ).each { |input| it(input) { described_class.evaluate(input) } }
+  ).each do |input|
+    it(input) do
+      original_result, original_output = evaluate_with_output(input)
+      formatted = format_input(input)
+      formatted_result, formatted_output = evaluate_with_output(formatted)
+
+      expect(formatted_result.class).to eq(original_result.class)
+      expect(formatted_output).to eq(original_output)
+    end
+  end
 
   [
     [
@@ -444,11 +463,18 @@ RSpec.describe Code do
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
+      formatted = format_input(input)
+
       output = StringIO.new
       code_input = described_class.evaluate(input, output: output)
       code_expected = described_class.evaluate(expected)
       expect(code_input).to eq(code_expected)
       expect(output.string).to eq("")
+
+      formatted_output = StringIO.new
+      formatted_result = described_class.evaluate(formatted, output: formatted_output)
+      expect(formatted_result).to eq(code_input)
+      expect(formatted_output.string).to eq("")
       next if code_input.is_a?(Code::Object::Decimal)
 
       expect(code_input.to_json).to eq(code_expected.to_json)
@@ -459,14 +485,20 @@ RSpec.describe Code do
 
   [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
     it "#{input} prints #{expected}" do
+      formatted = format_input(input)
+
       output = StringIO.new
       described_class.evaluate(input, output: output)
       expect(output.string).to eq(expected)
+
+      formatted_output = StringIO.new
+      described_class.evaluate(formatted, output: formatted_output)
+      expect(formatted_output.string).to eq(expected)
     end
   end
 
   it "doesn't crash with dictionnary as parameter" do
-    described_class.evaluate(<<~INPUT)
+    input = <<~INPUT
       [
         {
           videos: [{}]
@@ -478,10 +510,12 @@ RSpec.describe Code do
         post.videos.map { |video| }
       end
     INPUT
+    described_class.evaluate(input)
+    described_class.evaluate(format_input(input))
   end
 
   it "doesn't crash with functions" do
-    described_class.evaluate(<<~INPUT)
+    input = <<~INPUT
       send! = (subject:) => { subject }
 
       send!(subject: "pomodoro start")
@@ -489,5 +523,7 @@ RSpec.describe Code do
       send!(subject: "pomodoro start")
       send!(subject: "pomodoro break")
     INPUT
+    described_class.evaluate(input)
+    described_class.evaluate(format_input(input))
   end
 end

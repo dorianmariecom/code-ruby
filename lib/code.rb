@@ -32,6 +32,17 @@ class Code
     new(...).evaluate
   end
 
+  def self.format(source_or_tree, timeout: DEFAULT_TIMEOUT)
+    parse_tree =
+      if source_or_tree.is_a?(::String)
+        parse(source_or_tree, timeout: timeout)
+      else
+        source_or_tree
+      end
+
+    Format.format(parse_tree)
+  end
+
   def evaluate
     Timeout.timeout(timeout) do
       Node::Code.new(Code.parse(source)).evaluate(
