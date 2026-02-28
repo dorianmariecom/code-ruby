@@ -116,7 +116,7 @@ class Code
     def format_base_10(base_10, indent:)
       return "0" unless base_10.is_a?(Hash)
 
-      whole = base_10[:whole] || "0"
+      whole = format_grouped_whole(base_10[:whole] || "0")
       exponent = base_10[:exponent]
       return whole unless exponent
 
@@ -126,11 +126,27 @@ class Code
     def format_decimal(decimal, indent:)
       return "0.0" unless decimal.is_a?(Hash)
 
-      raw = decimal[:decimal] || "0.0"
+      raw = format_grouped_decimal(decimal[:decimal] || "0.0")
       exponent = decimal[:exponent]
       return raw unless exponent
 
       "#{raw}e#{format_nested_statement(exponent, indent: indent)}"
+    end
+
+    def format_grouped_whole(whole)
+      value = whole.to_s
+      return value unless value.match?(/\A\d+\z/)
+      return value if value.start_with?("0") && value.length > 1
+
+      value.reverse.scan(/.{1,3}/).join("_").reverse
+    end
+
+    def format_grouped_decimal(raw)
+      value = raw.to_s
+      whole, fraction = value.split(".", 2)
+      return value unless whole && fraction
+
+      "#{format_grouped_whole(whole)}.#{fraction.scan(/.{1,3}/).join("_")}"
     end
 
     def format_string(parts, indent:)
