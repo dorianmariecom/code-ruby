@@ -97,6 +97,14 @@ class Code
         code_second = code_arguments.code_second
 
         case code_operator.to_s
+        when "zone="
+          sig(args) { String }
+          ::Time.zone = code_value.raw
+          code_value
+        when "zone"
+          sig(args)
+          ::Time.zone ||= DEFAULT_ZONE
+          code_zone
         when "after?"
           sig(args) { (Date | Time).maybe }
           code_after?(code_value)
@@ -370,6 +378,10 @@ class Code
         end
       end
 
+      def self.code_zone
+        String.new(::Time.zone.name)
+      end
+
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
@@ -377,6 +389,9 @@ class Code
         code_second = code_arguments.code_second
 
         case code_operator.to_s
+        when "zone"
+          sig(args)
+          code_zone
         when "after?"
           sig(args) { (Date | Time).maybe }
           code_after?(code_value)
@@ -996,6 +1011,10 @@ class Code
         dup += (sec - raw.sec).seconds
 
         Time.new(dup)
+      end
+
+      def code_zone
+        String.new(raw.zone)
       end
     end
   end

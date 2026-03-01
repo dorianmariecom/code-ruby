@@ -464,6 +464,7 @@ RSpec.describe Code do
     ["subject = 1 { subject }", "{ subject: 1 }"],
     ["subject = 1 { subject: }", "{ subject: 1 }"],
     ["'{1} {2}'", "'1 2'"],
+    ['Time.zone = "Etc/UTC"', '"Etc/UTC"'],
     %w[Json.parse("1") 1],
     %w[{a:1}.to_query "a=1"],
     ["", ""]
@@ -531,5 +532,11 @@ RSpec.describe Code do
     INPUT
     described_class.evaluate(input)
     described_class.evaluate(format_input(input))
+  end
+
+  it "raises for undefined constant receiver assignment" do
+    expect do
+      described_class.evaluate("UnknownConstant.zone = 1")
+    end.to raise_error(Code::Error, /UnknownConstant is not defined/)
   end
 end

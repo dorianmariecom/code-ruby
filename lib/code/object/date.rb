@@ -7,6 +7,7 @@ class Code
 
       class << self
         delegate(
+          :code_zone,
           :code_format,
           :code_past?,
           :code_future?,
@@ -84,6 +85,13 @@ class Code
         code_second = code_arguments.code_second
 
         case code_operator.to_s
+        when "zone="
+          sig(args) { String }
+          ::Time.zone = code_value.raw
+          code_value
+        when "zone"
+          sig(args)
+          code_zone
         when "after?"
           sig(args) { (Date | Time).maybe }
           code_after?(code_value)
@@ -334,6 +342,9 @@ class Code
         code_second = code_arguments.code_second
 
         case code_operator.to_s
+        when "zone"
+          sig(args)
+          code_zone
         when "after?"
           sig(args) { (Date | Time).maybe }
           code_after?(code_value)
@@ -857,6 +868,10 @@ class Code
         dup += (cweek - raw.to_date.cweek).weeks
 
         Date.new(dup)
+      end
+
+      def code_zone
+        String.new(::Time.zone.name)
       end
     end
   end
