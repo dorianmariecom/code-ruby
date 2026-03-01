@@ -815,7 +815,6 @@ class Code
 
         requested_locale = code_locale.raw&.to_s
         locale = requested_locale&.presence_in(LOCALES)&.to_sym
-        locale ||= ::Current.locale if defined?(::Current)
         locale ||= ::I18n.locale
         locale = ::I18n.locale unless ::I18n.available_locales.include?(locale.to_sym)
 
