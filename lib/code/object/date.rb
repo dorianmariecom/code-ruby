@@ -97,9 +97,11 @@ class Code
           sig(args)
           code_future?
         when "format"
-          sig(args) { [String, { locale: String.maybe }] }
+          sig(args) { [String.maybe, { locale: String.maybe }] }
 
-          if code_second.something?
+          if code_value.is_a?(Dictionary)
+            code_format(nil, locale: code_value.code_get(:locale))
+          elsif code_second.something?
             code_format(code_value, locale: code_second.code_get(:locale))
           else
             code_format(code_value)
@@ -414,9 +416,11 @@ class Code
           sig(args)
           code_sunday?
         when "format"
-          sig(args) { [String, { locale: String.maybe }] }
+          sig(args) { [String.maybe, { locale: String.maybe }] }
 
-          if code_second.something?
+          if code_value.is_a?(Dictionary)
+            code_format(nil, locale: code_value.code_get(:locale))
+          elsif code_second.something?
             code_format(code_value, locale: code_second.code_get(:locale))
           else
             code_format(code_value)
@@ -700,9 +704,11 @@ class Code
         code_format = format.to_code
         code_locale = locale.to_code
 
-        locale = code_locale.raw.presence_in(LOCALES) || I18n.locale
+        requested_locale = code_locale.raw&.to_s
+        locale = requested_locale&.presence_in(LOCALES)&.to_sym || I18n.locale
+        locale = I18n.locale unless I18n.available_locales.include?(locale.to_sym)
 
-        format = code_format.raw
+        format = code_format.raw || :default
         format = format.to_sym if I18n.exists?("date.formats.#{format}", locale)
 
         String.new(I18n.l(raw, format: format, locale: locale))
