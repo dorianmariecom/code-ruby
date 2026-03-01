@@ -160,6 +160,303 @@ class Code
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
+        when "second"
+          sig(args)
+          code_second
+        when "third"
+          sig(args)
+          code_third
+        when "fourth"
+          sig(args)
+          code_fourth
+        when "fifth"
+          sig(args)
+          code_fifth
+        when "sixth"
+          sig(args)
+          code_sixth
+        when "seventh"
+          sig(args)
+          code_seventh
+        when "eighth"
+          sig(args)
+          code_eighth
+        when "ninth"
+          sig(args)
+          code_ninth
+        when "tenth"
+          sig(args)
+          code_tenth
+        when "eleventh"
+          sig(args)
+          code_eleventh
+        when "twelfth"
+          sig(args)
+          code_twelfth
+        when "thirteenth"
+          sig(args)
+          code_thirteenth
+        when "fourteenth"
+          sig(args)
+          code_fourteenth
+        when "fifteenth"
+          sig(args)
+          code_fifteenth
+        when "sixteenth"
+          sig(args)
+          code_sixteenth
+        when "seventeenth"
+          sig(args)
+          code_seventeenth
+        when "eighteenth"
+          sig(args)
+          code_eighteenth
+        when "nineteenth"
+          sig(args)
+          code_nineteenth
+        when "twentieth"
+          sig(args)
+          code_twentieth
+        when "twenty_first"
+          sig(args)
+          code_twenty_first
+        when "twenty_second"
+          sig(args)
+          code_twenty_second
+        when "twenty_third"
+          sig(args)
+          code_twenty_third
+        when "twenty_fourth"
+          sig(args)
+          code_twenty_fourth
+        when "twenty_fifth"
+          sig(args)
+          code_twenty_fifth
+        when "twenty_sixth"
+          sig(args)
+          code_twenty_sixth
+        when "twenty_seventh"
+          sig(args)
+          code_twenty_seventh
+        when "twenty_eighth"
+          sig(args)
+          code_twenty_eighth
+        when "twenty_ninth"
+          sig(args)
+          code_twenty_ninth
+        when "thirtieth"
+          sig(args)
+          code_thirtieth
+        when "thirty_first"
+          sig(args)
+          code_thirty_first
+        when "thirty_second"
+          sig(args)
+          code_thirty_second
+        when "thirty_third"
+          sig(args)
+          code_thirty_third
+        when "thirty_fourth"
+          sig(args)
+          code_thirty_fourth
+        when "thirty_fifth"
+          sig(args)
+          code_thirty_fifth
+        when "thirty_sixth"
+          sig(args)
+          code_thirty_sixth
+        when "thirty_seventh"
+          sig(args)
+          code_thirty_seventh
+        when "thirty_eighth"
+          sig(args)
+          code_thirty_eighth
+        when "thirty_ninth"
+          sig(args)
+          code_thirty_ninth
+        when "fortieth"
+          sig(args)
+          code_fortieth
+        when "forty_first"
+          sig(args)
+          code_forty_first
+        when "forty_second"
+          sig(args)
+          code_forty_second
+        when "forty_third"
+          sig(args)
+          code_forty_third
+        when "forty_fourth"
+          sig(args)
+          code_forty_fourth
+        when "forty_fifth"
+          sig(args)
+          code_forty_fifth
+        when "forty_sixth"
+          sig(args)
+          code_forty_sixth
+        when "forty_seventh"
+          sig(args)
+          code_forty_seventh
+        when "forty_eighth"
+          sig(args)
+          code_forty_eighth
+        when "forty_ninth"
+          sig(args)
+          code_forty_ninth
+        when "fiftieth"
+          sig(args)
+          code_fiftieth
+        when "fifty_first"
+          sig(args)
+          code_fifty_first
+        when "fifty_second"
+          sig(args)
+          code_fifty_second
+        when "fifty_third"
+          sig(args)
+          code_fifty_third
+        when "fifty_fourth"
+          sig(args)
+          code_fifty_fourth
+        when "fifty_fifth"
+          sig(args)
+          code_fifty_fifth
+        when "fifty_sixth"
+          sig(args)
+          code_fifty_sixth
+        when "fifty_seventh"
+          sig(args)
+          code_fifty_seventh
+        when "fifty_eighth"
+          sig(args)
+          code_fifty_eighth
+        when "fifty_ninth"
+          sig(args)
+          code_fifty_ninth
+        when "sixtieth"
+          sig(args)
+          code_sixtieth
+        when "sixty_first"
+          sig(args)
+          code_sixty_first
+        when "sixty_second"
+          sig(args)
+          code_sixty_second
+        when "sixty_third"
+          sig(args)
+          code_sixty_third
+        when "sixty_fourth"
+          sig(args)
+          code_sixty_fourth
+        when "sixty_fifth"
+          sig(args)
+          code_sixty_fifth
+        when "sixty_sixth"
+          sig(args)
+          code_sixty_sixth
+        when "sixty_seventh"
+          sig(args)
+          code_sixty_seventh
+        when "sixty_eighth"
+          sig(args)
+          code_sixty_eighth
+        when "sixty_ninth"
+          sig(args)
+          code_sixty_ninth
+        when "seventieth"
+          sig(args)
+          code_seventieth
+        when "seventy_first"
+          sig(args)
+          code_seventy_first
+        when "seventy_second"
+          sig(args)
+          code_seventy_second
+        when "seventy_third"
+          sig(args)
+          code_seventy_third
+        when "seventy_fourth"
+          sig(args)
+          code_seventy_fourth
+        when "seventy_fifth"
+          sig(args)
+          code_seventy_fifth
+        when "seventy_sixth"
+          sig(args)
+          code_seventy_sixth
+        when "seventy_seventh"
+          sig(args)
+          code_seventy_seventh
+        when "seventy_eighth"
+          sig(args)
+          code_seventy_eighth
+        when "seventy_ninth"
+          sig(args)
+          code_seventy_ninth
+        when "eightieth"
+          sig(args)
+          code_eightieth
+        when "eighty_first"
+          sig(args)
+          code_eighty_first
+        when "eighty_second"
+          sig(args)
+          code_eighty_second
+        when "eighty_third"
+          sig(args)
+          code_eighty_third
+        when "eighty_fourth"
+          sig(args)
+          code_eighty_fourth
+        when "eighty_fifth"
+          sig(args)
+          code_eighty_fifth
+        when "eighty_sixth"
+          sig(args)
+          code_eighty_sixth
+        when "eighty_seventh"
+          sig(args)
+          code_eighty_seventh
+        when "eighty_eighth"
+          sig(args)
+          code_eighty_eighth
+        when "eighty_ninth"
+          sig(args)
+          code_eighty_ninth
+        when "ninetieth"
+          sig(args)
+          code_ninetieth
+        when "ninety_first"
+          sig(args)
+          code_ninety_first
+        when "ninety_second"
+          sig(args)
+          code_ninety_second
+        when "ninety_third"
+          sig(args)
+          code_ninety_third
+        when "ninety_fourth"
+          sig(args)
+          code_ninety_fourth
+        when "ninety_fifth"
+          sig(args)
+          code_ninety_fifth
+        when "ninety_sixth"
+          sig(args)
+          code_ninety_sixth
+        when "ninety_seventh"
+          sig(args)
+          code_ninety_seventh
+        when "ninety_eighth"
+          sig(args)
+          code_ninety_eighth
+        when "ninety_ninth"
+          sig(args)
+          code_ninety_ninth
+        when "one_hundredth"
+          sig(args)
+          code_one_hundredth
         when "sample"
           sig(args) { Integer.maybe }
           code_sample(code_value)
@@ -641,6 +938,406 @@ class Code
         else
           List.new(raw.first(code_value.raw))
         end
+      end
+
+      def code_nth(index)
+        raw[index] || Nothing.new
+      end
+
+      def code_second
+        code_nth(1)
+      end
+
+      def code_third
+        code_nth(2)
+      end
+
+      def code_fourth
+        code_nth(3)
+      end
+
+      def code_fifth
+        code_nth(4)
+      end
+
+      def code_sixth
+        code_nth(5)
+      end
+
+      def code_seventh
+        code_nth(6)
+      end
+
+      def code_eighth
+        code_nth(7)
+      end
+
+      def code_ninth
+        code_nth(8)
+      end
+
+      def code_tenth
+        code_nth(9)
+      end
+
+      def code_eleventh
+        code_nth(10)
+      end
+
+      def code_twelfth
+        code_nth(11)
+      end
+
+      def code_thirteenth
+        code_nth(12)
+      end
+
+      def code_fourteenth
+        code_nth(13)
+      end
+
+      def code_fifteenth
+        code_nth(14)
+      end
+
+      def code_sixteenth
+        code_nth(15)
+      end
+
+      def code_seventeenth
+        code_nth(16)
+      end
+
+      def code_eighteenth
+        code_nth(17)
+      end
+
+      def code_nineteenth
+        code_nth(18)
+      end
+
+      def code_twentieth
+        code_nth(19)
+      end
+
+      def code_twenty_first
+        code_nth(20)
+      end
+
+      def code_twenty_second
+        code_nth(21)
+      end
+
+      def code_twenty_third
+        code_nth(22)
+      end
+
+      def code_twenty_fourth
+        code_nth(23)
+      end
+
+      def code_twenty_fifth
+        code_nth(24)
+      end
+
+      def code_twenty_sixth
+        code_nth(25)
+      end
+
+      def code_twenty_seventh
+        code_nth(26)
+      end
+
+      def code_twenty_eighth
+        code_nth(27)
+      end
+
+      def code_twenty_ninth
+        code_nth(28)
+      end
+
+      def code_thirtieth
+        code_nth(29)
+      end
+
+      def code_thirty_first
+        code_nth(30)
+      end
+
+      def code_thirty_second
+        code_nth(31)
+      end
+
+      def code_thirty_third
+        code_nth(32)
+      end
+
+      def code_thirty_fourth
+        code_nth(33)
+      end
+
+      def code_thirty_fifth
+        code_nth(34)
+      end
+
+      def code_thirty_sixth
+        code_nth(35)
+      end
+
+      def code_thirty_seventh
+        code_nth(36)
+      end
+
+      def code_thirty_eighth
+        code_nth(37)
+      end
+
+      def code_thirty_ninth
+        code_nth(38)
+      end
+
+      def code_fortieth
+        code_nth(39)
+      end
+
+      def code_forty_first
+        code_nth(40)
+      end
+
+      def code_forty_second
+        code_nth(41)
+      end
+
+      def code_forty_third
+        code_nth(42)
+      end
+
+      def code_forty_fourth
+        code_nth(43)
+      end
+
+      def code_forty_fifth
+        code_nth(44)
+      end
+
+      def code_forty_sixth
+        code_nth(45)
+      end
+
+      def code_forty_seventh
+        code_nth(46)
+      end
+
+      def code_forty_eighth
+        code_nth(47)
+      end
+
+      def code_forty_ninth
+        code_nth(48)
+      end
+
+      def code_fiftieth
+        code_nth(49)
+      end
+
+      def code_fifty_first
+        code_nth(50)
+      end
+
+      def code_fifty_second
+        code_nth(51)
+      end
+
+      def code_fifty_third
+        code_nth(52)
+      end
+
+      def code_fifty_fourth
+        code_nth(53)
+      end
+
+      def code_fifty_fifth
+        code_nth(54)
+      end
+
+      def code_fifty_sixth
+        code_nth(55)
+      end
+
+      def code_fifty_seventh
+        code_nth(56)
+      end
+
+      def code_fifty_eighth
+        code_nth(57)
+      end
+
+      def code_fifty_ninth
+        code_nth(58)
+      end
+
+      def code_sixtieth
+        code_nth(59)
+      end
+
+      def code_sixty_first
+        code_nth(60)
+      end
+
+      def code_sixty_second
+        code_nth(61)
+      end
+
+      def code_sixty_third
+        code_nth(62)
+      end
+
+      def code_sixty_fourth
+        code_nth(63)
+      end
+
+      def code_sixty_fifth
+        code_nth(64)
+      end
+
+      def code_sixty_sixth
+        code_nth(65)
+      end
+
+      def code_sixty_seventh
+        code_nth(66)
+      end
+
+      def code_sixty_eighth
+        code_nth(67)
+      end
+
+      def code_sixty_ninth
+        code_nth(68)
+      end
+
+      def code_seventieth
+        code_nth(69)
+      end
+
+      def code_seventy_first
+        code_nth(70)
+      end
+
+      def code_seventy_second
+        code_nth(71)
+      end
+
+      def code_seventy_third
+        code_nth(72)
+      end
+
+      def code_seventy_fourth
+        code_nth(73)
+      end
+
+      def code_seventy_fifth
+        code_nth(74)
+      end
+
+      def code_seventy_sixth
+        code_nth(75)
+      end
+
+      def code_seventy_seventh
+        code_nth(76)
+      end
+
+      def code_seventy_eighth
+        code_nth(77)
+      end
+
+      def code_seventy_ninth
+        code_nth(78)
+      end
+
+      def code_eightieth
+        code_nth(79)
+      end
+
+      def code_eighty_first
+        code_nth(80)
+      end
+
+      def code_eighty_second
+        code_nth(81)
+      end
+
+      def code_eighty_third
+        code_nth(82)
+      end
+
+      def code_eighty_fourth
+        code_nth(83)
+      end
+
+      def code_eighty_fifth
+        code_nth(84)
+      end
+
+      def code_eighty_sixth
+        code_nth(85)
+      end
+
+      def code_eighty_seventh
+        code_nth(86)
+      end
+
+      def code_eighty_eighth
+        code_nth(87)
+      end
+
+      def code_eighty_ninth
+        code_nth(88)
+      end
+
+      def code_ninetieth
+        code_nth(89)
+      end
+
+      def code_ninety_first
+        code_nth(90)
+      end
+
+      def code_ninety_second
+        code_nth(91)
+      end
+
+      def code_ninety_third
+        code_nth(92)
+      end
+
+      def code_ninety_fourth
+        code_nth(93)
+      end
+
+      def code_ninety_fifth
+        code_nth(94)
+      end
+
+      def code_ninety_sixth
+        code_nth(95)
+      end
+
+      def code_ninety_seventh
+        code_nth(96)
+      end
+
+      def code_ninety_eighth
+        code_nth(97)
+      end
+
+      def code_ninety_ninth
+        code_nth(98)
+      end
+
+      def code_one_hundredth
+        code_nth(99)
       end
 
       def code_sample(value = nil)

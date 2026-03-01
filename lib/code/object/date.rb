@@ -81,6 +81,7 @@ class Code
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
         code_value = code_arguments.code_first
+        code_second = code_arguments.code_second
 
         case code_operator.to_s
         when "after?"
@@ -96,8 +97,13 @@ class Code
           sig(args)
           code_future?
         when "format"
-          sig(args) { String }
-          code_format(code_value)
+          sig(args) { [String, { locale: String.maybe }] }
+
+          if code_second.something?
+            code_format(code_value, locale: code_second.code_get(:locale))
+          else
+            code_format(code_value)
+          end
         when "tomorrow"
           sig(args)
           code_tomorrow
@@ -323,6 +329,7 @@ class Code
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
         code_value = code_arguments.code_first
+        code_second = code_arguments.code_second
 
         case code_operator.to_s
         when "after?"
@@ -407,8 +414,13 @@ class Code
           sig(args)
           code_sunday?
         when "format"
-          sig(args) { String }
-          code_format(code_value)
+          sig(args) { [String, { locale: String.maybe }] }
+
+          if code_second.something?
+            code_format(code_value, locale: code_second.code_get(:locale))
+          else
+            code_format(code_value)
+          end
         when "january?"
           sig(args)
           code_january?
@@ -684,10 +696,23 @@ class Code
         code_month.code_twelve?
       end
 
-      def code_format(format)
+      def code_format(format, locale: nil)
         code_format = format.to_code
+        code_locale = locale.to_code
 
-        String.new(raw.strftime(code_format.raw))
+        locale = code_locale.raw.presence_in(LOCALES) || I18n.locale
+
+        format = code_format.raw
+        format = format.to_sym if I18n.exists?("date.formats.#{format}", locale)
+
+        String.new(I18n.l(raw, format: format, locale: locale))
+      end
+
+      def code_format_locale_from_arguments(code_arguments)
+        code_options = code_arguments.raw[1].to_code
+        return Nothing.new unless code_options.is_a?(Dictionary)
+
+        code_options.code_get(:locale)
       end
 
       def code_hour

@@ -17,7 +17,7 @@ RSpec.describe Code::Format do
       ["[1,2,3]", "[1, 2, 3]"],
       [
         "[1, 2, 3].select { |n| n.even? }",
-        "[1, 2, 3].select { |n|\n  n.even?\n}"
+        "[1, 2, 3].select { |n| n.even? }"
       ],
       [
         "if true 1 elsif false 2 else 3 end",
@@ -29,7 +29,7 @@ RSpec.describe Code::Format do
       ],
       [
         "Http.post(\"https://api.openai.com/v1/chat/completions\", headers: { authorization: \"Bearer {open_ai_api_key}\", \"content-type\": \"application/json\" }, body: { model: model, messages: [{ role: \"system\", content: \"hello\" }, { role: \"user\", content: \"world\" }] }.to_json)",
-        "Http.post(\n  \"https://api.openai.com/v1/chat/completions\",\n  headers: {\n    authorization: \"Bearer {open_ai_api_key}\",\n    \"content-type\": \"application/json\"\n  },\n  body: {\n    model: model,\n    messages: [\n      { role: \"system\", content: \"hello\" },\n      { role: \"user\", content: \"world\" }\n    ]\n  }.to_json\n)"
+        "Http.post(\n  \"https://api.openai.com/v1/chat/completions\",\n  headers: {\n    authorization: \"Bearer {open_ai_api_key}\",\n    \"content-type\": \"application/json\"\n  },\n  body: {\n    model: model,\n    messages: [\n      { role: :system, content: :hello },\n      { role: :user, content: :world }\n    ]\n  }.to_json\n)"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do

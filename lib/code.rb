@@ -3,6 +3,7 @@
 class Code
   GLOBALS = %i[context error input object output source].freeze
   DEFAULT_TIMEOUT = 0
+  LOCALES = %w[en fr].freeze
 
   def initialize(
     source,
