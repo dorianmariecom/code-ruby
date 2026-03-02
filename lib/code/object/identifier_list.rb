@@ -20,7 +20,7 @@ class Code
               context: context,
               assignment_operator: assignment_operator,
               code_value: code_value,
-              **args
+              **args.except(:context)
             )
           else
             assign_with_setter(
