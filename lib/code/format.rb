@@ -220,30 +220,35 @@ class Code
         components.flat_map do |component|
           value = component[:value].to_s
           if component[:type] == :code
-            [value]
+            [{ value: value, splittable: false }]
           else
-            value.split(/(\s+)/)
+            value
+              .split(/(\s+)/)
+              .reject(&:empty?)
+              .map { |unit| { value: unit, splittable: true } }
           end
-        end.reject(&:empty?)
+        end
 
       chunks = [""]
       units.each do |unit|
-        if unit.length > limit
+        value = unit[:value]
+
+        if unit[:splittable] && value.length > limit
           if chunks.last.empty?
-            segments = unit.scan(/.{1,#{limit}}/m)
+            segments = value.scan(/.{1,#{limit}}/m)
             chunks[-1] = segments.shift.to_s
             segments.each { |segment| chunks << segment }
           else
-            chunks << unit
+            chunks << value
           end
           next
         end
 
         current = chunks.last
-        candidate = "#{current}#{unit}"
+        candidate = "#{current}#{value}"
         if !current.empty? && candidate.length > limit
           chunks[-1] = current
-          chunks << unit
+          chunks << value
         else
           chunks[-1] = candidate
         end

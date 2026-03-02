@@ -60,7 +60,7 @@ class Code
             code_value
           else
             receiver.code_fetch(raw.last).call(
-              **args,
+              **args.merge(context: args.fetch(:context, context)),
               operator: assignment_operator.chop,
               arguments: [code_value]
             )

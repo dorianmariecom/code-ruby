@@ -30,6 +30,10 @@ RSpec.describe Code::Format do
       [
         "Http.post(\"https://api.openai.com/v1/chat/completions\", headers: { authorization: \"Bearer {open_ai_api_key}\", \"content-type\": \"application/json\" }, body: { model: model, messages: [{ role: \"system\", content: \"hello\" }, { role: \"user\", content: \"world\" }] }.to_json)",
         "Http.post(\n  \"https://api.openai.com/v1/chat/completions\",\n  headers: {\n    authorization: \"Bearer {open_ai_api_key}\",\n    \"content-type\": \"application/json\"\n  },\n  body: {\n    model: model,\n    messages: [\n      { role: :system, content: :hello },\n      { role: :user, content: :world }\n    ]\n  }.to_json\n)"
+      ],
+      [
+        "proxy_url = (url) => { \"{proxy_base_url}?{{ url: url, disposition: proxy_inline_disposition }.to_query}\" }",
+        "proxy_url = (url) => {\n  \"{proxy_base_url}?\"\n    + \"{{\n    url: url,\n    disposition: proxy_inline_disposition\n  }.to_query}\"\n}"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do
