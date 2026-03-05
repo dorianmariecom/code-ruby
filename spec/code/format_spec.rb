@@ -34,6 +34,10 @@ RSpec.describe Code::Format do
       [
         "proxy_url = (url) => { \"{proxy_base_url}?{{ url: url, disposition: proxy_inline_disposition }.to_query}\" }",
         "proxy_url = (url) => {\n  \"{proxy_base_url}?\"\n    + \"{{\n    url: url,\n    disposition: proxy_inline_disposition\n  }.to_query}\"\n}"
+      ],
+      [
+        "x = { content: \"you select the funniest tweets for a french \" + \"audience from the provided candidates. pick up to \" + \"{max_selected}. prioritize genuinely funny content\" + \" (jokes, memes, punchlines, absurd). avoid \" + \"politics/news/serious content. output only json.\" }",
+        "x = {\n  content: \"you select the funniest tweets for a french \"\n    + \"audience from the provided candidates. pick up to \"\n    + \"{max_selected}. prioritize genuinely funny content\"\n    + \" (jokes, memes, punchlines, absurd). avoid \"\n    + \"politics/news/serious content. output only json.\"\n}"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do

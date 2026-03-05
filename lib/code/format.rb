@@ -394,6 +394,9 @@ class Code
     end
 
     def format_left_operation(operation, indent:)
+      merged_string = extract_string_concatenation_parts(left_operation: operation)
+      return format_string(merged_string, indent: indent) if merged_string
+
       expression = format_nested_statement(operation[:first], indent: indent)
 
       Array(operation[:others]).each do |other|
@@ -419,6 +422,33 @@ class Code
       end
 
       expression
+    end
+
+    def extract_string_concatenation_parts(statement)
+      return nil unless statement.is_a?(Hash)
+
+      if statement.key?(:string)
+        return Array(statement[:string])
+      end
+
+      return nil unless statement.key?(:left_operation)
+
+      operation = statement[:left_operation]
+      others = Array(operation[:others])
+      return nil if others.empty?
+      return nil unless others.all? { |other| other[:operator] == "+" }
+
+      parts = extract_string_concatenation_parts(operation[:first])
+      return nil unless parts
+
+      others.each do |other|
+        nested = extract_string_concatenation_parts(other[:statement])
+        return nil unless nested
+
+        parts.concat(nested)
+      end
+
+      parts
     end
 
     def format_right_operation(operation, indent:)
