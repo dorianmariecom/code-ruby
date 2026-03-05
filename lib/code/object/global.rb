@@ -23,9 +23,18 @@ class Code
         when "break"
           sig(args) { Object.repeat }
           raise Error::Break, code_value || Nothing.new
+        when "continue"
+          sig(args) { Object.repeat }
+          raise Error::Continue, code_value || Nothing.new
         when "next"
           sig(args) { Object.repeat }
           raise Error::Next, code_value || Nothing.new
+        when "redo", "retry"
+          sig(args) { Object.repeat }
+          raise Error::Retry, code_value || Nothing.new
+        when "return"
+          sig(args) { Object.repeat }
+          raise Error::Return, code_value || Nothing.new
         when "Class"
           sig(args) { Object.repeat }
           if code_arguments.any?

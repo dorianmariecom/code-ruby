@@ -318,7 +318,7 @@ class Code
 
     def format_call(call, indent:)
       name = call[:name]
-      raw_arguments = Array(call[:arguments])
+      raw_arguments = call[:arguments].presence || []
       arguments = raw_arguments.map { |arg| format_call_argument(arg) }
       statement =
         if arguments.empty?
@@ -336,6 +336,8 @@ class Code
     end
 
     def format_call_argument(argument)
+      return format_code_inline(Array(argument), indent: 0) unless argument.is_a?(Hash)
+
       value = format_code_inline(argument[:value], indent: 0)
       return value unless argument.key?(:name)
 

@@ -49,6 +49,7 @@ class Code
       Node::Code.new(Code.parse(source)).evaluate(
         context: context,
         error: error,
+        global_control_flow_root: true,
         input: input,
         object: object,
         output: output,

@@ -28,21 +28,9 @@ class Code
             @left.evaluate(**args)
           end
         when "while"
-          left = Object::Nothing.new
-
-          left = @left&.evaluate(**args) || Object::Nothing.new while (
-            @right&.evaluate(**args) || Object::Nothing.new
-          ).truthy?
-
-          left
+          evaluate_conditional_loop(condition_truthy: true, **args)
         when "until"
-          left = Object::Nothing.new
-
-          left = @left&.evaluate(**args) || Object::Nothing.new while (
-            @right&.evaluate(**args) || Object::Nothing.new
-          ).falsy?
-
-          left
+          evaluate_conditional_loop(condition_truthy: false, **args)
         when "rescue"
           begin
             @left&.evaluate(**args) || Object::Nothing.new
@@ -68,6 +56,32 @@ class Code
             **args
           )
         end
+      end
+
+      private
+
+      def evaluate_conditional_loop(condition_truthy:, **args)
+        left = Object::Nothing.new
+
+        while loop_condition_truthy?(condition_truthy, **args)
+          begin
+            left = @left&.evaluate(**args) || Object::Nothing.new
+          rescue Error::Next, Error::Continue => e
+            left = e.code_value
+            next
+          rescue Error::Retry
+            retry
+          rescue Error::Break => e
+            return e.code_value
+          end
+        end
+
+        left
+      end
+
+      def loop_condition_truthy?(condition_truthy, **args)
+        condition = (@right&.evaluate(**args) || Object::Nothing.new).truthy?
+        condition_truthy ? condition : !condition
       end
     end
   end

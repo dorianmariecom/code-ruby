@@ -72,6 +72,8 @@ class Code
         end
 
         code_body.code_evaluate(**globals, context: code_context)
+      rescue Error::Return => e
+        e.code_value
       end
 
       def signature_for_call

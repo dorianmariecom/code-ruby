@@ -11,6 +11,7 @@ class Code
         elsif parsed.key?(:boolean)
           @statement = Boolean.new(parsed.delete(:boolean))
         elsif parsed.key?(:group)
+          @control_flow_scope = :group
           @statement = Code.new(parsed.delete(:group))
         elsif parsed.key?(:call)
           @statement = Call.new(parsed.delete(:call))
@@ -56,7 +57,12 @@ class Code
       end
 
       def evaluate(**args)
-        @statement&.evaluate(**args) || Object::Nothing.new
+        if @control_flow_scope == :group
+          @statement&.evaluate(**args, control_flow_scope: @control_flow_scope) ||
+            Object::Nothing.new
+        else
+          @statement&.evaluate(**args) || Object::Nothing.new
+        end
       end
 
       def resolve(**args)

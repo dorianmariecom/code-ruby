@@ -2,7 +2,7 @@
 
 class Code
   class Error < StandardError
-    class Break < Error
+    class ControlFlow < Error
       attr_reader :code_value
 
       def initialize(value = nil)
@@ -10,12 +10,14 @@ class Code
       end
     end
 
-    class Next < Error
-      attr_reader :code_value
+    class Break < ControlFlow; end
 
-      def initialize(value = nil)
-        @code_value = value.to_code
-      end
-    end
+    class Next < ControlFlow; end
+
+    class Continue < Next; end
+
+    class Return < ControlFlow; end
+
+    class Retry < ControlFlow; end
   end
 end

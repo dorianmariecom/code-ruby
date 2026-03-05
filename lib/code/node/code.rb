@@ -11,13 +11,37 @@ class Code
       end
 
       def evaluate(**args)
+        global_control_flow_root = args.fetch(:global_control_flow_root, false)
+        control_flow_scope = args.fetch(:control_flow_scope, nil)
+        statement_args =
+          if global_control_flow_root
+            args.merge(global_control_flow_root: false)
+          else
+            args
+          end
         last = Object::Nothing.new
 
-        (@statements || []).each do |statement|
-          last = statement.evaluate(**args, object: Object::Global.new)
+        begin
+          (@statements || []).each do |statement|
+            last = statement.evaluate(**statement_args, object: Object::Global.new)
+          end
+        rescue Error::Retry
+          retry if control_flow_scope == :group
+
+          raise
+        rescue Error::Break => e
+          return e.code_value if control_flow_scope == :group
+
+          raise
         end
 
         last
+      rescue Error::ControlFlow => e
+        raise unless global_control_flow_root
+
+        retry if e.is_a?(Error::Retry)
+
+        e.code_value
       end
 
       def resolve(**args)
