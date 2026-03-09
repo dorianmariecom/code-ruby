@@ -482,6 +482,7 @@ RSpec.describe Code do
     ['Time.zone = "Etc/UTC"', '"Etc/UTC"'],
     %w[Json.parse("1") 1],
     %w[{a:1}.to_query "a=1"],
+    ["dorian = 1 dorian#.to_something", "1"],
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

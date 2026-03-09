@@ -139,6 +139,10 @@ class Code
         str("?")
       end
 
+      def hashtag
+        str("#")
+      end
+
       def special_name
         str("...") | str("..") | str(".") | str("**") | str("*") | str("&")
       end
@@ -148,7 +152,7 @@ class Code
           opening_curly_bracket | closing_curly_bracket | opening_parenthesis |
           closing_parenthesis | opening_square_bracket |
           closing_square_bracket | single_quote | double_quote | lesser |
-          greater | asterisk
+          greater | asterisk | hashtag
       end
 
       def character

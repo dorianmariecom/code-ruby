@@ -8,6 +8,7 @@ RSpec.describe Code::Parser do
     "  ",
     "\n",
     "# comment",
+    "dorian = 1 dorian#.to_something",
     "/* comment",
     "/* comment */",
     "// comment",
