@@ -151,7 +151,8 @@ class Code
 
       def root
         (
-          name.aka(:name) << (whitespace? << arguments.aka(:arguments)).maybe <<
+          name.aka(:name) <<
+            (whiltespace_without_newline? << arguments.aka(:arguments)).maybe <<
             (whiltespace_without_newline? << block.aka(:block)).maybe
         ).aka(:call)
       end

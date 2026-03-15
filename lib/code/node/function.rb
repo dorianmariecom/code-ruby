@@ -12,8 +12,8 @@ class Code
         @body = Code.new(parsed.delete(:body).presence)
       end
 
-      def evaluate(**_args)
-        Object::Function.new(@parameters, @body)
+      def evaluate(**args)
+        Object::Function.new(@parameters, @body, args.fetch(:context))
       end
     end
   end

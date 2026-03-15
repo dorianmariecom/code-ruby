@@ -41,6 +41,10 @@ class Code
           right = @right&.evaluate(**args) || Object::Nothing.new
           left = @left&.resolve(**args) || Object::Nothing.new
 
+          if @operator != EQUAL && right.nothing?
+            return @left&.evaluate(**args) || Object::Nothing.new
+          end
+
           left.call(
             operator: @operator,
             arguments: Object::List.new([right]),

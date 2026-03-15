@@ -13,8 +13,8 @@ class Code
           @body = Code.new(parsed.delete(:body).presence)
         end
 
-        def evaluate(**_args)
-          Object::Function.new(@parameters, @body)
+        def evaluate(**args)
+          Object::Function.new(@parameters, @body, args.fetch(:context))
         end
       end
 
@@ -22,7 +22,9 @@ class Code
         return if parsed.blank?
 
         @name = parsed.delete(:name).presence
+        @explicit_arguments = parsed.key?(:arguments)
         @arguments = parsed.delete(:arguments).presence || []
+        @arguments = [@arguments] unless @arguments.is_a?(Array)
         @arguments.map! { |argument| CallArgument.new(argument) }
 
         return unless parsed.key?(:block)
@@ -52,6 +54,7 @@ class Code
         args.fetch(:object).call(
           operator: name,
           arguments: Object::List.new(arguments),
+          explicit_arguments: @explicit_arguments,
           **args
         )
       end

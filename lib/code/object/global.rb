@@ -199,7 +199,10 @@ class Code
           code_context = code_context.code_lookup!(code_operator)
           code_result = code_context.code_fetch(code_operator)
 
-          if code_result.is_a?(Function)
+          if code_result.is_a?(Super)
+            code_result.call(**args, operator: nil)
+          elsif code_result.is_a?(Function) &&
+                args.fetch(:explicit_arguments, false)
             code_result.call(**args, operator: nil)
           else
             sig(args)

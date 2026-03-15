@@ -542,7 +542,7 @@ class Code
           result = code_fetch(code_operator)
 
           if result.is_a?(Function)
-            result.call(**args, operator: nil)
+            result.call(**args, operator: nil, bound_self: self)
           else
             sig(args)
             result
