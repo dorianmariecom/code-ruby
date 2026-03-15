@@ -6,6 +6,7 @@ class Code
       def initialize(parsed)
         return if parsed.blank?
 
+        @parsed = parsed.deep_dup
         @statements =
           (parsed.presence || []).map { |statement| Statement.new(statement) }
       end
@@ -56,6 +57,10 @@ class Code
 
       def to_code
         @statements.blank? ? Object::Nothing.new : Object::Code.new(self)
+      end
+
+      def to_raw
+        @parsed.deep_dup
       end
     end
   end

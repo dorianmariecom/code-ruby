@@ -152,7 +152,18 @@ class Code
       end
 
       def code_to_string
-        String.new("<#{self.class.name} #{raw}>")
+        String.new(
+          Format.format(
+            [
+              {
+                function: {
+                  parameters: code_parameters.raw.map { |parameter| parameter_to_raw(parameter) },
+                  body: code_body.raw.to_raw
+                }
+              }
+            ]
+          )
+        )
       end
 
       def code_extend(function)
@@ -201,6 +212,29 @@ class Code
         end
 
         nil
+      end
+
+      def parameter_to_raw(parameter)
+        code_parameter = parameter.to_code
+        raw_parameter = { name: code_parameter.code_name.to_s }
+
+        if code_parameter.keyword?
+          raw_parameter[:keyword] = ":"
+        elsif code_parameter.keyword_splat?
+          raw_parameter[:keyword_splat] = "**"
+        elsif code_parameter.regular_splat?
+          raw_parameter[:regular_splat] = "*"
+        elsif code_parameter.block?
+          raw_parameter[:block] = "&"
+        elsif code_parameter.spread?
+          raw_parameter[:spread] = "..."
+        end
+
+        unless code_parameter.code_default.nothing?
+          raw_parameter[:default] = code_parameter.code_default.code_to_string.raw == "nothing" ? [] : Code.parse(code_parameter.code_default.to_s)
+        end
+
+        raw_parameter
       end
     end
   end

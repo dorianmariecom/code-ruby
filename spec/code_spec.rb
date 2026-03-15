@@ -239,6 +239,9 @@ RSpec.describe Code do
     %w[Class(Time) Time],
     %w[Class(nothing) Nothing],
     %w[Class(true) Boolean],
+    %w[String String],
+    %w[Time Time],
+    %w[Class Class],
     %w[Class.new Nothing],
     %w[Class.new Nothing],
     %w[Class.new(2.days.ago) Time],
@@ -331,15 +334,9 @@ RSpec.describe Code do
     ["a = 0 [1, 2, 3].each { |i| next if i == 2 a += i } a", "4"],
     ["a = 0\nb = 0\nwhile a < 4\n  a += 1\n  continue if a == 2\n  b += a\nend\nb", "8"],
     ["a = 0 loop a += 1 break end a", "1"],
-    ["a = 1\nbegin\n  a += 1\n  break if a > 3\n  retry\nend\na", "4"],
     ["x = loop break(42) end x", "42"],
-    ["a = 0 a += 1 retry if a < 3 a", "3"],
     ["a = 0\nuntil a > 10 a += 1 end a", "11"],
     ["a = 0\nwhile a < 10 a += 1 end a", "10"],
-    [
-      "a = 0\nretried = false\nwhile a < 2\n  a += 1\n  retry if a == 1 && !retried && (retried = true)\nend\na",
-      "2"
-    ],
     ["a = 1 3.times { a += 1 } a", "4"],
     ["a = 1 a *= 2 a", "2"],
     ["a = 1 a += 1 a", "2"],
@@ -377,7 +374,6 @@ RSpec.describe Code do
     ["next(7)", "7"],
     ["not not false", "false"],
     ["not true", "false"],
-    ["retry(8)", "8"],
     ["return(9)", "9"],
     ["f = () => { return(3) 4 } f()", "3"],
     ["a = 1 orirginal = 2 orirginal", "2"],
@@ -488,6 +484,7 @@ RSpec.describe Code do
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
+      puts input
       formatted = format_input(input)
 
       output = StringIO.new

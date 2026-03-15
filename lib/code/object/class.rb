@@ -19,6 +19,10 @@ class Code
       def call(...)
         raw.call(...)
       end
+
+      def code_to_string
+        String.new(raw.name.to_s.split("::")[2..].join("::"))
+      end
     end
   end
 end
