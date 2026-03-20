@@ -15,6 +15,10 @@ class Code
         Name
       end
 
+      def label_name
+        LabelName
+      end
+
       def whitespace
         Whitespace
       end
@@ -48,7 +52,7 @@ class Code
       end
 
       def key_value
-        (name.aka(:name) << colon << code_present.aka(:code).maybe).aka(
+        (label_name.aka(:name) << colon << code_present.aka(:code).maybe).aka(
           :name_code
         ) |
           (

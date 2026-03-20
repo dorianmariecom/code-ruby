@@ -11,6 +11,10 @@ class Code
         Name
       end
 
+      def label_name
+        LabelName
+      end
+
       def single_quote
         str("'")
       end
@@ -69,7 +73,7 @@ class Code
       end
 
       def symbol
-        (colon.ignore << name).aka(:text).repeat(1, 1)
+        (colon.ignore << label_name).aka(:text).repeat(1, 1)
       end
 
       def root

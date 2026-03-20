@@ -6,7 +6,8 @@ RSpec.describe Code::Parser::Function do
   [
     "() => {}",
     "(a, b) => { add(a, b) }",
-    "(a:, b:) => { add(a, b) }"
+    "(a:, b:) => { add(a, b) }",
+    "(end:) => { nothing }"
   ].each do |input|
     it "parses #{input}" do
       Code::Parser.parse(input)

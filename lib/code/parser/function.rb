@@ -7,6 +7,10 @@ class Code
         Name
       end
 
+      def label_name
+        LabelName
+      end
+
       def code
         Code
       end
@@ -90,7 +94,7 @@ class Code
       end
 
       def keyword_parameter
-        name.aka(:name) << whitespace? << colon.aka(:keyword) <<
+        label_name.aka(:name) << whitespace? << colon.aka(:keyword) <<
           code_present.aka(:default).maybe
       end
 

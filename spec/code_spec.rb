@@ -173,6 +173,7 @@ RSpec.describe Code do
       "(user = { name: :Dorian, age: 31 }).transform_values { user.name }.age",
       ":Dorian"
     ],
+    ["{ end: 2 }.keys.first", ":end"],
     %w[!!1 true],
     %w[!!true true],
     %w[!false true],
