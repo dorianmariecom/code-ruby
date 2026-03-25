@@ -22,7 +22,12 @@ class Code
       def resolve(**args)
         left = @left&.resolve(**args) || Object::Nothing.new
 
-        list = Object::IdentifierList.new([left])
+        list =
+          if left.is_an?(Object::IdentifierList)
+            Object::IdentifierList.new(left.raw.dup)
+          else
+            Object::IdentifierList.new([left])
+          end
 
         (@statements || []).each do |statement|
           list.code_append(statement.evaluate(**args))

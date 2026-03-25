@@ -412,6 +412,7 @@ RSpec.describe Code do
     ['"Hello {1}"', '"Hello 1"'],
     ['user = {} user.name = "Dorian" user.name', ":Dorian"],
     ['user = {} user[:name] = "Dorian" user[:name]', ":Dorian"],
+    ['value = {} email = "a" calendar_id = "c" value[email] ||= {} value[email][calendar_id] ||= {} value[email][calendar_id]', "{}"],
     ['{ "first_name": "Dorian" }', '{"first_name" => "Dorian"}'],
     ['{ "first_name": "Dorian" }.as_json', '{"first_name" => "Dorian"}'],
     %w[nothing.to_json :null],
