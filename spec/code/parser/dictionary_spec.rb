@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::Dictionary do
+RSpec.describe "parser dictionary" do
   [
     "{}",
     "{ }",

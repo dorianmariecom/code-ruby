@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::Function do
+RSpec.describe "parser function" do
   [
     "() => {}",
     "(a, b) => { add(a, b) }",

@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::String do
+RSpec.describe "parser string" do
   [
     "''",
     '""',

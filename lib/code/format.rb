@@ -279,7 +279,7 @@ class Code
     end
 
     def format_dictionary(key_values, indent:)
-      return "{}" if key_values == "" || key_values.nil?
+      return "{}" if key_values == "" || key_values.nil? || key_values == []
 
       values =
         Array(key_values).map do |key_value|
@@ -321,8 +321,10 @@ class Code
       raw_arguments = call[:arguments].presence || []
       arguments = raw_arguments.map { |arg| format_call_argument(arg) }
       statement =
-        if arguments.empty?
+        if arguments.empty? && !call.key?(:arguments)
           name.to_s
+        elsif arguments.empty?
+          "#{name}()"
         elsif multiline_call_arguments?(raw_arguments, arguments)
           body = arguments.map { |arg| indent_lines(arg, indent + 1) }.join(",\n")
           "#{name}(\n#{body}\n#{INDENT * indent})"

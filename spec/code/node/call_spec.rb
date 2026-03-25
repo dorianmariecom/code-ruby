@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::Call do
+RSpec.describe "parser call" do
   [
     "f(end: 2)"
   ].each do |input|

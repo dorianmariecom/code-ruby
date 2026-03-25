@@ -344,6 +344,7 @@ RSpec.describe Code do
     ["a = 1 a += 1 a", "2"],
     ["a = 1 a -= 1 a", "0"],
     ["a = 3 a -= 1 if false a", "3"],
+    ["a = 1 a = - 1 if false a", "1"],
     ["a = 3\n(a -= 1) if false\na", "3"],
     ["a = 1 a /= 2 a", "0.5"],
     ["a = 1 a <<= 1 a", "2"],
@@ -485,7 +486,6 @@ RSpec.describe Code do
     ["", ""]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
-      puts input
       formatted = format_input(input)
 
       output = StringIO.new

@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::List do
+RSpec.describe "parser list" do
   [
     "[]",
     "[ ]",

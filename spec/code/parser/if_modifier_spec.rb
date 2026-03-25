@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::IfModifier do
+RSpec.describe "parser if modifier" do
   [
     ["1 if true", "1"],
     ["1 if false", "nothing"],

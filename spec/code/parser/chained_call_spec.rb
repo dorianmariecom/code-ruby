@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Code::Parser::ChainedCall do
+RSpec.describe "parser chained call" do
   [
     "a.b",
     "user.first_name",
