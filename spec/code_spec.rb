@@ -401,6 +401,7 @@ RSpec.describe Code do
     ["true ? 1", "1"],
     ["true and false", "false"],
     ["true or false", "true"],
+    ["weekday? = false\n  or true\nweekday?", "true"],
     ["true || false", "true"],
     ["unless false 1", "1"],
     ["unless true 1", "nothing"],

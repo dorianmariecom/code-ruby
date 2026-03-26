@@ -64,6 +64,8 @@ class Code
       =>
     ].sort_by(&:length).reverse.freeze
 
+    ASSIGNMENT_RHS_MIN_BP = 20
+
     INFIX_PRECEDENCE = {
       "if" => [10, 9],
       "unless" => [10, 9],
@@ -293,7 +295,13 @@ class Code
       when "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", "&=", "|=",
            "^=", "||=", "&&="
         skip_newlines
-        { right_operation: { left: left, operator: operator, right: parse_expression(right_bp) } }
+        {
+          right_operation: {
+            left: left,
+            operator: operator,
+            right: parse_expression(ASSIGNMENT_RHS_MIN_BP)
+          }
+        }
       when "if", "unless", "while", "until", "rescue"
         skip_newlines
         { right_operation: { left: left, operator: operator, right: parse_expression(right_bp) } }
@@ -816,6 +824,7 @@ class Code
     def continuation_after_newline?(token)
       return false if token.type == :eof
       return true if token.type == :operator && INFIX_PRECEDENCE.key?(token.value)
+      return true if token.type == :keyword && %w[or and rescue].include?(token.value)
       return true if token.type == :punctuation && token.value == "?"
 
       token.type == :operator && [".", "::", "&."].include?(token.value)
