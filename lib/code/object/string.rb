@@ -74,7 +74,7 @@ class Code
           sig(args)
           code_strip
         when "split"
-          sig(args) { String }
+          sig(args) { String.maybe }
           code_split(code_value)
         else
           super
@@ -162,7 +162,11 @@ class Code
       def code_split(value)
         code_value = value.to_code
 
-        List.new(raw.split(code_value.to_s))
+        if code_value.nothing?
+          List.new(raw.split)
+        else
+          List.new(raw.split(code_value.to_s))
+        end
       end
 
       def present?
