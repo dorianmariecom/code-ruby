@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code-ruby (3.0.3)
+    code-ruby (3.0.4)
       activesupport
       base64
       bigdecimal
