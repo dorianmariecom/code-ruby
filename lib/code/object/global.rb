@@ -167,6 +167,9 @@ class Code
         when "Json"
           sig(args) { Object.repeat }
           code_arguments.any? ? Json.new(*code_arguments.raw) : Class.new(Json)
+        when "Ics"
+          sig(args) { Object.repeat }
+          code_arguments.any? ? Ics.new(*code_arguments.raw) : Class.new(Ics)
         when "evaluate"
           sig(args) { Object }
           Code.code_evaluate(code_value.code_to_string, **globals)

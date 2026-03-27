@@ -151,6 +151,7 @@ RSpec.describe Code do
         Json.parse('[]')
         Json.parse('{}')
         Json.parse('random-string')
+        Ics.parse("BEGIN:VCALENDAR\nEND:VCALENDAR")
         {}["".to_string]
       ] + ["Time.hour >= 6 and Time.hour <= 23"]
   ).each do |input|
@@ -556,5 +557,52 @@ RSpec.describe Code do
     expect do
       described_class.evaluate("UnknownConstant.zone = 1")
     end.to raise_error(Code::Error, /UnknownConstant is not defined/)
+  end
+
+  it "parses ics events into dictionaries" do
+    result = described_class.evaluate(<<~CODE)
+      events = Ics.parse("BEGIN:VCALENDAR
+      VERSION:2.0
+      PRODID:-//code-ruby//EN
+      BEGIN:VEVENT
+      UID:event-1
+      DTSTART:20260327T120000Z
+      DTEND:20260327T133000Z
+      SUMMARY:Lunch
+      DESCRIPTION:Team lunch
+      LOCATION:Paris
+      URL:https://example.com/events/1
+      CATEGORIES:food,team
+      END:VEVENT
+      END:VCALENDAR")
+
+      {
+        size: events.size,
+        summary: events.first.summary,
+        location: events.first.location,
+        uid: events.first.uid,
+        categories: events.first.categories,
+        starts_at: events.first.starts_at.to_string,
+        ends_at: events.first.ends_at.to_string,
+        all_day: events.first.all_day
+      }
+    CODE
+
+    expect(result).to eq(
+      {
+        size: 1,
+        summary: "Lunch",
+        location: "Paris",
+        uid: "event-1",
+        categories: ["food", "team"],
+        starts_at: "2026-03-27 12:00:00 UTC",
+        ends_at: "2026-03-27 13:30:00 UTC",
+        all_day: false
+      }.to_code
+    )
+  end
+
+  it "returns an empty list for invalid ics" do
+    expect(described_class.evaluate('Ics.parse("not an ics file")')).to eq([].to_code)
   end
 end

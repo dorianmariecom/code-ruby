@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency "bigdecimal"
   s.add_dependency "did-you-mean"
   s.add_dependency "dorian-arguments"
+  s.add_dependency "icalendar"
   s.add_dependency "json"
   s.add_dependency "language-ruby"
   s.add_dependency "mail"
