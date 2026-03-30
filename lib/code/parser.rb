@@ -350,11 +350,10 @@ class Code
           skip_newlines
 
           if match?(:keyword, "if") || match?(:keyword, "unless")
-            else_operator = advance.value
-            skip_newlines
-            else_statement = parse_expression
-            else_body = parse_body(%w[elsif elsunless else end])
-            elses << { operator: else_operator, statement: else_statement, body: else_body }
+            elses << {
+              operator: "else",
+              body: [parse_if_expression(advance.value)]
+            }
           else
             elses << { operator: "else", body: parse_body(%w[end]) }
           end
@@ -365,6 +364,7 @@ class Code
         break
       end
 
+      skip_newlines
       advance if match?(:keyword, "end")
 
       {
@@ -382,6 +382,7 @@ class Code
 
       statement = parse_expression unless operator == "loop"
       body = parse_body(%w[end])
+      skip_newlines
       advance if match?(:keyword, "end")
 
       {
@@ -414,7 +415,10 @@ class Code
         parse_delimited_code("{", "}")
       elsif match?(:keyword, "do") || match?(:keyword, "begin")
         advance
-        parse_code(stop_keywords: ["end"]).tap { advance if match?(:keyword, "end") }
+        parse_code(stop_keywords: ["end"]).tap do
+          skip_newlines
+          advance if match?(:keyword, "end")
+        end
       else
         [parse_expression]
       end
@@ -548,6 +552,7 @@ class Code
         expect(:keyword, "do")
         parameters = parse_pipe_parameters
         body = parse_code(stop_keywords: ["end"])
+        skip_newlines
         expect(:keyword, "end")
       end
 

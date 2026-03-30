@@ -413,10 +413,22 @@ class Code
           else
             candidate = "#{expression} #{operator} #{right}"
             if expression.include?("\n") || candidate.length > MAX_LINE_LENGTH
-              right_parts = right.split(" #{operator} ")
+              right_lines =
+                if right.include?("\n")
+                  right.lines(chomp: true).map(&:lstrip)
+                else
+                  right.split(" #{operator} ")
+                end
               continuation_lines =
-                right_parts.map do |part|
-                  "#{INDENT * (indent + 1)}#{operator} #{part}"
+                right_lines.each_with_index.map do |line, index|
+                  content = line.lstrip
+                  prefix =
+                    if content.start_with?("#{operator} ")
+                      ""
+                    else
+                      "#{operator} "
+                    end
+                  "#{INDENT * (indent + 1)}#{prefix}#{content}"
                 end
               "#{expression}\n#{continuation_lines.join("\n")}"
             else

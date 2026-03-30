@@ -24,6 +24,14 @@ RSpec.describe Code::Format do
         "if true\n  1\nelsif false\n  2\nelse\n  3\nend"
       ],
       [
+        "if false 1 else if true 2 else 3 end",
+        "if false\n  1\nelse\n  if true\n    2\n  else\n    3\n  end\nend"
+      ],
+      [
+        "event[:uid].present? and event[:summary].present? and event[:starts_at].present? and event[:ends_at].present?",
+        "event[:uid].present?\n  and event[:summary].present?\n  and event[:starts_at].present?\n  and event[:ends_at].present?"
+      ],
+      [
         "sum = (a, b: 2) => { a + b } sum(1)",
         "sum = (a, b: 2) => {\n  a + b\n}\n\nsum(1)"
       ],
