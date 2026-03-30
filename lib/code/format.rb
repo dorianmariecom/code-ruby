@@ -444,7 +444,7 @@ class Code
       return nil unless statement.is_a?(Hash)
 
       if statement.key?(:string)
-        return Array(statement[:string])
+        return Array(statement[:string]).deep_dup
       end
 
       return nil unless statement.key?(:left_operation)

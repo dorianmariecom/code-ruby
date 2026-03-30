@@ -32,6 +32,10 @@ RSpec.describe Code::Format do
         "event[:uid].present?\n  and event[:summary].present?\n  and event[:starts_at].present?\n  and event[:ends_at].present?"
       ],
       [
+        "Html.p { \"x{Time.new(event.starts_at).format}y\" + \"{Time.new(event.ends_at).format}\" }",
+        "Html.p {\n  \"x{Time.new(event.starts_at).format}y\"\n    + \"{Time.new(event.ends_at).format}\"\n}"
+      ],
+      [
         "sum = (a, b: 2) => { a + b } sum(1)",
         "sum = (a, b: 2) => {\n  a + b\n}\n\nsum(1)"
       ],
