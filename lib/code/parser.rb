@@ -32,37 +32,37 @@ class Code
       while
     ].freeze
 
-    MULTI_CHAR_OPERATORS = %w[
-      &.
-      &&
-      &&=
-      **
-      *=
-      +=
-      -=
-      ..
-      ...
-      /=
-      ::
-      <<=
-      <<
-      <=>
-      <=
-      ===
-      ==
-      =~
-      >=
-      >>=
-      >>
-      ||=
-      ||
-      |=
-      !==
-      !=
-      !~
-      %=
-      ^=
-      =>
+    MULTI_CHAR_OPERATORS = [
+      "&.",
+      "&&",
+      "&&=",
+      "**",
+      "*=",
+      "+=",
+      "-=",
+      "..",
+      "...",
+      "/=",
+      "::",
+      "<<=",
+      "<<",
+      "<=>",
+      "<=",
+      "===",
+      "==",
+      "=~",
+      ">=",
+      ">>=",
+      ">>",
+      "||=",
+      "||",
+      "|=",
+      "!==",
+      "!=",
+      "!~",
+      "%=",
+      "^=",
+      "=>"
     ].sort_by(&:length).reverse.freeze
     CONTINUATION_KEYWORDS = %w[or and rescue].freeze
     POSTFIX_CONTINUATIONS = %w[. :: &.].freeze

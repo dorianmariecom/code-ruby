@@ -226,7 +226,7 @@ class Code
           response = http.request(request)
         rescue ::Timeout::Error, ::Errno::ETIMEDOUT
           raise ::Code::Error, "http timeout"
-        rescue OpenSSL::SSL::SSLError, IOError, SystemCallError
+        rescue OpenSSL::SSL::SSLError, IOError, SystemCallError, SocketError
           raise ::Code::Error, "http error"
         end
 
