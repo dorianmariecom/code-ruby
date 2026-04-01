@@ -19,6 +19,7 @@ require "zeitwerk"
 
 loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.ignore("#{__dir__}/code-ruby.rb")
+loader.ignore("#{__dir__}/code/extensions")
 loader.setup
 
 require_relative "code/extensions/word_number_comparaisons"
