@@ -55,7 +55,12 @@ class Code
         end
       end
 
-      def code_call(*arguments, explicit_arguments: true, bound_self: nil, **globals)
+      def code_call(
+        *arguments,
+        explicit_arguments: true,
+        bound_self: nil,
+        **globals
+      )
         code_arguments = arguments.to_code
         code_context = Context.new({}, definition_context || globals[:context])
         code_self = bound_self.to_code
@@ -79,9 +84,7 @@ class Code
 
         code_parameters.raw.each.with_index do |code_parameter, index|
           code_argument =
-            if code_parameter.spread?
-              code_arguments
-            elsif code_parameter.regular_splat?
+            if code_parameter.spread? || code_parameter.regular_splat?
               code_arguments
             elsif code_parameter.keyword_splat?
               code_arguments.raw.detect do |code_argument|
@@ -95,7 +98,7 @@ class Code
             elsif code_parameter.keyword?
               code_arguments
                 .raw
-                .select { |code_argument| code_argument.is_a?(Dictionary) }
+                .grep(Dictionary)
                 .detect do |code_dictionary|
                   code_dictionary.code_has_key?(
                     code_parameter.code_name
@@ -121,14 +124,12 @@ class Code
         code_parameters
           .raw
           .inject([]) do |signature, code_parameter|
-            if code_parameter.spread?
+            if code_parameter.spread? || code_parameter.regular_splat?
               signature + [Object.repeat]
             elsif code_parameter.block?
               signature + [Function]
             elsif code_parameter.keyword_splat?
               signature + [Dictionary.maybe]
-            elsif code_parameter.regular_splat?
-              signature + [Object.repeat]
             elsif code_parameter.keyword? && code_parameter.required?
               if signature.last.is_a?(::Hash)
                 signature.last[code_parameter.code_name] = Object
@@ -157,7 +158,10 @@ class Code
             [
               {
                 function: {
-                  parameters: code_parameters.raw.map { |parameter| parameter_to_raw(parameter) },
+                  parameters:
+                    code_parameters.raw.map do |parameter|
+                      parameter_to_raw(parameter)
+                    end,
                   body: code_body.raw.to_raw
                 }
               }
@@ -206,7 +210,9 @@ class Code
         current = context
 
         while current
-          return current.code_fetch("self") if current.code_has_key?("self").truthy?
+          if current.code_has_key?("self").truthy?
+            return current.code_fetch("self")
+          end
 
           current = current.parent
         end
@@ -231,7 +237,13 @@ class Code
         end
 
         unless code_parameter.code_default.nothing?
-          raw_parameter[:default] = code_parameter.code_default.code_to_string.raw == "nothing" ? [] : Code.parse(code_parameter.code_default.to_s)
+          raw_parameter[:default] = (
+            if code_parameter.code_default.code_to_string.raw == "nothing"
+              []
+            else
+              Code.parse(code_parameter.code_default.to_s)
+            end
+          )
         end
 
         raw_parameter

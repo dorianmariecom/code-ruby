@@ -24,7 +24,8 @@ class Code
 
         begin
           (@statements || []).each do |statement|
-            last = statement.evaluate(**statement_args, object: Object::Global.new)
+            last =
+              statement.evaluate(**statement_args, object: Object::Global.new)
           end
         rescue Error::Retry
           retry if control_flow_scope == :group

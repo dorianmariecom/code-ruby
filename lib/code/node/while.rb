@@ -55,16 +55,14 @@ class Code
         last = Object::Nothing.new
 
         loop do
-          begin
-            last = @body&.evaluate(**args) || Object::Nothing.new
-          rescue Error::Next, Error::Continue => e
-            last = e.code_value
-            next
-          rescue Error::Retry
-            retry
-          rescue Error::Break => e
-            return e.code_value
-          end
+          last = @body&.evaluate(**args) || Object::Nothing.new
+        rescue Error::Next, Error::Continue => e
+          last = e.code_value
+          next
+        rescue Error::Retry
+          retry
+        rescue Error::Break => e
+          return e.code_value
         end
 
         last

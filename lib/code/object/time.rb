@@ -62,32 +62,29 @@ class Code
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
 
-        if args.first.is_a?(String) || args.first.is_a?(::String)
-          self.raw = ::Time.zone.parse(args.first.to_s) || raise(Error)
-        elsif args.first.is_a?(Time)
-          self.raw = args.first.raw.dup.in_time_zone(::Time.zone)
-        elsif args.first.is_a?(::Time)
-          self.raw = args.first.dup.in_time_zone(::Time.zone)
-        elsif args.first.is_a?(Date)
-          self.raw = args.first.raw.to_time.in_time_zone(::Time.zone)
-        elsif args.first.is_a?(::Date)
-          self.raw = args.first.to_time.in_time_zone(::Time.zone)
-        elsif args.first.is_a?(::ActiveSupport::TimeWithZone)
-          self.raw = args.first.dup
-        elsif args.first.is_a?(Integer) || args.first.is_a?(Decimal) ||
-            args.first.is_a?(::Integer) || args.first.is_a?(::Float) ||
-            args.first.is_a?(::BigDecimal)
-          code_value = args.first.to_code
-          timestamp =
-            if code_value.is_a?(Decimal)
-              code_value.raw.to_r
-            else
-              code_value.raw
-            end
-          self.raw = ::Time.zone.at(timestamp)
-        else
-          self.raw = ::Time.zone.now
-        end
+        first = args.first
+        self.raw =
+          case first
+          when String, ::String
+            ::Time.zone.parse(first.to_s) || raise(Error)
+          when Time
+            first.raw.dup.in_time_zone(::Time.zone)
+          when ::Time
+            first.dup.in_time_zone(::Time.zone)
+          when Date
+            first.raw.to_time.in_time_zone(::Time.zone)
+          when ::Date
+            first.to_time.in_time_zone(::Time.zone)
+          when ::ActiveSupport::TimeWithZone
+            first.dup
+          when Integer, Decimal, ::Integer, ::Float, ::BigDecimal
+            code_value = first.to_code
+            timestamp =
+              (code_value.is_a?(Decimal) ? code_value.raw.to_r : code_value.raw)
+            ::Time.zone.at(timestamp)
+          else
+            ::Time.zone.now
+          end
       end
 
       def self.call(**args)
@@ -831,10 +828,15 @@ class Code
         requested_locale = code_locale.raw&.to_s
         locale = requested_locale&.presence_in(LOCALES)&.to_sym
         locale ||= ::I18n.locale
-        locale = ::I18n.locale unless ::I18n.available_locales.include?(locale.to_sym)
+        locale = ::I18n.locale unless ::I18n.available_locales.include?(
+          locale.to_sym
+        )
 
         format = code_format.raw || :default
-        format = format.to_sym if ::I18n.exists?("time.formats.#{format}", locale)
+        format = format.to_sym if ::I18n.exists?(
+          "time.formats.#{format}",
+          locale
+        )
 
         String.new(::I18n.l(raw, format: format, locale: locale))
       end
@@ -900,14 +902,14 @@ class Code
           code_seconds.code_to_integer.raw + code_second.code_to_integer.raw
 
         code_change(
-          year:,
-          month:,
-          day:,
-          week_day:,
-          week:,
-          hour:,
-          minute:,
-          second:
+          year: year,
+          month: month,
+          day: day,
+          week_day: week_day,
+          week: week,
+          hour: hour,
+          minute: minute,
+          second: second
         )
       end
 
@@ -952,14 +954,14 @@ class Code
           code_seconds.code_to_integer.raw - code_second.code_to_integer.raw
 
         code_change(
-          year:,
-          month:,
-          day:,
-          week_day:,
-          week:,
-          hour:,
-          minute:,
-          second:
+          year: year,
+          month: month,
+          day: day,
+          week_day: week_day,
+          week: week,
+          hour: hour,
+          minute: minute,
+          second: second
         )
       end
 

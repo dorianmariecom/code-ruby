@@ -184,9 +184,12 @@ class Code
         http = ::Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true if uri.scheme == "https"
         default_timeout = timeout.nothing? ? DEFAULT_TIMEOUT : timeout.to_f
-        open_timeout_value = open_timeout.nothing? ? default_timeout : open_timeout.to_f
-        read_timeout_value = read_timeout.nothing? ? default_timeout : read_timeout.to_f
-        write_timeout_value = write_timeout.nothing? ? default_timeout : write_timeout.to_f
+        open_timeout_value =
+          open_timeout.nothing? ? default_timeout : open_timeout.to_f
+        read_timeout_value =
+          read_timeout.nothing? ? default_timeout : read_timeout.to_f
+        write_timeout_value =
+          write_timeout.nothing? ? default_timeout : write_timeout.to_f
 
         http.open_timeout = open_timeout_value if open_timeout_value
         http.read_timeout = read_timeout_value if read_timeout_value
@@ -221,12 +224,9 @@ class Code
 
         begin
           response = http.request(request)
-        rescue ::Timeout::Error,
-               ::Net::OpenTimeout,
-               ::Net::ReadTimeout,
-               ::Errno::ETIMEDOUT
+        rescue ::Timeout::Error, ::Errno::ETIMEDOUT
           raise ::Code::Error, "http timeout"
-        rescue OpenSSL::SSL::SSLError, IOError, EOFError
+        rescue OpenSSL::SSL::SSLError, IOError, SystemCallError
           raise ::Code::Error, "http error"
         end
 

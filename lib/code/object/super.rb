@@ -10,6 +10,7 @@ class Code
         definition_context,
         explicit_arguments: false
       )
+        _explicit_arguments = explicit_arguments
         @parent = parent.to_code
         @forwarded_arguments = forwarded_arguments.to_code
         @code_self = code_self.to_code
@@ -23,7 +24,7 @@ class Code
         explicit_arguments = args.fetch(:explicit_arguments, false)
 
         @parent.code_call(
-          *(arguments_for(code_arguments, explicit_arguments).raw),
+          *arguments_for(code_arguments, explicit_arguments).raw,
           explicit_arguments: explicit_arguments,
           bound_self: @code_self,
           **multi_fetch(args, *GLOBALS).merge(context: parent_context)

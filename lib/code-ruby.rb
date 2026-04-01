@@ -21,152 +21,19 @@ loader = Zeitwerk::Loader.for_gem(warn_on_extra_files: false)
 loader.ignore("#{__dir__}/code-ruby.rb")
 loader.setup
 
-module WordNumberComparaisons
-  def zero?
-    zero?
-  end
-
-  def one?
-    self == 1
-  end
-
-  def two?
-    self == 2
-  end
-
-  def three?
-    self == 3
-  end
-
-  def four?
-    self == 4
-  end
-
-  def five?
-    self == 5
-  end
-
-  def six?
-    self == 6
-  end
-
-  def seven?
-    self == 7
-  end
-
-  def eight?
-    self == 8
-  end
-
-  def nine?
-    self == 9
-  end
-
-  def ten?
-    self == 10
-  end
-end
-
-class Object
-  alias is_an? is_a?
-
-  def to_code
-    raise NotImplementedError, "to_code not defined on #{self.class.name}"
-  end
-end
-
-class Class
-  def to_code
-    Code::Object::Class.new(self)
-  end
-end
-
-class Module
-  def to_code
-    Code::Object::Class.new(self)
-  end
-end
-
-class NilClass
-  def to_code
-    Code::Object::Nothing.new(self)
-  end
-end
-
-class TrueClass
-  def to_code
-    Code::Object::Boolean.new(self)
-  end
-end
-
-class FalseClass
-  def to_code
-    Code::Object::Boolean.new(self)
-  end
-end
-
-class String
-  def to_code
-    Code::Object::String.new(self)
-  end
-end
-
-class Symbol
-  def to_code
-    Code::Object::String.new(self)
-  end
-end
-
-class Integer
-  include WordNumberComparaisons
-
-  def to_code
-    Code::Object::Integer.new(self)
-  end
-end
-
-class Float
-  include WordNumberComparaisons
-
-  def to_code
-    Code::Object::Decimal.new(self)
-  end
-end
-
-class BigDecimal
-  include WordNumberComparaisons
-
-  def to_code
-    Code::Object::Decimal.new(self)
-  end
-end
-
-class Array
-  def to_code
-    Code::Object::List.new(self)
-  end
-end
-
-class Hash
-  def to_code
-    Code::Object::Dictionary.new(self)
-  end
-end
-
-module Nokogiri
-  module XML
-    class Element
-      def to_code
-        Code::Object::Html.new(self)
-      end
-    end
-  end
-end
-
-module ActiveSupport
-  class TimeWithZone
-    def to_code
-      Code::Object::Time.new(self)
-    end
-  end
-end
+require_relative "code/extensions/word_number_comparaisons"
+require_relative "code/extensions/object"
+require_relative "code/extensions/class"
+require_relative "code/extensions/module"
+require_relative "code/extensions/nil_class"
+require_relative "code/extensions/true_class"
+require_relative "code/extensions/false_class"
+require_relative "code/extensions/string"
+require_relative "code/extensions/symbol"
+require_relative "code/extensions/integer"
+require_relative "code/extensions/float"
+require_relative "code/extensions/big_decimal"
+require_relative "code/extensions/array"
+require_relative "code/extensions/hash"
+require_relative "code/extensions/nokogiri"
+require_relative "code/extensions/active_support"

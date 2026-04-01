@@ -8,11 +8,17 @@ AllCops:
   TargetRubyVersion: 3.0
 Layout/ClosingHeredocIndentation:
   Enabled: false
+Layout/ElseAlignment:
+  Enabled: false
+Layout/EndAlignment:
+  Enabled: false
 Layout/FirstArgumentIndentation:
   Enabled: false
 Layout/HashAlignment:
   Enabled: false
 Layout/HeredocIndentation:
+  Enabled: false
+Layout/IndentationWidth:
   Enabled: false
 Layout/LineEndStringConcatenationIndentation:
   Enabled: false
@@ -21,6 +27,8 @@ Layout/LineLength:
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 Layout/MultilineOperationIndentation:
+  Enabled: false
+Layout/SpaceAroundKeyword:
   Enabled: false
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: false

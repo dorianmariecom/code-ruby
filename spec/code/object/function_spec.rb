@@ -39,8 +39,7 @@ RSpec.describe Code::Object::Function do
   end
 
   it "captures self for constructor-like functions that return self" do
-    result =
-      Code.evaluate(<<~CODE)
+    result = Code.evaluate(<<~CODE)
         User = (given_name:, family_name:, birth_date:) => {
           self.given_name = given_name.to_string.presence
           self.family_name = family_name.to_string.presence
@@ -74,8 +73,7 @@ RSpec.describe Code::Object::Function do
   end
 
   it "supports constructor methods on functions" do
-    result =
-      Code.evaluate(<<~CODE)
+    result = Code.evaluate(<<~CODE)
         User = (given_name:, family_name:) => {
           self.given_name = given_name
           self.family_name = family_name
@@ -103,8 +101,7 @@ RSpec.describe Code::Object::Function do
   end
 
   it "supports extending constructors and forwarding super arguments" do
-    result =
-      Code.evaluate(<<~CODE)
+    result = Code.evaluate(<<~CODE)
         Person = (given_name:, family_name:) => {
           self.given_name = given_name
           self.family_name = family_name
@@ -135,8 +132,7 @@ RSpec.describe Code::Object::Function do
   end
 
   it "distinguishes super from super()" do
-    result =
-      Code.evaluate(<<~CODE)
+    result = Code.evaluate(<<~CODE)
         Person = (given_name:, family_name:) => {
           self.full_name = () => {
             [given_name, family_name].join(" ")

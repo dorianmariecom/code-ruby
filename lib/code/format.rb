@@ -37,7 +37,11 @@ class Code
       statements
         .map do |statement|
           formatted = format_statement(statement, indent: indent)
-          pre_indented_statement?(statement) ? formatted : "#{INDENT * indent}#{formatted}"
+          if pre_indented_statement?(statement)
+            formatted
+          else
+            "#{INDENT * indent}#{formatted}"
+          end
         end
         .join(separator)
     end
@@ -45,7 +49,9 @@ class Code
     def format_code_inline(code, indent:)
       statements = Array(code)
       return "nothing" if statements.empty?
-      return format_statement(statements.first, indent: indent) if statements.one?
+      if statements.one?
+        return format_statement(statements.first, indent: indent)
+      end
 
       body = format_code(statements, indent: indent + 1)
       "begin\n#{body}\n#{INDENT * indent}end"
@@ -151,6 +157,7 @@ class Code
 
     def format_string(parts, indent:)
       return '""' if parts == "" || parts.nil?
+
       symbol = symbolizable_string(parts)
       return symbol if symbol
 
@@ -160,7 +167,10 @@ class Code
           if part.is_a?(Hash) && part.key?(:text)
             { type: :text, value: escape_string_text(part[:text].to_s) }
           elsif part.is_a?(Hash) && part.key?(:code)
-            { type: :code, value: "{#{format_code_inline(part[:code], indent: indent)}}" }
+            {
+              type: :code,
+              value: "{#{format_code_inline(part[:code], indent: indent)}}"
+            }
           else
             { type: :text, value: escape_string_text(part.to_s) }
           end
@@ -189,10 +199,7 @@ class Code
     end
 
     def escape_string_text(text)
-      text
-        .gsub("\\", "\\\\")
-        .gsub('"', '\"')
-        .gsub("{", "\\{")
+      text.gsub("\\", "\\\\").gsub('"', '\"').gsub("{", "\\{")
     end
 
     def format_string_literal(content, components:, indent:, allow_split:)
@@ -210,9 +217,10 @@ class Code
       continuation_indent = INDENT * (indent + 1)
       lines = chunks.map { |chunk| %("#{chunk}") }
 
-      ([lines.first] +
-        lines[1..].to_a.map { |line| "#{continuation_indent}+ #{line}" })
-        .join("\n")
+      (
+        [lines.first] +
+          lines[1..].to_a.map { |line| "#{continuation_indent}+ #{line}" }
+      ).join("\n")
     end
 
     def split_string_chunks(components, limit)
@@ -258,13 +266,17 @@ class Code
     end
 
     def string_inline_limit(indent)
-      [MIN_WIDTH, [MAX_INLINE_STRING_LENGTH, MAX_LINE_LENGTH - (INDENT * indent).length].min].max
+      [
+        MAX_INLINE_STRING_LENGTH,
+        MAX_LINE_LENGTH - (INDENT * indent).length
+      ].min.clamp(MIN_WIDTH, MAX_INLINE_STRING_LENGTH)
     end
 
     def chunk_limit(indent)
-      [MIN_WIDTH,
-       [MAX_INLINE_STRING_LENGTH,
-        MAX_LINE_LENGTH - (INDENT * (indent + 1)).length - CONTINUATION_PADDING].min].max
+      [
+        MAX_INLINE_STRING_LENGTH,
+        MAX_LINE_LENGTH - (INDENT * (indent + 1)).length - CONTINUATION_PADDING
+      ].min.clamp(MIN_WIDTH, MAX_INLINE_STRING_LENGTH)
     end
 
     def format_list(elements, indent:)
@@ -272,7 +284,7 @@ class Code
 
       values =
         Array(elements).map { |element| format_code_inline(element, indent: 0) }
-      return "[#{values.join(', ')}]" unless multiline_collection?(values)
+      return "[#{values.join(", ")}]" unless multiline_collection?(values)
 
       body = values.map { |value| indent_lines(value, indent + 1) }.join(",\n")
       "[\n#{body}\n#{INDENT * indent}]"
@@ -294,7 +306,7 @@ class Code
           end
         end
 
-      return "{ #{values.join(', ')} }" unless multiline_collection?(values)
+      return "{ #{values.join(", ")} }" unless multiline_collection?(values)
 
       body = values.map { |value| indent_lines(value, indent + 1) }.join(",\n")
       "{\n#{body}\n#{INDENT * indent}}"
@@ -326,10 +338,11 @@ class Code
         elsif arguments.empty?
           "#{name}()"
         elsif multiline_call_arguments?(raw_arguments, arguments)
-          body = arguments.map { |arg| indent_lines(arg, indent + 1) }.join(",\n")
+          body =
+            arguments.map { |arg| indent_lines(arg, indent + 1) }.join(",\n")
           "#{name}(\n#{body}\n#{INDENT * indent})"
         else
-          "#{name}(#{arguments.join(', ')})"
+          "#{name}(#{arguments.join(", ")})"
         end
 
       return statement unless call.key?(:block)
@@ -338,7 +351,9 @@ class Code
     end
 
     def format_call_argument(argument)
-      return format_code_inline(Array(argument), indent: 0) unless argument.is_a?(Hash)
+      unless argument.is_a?(Hash)
+        return format_code_inline(Array(argument), indent: 0)
+      end
 
       value = format_code_inline(argument[:value], indent: 0)
       return value unless argument.key?(:name)
@@ -347,22 +362,28 @@ class Code
     end
 
     def format_block(block, indent:)
-      parameters = Array(block[:parameters]).map { |parameter| format_parameter(parameter, indent: indent) }
+      parameters =
+        Array(block[:parameters]).map do |parameter|
+          format_parameter(parameter, indent: indent)
+        end
       inline_body = format_inline_block_body(block[:body], indent: indent)
       if inline_body
-        prefix = parameters.empty? ? "" : " |#{parameters.join(', ')}|"
+        prefix = parameters.empty? ? "" : " |#{parameters.join(", ")}|"
         return "{#{prefix} #{inline_body} }"
       end
 
-      header = parameters.empty? ? "{" : "{ |#{parameters.join(', ')}|"
+      header = parameters.empty? ? "{" : "{ |#{parameters.join(", ")}|"
       body = format_code(Array(block[:body]), indent: indent + 1)
       "#{header}\n#{body}\n#{INDENT * indent}}"
     end
 
     def format_function(function, indent:)
-      parameters = Array(function[:parameters]).map { |parameter| format_parameter(parameter, indent: indent) }
+      parameters =
+        Array(function[:parameters]).map do |parameter|
+          format_parameter(parameter, indent: indent)
+        end
       body = format_code(Array(function[:body]), indent: indent + 1)
-      "(#{parameters.join(', ')}) => {\n#{body}\n#{INDENT * indent}}"
+      "(#{parameters.join(", ")}) => {\n#{body}\n#{INDENT * indent}}"
     end
 
     def format_parameter(parameter, indent:)
@@ -398,7 +419,8 @@ class Code
     end
 
     def format_left_operation(operation, indent:)
-      merged_string = extract_string_concatenation_parts(left_operation: operation)
+      merged_string =
+        extract_string_concatenation_parts(left_operation: operation)
       return format_string(merged_string, indent: indent) if merged_string
 
       expression = format_nested_statement(operation[:first], indent: indent)
@@ -423,11 +445,7 @@ class Code
                 right_lines.each_with_index.map do |line, index|
                   content = line.lstrip
                   prefix =
-                    if content.start_with?("#{operator} ")
-                      ""
-                    else
-                      "#{operator} "
-                    end
+                    (content.start_with?("#{operator} ") ? "" : "#{operator} ")
                   "#{INDENT * (indent + 1)}#{prefix}#{content}"
                 end
               "#{expression}\n#{continuation_lines.join("\n")}"
@@ -443,9 +461,7 @@ class Code
     def extract_string_concatenation_parts(statement)
       return nil unless statement.is_a?(Hash)
 
-      if statement.key?(:string)
-        return Array(statement[:string]).deep_dup
-      end
+      return Array(statement[:string]).deep_dup if statement.key?(:string)
 
       return nil unless statement.key?(:left_operation)
 
@@ -475,7 +491,7 @@ class Code
     end
 
     def compact_operator?(operator)
-      [".", "::", "&.", "..", "..."].include?(operator)
+      %w[. :: &. .. ...].include?(operator)
     end
 
     def format_ternary(ternary, indent:)
@@ -505,9 +521,11 @@ class Code
     def format_square_bracket(square_bracket, indent:)
       left = format_nested_statement(square_bracket[:left], indent: indent)
       suffix =
-        Array(square_bracket[:statements]).map do |statement|
-          "[#{format_nested_statement(statement, indent: indent)}]"
-        end.join
+        Array(square_bracket[:statements])
+          .map do |statement|
+            "[#{format_nested_statement(statement, indent: indent)}]"
+          end
+          .join
       "#{left}#{suffix}"
     end
 
@@ -544,7 +562,10 @@ class Code
           format_code(branch[:body], indent: indent + 1)
         ]
       else
-        ["#{INDENT * indent}else", format_code(branch[:body], indent: indent + 1)]
+        [
+          "#{INDENT * indent}else",
+          format_code(branch[:body], indent: indent + 1)
+        ]
       end
     end
 
@@ -556,7 +577,8 @@ class Code
         return "#{INDENT * indent}loop {\n#{body}\n#{INDENT * indent}}"
       end
 
-      statement = format_nested_statement(while_statement[:statement], indent: indent)
+      statement =
+        format_nested_statement(while_statement[:statement], indent: indent)
       body = format_code(while_statement[:body], indent: indent + 1)
       "#{INDENT * indent}#{operator} #{statement}\n#{body}\n#{INDENT * indent}end"
     end
@@ -575,7 +597,9 @@ class Code
     def multiline_call_arguments?(raw_arguments, arguments)
       return true if arguments.any? { |argument| argument.include?("\n") }
       return true if arguments.size > MAX_INLINE_COLLECTION_ITEMS
-      return true if arguments.join(", ").length > MAX_INLINE_CALL_ARGUMENTS_LENGTH
+      if arguments.join(", ").length > MAX_INLINE_CALL_ARGUMENTS_LENGTH
+        return true
+      end
 
       raw_arguments.any? do |argument|
         named_value = argument[:value]
@@ -593,8 +617,10 @@ class Code
       value.split("\n").map { |line| "#{prefix}#{line}" }.join("\n")
     end
 
-    def statement_separator(inline:, indent: _indent)
+    def statement_separator(inline:, indent: nil)
+      _indent = indent
       return " " if inline
+
       "\n\n"
     end
 
@@ -614,10 +640,7 @@ class Code
     end
 
     def enforce_line_width(formatted)
-      formatted
-        .split("\n")
-        .flat_map { |line| wrap_line(line) }
-        .join("\n")
+      formatted.split("\n").flat_map { |line| wrap_line(line) }.join("\n")
     end
 
     def wrap_line(line)
@@ -625,16 +648,11 @@ class Code
 
       indent = line[/\A */].to_s
       split =
-        find_split(line, " and ") ||
-        find_split(line, " or ") ||
-        find_split(line, " ? ") ||
-        find_split(line, " : ") ||
-        find_split(line, " <=> ") ||
-        find_split(line, " >= ") ||
-        find_split(line, " <= ") ||
-        find_split(line, " == ") ||
-        find_split(line, " = ") ||
-        find_split(line, ".")
+        find_split(line, " and ") || find_split(line, " or ") ||
+          find_split(line, " ? ") || find_split(line, " : ") ||
+          find_split(line, " <=> ") || find_split(line, " >= ") ||
+          find_split(line, " <= ") || find_split(line, " == ") ||
+          find_split(line, " = ") || find_split(line, ".")
 
       return [line] unless split
 
@@ -692,6 +710,5 @@ class Code
 
       quote_count.even?
     end
-
   end
 end

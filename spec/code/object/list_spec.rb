@@ -10,7 +10,7 @@ RSpec.describe Code::Object::List do
     ["[] + []", "[]"],
     ["[1, 2, 3].second", "2"],
     ["[1, 2, 3].third", "3"],
-    ["(1..100).to_list.one_hundredth", "100"],
+    %w[(1..100).to_list.one_hundredth 100],
     ["[1, 2, 3].one_hundredth", "nothing"]
   ].each do |input, expected|
     it "#{input} == #{expected}" do

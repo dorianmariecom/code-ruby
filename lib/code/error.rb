@@ -10,14 +10,19 @@ class Code
       end
     end
 
-    class Break < ControlFlow; end
+    class Break < ControlFlow
+    end
 
-    class Next < ControlFlow; end
+    class Next < ControlFlow
+    end
 
-    class Continue < Next; end
+    class Continue < Next
+    end
 
-    class Return < ControlFlow; end
+    class Return < ControlFlow
+    end
 
-    class Retry < ControlFlow; end
+    class Retry < ControlFlow
+    end
   end
 end

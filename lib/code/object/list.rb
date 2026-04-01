@@ -1715,11 +1715,7 @@ class Code
         end
 
         if code_argument.is_a?(Class)
-          return List.new(
-            raw
-              .select { |code_element| code_element.is_a?(code_argument.raw) }
-              .uniq
-          )
+          return List.new(raw.grep(code_argument.raw).uniq)
         end
 
         index = 0

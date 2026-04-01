@@ -58,8 +58,10 @@ class Code
 
       def evaluate(**args)
         if @control_flow_scope == :group
-          @statement&.evaluate(**args, control_flow_scope: @control_flow_scope) ||
-            Object::Nothing.new
+          @statement&.evaluate(
+            **args,
+            control_flow_scope: @control_flow_scope
+          ) || Object::Nothing.new
         else
           @statement&.evaluate(**args) || Object::Nothing.new
         end

@@ -60,7 +60,8 @@ class Code
             code_value
           else
             receiver.code_fetch(raw.last).call(
-              **args.merge(context: args.fetch(:context, context)),
+              **args,
+              context: args.fetch(:context, context),
               operator: assignment_operator.chop,
               arguments: [code_value]
             )
@@ -88,15 +89,16 @@ class Code
             arguments: Object::List.new([code_value])
           )
         else
-          next_value = receiver.call(
-            **args,
-            operator: raw.last,
-            arguments: Object::List.new
-          ).call(
-            **args,
-            operator: assignment_operator.chop,
-            arguments: Object::List.new([code_value])
-          )
+          next_value =
+            receiver.call(
+              **args,
+              operator: raw.last,
+              arguments: Object::List.new
+            ).call(
+              **args,
+              operator: assignment_operator.chop,
+              arguments: Object::List.new([code_value])
+            )
 
           receiver.call(
             **args,

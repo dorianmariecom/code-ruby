@@ -4,8 +4,7 @@ require "spec_helper"
 
 RSpec.describe Code::Object::Ics do
   it "normalizes binary event strings before json serialization" do
-    source =
-      <<~ICS
+    source = <<~ICS
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//code-ruby//EN
@@ -21,12 +20,13 @@ RSpec.describe Code::Object::Ics do
 
     events = described_class.code_parse(Code::Object::String.new(source.b))
 
-    expect { expect(events.to_json).to include("Joséphine") }.not_to output.to_stderr
+    expect do
+      expect(events.to_json).to include("Joséphine")
+    end.not_to output.to_stderr
   end
 
   it "serializes comma-separated descriptions as strings" do
-    source =
-      <<~ICS
+    source = <<~ICS
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//code-ruby//EN

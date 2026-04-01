@@ -8,7 +8,8 @@ class Code
     class Language
     end
 
-    Token = Data.define(:type, :value, :position, :newline_before, :space_before)
+    Token =
+      Data.define(:type, :value, :position, :newline_before, :space_before)
 
     KEYWORDS = %w[
       and
@@ -63,6 +64,13 @@ class Code
       ^=
       =>
     ].sort_by(&:length).reverse.freeze
+    CONTINUATION_KEYWORDS = %w[or and rescue].freeze
+    POSTFIX_CONTINUATIONS = %w[. :: &.].freeze
+    HORIZONTAL_WHITESPACE = [" ", "\t"].freeze
+    NEWLINE_CHARACTERS = ["\n", "\r"].freeze
+    PUNCTUATION_CHARACTERS = %w[( ) [ ] { } , ? :].freeze
+    OPERATOR_CHARACTERS = %w[. & | = ! ~ + - * / % < > ^ × ÷].freeze
+    SUFFIX_PUNCTUATION = %w[! ?].freeze
 
     ASSIGNMENT_RHS_MIN_BP = 20
 
@@ -144,8 +152,10 @@ class Code
       until eof?
         break if stop?(stop_keywords, stop_values)
 
+        previous_index = @index
         statements << parse_expression
         consume_newlines
+        ensure_parse_progress!(previous_index, "parsing code")
       end
 
       statements
@@ -156,13 +166,16 @@ class Code
       left = nud(token)
 
       loop do
+        previous_index = @index
         token = current
         break if token.type == :eof
+
         if token.type == :newline
           next_token = next_significant_token
           break unless continuation_after_newline?(next_token)
 
           skip_newlines
+          ensure_parse_progress!(previous_index, "skipping newlines")
           next
         end
 
@@ -172,6 +185,7 @@ class Code
           break if call_like_postfix?(token) && !callable_expression?(left)
 
           left = led_postfix(left)
+          ensure_parse_progress!(previous_index, "parsing postfix expression")
           next
         end
 
@@ -183,6 +197,7 @@ class Code
 
         advance
         left = led_infix(left, operator, right_bp)
+        ensure_parse_progress!(previous_index, "parsing infix expression")
       end
 
       left
@@ -237,7 +252,11 @@ class Code
       when "!", "~", "+"
         wrap_prefixed_expression(:negation, token.value, parse_expression(145))
       when "-"
-        wrap_prefixed_expression(:unary_minus, token.value, parse_expression(159))
+        wrap_prefixed_expression(
+          :unary_minus,
+          token.value,
+          parse_expression(159)
+        )
       else
         raise_parse_error("unexpected operator #{token.value.inspect}", token)
       end
@@ -254,7 +273,10 @@ class Code
       when ":"
         parse_symbol_literal
       else
-        raise_parse_error("unexpected punctuation #{token.value.inspect}", token)
+        raise_parse_error(
+          "unexpected punctuation #{token.value.inspect}",
+          token
+        )
       end
     end
 
@@ -291,10 +313,10 @@ class Code
     end
 
     def led_infix(left, operator, right_bp)
+      skip_newlines
       case operator
-      when "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", "&=", "|=",
-           "^=", "||=", "&&="
-        skip_newlines
+      when "=", "+=", "-=", "*=", "/=", "%=", "<<=", ">>=", "&=", "|=", "^=",
+           "||=", "&&="
         {
           right_operation: {
             left: left,
@@ -303,10 +325,14 @@ class Code
           }
         }
       when "if", "unless", "while", "until", "rescue"
-        skip_newlines
-        { right_operation: { left: left, operator: operator, right: parse_expression(right_bp) } }
+        {
+          right_operation: {
+            left: left,
+            operator: operator,
+            right: parse_expression(right_bp)
+          }
+        }
       when "?"
-        skip_newlines
         middle = parse_expression
         right =
           if match?(:punctuation, ":")
@@ -316,7 +342,6 @@ class Code
           end
         { ternary: { left: left, middle: middle, right: right } }
       else
-        skip_newlines
         right = parse_expression(right_bp)
 
         if operator == "**"
@@ -341,7 +366,11 @@ class Code
           skip_newlines
           else_statement = parse_expression
           else_body = parse_body(%w[elsif elsunless else end])
-          elses << { operator: else_operator, statement: else_statement, body: else_body }
+          elses << {
+            operator: else_operator,
+            statement: else_statement,
+            body: else_body
+          }
           next
         end
 
@@ -349,13 +378,10 @@ class Code
           advance
           skip_newlines
 
-          if match?(:keyword, "if") || match?(:keyword, "unless")
-            elses << {
-              operator: "else",
-              body: [parse_if_expression(advance.value)]
-            }
+          elses << if match?(:keyword, "if") || match?(:keyword, "unless")
+            { operator: "else", body: [parse_if_expression(advance.value)] }
           else
-            elses << { operator: "else", body: parse_body(%w[end]) }
+            { operator: "else", body: parse_body(%w[end]) }
           end
 
           break
@@ -386,11 +412,7 @@ class Code
       advance if match?(:keyword, "end")
 
       {
-        while: {
-          operator: operator,
-          statement: statement,
-          body: body
-        }.compact
+        while: { operator: operator, statement: statement, body: body }.compact
       }
     end
 
@@ -467,19 +489,15 @@ class Code
       if label_name_start?(current) && next_token_value == ":"
         name = advance.value
         advance
-        code = parse_optional_code([",", "}"])
+        code = parse_optional_code(%w[, }])
         return { name_code: { name: name, code: code }.compact }
       end
 
       statement = parse_expression
 
-      if match?(:punctuation, ":")
+      if match?(:punctuation, ":") || match?(:operator, "=>")
         advance
-        code = parse_optional_code([",", "}"])
-        { statement_code: { statement: statement, code: code }.compact }
-      elsif match?(:operator, "=>")
-        advance
-        code = parse_optional_code([",", "}"])
+        code = parse_optional_code(%w[, }])
         { statement_code: { statement: statement, code: code }.compact }
       else
         { code: wrap_code(statement) }
@@ -536,9 +554,9 @@ class Code
       if label_name_start?(current) && next_token_value == ":"
         name = advance.value
         advance
-        { name: name, value: parse_code(stop_values: [",", ")"]) }
+        { name: name, value: parse_code(stop_values: %w[, )]) }
       else
-        { value: parse_code(stop_values: [",", ")"]) }
+        { value: parse_code(stop_values: %w[, )]) }
       end
     end
 
@@ -607,15 +625,16 @@ class Code
       if label_name_start?(current) && next_token_value == ":"
         name = advance.value
         advance
-        default = parse_optional_code([",", ")", "|"])
+        default = parse_optional_code(%w[, ) |])
         return { name: name, keyword: ":", default: default }.compact
       end
 
-      name = advance.value if current.type == :identifier || keyword_name?(current)
+      name = advance.value if current.type == :identifier ||
+        keyword_name?(current)
       default =
         if match?(:operator, "=")
           advance
-          parse_code(stop_values: [",", ")", "|"])
+          parse_code(stop_values: %w[, ) |])
         end
 
       {
@@ -631,7 +650,7 @@ class Code
     def parse_parameter_prefix
       return unless current.type == :operator
 
-      return advance.value if %w[* ** & .. ... .].include?(current.value)
+      advance.value if %w[* ** & .. ... .].include?(current.value)
     end
 
     def parse_optional_code(stop_values)
@@ -642,15 +661,11 @@ class Code
     end
 
     def attach_call_arguments(left, arguments)
-      update_terminal_call(left) do |call|
-        call[:arguments] = arguments
-      end
+      update_terminal_call(left) { |call| call[:arguments] = arguments }
     end
 
     def attach_call_block(left, block)
-      update_terminal_call(left) do |call|
-        call[:block] = block
-      end
+      update_terminal_call(left) { |call| call[:block] = block }
     end
 
     def update_terminal_call(left)
@@ -683,7 +698,11 @@ class Code
            same_left_operation_group?(left[:left_operation], operator)
         raw = left.deep_dup
         target = raw[:left_operation][:others].last
-        target[:statement] = append_left_operation(target[:statement], operator, statement)
+        target[:statement] = append_left_operation(
+          target[:statement],
+          operator,
+          statement
+        )
         raw
       else
         {
@@ -704,18 +723,30 @@ class Code
 
     def operator_group(operator)
       case operator
-      when ".", "::", "&." then :chain
-      when "or", "and" then :keyword_logic
-      when "||" then :or_operator
-      when "&&" then :and_operator
-      when "==", "===", "!=", "!==", "<=>", "=~", "~=", "!~" then :equality
-      when ">", "<", ">=", "<=" then :comparison
-      when "|", "^" then :bitwise_or
-      when "&" then :bitwise_and
-      when "<<", ">>" then :shift
-      when "+", "-" then :addition
-      when "*", "/", "%", "×", "÷" then :multiplication
-      when "..", "..." then :range
+      when ".", "::", "&."
+        :chain
+      when "or", "and"
+        :keyword_logic
+      when "||"
+        :or_operator
+      when "&&"
+        :and_operator
+      when "==", "===", "!=", "!==", "<=>", "=~", "~=", "!~"
+        :equality
+      when ">", "<", ">=", "<="
+        :comparison
+      when "|", "^"
+        :bitwise_or
+      when "&"
+        :bitwise_and
+      when "<<", ">>"
+        :shift
+      when "+", "-"
+        :addition
+      when "*", "/", "%", "×", "÷"
+        :multiplication
+      when "..", "..."
+        :range
       else
         operator
       end
@@ -728,7 +759,12 @@ class Code
       left_operation = right[:left_operation].deep_dup
       {
         left_operation: {
-          first: { type => { operator: operator, right: left_operation[:first] } },
+          first: {
+            type => {
+              operator: operator,
+              right: left_operation[:first]
+            }
+          },
           others: left_operation[:others]
         }
       }
@@ -752,28 +788,53 @@ class Code
     end
 
     def postfix_start?(token)
-      token.type == :punctuation && ["(", "[", "{"].include?(token.value) ||
-        token.type == :operator && [".", "::", "&."].include?(token.value) ||
-        token.type == :keyword && token.value == "do"
+      (token.type == :punctuation && ["(", "[", "{"].include?(token.value)) ||
+        (token.type == :operator && %w[. :: &.].include?(token.value)) ||
+        (token.type == :keyword && token.value == "do")
     end
 
     def call_like_postfix?(token)
-      token.type == :punctuation && ["(", "{"].include?(token.value) ||
-        token.type == :keyword && token.value == "do"
+      (token.type == :punctuation && %w[( {].include?(token.value)) ||
+        (token.type == :keyword && token.value == "do")
     end
 
     def infix_operator(token)
-      return token.value if token.type == :operator && INFIX_PRECEDENCE.key?(token.value)
-      return token.value if token.type == :keyword && INFIX_PRECEDENCE.key?(token.value)
-      return token.value if token.type == :punctuation && token.value == "?"
+      if token.type == :operator && INFIX_PRECEDENCE.key?(token.value)
+        return token.value
+      end
+      if token.type == :keyword && INFIX_PRECEDENCE.key?(token.value)
+        return token.value
+      end
+
+      token.value if token.type == :punctuation && token.value == "?"
     end
 
     def label_name_start?(token)
-      token.type == :identifier || token.type == :keyword
+      %i[identifier keyword].include?(token.type)
     end
 
     def keyword_name?(token)
-      token.type == :keyword && !%w[if unless while until loop not rescue or and do begin else elsif elsunless end true false nothing].include?(token.value)
+      token.type == :keyword &&
+        !%w[
+          if
+          unless
+          while
+          until
+          loop
+          not
+          rescue
+          or
+          and
+          do
+          begin
+          else
+          elsif
+          elsunless
+          end
+          true
+          false
+          nothing
+        ].include?(token.value)
     end
 
     def callable_expression?(expression)
@@ -790,7 +851,16 @@ class Code
     end
 
     def next_token_value
-      tokens.fetch(@index + 1, Token.new(type: :eof, value: nil, position: input.length, newline_before: false, space_before: false)).value
+      tokens.fetch(
+        @index + 1,
+        Token.new(
+          type: :eof,
+          value: nil,
+          position: input.length,
+          newline_before: false,
+          space_before: false
+        )
+      ).value
     end
 
     def advance
@@ -806,7 +876,9 @@ class Code
 
     def expect(type, value = nil)
       token = current
-      return advance if token.type == type && (value.nil? || token.value == value)
+      if token.type == type && (value.nil? || token.value == value)
+        return advance
+      end
 
       expected = value || type
       raise_parse_error("expected #{expected.inspect}", token)
@@ -823,24 +895,43 @@ class Code
     def next_significant_token
       index = @index
       index += 1 while tokens[index]&.type == :newline
-      tokens.fetch(index, Token.new(type: :eof, value: nil, position: input.length, newline_before: false, space_before: false))
+      tokens.fetch(
+        index,
+        Token.new(
+          type: :eof,
+          value: nil,
+          position: input.length,
+          newline_before: false,
+          space_before: false
+        )
+      )
     end
 
     def continuation_after_newline?(token)
       return false if token.type == :eof
-      return true if token.type == :operator && INFIX_PRECEDENCE.key?(token.value)
-      return true if token.type == :keyword && %w[or and rescue].include?(token.value)
+      if token.type == :operator && INFIX_PRECEDENCE.key?(token.value)
+        return true
+      end
+      if token.type == :keyword && CONTINUATION_KEYWORDS.include?(token.value)
+        return true
+      end
       return true if token.type == :punctuation && token.value == "?"
 
-      token.type == :operator && [".", "::", "&."].include?(token.value)
+      token.type == :operator && POSTFIX_CONTINUATIONS.include?(token.value)
     end
 
     def newline_postfix_continuation?(token)
-      token.type == :operator && [".", "::", "&."].include?(token.value)
+      token.type == :operator && POSTFIX_CONTINUATIONS.include?(token.value)
     end
 
     def consume_newlines
       skip_newlines
+    end
+
+    def ensure_parse_progress!(previous_index, context)
+      return if @index > previous_index
+
+      raise_parse_error("parser made no progress while #{context}")
     end
 
     def raise_parse_error(message, token = current)
@@ -856,20 +947,27 @@ class Code
       while index < source.length
         char = source[index]
 
-        if char == " " || char == "\t"
+        if HORIZONTAL_WHITESPACE.include?(char)
           index += 1
           space_before = true
           next
         end
 
-        if char == "\n" || char == "\r"
-          if char == "\r" && source[index + 1] == "\n"
-            index += 2
-          else
-            index += 1
-          end
+        if NEWLINE_CHARACTERS.include?(char)
+          index +=
+            if char == "\r" && source[index + 1] == "\n"
+              2
+            else
+              1
+            end
 
-          tokens << Token.new(type: :newline, value: "\n", position: index - 1, newline_before: false, space_before: false)
+          tokens << Token.new(
+            type: :newline,
+            value: "\n",
+            position: index - 1,
+            newline_before: false,
+            space_before: false
+          )
           newline_before = true
           space_before = false
           next
@@ -877,14 +975,16 @@ class Code
 
         if char == "#"
           index += 1
-          index += 1 while index < source.length && !["\n", "\r"].include?(source[index])
+          index += 1 while index < source.length &&
+            !NEWLINE_CHARACTERS.include?(source[index])
           space_before = true unless newline_before
           next
         end
 
         if source[index, 2] == "//"
           index += 2
-          index += 1 while index < source.length && !["\n", "\r"].include?(source[index])
+          index += 1 while index < source.length &&
+            !NEWLINE_CHARACTERS.include?(source[index])
           space_before = true unless newline_before
           next
         end
@@ -892,7 +992,7 @@ class Code
         if source[index, 2] == "/*"
           index += 2
           while index < source.length && source[index, 2] != "*/"
-            newline_before ||= ["\n", "\r"].include?(source[index])
+            newline_before ||= NEWLINE_CHARACTERS.include?(source[index])
             index += 1
           end
           index += 2 if source[index, 2] == "*/"
@@ -901,7 +1001,19 @@ class Code
         end
 
         if (string_data = scan_string(source, index))
-          tokens << Token.new(type: :string, value: string_data[:parts], position: index, newline_before: newline_before, space_before: space_before)
+          ensure_lex_progress!(
+            index,
+            string_data[:index],
+            "scanning string",
+            source
+          )
+          tokens << Token.new(
+            type: :string,
+            value: string_data[:parts],
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index = string_data[:index]
           newline_before = false
           space_before = false
@@ -909,7 +1021,19 @@ class Code
         end
 
         if (symbol_data = scan_symbol(source, index))
-          tokens << Token.new(type: :symbol, value: symbol_data[:value], position: index, newline_before: newline_before, space_before: space_before)
+          ensure_lex_progress!(
+            index,
+            symbol_data[:index],
+            "scanning symbol",
+            source
+          )
+          tokens << Token.new(
+            type: :symbol,
+            value: symbol_data[:value],
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index = symbol_data[:index]
           newline_before = false
           space_before = false
@@ -917,33 +1041,65 @@ class Code
         end
 
         if (number_data = scan_number(source, index))
-          tokens << Token.new(type: :number, value: number_data[:raw], position: index, newline_before: newline_before, space_before: space_before)
+          ensure_lex_progress!(
+            index,
+            number_data[:index],
+            "scanning number",
+            source
+          )
+          tokens << Token.new(
+            type: :number,
+            value: number_data[:raw],
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index = number_data[:index]
           newline_before = false
           space_before = false
           next
         end
 
-        operator = MULTI_CHAR_OPERATORS.find { |candidate| source[index, candidate.length] == candidate }
+        operator =
+          MULTI_CHAR_OPERATORS.find do |candidate|
+            source[index, candidate.length] == candidate
+          end
         if operator
-          type = operator == "=>" ? :operator : :operator
-          tokens << Token.new(type: type, value: operator, position: index, newline_before: newline_before, space_before: space_before)
+          tokens << Token.new(
+            type: :operator,
+            value: operator,
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index += operator.length
           newline_before = false
           space_before = false
           next
         end
 
-        if %w[( ) [ ] { } , ? :].include?(char)
-          tokens << Token.new(type: :punctuation, value: char, position: index, newline_before: newline_before, space_before: space_before)
+        if PUNCTUATION_CHARACTERS.include?(char)
+          tokens << Token.new(
+            type: :punctuation,
+            value: char,
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index += 1
           newline_before = false
           space_before = false
           next
         end
 
-        if %w[. & | = ! ~ + - * / % < > ^ × ÷].include?(char)
-          tokens << Token.new(type: :operator, value: char, position: index, newline_before: newline_before, space_before: space_before)
+        if OPERATOR_CHARACTERS.include?(char)
+          tokens << Token.new(
+            type: :operator,
+            value: char,
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index += 1
           newline_before = false
           space_before = false
@@ -952,8 +1108,20 @@ class Code
 
         identifier = scan_identifier(source, index)
         if identifier
+          ensure_lex_progress!(
+            index,
+            index + identifier.length,
+            "scanning identifier",
+            source
+          )
           type = KEYWORDS.include?(identifier) ? :keyword : :identifier
-          tokens << Token.new(type: type, value: identifier, position: index, newline_before: newline_before, space_before: space_before)
+          tokens << Token.new(
+            type: type,
+            value: identifier,
+            position: index,
+            newline_before: newline_before,
+            space_before: space_before
+          )
           index += identifier.length
           newline_before = false
           space_before = false
@@ -963,13 +1131,33 @@ class Code
         raise Error, "unexpected character #{char.inspect} at #{index}"
       end
 
-      tokens << Token.new(type: :eof, value: nil, position: source.length, newline_before: newline_before, space_before: space_before)
+      tokens << Token.new(
+        type: :eof,
+        value: nil,
+        position: source.length,
+        newline_before: newline_before,
+        space_before: space_before
+      )
       tokens
+    end
+
+    def ensure_lex_progress!(previous_index, next_index, context, source)
+      return if next_index > previous_index
+
+      token =
+        Token.new(
+          type: :eof,
+          value: nil,
+          position: [previous_index, source.length].min,
+          newline_before: false,
+          space_before: false
+        )
+      raise_parse_error("lexer made no progress while #{context}", token)
     end
 
     def scan_string(source, index)
       quote = source[index]
-      return unless quote == "'" || quote == '"'
+      return unless %w[' "].include?(quote)
 
       parts = []
       text = +""
@@ -1023,18 +1211,12 @@ class Code
 
         if char == "{"
           depth += 1
-          body << char
-          i += 1
         elsif char == "}"
           depth -= 1
-          return [body, i + 1] if depth.zero?
-
-          body << char
-          i += 1
-        else
-          body << char
-          i += 1
+          return body, i + 1 if depth.zero?
         end
+        body << char
+        i += 1
       end
 
       [body, i]
@@ -1045,35 +1227,76 @@ class Code
       return unless rest
 
       if (match = /\A0[xX][0-9a-fA-F](?:_?[0-9a-fA-F])*/.match(rest))
-        return { raw: { number: { base_16: match[0][2..].delete("_") } }, index: index + match[0].length }
+        return(
+          {
+            raw: {
+              number: {
+                base_16: match[0][2..].delete("_")
+              }
+            },
+            index: index + match[0].length
+          }
+        )
       end
 
       if (match = /\A0[oO][0-7](?:_?[0-7])*/.match(rest))
-        return { raw: { number: { base_8: match[0][2..].delete("_") } }, index: index + match[0].length }
+        return(
+          {
+            raw: {
+              number: {
+                base_8: match[0][2..].delete("_")
+              }
+            },
+            index: index + match[0].length
+          }
+        )
       end
 
       if (match = /\A0[bB][01](?:_?[01])*/.match(rest))
-        return { raw: { number: { base_2: match[0][2..].delete("_") } }, index: index + match[0].length }
+        return(
+          {
+            raw: {
+              number: {
+                base_2: match[0][2..].delete("_")
+              }
+            },
+            index: index + match[0].length
+          }
+        )
       end
 
-      if (match = /\A[0-9](?:_?[0-9])*\.[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(rest))
+      if (
+           match =
+             /\A[0-9](?:_?[0-9])*\.[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
+               rest
+             )
+         )
         decimal, exponent = match[0].split(/[eE]/, 2)
         raw = { decimal: decimal.delete("_") }
         raw[:exponent] = exponent_to_raw(exponent) if exponent
-        return { raw: { number: { decimal: raw } }, index: index + match[0].length }
+        return(
+          { raw: { number: { decimal: raw } }, index: index + match[0].length }
+        )
       end
 
-      if (match = /\A[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(rest))
+      if (
+           match =
+             /\A[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
+               rest
+             )
+         )
         whole, exponent = match[0].split(/[eE]/, 2)
         raw = { whole: whole.delete("_") }
         raw[:exponent] = exponent_to_raw(exponent) if exponent
-        return { raw: { number: { base_10: raw } }, index: index + match[0].length }
+        { raw: { number: { base_10: raw } }, index: index + match[0].length }
       end
     end
 
     def exponent_to_raw(exponent)
       exponent = exponent.delete("_")
-      return { number: { decimal: { decimal: exponent } } } if exponent.include?(".")
+      if exponent.include?(".")
+        return { number: { decimal: { decimal: exponent } } }
+      end
 
       { number: { base_10: { whole: exponent } } }
     end
@@ -1092,10 +1315,10 @@ class Code
 
       while i < source.length
         char = source[i]
-        break if char =~ /\s/
+        break if /\s/.match?(char)
         break if "()[]{}.,:&|=~*/%<>^#".include?(char)
 
-        if char == "!" || char == "?"
+        if SUFFIX_PUNCTUATION.include?(char)
           value << char
           i += 1
           break
@@ -1123,12 +1346,10 @@ class Code
 
       while i < source.length
         char = source[i]
-        break if char =~ /\s/
+        break if /\s/.match?(char)
 
-        if char == "!" || char == "?"
-          if value.empty? || source[i + 1] == "=" || source[i + 1] == "~"
-            break
-          end
+        if SUFFIX_PUNCTUATION.include?(char)
+          break if value.empty? || source[i + 1] == "=" || source[i + 1] == "~"
 
           value << char
           i += 1

@@ -42,25 +42,29 @@ class Code
       end
 
       def self.serialize_event(event)
-        EVENT_ATTRIBUTES.each_with_object({}) do |attribute, result|
-          next unless event.respond_to?(attribute)
+        EVENT_ATTRIBUTES
+          .each_with_object({}) do |attribute, result|
+            next unless event.respond_to?(attribute)
 
-          serialized = serialize_value(event.public_send(attribute))
-          serialized =
-            if attribute == :categories && serialized.is_a?(::Array)
-              serialized.flatten(1)
-            elsif scalar_event_attribute?(attribute) && serialized.is_a?(::Array)
-              serialized.join(",")
-            else
-              serialized
-            end
-          result[attribute] = serialized unless serialized.nil?
-        end.merge(
-          timestamp: serialize_value(event.dtstamp),
-          starts_at: serialize_value(event.dtstart),
-          ends_at: serialize_value(event.dtend),
-          all_day: !!serialize_date_like(event.dtstart).is_a?(::Date)
-        ).compact
+            serialized = serialize_value(event.public_send(attribute))
+            serialized =
+              if attribute == :categories && serialized.is_a?(::Array)
+                serialized.flatten(1)
+              elsif scalar_event_attribute?(attribute) &&
+                    serialized.is_a?(::Array)
+                serialized.join(",")
+              else
+                serialized
+              end
+            result[attribute] = serialized unless serialized.nil?
+          end
+          .merge(
+            timestamp: serialize_value(event.dtstamp),
+            starts_at: serialize_value(event.dtstart),
+            ends_at: serialize_value(event.dtend),
+            all_day: !!serialize_date_like(event.dtstart).is_a?(::Date)
+          )
+          .compact
       end
 
       def self.serialize_value(value)

@@ -63,19 +63,22 @@ class Code
       def initialize(*args, **_kargs, &_block)
         ::Time.zone ||= DEFAULT_ZONE
 
-        if args.first.is_a?(String) || args.first.is_a?(::String)
-          self.raw = ::Date.parse(args.first.to_s)
-        elsif args.first.is_a?(Time)
-          self.raw = args.first.raw.to_date
-        elsif args.first.is_a?(::Time)
-          self.raw = args.first.to_date
-        elsif args.first.is_a?(Date)
-          self.raw = args.first.raw.dup
-        elsif args.first.is_a?(::Date)
-          self.raw = args.first.dup
-        else
-          self.raw = ::Date.current
-        end
+        first = args.first
+        self.raw =
+          case first
+          when String, ::String
+            ::Date.parse(first.to_s)
+          when Time
+            first.raw.to_date
+          when ::Time
+            first.to_date
+          when Date
+            first.raw.dup
+          when ::Date
+            first.dup
+          else
+            ::Date.current
+          end
       end
 
       def self.call(**args)
@@ -718,10 +721,15 @@ class Code
         requested_locale = code_locale.raw&.to_s
         locale = requested_locale&.presence_in(LOCALES)&.to_sym
         locale ||= ::I18n.locale
-        locale = ::I18n.locale unless ::I18n.available_locales.include?(locale.to_sym)
+        locale = ::I18n.locale unless ::I18n.available_locales.include?(
+          locale.to_sym
+        )
 
         format = code_format.raw || :default
-        format = format.to_sym if ::I18n.exists?("date.formats.#{format}", locale)
+        format = format.to_sym if ::I18n.exists?(
+          "date.formats.#{format}",
+          locale
+        )
 
         String.new(::I18n.l(raw, format: format, locale: locale))
       end
@@ -803,7 +811,13 @@ class Code
           code_week_days.code_to_integer.raw + code_week_day.code_to_integer.raw
         week = code_weeks.code_to_integer.raw + code_week.code_to_integer.raw
 
-        code_change(year:, month:, day:, week_day:, week:)
+        code_change(
+          year: year,
+          month: month,
+          day: day,
+          week_day: week_day,
+          week: week
+        )
       end
 
       def code_substract(
@@ -832,7 +846,13 @@ class Code
           code_week_days.code_to_integer.raw - code_week_day.code_to_integer.raw
         week = code_weeks.code_to_integer.raw - code_week.code_to_integer.raw
 
-        code_change(year:, month:, day:, week_day:, week:)
+        code_change(
+          year: year,
+          month: month,
+          day: day,
+          week_day: week_day,
+          week: week
+        )
       end
 
       def code_change(

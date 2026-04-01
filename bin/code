@@ -37,17 +37,41 @@ parsed =
 abort Code::Version.to_s if parsed.options.version
 abort parsed.help if parsed.options.help
 
+def glob_pattern?(value)
+  value.match?(/[*?\[\]{]/)
+end
+
+expanded_argument_files = []
+remaining_arguments = []
+
+parsed.arguments.each do |argument|
+  if glob_pattern?(argument)
+    matches = Dir.glob(argument).select { |path| File.file?(path) }
+
+    if matches.any?
+      expanded_argument_files.concat(matches)
+    else
+      remaining_arguments << argument
+    end
+  else
+    remaining_arguments << argument
+  end
+end
+
 input = parsed.options.input.to_s
 input += File.read(input) if File.exist?(input)
-input += parsed.arguments.join(" ")
-input += parsed.files.map { |file| File.read(file) }.join
+input += remaining_arguments.join(" ")
+input +=
+  (parsed.files + expanded_argument_files)
+    .map { |file| File.read(file) }
+    .join("\n\n")
 
 profile = parsed.options.profile || parsed.options.profiler
 require "ruby-prof" if profile
 
 RubyProf.start if profile
 
-input = STDIN.each_line.to_a.join if input.empty?
+input = $stdin.each_line.to_a.join if input.empty?
 
 if parsed.options.parse
   begin
