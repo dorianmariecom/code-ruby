@@ -434,10 +434,17 @@ class Code
             "#{expression}#{operator}#{right}"
           else
             candidate = "#{expression} #{operator} #{right}"
-            if multiline_collection_statement?(other[:statement]) &&
-                 right.include?("\n")
+            if right.include?("\n")
               first_line, *rest = right.lines(chomp: true)
-              [ "#{expression} #{operator} #{first_line}", *rest ].join("\n")
+              if multiline_operand_statement?(other[:statement]) ||
+                   !%w[and or].include?(operator)
+                [ "#{expression} #{operator} #{first_line.lstrip}", *rest ].join("\n")
+              else
+                [
+                  "#{expression}\n#{INDENT * (indent + 1)}#{operator} #{first_line.lstrip}",
+                  *rest
+                ].join("\n")
+              end
             elsif expression.include?("\n") || candidate.length > MAX_LINE_LENGTH
               right_lines =
                 if right.include?("\n")
@@ -491,6 +498,17 @@ class Code
       operator = operation[:operator].to_s
       left = format_nested_statement(operation[:left], indent: indent)
       right = format_nested_statement(operation[:right], indent: indent)
+      if right.include?("\n")
+        first_line, *rest = right.lines(chomp: true)
+        first_line = first_line.lstrip
+        return "#{left} #{operator} #{first_line}" if rest.empty?
+
+        return [
+          "#{left} #{operator} #{first_line}",
+          *rest
+        ].join("\n")
+      end
+
       "#{left} #{operator} #{right}"
     end
 
@@ -598,9 +616,22 @@ class Code
       values.join(", ").length > MAX_INLINE_COLLECTION_LENGTH
     end
 
-    def multiline_collection_statement?(statement)
-      statement.is_a?(Hash) &&
-        (statement.key?(:dictionnary) || statement.key?(:list))
+    def multiline_operand_statement?(statement)
+      return false unless statement.is_a?(Hash)
+
+      return true if statement.key?(:dictionnary) || statement.key?(:list)
+      return true if statement.key?(:call)
+      if statement.key?(:left_operation)
+        operation = statement[:left_operation]
+        others = Array(operation[:others])
+
+        return false if others.empty?
+        return false unless others.all? { |other| compact_operator?(other[:operator]) }
+
+        return multiline_operand_statement?(operation[:first])
+      end
+
+      false
     end
 
     def multiline_call_arguments?(raw_arguments, arguments)
@@ -692,7 +723,7 @@ class Code
       search_limit = [MAX_LINE_LENGTH, line.length - token.length].min
       index = line.rindex(token, search_limit)
       while index
-        break if index.positive? && outside_string?(line, index)
+        break if index.positive? && outside_string_and_grouping?(line, index)
 
         index = line.rindex(token, index - 1)
       end
@@ -701,9 +732,10 @@ class Code
       [index, token]
     end
 
-    def outside_string?(line, index)
+    def outside_string_and_grouping?(line, index)
       quote_count = 0
       escaped = false
+      grouping_depth = 0
       line[0...index].each_char do |char|
         if escaped
           escaped = false
@@ -714,10 +746,17 @@ class Code
           escaped = true
         elsif char == '"'
           quote_count += 1
+        elsif quote_count.even?
+          case char
+          when "(", "[", "{"
+            grouping_depth += 1
+          when ")", "]", "}"
+            grouping_depth -= 1 if grouping_depth.positive?
+          end
         end
       end
 
-      quote_count.even?
+      quote_count.even? && grouping_depth.zero?
     end
   end
 end

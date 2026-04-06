@@ -51,6 +51,18 @@ RSpec.describe Code::Format do
       [
         "blocks << { title: \"hello world\", description: \"lorem ipsum dolor es sit\", position: 1 }",
         "blocks << {\n  title: \"hello world\",\n  description: \"lorem ipsum dolor es sit\",\n  position: 1\n}"
+      ],
+      [
+        "sections << Html.join([Html.p { Html.b { \"{index + 1}. {title}\" } }, Html.p { query } if query.presence, Html.p { Html.a(href: link || inline_url) { :source } } if (link || inline_url), Html.p { Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) } }, Html.p { Html.a(href: attachment_url) { \"télécharger\" } }].compact)",
+        "sections << Html.join(\n  [\n    Html.p { Html.b { \"{index + 1}. {title}\" } },\n    Html.p { query } if query.presence,\n    Html.p {\n      Html.a(href: link || inline_url) { :source }\n    } if (link || inline_url),\n    Html.p {\n      Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) }\n    },\n    Html.p {\n      Html.a(href: attachment_url) { \"télécharger\" }\n    }\n  ].compact\n)"
+      ],
+      [
+        "safe = post.present? and !post[:over_18] and post[:post_hint] == :image and post[:url].to_string.strip.presence and (post[:url].to_string.strip.ends_with?(\".jpg\") or post[:url].to_string.strip.ends_with?(\".jpeg\") or post[:url].to_string.strip.ends_with?(\".png\") or post[:url].to_string.strip.include?(\"i.redd.it\"))",
+        "safe = post.present?\n  and !post[:over_18]\n  and post[:post_hint] == :image\n  and post[:url].to_string.strip.presence\n  and (post[:url].to_string.strip.ends_with?(\".jpg\")\n  or post[:url].to_string.strip.ends_with?(\".jpeg\")\n  or post[:url].to_string.strip.ends_with?(\".png\")\n  or post[:url].to_string.strip.include?(\"i.redd.it\"))"
+      ],
+      [
+        "items.each { |item, index| proxied_image_url = if image_url proxy_url(image_url) else nothing end }",
+        "items.each { |item, index|\n  proxied_image_url = if image_url\n    proxy_url(image_url)\n  else\n    nothing\n  end\n}"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do
