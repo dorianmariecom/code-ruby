@@ -434,7 +434,11 @@ class Code
             "#{expression}#{operator}#{right}"
           else
             candidate = "#{expression} #{operator} #{right}"
-            if expression.include?("\n") || candidate.length > MAX_LINE_LENGTH
+            if multiline_collection_statement?(other[:statement]) &&
+                 right.include?("\n")
+              first_line, *rest = right.lines(chomp: true)
+              [ "#{expression} #{operator} #{first_line}", *rest ].join("\n")
+            elsif expression.include?("\n") || candidate.length > MAX_LINE_LENGTH
               right_lines =
                 if right.include?("\n")
                   right.lines(chomp: true).map(&:lstrip)
@@ -442,7 +446,7 @@ class Code
                   right.split(" #{operator} ")
                 end
               continuation_lines =
-                right_lines.each_with_index.map do |line, index|
+                right_lines.map do |line|
                   content = line.lstrip
                   prefix =
                     (content.start_with?("#{operator} ") ? "" : "#{operator} ")
@@ -592,6 +596,11 @@ class Code
       return true if values.size > MAX_INLINE_COLLECTION_ITEMS
 
       values.join(", ").length > MAX_INLINE_COLLECTION_LENGTH
+    end
+
+    def multiline_collection_statement?(statement)
+      statement.is_a?(Hash) &&
+        (statement.key?(:dictionnary) || statement.key?(:list))
     end
 
     def multiline_call_arguments?(raw_arguments, arguments)

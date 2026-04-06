@@ -47,6 +47,10 @@ RSpec.describe Code::Format do
       [
         "x = { content: \"you select the funniest tweets for a french \" + \"audience from the provided candidates. pick up to \" + \"{max_selected}. prioritize genuinely funny content\" + \" (jokes, memes, punchlines, absurd). avoid \" + \"politics/news/serious content. output only json.\" }",
         "x = {\n  content: \"you select the funniest tweets for a french \"\n    + \"audience from the provided candidates. pick up to \"\n    + \"{max_selected}. prioritize genuinely funny content\"\n    + \" (jokes, memes, punchlines, absurd). avoid \"\n    + \"politics/news/serious content. output only json.\"\n}"
+      ],
+      [
+        "blocks << { title: \"hello world\", description: \"lorem ipsum dolor es sit\", position: 1 }",
+        "blocks << {\n  title: \"hello world\",\n  description: \"lorem ipsum dolor es sit\",\n  position: 1\n}"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do
