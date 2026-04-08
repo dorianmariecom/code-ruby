@@ -58,15 +58,33 @@ RSpec.describe Code::Format do
       ],
       [
         "safe = post.present? and !post[:over_18] and post[:post_hint] == :image and post[:url].to_string.strip.presence and (post[:url].to_string.strip.ends_with?(\".jpg\") or post[:url].to_string.strip.ends_with?(\".jpeg\") or post[:url].to_string.strip.ends_with?(\".png\") or post[:url].to_string.strip.include?(\"i.redd.it\"))",
-        "safe = post.present?\n  and !post[:over_18]\n  and post[:post_hint] == :image\n  and post[:url].to_string.strip.presence\n  and (post[:url].to_string.strip.ends_with?(\".jpg\")\n  or post[:url].to_string.strip.ends_with?(\".jpeg\")\n  or post[:url].to_string.strip.ends_with?(\".png\")\n  or post[:url].to_string.strip.include?(\"i.redd.it\"))"
+        "safe = post.present?\n  and !post[:over_18]\n  and post[:post_hint] == :image\n  and post[:url].to_string.strip.presence\n  and (\n  post[:url].to_string.strip.ends_with?(\".jpg\")\n    or post[:url].to_string.strip.ends_with?(\".jpeg\")\n    or post[:url].to_string.strip.ends_with?(\".png\")\n    or post[:url].to_string.strip.include?(\"i.redd.it\")\n)"
       ],
       [
         "items.each { |item, index| proxied_image_url = if image_url proxy_url(image_url) else nothing end }",
         "items.each { |item, index|\n  proxied_image_url = if image_url\n    proxy_url(image_url)\n  else\n    nothing\n  end\n}"
+      ],
+      [
+        "lines << \"vacances scolaires france {zone} (prochains {months_ahead} mois) :\".downcase",
+        "lines << (\n  \"vacances scolaires france {zone} (prochains \"\n    + \"{months_ahead} mois) :\"\n).downcase"
+      ],
+      [
+        "src = \"https://proxy.dorianmarie.com?\" + \"{{ url: src, disposition: :inline }.to_query}\" if src",
+        "src = (\n  \"https://proxy.dorianmarie.com?\"\n    + \"{{ url: src, disposition: :inline }.to_query}\"\n) if src"
+      ],
+      [
+        "inline_image = image ? \"https://proxy.dorianmarie.com?\" + \"{inline_params.to_query}\" : nothing",
+        "inline_image = image ? (\n  \"https://proxy.dorianmarie.com?\"\n    + \"{inline_params.to_query}\"\n) : nothing"
       ]
     ].each do |input, expected|
       it "formats #{input.inspect}" do
         expect(described_class.format(Code.parse(input))).to eq(expected)
+      end
+
+      it "formats #{input.inspect} idempotently" do
+        formatted = described_class.format(Code.parse(input))
+
+        expect(described_class.format(Code.parse(formatted))).to eq(formatted)
       end
     end
 
@@ -76,6 +94,51 @@ RSpec.describe Code::Format do
 
       expect(Code.parse(formatted)).to be_present
       expect(Code.evaluate(formatted)).to eq(Code.evaluate(input))
+    end
+
+    it "keeps grouped multiline receivers stable" do
+      input = <<~CODE.chomp
+        lines << (
+          "vacances scolaires france {zone} (prochains "
+            + "{months_ahead} mois) :"
+        ).downcase
+      CODE
+
+      expect(described_class.format(Code.parse(input))).to eq(input)
+    end
+
+    it "does not split operators inside string interpolations when wrapping" do
+      input =
+        %q(body_text = "{title}\n\n{description}\n\ningrédients :\n" + ingredients.map { |ingredient| "- {ingredient}" }.join("\n") + "\n\ninstructions :\n" + instructions.map { |instruction, index| "{index + 1}. {instruction}" }.join("\n"))
+
+      formatted = described_class.format(Code.parse(input))
+
+      expect(formatted).to include(
+        'instructions.map { |instruction, index| "{index + 1}. {instruction}" }'
+      )
+      expect(formatted).not_to include(
+        "\"{index\n  + 1}. {instruction}\""
+      )
+    end
+
+    it "does not emit whitespace-only blank lines" do
+      input = <<~CODE.chomp
+        body = Html.join(elements.map { |element| title = element.at_css(".x") value = element.at_css(".y") title }, Html.br)
+      CODE
+
+      formatted = described_class.format(Code.parse(input))
+
+      expect(formatted.lines).not_to include(match(/\A[ \t]+\n\z/))
+    end
+
+    it "keeps lines within 80 characters" do
+      input = <<~CODE.chomp
+        src = "https://proxy.dorianmarie.com?" + "{{ url: src, disposition: :inline }.to_query}" if src
+      CODE
+
+      formatted = described_class.format(Code.parse(input))
+
+      expect(formatted.lines.map(&:chomp).map(&:length).max).to be <= 80
     end
   end
 end

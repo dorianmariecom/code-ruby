@@ -57,13 +57,20 @@ class Code
       "begin\n#{body}\n#{INDENT * indent}end"
     end
 
+    def format_group(group, indent:)
+      formatted = format_code_inline(group, indent: indent)
+      return "(#{formatted})" unless formatted.include?("\n")
+
+      "(\n#{indent_lines(normalize_group_indentation(formatted, indent: indent), indent + 1)}\n#{INDENT * indent})"
+    end
+
     def format_statement(statement, indent:)
       if statement.is_a?(Hash) && statement.key?(:nothing)
         statement[:nothing].presence || "nothing"
       elsif statement.is_a?(Hash) && statement.key?(:boolean)
         statement[:boolean]
       elsif statement.is_a?(Hash) && statement.key?(:group)
-        "(#{format_code_inline(statement[:group], indent: indent)})"
+        format_group(statement[:group], indent: indent)
       elsif statement.is_a?(Hash) && statement.key?(:call)
         format_call(statement[:call], indent: indent)
       elsif statement.is_a?(Hash) && statement.key?(:number)
@@ -431,7 +438,7 @@ class Code
 
         expression =
           if compact_operator?(operator)
-            "#{expression}#{operator}#{right}"
+            "#{format_compact_receiver(expression, indent: indent)}#{operator}#{right}"
           else
             candidate = "#{expression} #{operator} #{right}"
             if right.include?("\n")
@@ -449,8 +456,10 @@ class Code
               right_lines =
                 if right.include?("\n")
                   right.lines(chomp: true).map(&:lstrip)
-                else
+                elsif %w[and or].include?(operator)
                   right.split(" #{operator} ")
+                else
+                  [right]
                 end
               continuation_lines =
                 right_lines.map do |line|
@@ -467,6 +476,34 @@ class Code
       end
 
       expression
+    end
+
+    def format_compact_receiver(expression, indent:)
+      return expression unless compact_receiver_needs_parentheses?(expression)
+
+      "(\n#{indent_lines(expression, indent + 1)}\n#{INDENT * indent})"
+    end
+
+    def compact_receiver_needs_parentheses?(expression)
+      return false unless expression.include?("\n")
+      return false if expression.lstrip.start_with?("(")
+
+      continuation_lines =
+        expression
+          .lines(chomp: true)[1..]
+          .to_a
+          .reject { |line| line.strip.empty? || line.strip.match?(/\A[\)\]\}]+\z/) }
+
+      return false if continuation_lines.empty?
+
+      base_indent =
+        continuation_lines.map { |line| line[/\A */].to_s.length }.min
+
+      continuation_lines.any? do |line|
+        next false unless line[/\A */].to_s.length == base_indent
+
+        line.lstrip.match?(/\A(\+|-|\*|\/|%|<<|>>|\||\^|&|and\b|or\b)/)
+      end
     end
 
     def extract_string_concatenation_parts(statement)
@@ -496,8 +533,14 @@ class Code
 
     def format_right_operation(operation, indent:)
       operator = operation[:operator].to_s
-      left = format_nested_statement(operation[:left], indent: indent)
+      left =
+        if %w[if unless].include?(operator)
+          format_modifier_left(operation[:left], indent: indent)
+        else
+          format_nested_statement(operation[:left], indent: indent)
+        end
       right = format_nested_statement(operation[:right], indent: indent)
+
       if right.include?("\n")
         first_line, *rest = right.lines(chomp: true)
         first_line = first_line.lstrip
@@ -512,6 +555,42 @@ class Code
       "#{left} #{operator} #{right}"
     end
 
+    def format_modifier_left(statement, indent:)
+      if statement.is_a?(Hash) && statement.key?(:right_operation)
+        nested = statement[:right_operation]
+        nested_operator = nested[:operator].to_s
+        if nested_operator == "="
+          left = format_nested_statement(nested[:left], indent: indent)
+          right = format_nested_statement(nested[:right], indent: indent)
+          return "#{left} #{nested_operator} #{group_multiline_expression(right, indent: indent)}"
+        end
+      end
+
+      format_nested_statement(statement, indent: indent)
+    end
+
+    def group_multiline_expression(expression, indent:)
+      return expression unless expression.include?("\n")
+      return expression if expression.lstrip.start_with?("(")
+
+      normalized = normalize_group_indentation(expression, indent: indent)
+      "(\n#{indent_lines(normalized, indent + 1)}\n#{INDENT * indent})"
+    end
+
+    def normalize_group_indentation(expression, indent:)
+      prefix = INDENT * indent
+
+      expression
+        .lines(chomp: true)
+        .map
+        .with_index do |line, index|
+          next line if index.zero? || line.empty? || prefix.empty?
+
+          line.delete_prefix(prefix)
+        end
+        .join("\n")
+    end
+
     def compact_operator?(operator)
       %w[. :: &. .. ...].include?(operator)
     end
@@ -519,9 +598,11 @@ class Code
     def format_ternary(ternary, indent:)
       left = format_nested_statement(ternary[:left], indent: indent)
       middle = format_nested_statement(ternary[:middle], indent: indent)
+      middle = group_multiline_expression(middle, indent: indent)
       return "#{left} ? #{middle}" unless ternary.key?(:right)
 
       right = format_nested_statement(ternary[:right], indent: indent)
+      right = group_multiline_expression(right, indent: indent)
       "#{left} ? #{middle} : #{right}"
     end
 
@@ -654,7 +735,7 @@ class Code
 
     def indent_lines(value, indent)
       prefix = INDENT * indent
-      value.split("\n").map { |line| "#{prefix}#{line}" }.join("\n")
+      value.split("\n").map { |line| line.empty? ? "" : "#{prefix}#{line}" }.join("\n")
     end
 
     def statement_separator(inline:, indent: nil)
