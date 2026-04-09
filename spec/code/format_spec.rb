@@ -13,6 +13,8 @@ RSpec.describe Code::Format do
       %w[100000 100_000],
       %w[1000000 1_000_000],
       %w[1.0000000001 1.000_000_000_1],
+      ["true || false", "true or false"],
+      ["true && false", "true and false"],
       ["{a:1}", "{ a: 1 }"],
       ["[1,2,3]", "[1, 2, 3]"],
       ["[1, 2, 3].select { |n| n.even? }", "[1, 2, 3].select { |n| n.even? }"],
@@ -54,7 +56,7 @@ RSpec.describe Code::Format do
       ],
       [
         "sections << Html.join([Html.p { Html.b { \"{index + 1}. {title}\" } }, Html.p { query } if query.presence, Html.p { Html.a(href: link || inline_url) { :source } } if (link || inline_url), Html.p { Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) } }, Html.p { Html.a(href: attachment_url) { \"télécharger\" } }].compact)",
-        "sections << Html.join(\n  [\n    Html.p { Html.b { \"{index + 1}. {title}\" } },\n    Html.p { query } if query.presence,\n    Html.p {\n      Html.a(href: link || inline_url) { :source }\n    } if (link || inline_url),\n    Html.p {\n      Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) }\n    },\n    Html.p {\n      Html.a(href: attachment_url) { \"télécharger\" }\n    }\n  ].compact\n)"
+        "sections << Html.join(\n  [\n    Html.p { Html.b { \"{index + 1}. {title}\" } },\n    Html.p { query } if query.presence,\n    Html.p {\n      Html.a(href: link or inline_url) { :source }\n    } if (link or inline_url),\n    Html.p {\n      Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) }\n    },\n    Html.p {\n      Html.a(href: attachment_url) { \"télécharger\" }\n    }\n  ].compact\n)"
       ],
       [
         "safe = post.present? and !post[:over_18] and post[:post_hint] == :image and post[:url].to_string.strip.presence and (post[:url].to_string.strip.ends_with?(\".jpg\") or post[:url].to_string.strip.ends_with?(\".jpeg\") or post[:url].to_string.strip.ends_with?(\".png\") or post[:url].to_string.strip.include?(\"i.redd.it\"))",

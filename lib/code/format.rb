@@ -434,7 +434,7 @@ class Code
 
       Array(operation[:others]).each do |other|
         right = format_nested_statement(other[:statement], indent: indent)
-        operator = other[:operator]
+        operator = format_operator(other[:operator])
 
         expression =
           if compact_operator?(operator)
@@ -532,7 +532,7 @@ class Code
     end
 
     def format_right_operation(operation, indent:)
-      operator = operation[:operator].to_s
+      operator = format_operator(operation[:operator])
       left =
         if %w[if unless].include?(operator)
           format_modifier_left(operation[:left], indent: indent)
@@ -593,6 +593,17 @@ class Code
 
     def compact_operator?(operator)
       %w[. :: &. .. ...].include?(operator)
+    end
+
+    def format_operator(operator)
+      case operator.to_s
+      when "||"
+        "or"
+      when "&&"
+        "and"
+      else
+        operator.to_s
+      end
     end
 
     def format_ternary(ternary, indent:)

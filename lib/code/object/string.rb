@@ -157,6 +157,10 @@ class Code
 
       def code_strip
         String.new(raw.strip)
+      rescue ArgumentError, Encoding::CompatibilityError => e
+        raise unless e.message.include?("invalid byte sequence")
+
+        String.new(sanitized_utf8_raw.strip)
       end
 
       def code_split(value)
@@ -171,6 +175,15 @@ class Code
 
       def present?
         raw.present?
+      end
+
+      private
+
+      def sanitized_utf8_raw
+        raw
+          .dup
+          .force_encoding(::Encoding::UTF_8)
+          .encode(::Encoding::UTF_8, invalid: :replace, undef: :replace)
       end
     end
   end
