@@ -33,6 +33,7 @@ class Code
           code_call(
             *code_arguments.raw,
             explicit_arguments: args.fetch(:explicit_arguments, true),
+            bound_self: args.fetch(:bound_self, nil),
             **globals
           )
         when "extend"
@@ -64,10 +65,11 @@ class Code
         code_arguments = arguments.to_code
         code_context = Context.new({}, definition_context || globals[:context])
         code_self = bound_self.to_code
-        code_self = captured_self if code_self.nothing? && captured_self
         code_self = Dictionary.new if code_self.nil? || code_self.nothing?
+        code_parent = captured_self.to_code
 
         code_context.code_set("self", code_self)
+        bind_parent(code_context, code_self, code_parent)
 
         if parent.is_a?(Function)
           code_context.code_set(
@@ -110,7 +112,18 @@ class Code
               code_arguments.raw[index].to_code
             end
 
-          code_argument = code_parameter.code_default if code_argument.nothing?
+          if code_argument.nothing?
+            code_default = code_parameter.code_default
+            code_argument =
+              if code_default.is_a?(Code)
+                code_default.code_evaluate(
+                  **globals,
+                  context: code_context
+                )
+              else
+                code_default
+              end
+          end
 
           code_context.code_set(code_parameter.code_name, code_argument)
         end
@@ -200,6 +213,18 @@ class Code
 
       private
 
+      def bind_parent(code_context, code_self, code_parent)
+        return if code_parent.nothing?
+
+        code_context.code_set("parent", code_parent)
+
+        return unless code_self.is_a?(Dictionary)
+        return if code_self == code_parent
+        return if code_self.code_has_key?("parent").truthy?
+
+        code_self.code_set("parent", code_parent)
+      end
+
       def captured_self
         self_from(definition_context)
       end
@@ -241,7 +266,7 @@ class Code
             if code_parameter.code_default.code_to_string.raw == "nothing"
               []
             else
-              Code.parse(code_parameter.code_default.to_s)
+              ::Code.parse(code_parameter.code_default.to_s)
             end
           )
         end

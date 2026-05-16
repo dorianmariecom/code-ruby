@@ -1545,25 +1545,22 @@ class Code
       def code_compact(argument = nil, **globals)
         code_argument = argument.to_code
 
-        index = 0
-
         List.new(
-          raw.select do |code_element|
-            if code_argument.is_a?(Function)
-              code_argument
-                .call(
-                  arguments: List.new([code_element, Integer.new(index), self]),
-                  **globals
-                )
-                .truthy?
-                .tap { index += 1 }
+          raw.reject.with_index do |code_element, index|
+            if code_argument.nothing?
+              code_element.nothing?
+            elsif code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
             elsif code_argument.is_a?(Class)
-              code_element.is_a?(code_argument.raw).tap { index += 1 }
+              code_element.is_a?(code_argument.raw)
             else
-              code_element.truthy?.tap { index += 1 }
+              false
             end
           rescue Error::Next => e
-            e.code_value.truhty?.tap { index += 1 }
+            e.code_value.truthy?
           end
         )
       end
@@ -1571,24 +1568,21 @@ class Code
       def code_compact!(argument = nil, **globals)
         code_argument = argument.to_code
 
-        index = 0
-
-        raw.select! do |code_element|
-          if code_argument.is_a?(Function)
-            code_argument
-              .call(
-                arguments: List.new([code_element, Integer.new(index), self]),
-                **globals
-              )
-              .truthy?
-              .tap { index += 1 }
+        raw.reject!.with_index do |code_element, index|
+          if code_argument.nothing?
+            code_element.nothing?
+          elsif code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
           elsif code_argument.is_a?(Class)
-            code_element.is_a?(code_argument.raw).tap { index += 1 }
+            code_element.is_a?(code_argument.raw)
           else
-            code_element.truthy?.tap { index += 1 }
+            false
           end
         rescue Error::Next => e
-          e.code_value.truhty?.tap { index += 1 }
+          e.code_value.truthy?
         end
 
         self

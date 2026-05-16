@@ -16,6 +16,9 @@ RSpec.describe Code::Format do
       ["true || false", "true or false"],
       ["true && false", "true and false"],
       ["{a:1}", "{ a: 1 }"],
+      ["{ :mobility: mobility }", "{ mobility: mobility }"],
+      ['{ "hello": "world" }', "{ hello: :world }"],
+      ['{ "hello" => "world" }', "{ hello: :world }"],
       ["[1,2,3]", "[1, 2, 3]"],
       ["[1, 2, 3].select { |n| n.even? }", "[1, 2, 3].select { |n| n.even? }"],
       [
@@ -53,6 +56,10 @@ RSpec.describe Code::Format do
       [
         "blocks << { title: \"hello world\", description: \"lorem ipsum dolor es sit\", position: 1 }",
         "blocks << {\n  title: \"hello world\",\n  description: \"lorem ipsum dolor es sit\",\n  position: 1\n}"
+      ],
+      [
+        "query = { :mobility: mobility, :unit_organization_id: unit_organization_id, :limit: limit, :offset: offset }",
+        "query = {\n  mobility: mobility,\n  unit_organization_id: unit_organization_id,\n  limit: limit,\n  offset: offset\n}"
       ],
       [
         "sections << Html.join([Html.p { Html.b { \"{index + 1}. {title}\" } }, Html.p { query } if query.presence, Html.p { Html.a(href: link || inline_url) { :source } } if (link || inline_url), Html.p { Html.a(href: inline_url) { Html.img(src: inline_url, alt: title) } }, Html.p { Html.a(href: attachment_url) { \"télécharger\" } }].compact)",

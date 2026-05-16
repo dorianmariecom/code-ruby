@@ -134,6 +134,11 @@ class Code
         code_arguments = args.fetch(:arguments, List.new).to_code
         globals = multi_fetch(args, *GLOBALS)
         code_value = code_arguments.code_first
+        stored_value = code_fetch(code_operator)
+
+        if stored_value.is_a?(Function)
+          return stored_value.call(**args, operator: nil, bound_self: self)
+        end
 
         case code_operator.to_s
         when "[]", "at", "get"
@@ -146,11 +151,11 @@ class Code
           sig(args)
           code_clear
         when "compact!"
-          sig(args)
-          code_compact!
+          sig(args) { (Function | Class).maybe }
+          code_compact!(code_value, **globals)
         when "compact"
-          sig(args)
-          code_compact
+          sig(args) { (Function | Class).maybe }
+          code_compact(code_value, **globals)
         when "delete"
           sig(args) { Object.repeat(1) }
           code_delete(*code_arguments.raw, **globals)
@@ -581,12 +586,45 @@ class Code
         self
       end
 
-      def code_compact
-        Dictionary.new(raw.dup.delete_if { |_, value| value.falsy? })
+      def code_compact(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        Dictionary.new(
+          raw.reject.with_index do |(key, value), index|
+            if code_argument.nothing?
+              value.nothing?
+            elsif code_argument.is_a?(Class)
+              value.is_a?(code_argument.raw)
+            else
+              code_argument.call(
+                arguments: List.new([value, key, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            end
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+        )
       end
 
-      def code_compact!
-        raw.delete_if { |_, value| value.falsy? }
+      def code_compact!(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        raw.reject!.with_index do |(key, value), index|
+          if code_argument.nothing?
+            value.nothing?
+          elsif code_argument.is_a?(Class)
+            value.is_a?(code_argument.raw)
+          else
+            code_argument.call(
+              arguments: List.new([value, key, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          end
+        rescue Error::Next => e
+          e.code_value.truthy?
+        end
+
         self
       end
 

@@ -13,9 +13,10 @@ class Code
 
       def evaluate(**args)
         left = @left&.evaluate(**args) || Object::Nothing.new
+        index_args = args.merge(object: args.fetch(:previous_object, args.fetch(:object)))
 
         (@statements || []).reduce(left) do |object, statement|
-          object.code_fetch(statement.evaluate(**args))
+          object.code_fetch(statement.evaluate(**index_args))
         end
       end
 
@@ -29,8 +30,10 @@ class Code
             Object::IdentifierList.new([left])
           end
 
+        index_args = args.merge(object: args.fetch(:previous_object, args.fetch(:object)))
+
         (@statements || []).each do |statement|
-          list.code_append(statement.evaluate(**args))
+          list.code_append(statement.evaluate(**index_args))
         end
 
         list

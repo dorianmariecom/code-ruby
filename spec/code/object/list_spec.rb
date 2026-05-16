@@ -5,6 +5,8 @@ require "spec_helper"
 RSpec.describe Code::Object::List do
   [
     ["[] == []", "true"],
+    ["[nothing, 1, false, \"\"].compact", '[1, false, ""]'],
+    ["[nothing, 1, false, \"\"].compact(&:blank?)", "[1]"],
     ["[1, 2, 3].sum", "6"],
     ["[1, 2] + [3, 4]", "[1, 2, 3, 4]"],
     ["[] + []", "[]"],

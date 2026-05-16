@@ -51,12 +51,20 @@ class Code
 
         @others.reduce(first) do |left, right|
           if right.call?
-            right.statement.evaluate(**args, object: left)
+            right.statement.evaluate(
+              **args,
+              object: left,
+              previous_object: args.fetch(:object)
+            )
           elsif right.safe_call?
             if left.is_an?(Object::Nothing)
               Object::Nothing.new
             else
-              right.statement.evaluate(**args, object: left)
+              right.statement.evaluate(
+                **args,
+                object: left,
+                previous_object: args.fetch(:object)
+              )
             end
           elsif (right.or? && left.truthy?) || (right.and? && left.falsy?)
             left
@@ -76,9 +84,18 @@ class Code
         list = Object::IdentifierList.new([first])
 
         (@others || []).each do |other|
-          list.code_append(
-            other.statement.resolve(**args, object: list.code_last)
-          )
+          resolved =
+            other.statement.resolve(
+              **args,
+              object: list.code_last,
+              previous_object: args.fetch(:object)
+            )
+
+          if resolved.is_a?(Object::IdentifierList)
+            resolved.raw.each { |identifier| list.code_append(identifier) }
+          else
+            list.code_append(resolved)
+          end
         end
 
         list

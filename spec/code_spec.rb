@@ -328,6 +328,18 @@ RSpec.describe Code do
       ["[1, 2, 3]", "[1, 2, 3]"],
       ["[1, 2, 3].include?(2)", "true"],
       ["[1, 2, 3].include?(4)", "false"],
+      [
+        "summary = { by_status: { draft: 1 } } k = \"draft\" summary.by_status[k]",
+        "1"
+      ],
+      [
+        "summary = { by_status: {} } k = \"draft\" summary.by_status[k] = 1 summary",
+        '{"by_status" => {"draft" => 1}}'
+      ],
+      [
+        "summary = { by_status: {} } [{status: \"draft\"}].each { |track| summary.by_status[track[:status]] = 1 } summary",
+        '{"by_status" => {"draft" => 1}}'
+      ],
       ["[1, 2, 3].map { |i| continue(0) if i.even? i ** 2}", "[1, 0, 9]"],
       ["[1, 2, 3].map { |i| next if i == 2 i ** 2}", "[1, nothing, 9]"],
       ["[1, 2, 3].map { |i| next(0) if i.even? i ** 2}", "[1, 0, 9]"],

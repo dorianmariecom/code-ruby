@@ -328,11 +328,28 @@ class Code
     end
 
     def format_dictionary_statement_code(statement_code)
-      key = format_nested_statement(statement_code[:statement], indent: 0)
+      key =
+        format_dictionary_statement_key(statement_code[:statement]) ||
+        format_nested_statement(statement_code[:statement], indent: 0)
       return key unless statement_code.key?(:code)
 
       value = format_code_inline(statement_code[:code], indent: 0)
       "#{key}: #{value}"
+    end
+
+    def format_dictionary_statement_key(statement)
+      return unless statement.is_a?(Hash) && statement.key?(:string)
+
+      parts = Array(statement[:string])
+      return unless parts.one?
+
+      part = parts.first
+      return unless part.is_a?(Hash) && part.key?(:text)
+
+      text = part[:text].to_s
+      return unless text.match?(/\A[a-z_][a-z0-9_]*\z/)
+
+      text
     end
 
     def format_call(call, indent:)
@@ -791,6 +808,7 @@ class Code
       index, token = split
       left = line[0...index]
       right = line[(index + token.length)..]
+      return [line] if token == "." && left.strip.empty?
       continuation = "#{indent}#{INDENT}#{right.lstrip}"
 
       first_line =

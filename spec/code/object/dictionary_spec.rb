@@ -74,6 +74,8 @@ RSpec.describe Code::Object::Dictionary do
     ["{ a: 1, b: [2, 3] }.flatten(1)", "[:a, 1, :b, [2, 3]]"],
     ["{ a: 1, b: [2, 3] }.to_list", "[[:a, 1], [:b, [2, 3]]]"],
     ["{ a: nothing }.compact", "{}"],
+    ["{ a: nothing, b: 1, c: false, d: \"\" }.compact", '{ b: 1, c: false, d: "" }'],
+    ["{ a: nothing, b: 1, c: false, d: \"\" }.compact(&:blank?)", "{ b: 1 }"],
     ["{ age: 31 }.delete_unless { |key| key == :age }", "{ age: 31 }"],
     ["{ age: 31 }.delete_unless(Integer)", "{ age: 31 }"],
     ["{ age: 31 }.keep_unless { |key| key == :age }", "{}"],
