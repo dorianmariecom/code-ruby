@@ -47,10 +47,10 @@ class Code
         when "==", "equal"
           sig(args) { Object }
           code_equal(code_value)
-        when ">", "greater_or_equal"
+        when ">", "greater"
           sig(args) { Object }
           code_greater(code_value)
-        when ">=", "greater"
+        when ">=", "greater_or_equal"
           sig(args) { Object }
           code_greater_or_equal(code_value)
         when "<=>", "compare"
