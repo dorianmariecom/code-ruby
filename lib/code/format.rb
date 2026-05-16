@@ -11,6 +11,7 @@ class Code
     MAX_INLINE_CALL_ARGUMENTS_LENGTH = 80
     MAX_INLINE_BLOCK_BODY_LENGTH = 40
     CONTINUATION_PADDING = 4
+    BOOLEAN_WORD_OPERATORS = %w[and or].freeze
 
     class << self
       def format(parsed)
@@ -461,8 +462,8 @@ class Code
             if right.include?("\n")
               first_line, *rest = right.lines(chomp: true)
               if multiline_operand_statement?(other[:statement]) ||
-                   !%w[and or].include?(operator)
-                [ "#{expression} #{operator} #{first_line.lstrip}", *rest ].join("\n")
+                   !BOOLEAN_WORD_OPERATORS.include?(operator)
+                ["#{expression} #{operator} #{first_line.lstrip}", *rest].join("\n")
               else
                 [
                   "#{expression}\n#{INDENT * (indent + 1)}#{operator} #{first_line.lstrip}",
@@ -473,7 +474,7 @@ class Code
               right_lines =
                 if right.include?("\n")
                   right.lines(chomp: true).map(&:lstrip)
-                elsif %w[and or].include?(operator)
+                elsif BOOLEAN_WORD_OPERATORS.include?(operator)
                   right.split(" #{operator} ")
                 else
                   [right]
@@ -509,7 +510,7 @@ class Code
         expression
           .lines(chomp: true)[1..]
           .to_a
-          .reject { |line| line.strip.empty? || line.strip.match?(/\A[\)\]\}]+\z/) }
+          .reject { |line| line.strip.empty? || line.strip.match?(/\A[\])}]+\z/) }
 
       return false if continuation_lines.empty?
 
@@ -519,7 +520,7 @@ class Code
       continuation_lines.any? do |line|
         next false unless line[/\A */].to_s.length == base_indent
 
-        line.lstrip.match?(/\A(\+|-|\*|\/|%|<<|>>|\||\^|&|and\b|or\b)/)
+        line.lstrip.match?(%r{\A(\+|-|\*|/|%|<<|>>|\||\^|&|and\b|or\b)})
       end
     end
 
@@ -730,6 +731,7 @@ class Code
 
       return true if statement.key?(:dictionnary) || statement.key?(:list)
       return true if statement.key?(:call)
+
       if statement.key?(:left_operation)
         operation = statement[:left_operation]
         others = Array(operation[:others])
@@ -809,6 +811,7 @@ class Code
       left = line[0...index]
       right = line[(index + token.length)..]
       return [line] if token == "." && left.strip.empty?
+
       continuation = "#{indent}#{INDENT}#{right.lstrip}"
 
       first_line =

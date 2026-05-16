@@ -3,21 +3,21 @@
 require "spec_helper"
 
 RSpec.describe Code::Object::Function do
-   [
-     ["even? = (i) => { i.even? } even?(2)", "true"],
-     ["even? = (i:) => { i.even? } even?(i: 2)", "true"],
-     ["add = (a, b) => { a + b } add(1, 2)", "3"],
-     ["minus = (a:, b:) => { a - b } minus(b: 1, a: 2)", "1"]
-   ].each do |input, expected|
-     it "#{input} == #{expected}" do
-       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
-     end
-   end
+  [
+    ["even? = (i) => { i.even? } even?(2)", "true"],
+    ["even? = (i:) => { i.even? } even?(i: 2)", "true"],
+    ["add = (a, b) => { a + b } add(1, 2)", "3"],
+    ["minus = (a:, b:) => { a - b } minus(b: 1, a: 2)", "1"]
+  ].each do |input, expected|
+    it "#{input} == #{expected}" do
+      expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
+    end
+  end
 
   context "valid" do
     [
       "f = () => {} f",
-      "f = (x) => {} f(1)"
+      "f = (x) => {} f(1)",
       "f = (x:) => {} f(x: 1)"
     ].each do |input|
       it "#{input} is valid" do

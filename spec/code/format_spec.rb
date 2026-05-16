@@ -147,7 +147,7 @@ RSpec.describe Code::Format do
 
       formatted = described_class.format(Code.parse(input))
 
-      expect(formatted.lines.map(&:chomp).map(&:length).max).to be <= 80
+      expect(formatted.lines.map { |line| line.chomp.length }.max).to be <= 80
     end
   end
 end
