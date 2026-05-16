@@ -706,7 +706,13 @@ class Code
 
       if operator == "loop"
         body = format_code(while_statement[:body], indent: indent + 1)
-        return "#{INDENT * indent}loop {\n#{body}\n#{INDENT * indent}}"
+        parameters =
+          Array(while_statement[:parameters]).map do |parameter|
+            format_parameter(parameter, indent: indent)
+          end
+        header = parameters.empty? ? "loop {" : "loop { |#{parameters.join(", ")}|"
+
+        return "#{INDENT * indent}#{header}\n#{body}\n#{INDENT * indent}}"
       end
 
       statement =

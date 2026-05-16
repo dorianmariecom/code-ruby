@@ -407,12 +407,26 @@ class Code
       skip_newlines
 
       statement = parse_expression unless operator == "loop"
-      body = parse_body(%w[end])
+
+      if operator == "loop" &&
+           (match?(:punctuation, "{") || match?(:keyword, "do"))
+        block = parse_block(current.value)
+        body = block[:body]
+        parameters = block[:parameters]
+      else
+        body = parse_body(%w[end])
+      end
+
       skip_newlines
       advance if match?(:keyword, "end")
 
       {
-        while: { operator: operator, statement: statement, body: body }.compact
+        while: {
+          operator: operator,
+          statement: statement,
+          parameters: parameters,
+          body: body
+        }.compact
       }
     end
 

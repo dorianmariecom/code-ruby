@@ -90,8 +90,12 @@ class Code
               )
               .truthy?
               .tap { index += 1 }
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_any?(argument, **globals)
@@ -108,8 +112,12 @@ class Code
               )
               .truthy?
               .tap { index += 1 }
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_each(argument, **globals)
@@ -120,9 +128,13 @@ class Code
             arguments: List.new([code_element, Integer.new(index), self]),
             **globals
           )
+        rescue Error::Next => e
+          e.code_value
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_first
@@ -142,8 +154,12 @@ class Code
               arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             )
+          rescue Error::Next => e
+            e.code_value
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_select(argument, **globals)
@@ -155,8 +171,12 @@ class Code
               arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             ).truthy?
+          rescue Error::Next => e
+            e.code_value.truthy?
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def exclude_end?

@@ -14,6 +14,8 @@ class Code
         @statement = Statement.new(parsed.delete(:statement)) if parsed.key?(
           :statement
         )
+        @parameters = parsed.delete(:parameters) { [] }.presence || []
+        @parameters.map! { |parameter| FunctionParameter.new(parameter) }
         @body = Code.new(parsed.delete(:body).presence)
       end
 
@@ -53,11 +55,15 @@ class Code
 
       def evaluate_infinite_loop(**args)
         last = Object::Nothing.new
+        index = 0
 
         loop do
+          bind_loop_parameters(index, **args)
           last = @body&.evaluate(**args) || Object::Nothing.new
+          index += 1
         rescue Error::Next, Error::Continue => e
           last = e.code_value
+          index += 1
           next
         rescue Error::Retry
           retry
@@ -73,6 +79,21 @@ class Code
           (@statement&.evaluate(**args) || Object::Nothing.new).truthy?
 
         condition_truthy ? condition : !condition
+      end
+
+      def bind_loop_parameters(index, **args)
+        return if @parameters.blank?
+
+        @parameters.each.with_index do |parameter, parameter_index|
+          value =
+            if parameter_index.zero?
+              Object::Integer.new(index)
+            else
+              Object::Nothing.new
+            end
+
+          args.fetch(:context).code_set(parameter.name, value)
+        end
       end
     end
   end

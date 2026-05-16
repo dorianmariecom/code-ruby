@@ -584,9 +584,13 @@ class Code
             arguments: List.new([Integer.new(element), self]),
             **globals
           )
+        rescue Error::Next => e
+          e.code_value
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_truncate(n = nil)

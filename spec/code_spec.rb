@@ -13,6 +13,74 @@ RSpec.describe Code do
     [result, output.string]
   end
 
+  def control_flow_block_calls
+    [
+      "[1].each { CONTROL }",
+      "[1, 2].any? { CONTROL }",
+      "[1].detect { CONTROL }",
+      "[1].map { CONTROL }",
+      "xs = [1] xs.map! { CONTROL }",
+      "[1].max { CONTROL }",
+      "[1].none? { CONTROL }",
+      "[1].all? { CONTROL }",
+      "[1, 2].reduce { |acc, item| CONTROL }",
+      "[nothing].compact { CONTROL }",
+      "xs = [nothing] xs.compact! { CONTROL }",
+      "[1].select { CONTROL }",
+      "xs = [1] xs.select! { CONTROL }",
+      "[1].reject { CONTROL }",
+      "xs = [1] xs.reject! { CONTROL }",
+      "[1].sort { CONTROL }",
+      "[1].uniq { CONTROL }",
+      "(1..1).all? { CONTROL }",
+      "(1..1).any? { CONTROL }",
+      "(1..1).each { CONTROL }",
+      "(1..1).map { CONTROL }",
+      "(1..1).select { CONTROL }",
+      "{a: 1}.any? { CONTROL }",
+      "{a: 1}.compact { CONTROL }",
+      "hash = {a: 1} hash.compact! { CONTROL }",
+      "{a: 1}.delete(:b) { CONTROL }",
+      "hash = {a: 1} hash.delete_if { CONTROL }",
+      "hash = {a: 1} hash.delete_unless { CONTROL }",
+      "{a: 1}.each { CONTROL }",
+      "{a: 1}.fetch(:b) { CONTROL }",
+      "hash = {a: 1} hash.keep_if { CONTROL }",
+      "hash = {a: 1} hash.keep_unless { CONTROL }",
+      "{a: 1}.key(2) { CONTROL }",
+      "{a: 1}.merge({a: 2}) { CONTROL }",
+      "hash = {a: 1} hash.merge!({a: 2}) { CONTROL }",
+      "{a: 1}.select { CONTROL }",
+      "hash = {a: 1} hash.select! { CONTROL }",
+      "{a: 1}.transform_values { CONTROL }",
+      "1.times { CONTROL }",
+      "Html.p { CONTROL }",
+      "Html.escape { CONTROL }",
+      "Html.unescape { CONTROL }",
+      "Html.join(Html.br) { CONTROL }",
+      "Html.text { CONTROL }",
+      "Html.raw { CONTROL }",
+      "Html.raw(\"<p>a</p>\").css(\"p\").map { CONTROL }"
+    ]
+  end
+
+  %w[return break next continue].each do |control_flow|
+    it "continues after #{control_flow} in block methods" do
+      aggregate_failures do
+        control_flow_block_calls.each do |block_call|
+          input = "#{block_call.sub("CONTROL", control_flow)} puts(:end)"
+          formatted = format_input(input)
+
+          _result, output = evaluate_with_output(input)
+          _formatted_result, formatted_output = evaluate_with_output(formatted)
+
+          expect(output).to eq("end\n"), input
+          expect(formatted_output).to eq("end\n"), formatted
+        end
+      end
+    end
+  end
+
   (
     [
       "{ a: 1, b: 2 }.transform_values { |key| key.upcase }",
@@ -352,6 +420,7 @@ RSpec.describe Code do
       ["[1, 2].map(&:to_string)", '["1", "2"]'],
       ["[1, 2].map(&:to_string)", '["1", "2"]'],
       ["[1].each do end", "[1]"],
+      ["x = [1].each { break(42) } x", "42"],
       ["[[true]]", "[[true]]"],
       ["[]", "[]"],
       ["\r\n", "nothing"],
@@ -362,6 +431,8 @@ RSpec.describe Code do
       ],
       ["a = 0 loop a += 1 break end a", "1"],
       ["x = loop break(42) end x", "42"],
+      ["x = loop { |index| break(index) if index > 3 } x", "4"],
+      ["x = loop do |index| break(index) if index > 3 end x", "4"],
       ["a = 0\nuntil a > 10 a += 1 end a", "11"],
       ["a = 0\nwhile a < 10 a += 1 end a", "10"],
       ["a = 1 3.times { a += 1 } a", "4"],
@@ -541,7 +612,11 @@ RSpec.describe Code do
     end
   end
 
-  [["puts(true)", "true\n"], %w[print(false) false]].each do |input, expected|
+  [
+    ["puts(true)", "true\n"],
+    %w[print(false) false],
+    ["[1].each { break } puts(:end)", "end\n"]
+  ].each do |input, expected|
     it "#{input} prints #{expected}" do
       formatted = format_input(input)
 

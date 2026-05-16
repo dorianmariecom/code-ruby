@@ -576,9 +576,13 @@ class Code
                 )
                 .truthy?
                 .tap { index += 1 }
+            rescue Error::Next => e
+              e.code_value.truthy?.tap { index += 1 }
             end
           )
         end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_clear
@@ -605,6 +609,8 @@ class Code
             e.code_value.truthy?
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_compact!(argument = nil, **globals)
@@ -626,6 +632,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_delete(*arguments, index: 0, **globals)
@@ -650,6 +658,8 @@ class Code
                 **globals
               )
             end
+          rescue Error::Next => e
+            e.code_value
           end
         else
           Dictionary.new(
@@ -676,6 +686,8 @@ class Code
               .to_h
           )
         end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_delete_if(argument, **globals)
@@ -690,10 +702,14 @@ class Code
                 List.new([code_key, code_value, Integer.new(index), self]),
               **globals
             ).truthy?
+          rescue Error::Next => e
+            e.code_value.truthy?
           end
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_delete_unless(argument, **globals)
@@ -707,10 +723,14 @@ class Code
               arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).falsy?
+          rescue Error::Next => e
+            e.code_value.falsy?
           end
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_dig(*arguments)
@@ -735,9 +755,13 @@ class Code
             arguments: List.new([key, value, Integer.new(index), self]),
             **globals
           )
+        rescue Error::Next => e
+          e.code_value
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_empty?
@@ -771,6 +795,8 @@ class Code
                 **globals
               )
             end
+          rescue Error::Next => e
+            e.code_value
           end
         else
           Dictionary.new(
@@ -797,6 +823,8 @@ class Code
               .to_h
           )
         end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_fetch_values(*arguments)
@@ -841,10 +869,14 @@ class Code
               arguments: List.new([key, value, Integer.new(index), self]),
               **globals
             ).truthy?
+          rescue Error::Next => e
+            e.code_value.truthy?
           end
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_keep_unless(argument, **globals)
@@ -864,6 +896,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_key(value, function = nil, **globals)
@@ -876,7 +910,7 @@ class Code
           raw.key(code_value) ||
             function.call(arguments: List.new([code_value, self]), **globals)
         end
-      rescue Error::Next => e
+      rescue Error::Next, Error::Break => e
         e.code_value
       end
 
@@ -921,6 +955,8 @@ class Code
             e.code_value.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_merge!(*arguments, **globals)
@@ -960,6 +996,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_select!(argument, **globals)
@@ -980,6 +1018,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_select(argument, **globals)
@@ -1002,6 +1042,8 @@ class Code
             end
           )
         end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_set(key, value)
@@ -1045,6 +1087,8 @@ class Code
             end
             .to_h
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_values

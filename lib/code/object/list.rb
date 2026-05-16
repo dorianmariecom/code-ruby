@@ -870,6 +870,8 @@ class Code
             e.code_value.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_append(other)
@@ -909,6 +911,8 @@ class Code
         rescue Error::Next => e
           e.code_value
         end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_each(argument = nil, **globals)
@@ -928,6 +932,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_first(value = nil)
@@ -1424,6 +1430,8 @@ class Code
             e.code_value
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_map!(argument = nil, **globals)
@@ -1445,6 +1453,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_max(argument = nil, **globals)
@@ -1462,6 +1472,8 @@ class Code
         rescue Error::Next => e
           e.code_value
         end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_none?(argument = nil, **globals)
@@ -1488,6 +1500,8 @@ class Code
             e.code_value.truthy?.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_all?(argument = nil, **globals)
@@ -1514,6 +1528,8 @@ class Code
             e.code_value.truthy?.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_reduce(argument = nil, **globals)
@@ -1536,6 +1552,8 @@ class Code
         rescue Error::Next => e
           e.code_value.tap { index += 1 }
         end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_reverse
@@ -1563,6 +1581,8 @@ class Code
             e.code_value.truthy?
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_compact!(argument = nil, **globals)
@@ -1586,6 +1606,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_select(argument = nil, **globals)
@@ -1607,6 +1629,8 @@ class Code
             e.code_value.truthy?
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_select!(argument = nil, **globals)
@@ -1628,6 +1652,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_reject(argument = nil, **globals)
@@ -1649,6 +1675,8 @@ class Code
             e.code_value.truthy?
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_reject!(argument = nil, **globals)
@@ -1670,6 +1698,8 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_join(separator = nil)
@@ -1695,6 +1725,8 @@ class Code
             e.code_value
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_size
@@ -1730,6 +1762,8 @@ class Code
             e.code_value.tap { index += 1 }
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_sum

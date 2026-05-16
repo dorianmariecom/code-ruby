@@ -188,10 +188,14 @@ class Code
 
         if code_function.something?
           code_content =
-            code_function.call(
-              arguments: List.new([code_name, code_attributes]),
-              **globals
-            )
+            begin
+              code_function.call(
+                arguments: List.new([code_name, code_attributes]),
+                **globals
+              )
+            rescue Error::Next => e
+              e.code_value
+            end
 
           content =
             if code_content.is_an?(Html)
@@ -206,33 +210,52 @@ class Code
         fragment.add_child(node)
 
         Html.new(fragment)
+      rescue Error::Break => e
+        e.code_value
       end
 
       def self.code_escape(value_or_function = nil, **globals)
         code_value =
           if value_or_function.is_a?(Function)
-            value_or_function.to_code.call(**globals)
+            begin
+              value_or_function.to_code.call(**globals)
+            rescue Error::Next => e
+              e.code_value
+            end
           else
             value_or_function.to_code
           end
 
         String.new(CGI.escapeHTML(code_value.to_s))
+      rescue Error::Break => e
+        e.code_value
       end
 
       def self.code_unescape(value_or_function = nil, **globals)
         code_value =
           if value_or_function.is_a?(Function)
-            value_or_function.to_code.call(**globals)
+            begin
+              value_or_function.to_code.call(**globals)
+            rescue Error::Next => e
+              e.code_value
+            end
           else
             value_or_function.to_code
           end
 
         String.new(Nokogiri::HTML.fragment(code_value.to_s).text)
+      rescue Error::Break => e
+        e.code_value
       end
 
       def self.code_join(first = nil, second = nil, **globals)
         if second.is_a?(Function)
-          code_contents = second.to_code.call(**globals)
+          code_contents =
+            begin
+              second.to_code.call(**globals)
+            rescue Error::Next => e
+              e.code_value
+            end
           code_separator = first.to_code
         else
           code_contents = first.to_code
@@ -264,12 +287,18 @@ class Code
         end
 
         Html.new(fragment)
+      rescue Error::Break => e
+        e.code_value
       end
 
       def self.code_text(value_or_function = nil, **globals)
         code_value =
           if value_or_function.is_a?(Function)
-            value_or_function.to_code.call(**globals)
+            begin
+              value_or_function.to_code.call(**globals)
+            rescue Error::Next => e
+              e.code_value
+            end
           else
             value_or_function.to_code
           end
@@ -280,12 +309,18 @@ class Code
         )
 
         Html.new(fragment)
+      rescue Error::Break => e
+        e.code_value
       end
 
       def self.code_raw(value_or_function = nil, **globals)
         code_value =
           if value_or_function.is_a?(Function)
-            value_or_function.to_code.call(**globals)
+            begin
+              value_or_function.to_code.call(**globals)
+            rescue Error::Next => e
+              e.code_value
+            end
           else
             value_or_function.to_code
           end
@@ -295,6 +330,8 @@ class Code
         else
           Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_s))
         end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def call(**args)
@@ -352,6 +389,8 @@ class Code
             e.code_value
           end
         )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def to_s
