@@ -133,15 +133,33 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "[]", "at", "get"
+          sig(args) { Integer }
+          code_get(code_value)
+        when "clear"
+          sig(args)
+          code_clear
         when "join"
           sig(args) { String.maybe }
           code_join(code_value)
         when "sort"
           sig(args) { Function.maybe }
           code_sort(code_value, **globals)
+        when "sort!"
+          sig(args) { Function.maybe }
+          code_sort!(code_value, **globals)
         when "<<", "append"
           sig(args) { Object }
           code_append(code_value)
+        when "push"
+          sig(args) { Object }
+          code_push(code_value)
+        when "prepend"
+          sig(args) { Object }
+          code_prepend(code_value)
+        when "insert"
+          sig(args) { [Integer, Object] }
+          code_insert(*code_arguments.raw)
         when "+", "plus"
           sig(args) { List.maybe }
           code_arguments.any? ? code_plus(code_value) : code_self
@@ -463,9 +481,18 @@ class Code
         when "shuffle"
           sig(args)
           code_shuffle
+        when "shuffle!"
+          sig(args)
+          code_shuffle!
         when "flatten"
           sig(args) { Integer.maybe }
           code_flatten(code_value)
+        when "delete"
+          sig(args) { Object }
+          code_delete(code_value)
+        when "delete_at"
+          sig(args) { Integer }
+          code_delete_at(code_value)
         when "pop"
           sig(args) { Integer.maybe }
           code_pop(code_value)
@@ -481,6 +508,12 @@ class Code
         when "last"
           sig(args)
           code_last
+        when "take"
+          sig(args) { Integer }
+          code_take(code_value)
+        when "drop"
+          sig(args) { Integer }
+          code_drop(code_value)
         when "map"
           sig(args) { (Function | Class).maybe }
           code_map(code_value, **globals)
@@ -490,6 +523,12 @@ class Code
         when "max"
           sig(args) { (Function | Class).maybe }
           code_max(code_value, **globals)
+        when "maximum"
+          sig(args) { (Function | Class).maybe }
+          code_maximum(code_value, **globals)
+        when "minimum"
+          sig(args) { (Function | Class).maybe }
+          code_minimum(code_value, **globals)
         when "none?"
           sig(args) { (Function | Class).maybe }
           code_none?(code_value, **globals)
@@ -502,6 +541,9 @@ class Code
         when "reverse"
           sig(args)
           code_reverse
+        when "reverse!"
+          sig(args)
+          code_reverse!
         when "select"
           sig(args) { (Function | Class).maybe }
           code_select(code_value, **globals)
@@ -523,12 +565,24 @@ class Code
         when "size"
           sig(args)
           code_size
+        when "empty?"
+          sig(args)
+          code_empty?
+        when "count"
+          sig(args) { (Function | Class).maybe }
+          code_count(code_value, **globals)
         when "sum"
           sig(args)
           code_sum
+        when "tally"
+          sig(args)
+          code_tally
         when "uniq"
           sig(args) { (Function | Class).maybe }
           code_uniq(code_value, **globals)
+        when "uniq!"
+          sig(args) { (Function | Class).maybe }
+          code_uniq!(code_value, **globals)
         when "many?"
           sig(args)
           code_many?
@@ -879,6 +933,28 @@ class Code
 
         raw << code_other
 
+        self
+      end
+
+      def code_clear
+        raw.clear
+        self
+      end
+
+      def code_push(other)
+        code_append(other)
+      end
+
+      def code_prepend(other)
+        code_other = other.to_code
+        raw.unshift(code_other)
+        self
+      end
+
+      def code_insert(index, value)
+        code_index = index.to_code
+        code_value = value.to_code
+        raw.insert(code_index.raw, code_value)
         self
       end
 
@@ -1360,6 +1436,11 @@ class Code
         List.new(raw.shuffle)
       end
 
+      def code_shuffle!
+        raw.shuffle!
+        self
+      end
+
       def code_flatten(level = nil)
         code_level = level.to_code
         code_level = Integer.new(-1) if code_level.nothing?
@@ -1378,6 +1459,16 @@ class Code
             end
           end
         )
+      end
+
+      def code_delete(value)
+        code_value = value.to_code
+        raw.delete(code_value) || Nothing.new
+      end
+
+      def code_delete_at(index)
+        code_index = index.to_code
+        raw.delete_at(code_index.raw) || Nothing.new
       end
 
       def code_pop(n = nil)
@@ -1409,6 +1500,16 @@ class Code
 
       def code_last
         raw.last || Nothing.new
+      end
+
+      def code_take(n)
+        code_n = n.to_code
+        List.new(raw.take(code_n.raw))
+      end
+
+      def code_drop(n)
+        code_n = n.to_code
+        List.new(raw.drop(code_n.raw))
       end
 
       def code_map(argument = nil, **globals)
@@ -1466,6 +1567,29 @@ class Code
               arguments: List.new([code_element, Integer.new(index), self]),
               **globals
             ).truthy?
+          else
+            code_element
+          end
+        rescue Error::Next => e
+          e.code_value
+        end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_maximum(argument = nil, **globals)
+        code_max(argument, **globals)
+      end
+
+      def code_minimum(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        raw.min_by.with_index do |code_element, index|
+          if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
           else
             code_element
           end
@@ -1558,6 +1682,11 @@ class Code
 
       def code_reverse
         List.new(raw.reverse)
+      end
+
+      def code_reverse!
+        raw.reverse!
+        self
       end
 
       def code_compact(argument = nil, **globals)
@@ -1729,8 +1858,48 @@ class Code
         e.code_value
       end
 
+      def code_sort!(argument = nil, **globals)
+        self.raw = code_sort(argument, **globals).raw
+        self
+      end
+
       def code_size
         Integer.new(raw.size)
+      end
+
+      def code_empty?
+        Boolean.new(raw.empty?)
+      end
+
+      def code_count(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.nothing?
+          return Integer.new(raw.count)
+        elsif code_argument.is_a?(Class)
+          return Integer.new(raw.count { |element| element.is_a?(code_argument.raw) })
+        end
+
+        index = 0
+        Integer.new(
+          raw.count do |code_element|
+            code_argument
+              .call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_tally
+        Dictionary.new(raw.tally)
       end
 
       def code_uniq(argument = nil, **globals)
@@ -1764,6 +1933,11 @@ class Code
         )
       rescue Error::Break => e
         e.code_value
+      end
+
+      def code_uniq!(argument = nil, **globals)
+        self.raw = code_uniq(argument, **globals).raw
+        self
       end
 
       def code_sum

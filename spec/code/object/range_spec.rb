@@ -14,7 +14,15 @@ RSpec.describe Code::Object::Range do
     ["(0..1).to_list", "[0, 1]"],
     ["(0...1).to_list", "[0]"],
     %w[(0..1).first 0],
-    %w[(0..1).last 1]
+    %w[(0..1).last 1],
+    %w[(1..3).include?(2) true],
+    %w[(1..3).cover?(4) false],
+    %w[(1..3).size 3],
+    %w[(1...1).empty? true],
+    %w[(1..3).minimum 1],
+    %w[(1..3).maximum 3],
+    %w[(1..3).count 3],
+    %w[(1..5).count(&:even?) 2]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))

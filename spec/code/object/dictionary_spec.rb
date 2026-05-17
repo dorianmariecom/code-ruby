@@ -86,6 +86,18 @@ RSpec.describe Code::Object::Dictionary do
     ["{ first_name: :Dorian }.delete_if(String)", "{}"],
     ["{ first_name: :Dorian }.keep_if { |_, value| value != :Dorian }", "{}"],
     ["{ first_name: :Dorian }.keep_if(String)", "{ first_name: :Dorian }"],
+    ["{ a: 1 }.key?(:a)", "true"],
+    ["{ a: 1 }.value?(1)", "true"],
+    ["{ a: 1 }.include?(:a)", "true"],
+    ["{ a: 1 }.member?(:a)", "true"],
+    ["{ a: 1 }.length", "1"],
+    ["{ a: 1, b: 2 }.slice(:a)", "{ a: 1 }"],
+    ["{ a: 1, b: 2 }.reject { |_, v| v.even? }", "{ a: 1 }"],
+    ['{ a: 1, b: "x" }.reject(String)', "{ a: 1 }"],
+    ["d = { a: 1 } d.reject! { |_, v| v.one? } d", "{}"],
+    ["{ a: 1 }.transform_keys(&:upcase)", "{ A: 1 }"],
+    ["d = { a: 1 } d.transform_keys!(&:upcase) d", "{ A: 1 }"],
+    ["d = { a: 1 } d.transform_values! { |_, value| value.next } d", "{ a: 2 }"],
     ["{} == {}", "true"],
     ['{ "name" => "Dorian" } == { name: :Dorian }', "true"]
   ].each do |input, expected|

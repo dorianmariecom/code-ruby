@@ -45,6 +45,12 @@ class Code
         when "/", "division"
           sig(args) { Integer | Decimal }
           code_division(code_value)
+        when "divide"
+          sig(args) { Integer | Decimal }
+          code_divide(code_value)
+        when "divide_modulo"
+          sig(args) { Integer | Decimal }
+          code_divide_modulo(code_value)
         when "<<", "left_shift"
           sig(args) { Integer | Decimal }
           code_left_shift(code_value)
@@ -57,21 +63,57 @@ class Code
         when "abs"
           sig(args)
           code_abs
+        when "between?"
+          sig(args) { [Integer | Decimal, Integer | Decimal] }
+          code_between?(*code_arguments.raw)
         when "ceil"
           sig(args) { Integer.maybe }
           code_ceil(code_value)
+        when "clamp"
+          sig(args) { [Integer | Decimal, Integer | Decimal] }
+          code_clamp(*code_arguments.raw)
+        when "day", "days"
+          sig(args)
+          code_days
         when "floor"
           sig(args) { Integer.maybe }
           code_floor(code_value)
+        when "hour", "hours"
+          sig(args)
+          code_hours
+        when "minute", "minutes"
+          sig(args)
+          code_minutes
+        when "month", "months"
+          sig(args)
+          code_months
+        when "next", "successor"
+          sig(args)
+          code_next
+        when "previous", "predecessor"
+          sig(args)
+          code_previous
+        when "remainder"
+          sig(args) { Integer | Decimal }
+          code_remainder(code_value)
         when "round"
           sig(args) { Integer.maybe }
           code_round(code_value)
+        when "second", "seconds"
+          sig(args)
+          code_seconds
         when "sqrt"
           sig(args)
           code_sqrt
         when "truncate"
           sig(args) { Integer.maybe }
           code_truncate(code_value)
+        when "week", "weeks"
+          sig(args)
+          code_weeks
+        when "year", "years"
+          sig(args)
+          code_years
         when "|", "bitwise_or"
           sig(args) { Integer | Decimal }
           code_bitwise_or(code_value)
@@ -435,6 +477,34 @@ class Code
         code_n = Integer.new(0) if code_n.nothing?
 
         Decimal.new(raw.floor(code_n.raw))
+      end
+
+      def code_days
+        Duration.new(raw.days)
+      end
+
+      def code_hours
+        Duration.new(raw.hours)
+      end
+
+      def code_minutes
+        Duration.new(raw.minutes)
+      end
+
+      def code_months
+        Duration.new(::ActiveSupport::Duration.months(raw))
+      end
+
+      def code_seconds
+        Duration.new(raw.seconds)
+      end
+
+      def code_weeks
+        Duration.new(raw.weeks)
+      end
+
+      def code_years
+        Duration.new(::ActiveSupport::Duration.years(raw))
       end
 
       def code_left_shift(other)

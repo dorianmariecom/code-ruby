@@ -186,10 +186,10 @@ class Code
         when "flatten"
           sig(args) { Integer.maybe }
           code_flatten(code_value)
-        when "has_key?"
+        when "has_key?", "key?", "include?", "member?"
           sig(args) { Object }
           code_has_key?(code_value)
-        when "has_value?"
+        when "has_value?", "value?"
           sig(args) { Object }
           code_has_value?(code_value)
         when "invert"
@@ -213,18 +213,36 @@ class Code
         when "merge!"
           sig(args) { [Dictionary.repeat, Function.maybe] }
           code_merge!(*code_arguments.raw, **globals)
+        when "reject!"
+          sig(args) { Function | Class }
+          code_reject!(code_value, **globals)
+        when "reject"
+          sig(args) { Function | Class }
+          code_reject(code_value, **globals)
         when "select!", "filter!"
           sig(args) { Function | Class }
           code_select!(code_value, **globals)
         when "select", "filter"
           sig(args) { Function | Class }
           code_select(code_value, **globals)
-        when "size"
+        when "size", "length"
           sig(args)
           code_size
+        when "slice"
+          sig(args) { Object.repeat(1) }
+          code_slice(*code_arguments.raw)
+        when "transform_keys"
+          sig(args) { Function }
+          code_transform_keys(code_value, **globals)
+        when "transform_keys!"
+          sig(args) { Function }
+          code_transform_keys!(code_value, **globals)
         when "transform_values"
           sig(args) { Function }
           code_transform_values(code_value, **globals)
+        when "transform_values!"
+          sig(args) { Function }
+          code_transform_values!(code_value, **globals)
         when "to_query"
           sig(args) { String.maybe }
           code_to_query(code_value)
@@ -1046,6 +1064,48 @@ class Code
         e.code_value
       end
 
+      def code_reject!(argument, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.is_a?(Class)
+          raw.reject! { |_, value| value.is_a?(code_argument.raw) }
+        else
+          raw.reject!.with_index do |(key, value), index|
+            code_argument.call(
+              arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+              **globals
+            ).truthy?
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_reject(argument, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.is_a?(Class)
+          Dictionary.new(raw.reject { |_, value| value.is_a?(code_argument.raw) })
+        else
+          Dictionary.new(
+            raw.reject.with_index do |(key, value), index|
+              code_argument.call(
+                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                **globals
+              ).truthy?
+            rescue Error::Next => e
+              e.code_value.truthy?
+            end
+          )
+        end
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_set(key, value)
         code_key = key.to_code
         code_value = value.to_code
@@ -1057,6 +1117,11 @@ class Code
         Integer.new(raw.size)
       end
 
+      def code_slice(*arguments)
+        code_arguments = arguments.to_code
+        Dictionary.new(raw.slice(*code_arguments.raw))
+      end
+
       def code_to_context
         Context.new(raw)
       end
@@ -1065,6 +1130,34 @@ class Code
         code_namespace = namespace.to_code
 
         String.new(raw.to_query(code_namespace.raw))
+      end
+
+      def code_transform_keys(function, **globals)
+        code_function = function.to_code
+
+        Dictionary.new(
+          raw
+            .map
+            .with_index do |(key, value), index|
+              [
+                code_function.call(
+                  arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                  **globals
+                ),
+                value.to_code
+              ]
+            rescue Error::Next => e
+              [e.code_value, value.to_code]
+            end
+            .to_h
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_transform_keys!(function, **globals)
+        self.raw = code_transform_keys(function, **globals).raw
+        self
       end
 
       def code_transform_values(function, **globals)
@@ -1089,6 +1182,11 @@ class Code
         )
       rescue Error::Break => e
         e.code_value
+      end
+
+      def code_transform_values!(function, **globals)
+        self.raw = code_transform_values(function, **globals).raw
+        self
       end
 
       def code_values

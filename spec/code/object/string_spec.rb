@@ -16,6 +16,36 @@ RSpec.describe Code::Object::String do
     end
   end
 
+  [
+    ['"".empty?', "true"],
+    ['"hello".last', '"o"'],
+    ['"hello".last(2)', '"lo"'],
+    ['"hi\n".chomp', '"hi"'],
+    ['"hello".chop', '"hell"'],
+    ['"hello".capitalize', '"Hello"'],
+    ['"hello world".titleize', '"Hello World"'],
+    ['"Hello".swapcase', '"hELLO"'],
+    ['" a   b ".squish', '"a b"'],
+    ['"hello".delete("l")', '"heo"'],
+    ['"hello".delete_prefix("he")', '"llo"'],
+    ['"hello".delete_suffix("lo")', '"hel"'],
+    ['"one one".substitute_once("one", "two")', '"two one"'],
+    ['"one one".substitute("one", "two")', '"two two"'],
+    ['"one one".substitute_all("one", "two")', '"two two"'],
+    ['"hello".index("l")', "2"],
+    ['"hello".right_index("l")', "3"],
+    ['"hello".index("z")', "nothing"],
+    ['"hi".characters', '["h", "i"]'],
+    ["\"a\\nb\".lines", '["a\n", "b"]'],
+    ['"a b  c".words', '["a", "b", "c"]'],
+    ['"hello".at(1)', '"e"'],
+    ['"hello"[10]', "nothing"]
+  ].each do |input, expected|
+    it "#{input} == #{expected}" do
+      expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
+    end
+  end
+
   describe "#code_strip" do
     it "replaces invalid utf-8 bytes instead of raising" do
       string = described_class.new("\xC3 ".b.force_encoding(Encoding::UTF_8))

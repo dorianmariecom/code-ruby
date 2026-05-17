@@ -7,6 +7,18 @@ class Code
         self.raw = nil
       end
 
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+
+        case code_operator.to_s
+        when "empty?"
+          sig(args)
+          code_empty?
+        else
+          super
+        end
+      end
+
       def truthy?
         false
       end
@@ -17,6 +29,10 @@ class Code
 
       def nothing?
         true
+      end
+
+      def code_empty?
+        Boolean.new(true)
       end
 
       def code_to_string

@@ -74,6 +74,12 @@ class Code
         when "truthy?"
           sig(args)
           code_truthy?
+        when "true?"
+          sig(args)
+          code_true?
+        when "false?"
+          sig(args)
+          code_false?
         when "||", "or"
           sig(args) { Object }
           code_or(code_value)
@@ -402,6 +408,14 @@ class Code
 
       def code_truthy?
         Object::Boolean.new(truthy?)
+      end
+
+      def code_true?
+        Object::Boolean.new(self == Object::Boolean.new(true))
+      end
+
+      def code_false?
+        Object::Boolean.new(self == Object::Boolean.new(false) || nothing?)
       end
 
       def code_to_boolean

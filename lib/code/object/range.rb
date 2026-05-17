@@ -50,12 +50,27 @@ class Code
         when "each"
           sig(args) { Function }
           code_each(code_value, **globals)
+        when "include?"
+          sig(args) { Object }
+          code_include?(code_value)
+        when "cover?"
+          sig(args) { Object }
+          code_cover?(code_value)
+        when "empty?"
+          sig(args)
+          code_empty?
         when "first"
           sig(args)
           code_first
         when "last"
           sig(args)
           code_last
+        when "minimum"
+          sig(args)
+          code_minimum
+        when "maximum"
+          sig(args)
+          code_maximum
         when "map"
           sig(args) { Function }
           code_map(code_value, **globals)
@@ -68,6 +83,12 @@ class Code
         when "sample"
           sig(args)
           code_sample
+        when "size"
+          sig(args)
+          code_size
+        when "count"
+          sig(args) { Function.maybe }
+          code_count(code_value, **globals)
         when "to_list"
           sig(args)
           code_to_list
@@ -137,12 +158,34 @@ class Code
         e.code_value
       end
 
+      def code_include?(value)
+        code_value = value.to_code
+        Boolean.new(raw.include?(code_value))
+      end
+
+      def code_cover?(value)
+        code_value = value.to_code
+        Boolean.new(raw.cover?(code_value))
+      end
+
+      def code_empty?
+        Boolean.new(raw.to_a.empty?)
+      end
+
       def code_first
         raw.first || Nothing.new
       end
 
       def code_last
         raw.last || Nothing.new
+      end
+
+      def code_minimum
+        raw.min || Nothing.new
+      end
+
+      def code_maximum
+        raw.max || Nothing.new
       end
 
       def code_map(argument, **globals)
@@ -213,6 +256,35 @@ class Code
 
       def code_sample
         code_to_list.code_sample
+      end
+
+      def code_size
+        Integer.new(raw.to_a.size)
+      end
+
+      def code_count(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.nothing?
+          return Integer.new(raw.to_a.size)
+        end
+
+        index = 0
+        Integer.new(
+          raw.count do |code_element|
+            code_argument
+              .call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
       end
     end
   end

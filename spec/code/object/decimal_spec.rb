@@ -41,7 +41,31 @@ RSpec.describe Code::Object::Decimal do
     %w[7.0.seven? true],
     %w[8.0.eight? true],
     %w[9.0.nine? true],
-    %w[10.0.ten? true]
+    %w[10.0.ten? true],
+    %w[3.5.between?(1,5) true],
+    %w[3.5.between?(4,5) false],
+    %w[10.5.clamp(1,5) 5],
+    %w[1.5.next 2.5],
+    %w[1.5.successor 2.5],
+    %w[1.5.previous 0.5],
+    %w[1.5.predecessor 0.5],
+    %w[5.5.divide(2) 2],
+    ["5.5.divide_modulo(2)", "[2, 1.5]"],
+    %w[5.5.remainder(2) 1.5],
+    %w[Class(1.5.second) Duration],
+    %w[Class(1.5.seconds) Duration],
+    %w[Class(1.5.minute) Duration],
+    %w[Class(1.5.minutes) Duration],
+    %w[Class(1.5.hour) Duration],
+    %w[Class(1.5.hours) Duration],
+    %w[Class(1.5.day) Duration],
+    %w[Class(1.5.days) Duration],
+    %w[Class(1.5.week) Duration],
+    %w[Class(1.5.weeks) Duration],
+    %w[Class(1.5.month) Duration],
+    %w[Class(1.5.months) Duration],
+    %w[Class(1.5.year) Duration],
+    %w[Class(1.5.years) Duration]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))

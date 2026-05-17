@@ -9,7 +9,11 @@ RSpec.describe Code::Object::Boolean do
     ["true | false", "true"],
     %w[true.bitwise_or(false) true],
     ["true ^ false", "true"],
-    %w[true.bitwise_xor(false) true]
+    %w[true.bitwise_xor(false) true],
+    %w[true.true? true],
+    %w[true.false? false],
+    %w[false.true? false],
+    %w[false.false? true]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))

@@ -52,18 +52,72 @@ class Code
         when "end_with?"
           sig(args) { String }
           code_end_with?(code_value)
+        when "[]", "at", "get"
+          sig(args) { Integer }
+          code_get(code_value)
+        when "capitalize"
+          sig(args)
+          code_capitalize
+        when "characters"
+          sig(args)
+          code_characters
+        when "chomp"
+          sig(args)
+          code_chomp
+        when "chop"
+          sig(args)
+          code_chop
+        when "delete"
+          sig(args) { String }
+          code_delete(code_value)
+        when "delete_prefix"
+          sig(args) { String }
+          code_delete_prefix(code_value)
+        when "delete_suffix"
+          sig(args) { String }
+          code_delete_suffix(code_value)
+        when "empty?"
+          sig(args)
+          code_empty?
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
+        when "index"
+          sig(args) { String }
+          code_index(code_value)
+        when "last"
+          sig(args) { Integer.maybe }
+          code_last(code_value)
+        when "lines"
+          sig(args)
+          code_lines
         when "reverse"
           sig(args)
           code_reverse
+        when "right_index"
+          sig(args) { String }
+          code_right_index(code_value)
         when "parameterize"
           sig(args)
           code_parameterize
+        when "squish"
+          sig(args)
+          code_squish
         when "substitute"
           sig(args) { [String, String.maybe] }
           code_substitute(*code_arguments.raw)
+        when "substitute_all"
+          sig(args) { [String, String.maybe] }
+          code_substitute_all(*code_arguments.raw)
+        when "substitute_once"
+          sig(args) { [String, String.maybe] }
+          code_substitute_once(*code_arguments.raw)
+        when "swapcase"
+          sig(args)
+          code_swapcase
+        when "titleize"
+          sig(args)
+          code_titleize
         when "upcase"
           sig(args)
           code_upcase
@@ -76,6 +130,9 @@ class Code
         when "split"
           sig(args) { String.maybe }
           code_split(code_value)
+        when "words"
+          sig(args)
+          code_words
         else
           super
         end
@@ -89,9 +146,64 @@ class Code
         String.new(raw.upcase)
       end
 
+      def code_capitalize
+        String.new(raw.capitalize)
+      end
+
+      def code_characters
+        List.new(raw.chars)
+      end
+
+      def code_chomp
+        String.new(raw.chomp)
+      end
+
+      def code_chop
+        String.new(raw.chop)
+      end
+
+      def code_delete(value)
+        code_value = value.to_code
+        String.new(raw.delete(code_value.raw))
+      end
+
+      def code_delete_prefix(value)
+        code_value = value.to_code
+        String.new(raw.delete_prefix(code_value.raw))
+      end
+
+      def code_delete_suffix(value)
+        code_value = value.to_code
+        String.new(raw.delete_suffix(code_value.raw))
+      end
+
+      def code_empty?
+        Boolean.new(raw.empty?)
+      end
+
+      def code_get(value)
+        code_value = value.to_code
+        raw[code_value.raw].to_code
+      end
+
       def code_include?(value)
         code_value = value.to_code
         Boolean.new(raw.include?(code_value.raw))
+      end
+
+      def code_index(value)
+        code_value = value.to_code
+        raw.index(code_value.raw).to_code
+      end
+
+      def code_last(n = nil)
+        code_n = n.to_code
+        code_n = Integer.new(1) if code_n.nothing?
+        String.new(raw.last(code_n.raw))
+      end
+
+      def code_lines
+        List.new(raw.lines)
       end
 
       def code_multiplication(other)
@@ -126,6 +238,11 @@ class Code
         String.new(raw.reverse)
       end
 
+      def code_right_index(value)
+        code_value = value.to_code
+        raw.rindex(code_value.raw).to_code
+      end
+
       def code_to_function(**_globals)
         Function.new([{ name: "_" }], "_.#{raw}")
       end
@@ -138,11 +255,34 @@ class Code
         String.new(raw.parameterize)
       end
 
+      def code_squish
+        String.new(raw.squish)
+      end
+
       def code_substitute(from = nil, to = nil)
+        code_substitute_all(from, to)
+      end
+
+      def code_substitute_all(from = nil, to = nil)
         code_from = from.to_code
         code_to = to.to_code
 
         String.new(raw.gsub(code_from.to_s, code_to.to_s))
+      end
+
+      def code_substitute_once(from = nil, to = nil)
+        code_from = from.to_code
+        code_to = to.to_code
+
+        String.new(raw.sub(code_from.to_s, code_to.to_s))
+      end
+
+      def code_swapcase
+        String.new(raw.swapcase)
+      end
+
+      def code_titleize
+        String.new(raw.titleize)
       end
 
       def code_first(n = nil)
@@ -171,6 +311,10 @@ class Code
         else
           List.new(raw.split(code_value.to_s))
         end
+      end
+
+      def code_words
+        List.new(raw.split)
       end
 
       def present?
