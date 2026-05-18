@@ -207,6 +207,9 @@ class Code
         when "keys"
           sig(args)
           code_keys
+        when "map"
+          sig(args) { Function }
+          code_map(code_value, **globals)
         when "merge"
           sig(args) { [Dictionary.repeat, Function.maybe] }
           code_merge(*code_arguments.raw, **globals)
@@ -247,8 +250,8 @@ class Code
           sig(args) { String.maybe }
           code_to_query(code_value)
         when "values"
-          sig(args)
-          code_values
+          sig(args) { [Object.repeat, Function.maybe] }
+          code_values(*code_arguments.raw, **globals)
         when "many?"
           sig(args)
           code_many?
@@ -936,6 +939,23 @@ class Code
         List.new(raw.keys)
       end
 
+      def code_map(function, **globals)
+        code_function = function.to_code
+
+        List.new(
+          raw.map.with_index do |(key, value), index|
+            code_function.call(
+              arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+              **globals
+            )
+          rescue Error::Next => e
+            e.code_value
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_merge(*arguments, **globals)
         arguments = arguments.to_code.raw
 
@@ -1189,8 +1209,36 @@ class Code
         self
       end
 
-      def code_values
-        List.new(raw.values)
+      def code_values(*arguments, **globals)
+        arguments = arguments.to_code.raw
+        code_function =
+          (arguments.last if arguments.last.is_a?(Function)).to_code
+
+        arguments = arguments[..-2] unless code_function.nothing?
+
+        entries =
+          if arguments.empty?
+            raw.to_a
+          else
+            arguments.map { |key| [key, raw.fetch(key, Nothing.new)] }
+          end
+
+        if code_function.nothing?
+          List.new(entries.map(&:second))
+        else
+          List.new(
+            entries.map.with_index do |(key, value), index|
+              code_function.call(
+                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                **globals
+              )
+            rescue Error::Next => e
+              e.code_value
+            end
+          )
+        end
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_deep_duplicate

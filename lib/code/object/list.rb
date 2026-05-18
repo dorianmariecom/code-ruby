@@ -172,6 +172,9 @@ class Code
         when "detect"
           sig(args) { (Function | Class).maybe }
           code_detect(code_value, **globals)
+        when "index", "find_index"
+          sig(args) { (Object | Function | Class).maybe }
+          code_index(code_value, **globals)
         when "each"
           sig(args) { (Function | Class).maybe }
           code_each(code_value, **globals)
@@ -514,6 +517,9 @@ class Code
         when "drop"
           sig(args) { Integer }
           code_drop(code_value)
+        when "zip"
+          sig(args) { List.repeat(1) }
+          code_zip(*code_arguments.raw)
         when "map"
           sig(args) { (Function | Class).maybe }
           code_map(code_value, **globals)
@@ -538,6 +544,24 @@ class Code
         when "reduce"
           sig(args) { (Function | Class).maybe }
           code_reduce(code_value, **globals)
+        when "group"
+          sig(args) { (Function | Class).maybe }
+          code_group(code_value, **globals)
+        when "partition"
+          sig(args) { Function | Class }
+          code_partition(code_value, **globals)
+        when "cycle"
+          sig(args) { [Integer.maybe, Function.maybe] }
+          code_cycle(*code_arguments.raw, **globals)
+        when "transpose"
+          sig(args)
+          code_transpose
+        when "combination"
+          sig(args) { Integer }
+          code_combination(code_value)
+        when "permutation"
+          sig(args) { Integer.maybe }
+          code_permutation(code_value)
         when "reverse"
           sig(args)
           code_reverse
@@ -987,6 +1011,32 @@ class Code
         rescue Error::Next => e
           e.code_value
         end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_index(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.nothing?
+          return Nothing.new
+        elsif code_argument.is_a?(Function)
+          index =
+            raw.index.with_index do |code_element, index|
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            rescue Error::Next => e
+              e.code_value.truthy?
+            end
+        elsif code_argument.is_a?(Class)
+          index = raw.index { |code_element| code_element.is_a?(code_argument.raw) }
+        else
+          index = raw.index(code_argument)
+        end
+
+        index.nil? ? Nothing.new : Integer.new(index)
       rescue Error::Break => e
         e.code_value
       end
@@ -1512,6 +1562,11 @@ class Code
         List.new(raw.drop(code_n.raw))
       end
 
+      def code_zip(*arguments)
+        code_arguments = arguments.to_code
+        List.new(raw.zip(*code_arguments.raw.map(&:raw)))
+      end
+
       def code_map(argument = nil, **globals)
         code_argument = argument.to_code
 
@@ -1678,6 +1733,101 @@ class Code
         end || Nothing.new
       rescue Error::Break => e
         e.code_value
+      end
+
+      def code_group(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        grouped =
+          raw.group_by.with_index do |code_element, index|
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+            elsif code_argument.is_a?(Class)
+              Boolean.new(code_element.is_a?(code_argument.raw))
+            else
+              code_element
+            end
+          rescue Error::Next => e
+            e.code_value
+          end
+
+        Dictionary.new(grouped.transform_values { |values| List.new(values) })
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_partition(argument, **globals)
+        code_argument = argument.to_code
+
+        lists =
+          raw.partition.with_index do |code_element, index|
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            elsif code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw)
+            else
+              false
+            end
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+
+        List.new(lists.map { |list| List.new(list) })
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_cycle(times = nil, function = nil, **globals)
+        code_times = times.to_code
+        code_function = function.to_code
+
+        if code_times.is_a?(Function)
+          code_function = code_times
+          code_times = Integer.new(1)
+        elsif code_times.nothing?
+          code_times = Integer.new(1)
+        end
+
+        cycled = raw.cycle(code_times.raw)
+
+        if code_function.is_a?(Function)
+          cycled.each.with_index do |code_element, index|
+            code_function.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          rescue Error::Next => e
+            e.code_value
+          end
+
+          self
+        else
+          List.new(cycled.to_a)
+        end
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_transpose
+        List.new(raw.map(&:raw).transpose)
+      end
+
+      def code_combination(size)
+        code_size = size.to_code
+        List.new(raw.combination(code_size.raw).map { |values| List.new(values) })
+      end
+
+      def code_permutation(size = nil)
+        code_size = size.to_code
+        size = code_size.nothing? ? raw.size : code_size.raw
+
+        List.new(raw.permutation(size).map { |values| List.new(values) })
       end
 
       def code_reverse

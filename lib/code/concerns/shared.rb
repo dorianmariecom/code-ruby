@@ -23,6 +23,9 @@ class Code
         when "presence_in"
           sig(args) { Object::List }
           code_presence_in(code_value)
+        when "is_a?", "is_an?", "kind_of?"
+          sig(args) { Object::Class }
+          code_is_a?(code_value)
         when "new"
           sig(args) { Object.repeat }
           code_new(*code_arguments.raw)
@@ -145,6 +148,18 @@ class Code
         when "methods"
           sig(args)
           code_methods
+        when "itself"
+          sig(args)
+          code_itself
+        when "send"
+          sig(args) { [Object, Object.repeat] }
+          code_send(*code_arguments.raw, **args)
+        when "tap"
+          sig(args) { Object::Function }
+          code_tap(code_value, **args)
+        when "then"
+          sig(args) { Object::Function }
+          code_then(code_value, **args)
         when "name"
           sig(args)
           code_name
@@ -476,6 +491,45 @@ class Code
 
       def code_methods
         Object::List.new(methods)
+      end
+
+      def code_is_a?(klass)
+        code_klass = klass.to_code
+
+        Object::Boolean.new(is_a?(code_klass.raw))
+      end
+
+      def code_itself
+        self
+      end
+
+      def code_send(operator, *arguments, **globals)
+        code_operator = operator.to_code
+
+        call(
+          **globals,
+          arguments: Object::List.new(arguments),
+          operator: code_operator
+        )
+      end
+
+      def code_tap(function, **globals)
+        code_function = function.to_code
+        code_function.call(
+          **globals,
+          arguments: Object::List.new([self]),
+          operator: nil
+        )
+        self
+      end
+
+      def code_then(function, **globals)
+        code_function = function.to_code
+        code_function.call(
+          **globals,
+          arguments: Object::List.new([self]),
+          operator: nil
+        )
       end
 
       def present?

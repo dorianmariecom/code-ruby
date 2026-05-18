@@ -52,6 +52,18 @@ class Code
         when "divide_modulo"
           sig(args) { Integer | Decimal }
           code_divide_modulo(code_value)
+        when "digits"
+          sig(args) { Integer.maybe }
+          code_digits(code_value)
+        when "character"
+          sig(args)
+          code_character
+        when "greatest_common_denominator"
+          sig(args) { Integer }
+          code_greatest_common_denominator(code_value)
+        when "lowest_common_multiple"
+          sig(args) { Integer }
+          code_lowest_common_multiple(code_value)
         when "<<", "left_shift"
           sig(args) { Integer | Decimal }
           code_left_shift(code_value)
@@ -127,6 +139,12 @@ class Code
         when "times"
           sig(args) { Function }
           code_times(code_value, **globals)
+        when "down_to"
+          sig(args) { [Integer, Function] }
+          code_down_to(*code_arguments.raw, **globals)
+        when "up_to"
+          sig(args) { [Integer, Function] }
+          code_up_to(*code_arguments.raw, **globals)
         when "truncate"
           sig(args) { Integer.maybe }
           code_truncate(code_value)
@@ -502,6 +520,20 @@ class Code
         Decimal.new(BigDecimal(raw) / code_other.raw)
       end
 
+      def code_digits(base = nil)
+        code_base = base.to_code
+
+        if code_base.nothing?
+          List.new(raw.digits)
+        else
+          List.new(raw.digits(code_base.raw))
+        end
+      end
+
+      def code_character
+        String.new(raw.chr)
+      end
+
       def code_even?
         Boolean.new(raw.even?)
       end
@@ -523,6 +555,16 @@ class Code
         code_n = n.to_code
         code_n = Integer.new(1) if code_n.nothing?
         Integer.new(raw + code_n.raw)
+      end
+
+      def code_greatest_common_denominator(other)
+        code_other = other.to_code
+        Integer.new(raw.gcd(code_other.raw))
+      end
+
+      def code_lowest_common_multiple(other)
+        code_other = other.to_code
+        Integer.new(raw.lcm(code_other.raw))
       end
 
       def code_left_shift(other)
@@ -618,6 +660,42 @@ class Code
         raw.times do |element|
           code_argument.call(
             arguments: List.new([Integer.new(element), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_down_to(value, function, **globals)
+        code_value = value.to_code
+        code_function = function.to_code
+
+        raw.downto(code_value.raw).with_index do |element, index|
+          code_function.call(
+            arguments: List.new([Integer.new(element), Integer.new(index), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_up_to(value, function, **globals)
+        code_value = value.to_code
+        code_function = function.to_code
+
+        raw.upto(code_value.raw).with_index do |element, index|
+          code_function.call(
+            arguments: List.new([Integer.new(element), Integer.new(index), self]),
             **globals
           )
         rescue Error::Next => e

@@ -47,6 +47,9 @@ class Code
         when "any?"
           sig(args) { Function }
           code_any?(code_value, **globals)
+        when "none?"
+          sig(args) { Function }
+          code_none?(code_value, **globals)
         when "each"
           sig(args) { Function }
           code_each(code_value, **globals)
@@ -77,9 +80,15 @@ class Code
         when "select"
           sig(args) { Function }
           code_select(code_value, **globals)
+        when "reject"
+          sig(args) { Function }
+          code_reject(code_value, **globals)
+        when "reduce"
+          sig(args) { Function }
+          code_reduce(code_value, **globals)
         when "step"
-          sig(args) { Integer | Decimal }
-          code_step(code_value)
+          sig(args) { [(Integer | Decimal).maybe, Function.maybe] }
+          code_step(*code_arguments.raw, **globals)
         when "sample"
           sig(args)
           code_sample
@@ -126,6 +135,28 @@ class Code
 
         Boolean.new(
           raw.any? do |code_element|
+            code_argument
+              .call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+              .truthy?
+              .tap { index += 1 }
+          rescue Error::Next => e
+            e.code_value.truthy?.tap { index += 1 }
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_none?(argument, **globals)
+        code_argument = argument.to_code
+
+        index = 0
+
+        Boolean.new(
+          raw.none? do |code_element|
             code_argument
               .call(
                 arguments: List.new([code_element, Integer.new(index), self]),
@@ -222,32 +253,89 @@ class Code
         e.code_value
       end
 
+      def code_reject(argument, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.reject.with_index do |code_element, index|
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_reduce(argument, **globals)
+        code_argument = argument.to_code
+
+        index = 0
+
+        raw.reduce do |code_acc, code_element|
+          code_argument
+            .call(
+              arguments:
+                List.new([code_acc, code_element, Integer.new(index), self]),
+              **globals
+            )
+            .tap { index += 1 }
+        rescue Error::Next => e
+          e.code_value.tap { index += 1 }
+        end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def exclude_end?
         code_exclude_end.truthy?
       end
 
-      def code_step(argument)
+      def code_step(argument = nil, function = nil, **globals)
         code_argument = argument.to_code
+        code_function = function.to_code
+
+        if code_argument.is_a?(Function)
+          code_function = code_argument
+          code_argument = Integer.new(1)
+        elsif code_argument.nothing?
+          code_argument = Integer.new(1)
+        end
 
         code_list = List.new
         code_element = code_left
-        code_list.code_append(code_element)
+        index = 0
+        step_is_positive = code_argument.code_greater(Integer.new(0)).truthy?
 
-        code_element = code_element.code_plus(code_argument)
+        loop do
+          comparison =
+            if step_is_positive
+              exclude_end? ? code_element.code_less(code_right) : code_element.code_less_or_equal(code_right)
+            else
+              exclude_end? ? code_element.code_greater(code_right) : code_element.code_greater_or_equal(code_right)
+            end
 
-        if exclude_end?
-          while code_element.code_less(code_right).truthy?
+          break unless comparison.truthy?
+
+          if code_function.is_a?(Function)
+            code_function.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          else
             code_list.code_append(code_element)
-            code_element = code_element.code_plus(code_argument)
           end
-        else
-          while code_element.code_less_or_equal(code_right).truthy?
-            code_list.code_append(code_element)
-            code_element = code_element.code_plus(code_argument)
-          end
+
+          index += 1
+          code_element = code_element.code_plus(code_argument)
         end
 
-        code_list
+        code_function.is_a?(Function) ? self : code_list
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_to_list

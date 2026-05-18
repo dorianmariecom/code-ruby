@@ -61,6 +61,9 @@ class Code
         when "characters"
           sig(args)
           code_characters
+        when "bytes"
+          sig(args)
+          code_bytes
         when "chomp"
           sig(args)
           code_chomp
@@ -106,12 +109,21 @@ class Code
         when "substitute"
           sig(args) { [String, String.maybe] }
           code_substitute(*code_arguments.raw)
+        when "substitute!"
+          sig(args) { [String, String.maybe] }
+          code_substitute!(*code_arguments.raw)
         when "substitute_all"
           sig(args) { [String, String.maybe] }
           code_substitute_all(*code_arguments.raw)
+        when "substitute_all!"
+          sig(args) { [String, String.maybe] }
+          code_substitute_all!(*code_arguments.raw)
         when "substitute_once"
           sig(args) { [String, String.maybe] }
           code_substitute_once(*code_arguments.raw)
+        when "substitute_once!"
+          sig(args) { [String, String.maybe] }
+          code_substitute_once!(*code_arguments.raw)
         when "swapcase"
           sig(args)
           code_swapcase
@@ -127,6 +139,21 @@ class Code
         when "strip"
           sig(args)
           code_strip
+        when "left_strip"
+          sig(args)
+          code_left_strip
+        when "right_strip"
+          sig(args)
+          code_right_strip
+        when "slice"
+          sig(args) { Object.repeat(1) }
+          code_slice(*code_arguments.raw)
+        when "left_justify"
+          sig(args) { [Integer, String.maybe] }
+          code_left_justify(*code_arguments.raw)
+        when "right_justify"
+          sig(args) { [Integer, String.maybe] }
+          code_right_justify(*code_arguments.raw)
         when "split"
           sig(args) { String.maybe }
           code_split(code_value)
@@ -152,6 +179,10 @@ class Code
 
       def code_characters
         List.new(raw.chars)
+      end
+
+      def code_bytes
+        List.new(raw.bytes)
       end
 
       def code_chomp
@@ -263,6 +294,10 @@ class Code
         code_substitute_all(from, to)
       end
 
+      def code_substitute!(from = nil, to = nil)
+        code_substitute_all!(from, to)
+      end
+
       def code_substitute_all(from = nil, to = nil)
         code_from = from.to_code
         code_to = to.to_code
@@ -270,11 +305,21 @@ class Code
         String.new(raw.gsub(code_from.to_s, code_to.to_s))
       end
 
+      def code_substitute_all!(from = nil, to = nil)
+        self.raw = code_substitute_all(from, to).raw
+        self
+      end
+
       def code_substitute_once(from = nil, to = nil)
         code_from = from.to_code
         code_to = to.to_code
 
         String.new(raw.sub(code_from.to_s, code_to.to_s))
+      end
+
+      def code_substitute_once!(from = nil, to = nil)
+        self.raw = code_substitute_once(from, to).raw
+        self
       end
 
       def code_swapcase
@@ -301,6 +346,48 @@ class Code
         raise unless e.message.include?("invalid byte sequence")
 
         String.new(sanitized_utf8_raw.strip)
+      end
+
+      def code_left_strip
+        String.new(raw.lstrip)
+      end
+
+      def code_right_strip
+        String.new(raw.rstrip)
+      end
+
+      def code_slice(*arguments)
+        code_arguments = arguments.to_code.raw
+
+        if code_arguments.first.is_a?(Range)
+          code_range = code_arguments.first
+          range =
+            ::Range.new(
+              code_range.code_left.to_i,
+              code_range.code_right.to_i,
+              code_range.exclude_end?
+            )
+
+          return raw.slice(range).to_code
+        end
+
+        raw.slice(*code_arguments.map(&:to_i)).to_code
+      end
+
+      def code_left_justify(width, padding = nil)
+        code_width = width.to_code
+        code_padding = padding.to_code
+        code_padding = String.new(" ") if code_padding.nothing?
+
+        String.new(raw.ljust(code_width.raw, code_padding.to_s))
+      end
+
+      def code_right_justify(width, padding = nil)
+        code_width = width.to_code
+        code_padding = padding.to_code
+        code_padding = String.new(" ") if code_padding.nothing?
+
+        String.new(raw.rjust(code_width.raw, code_padding.to_s))
       end
 
       def code_split(value)

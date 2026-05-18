@@ -32,14 +32,24 @@ RSpec.describe Code::Object::String do
     ['"one one".substitute_once("one", "two")', '"two one"'],
     ['"one one".substitute("one", "two")', '"two two"'],
     ['"one one".substitute_all("one", "two")', '"two two"'],
+    ['s = "one one" s.substitute_once!("one", "two") s', '"two one"'],
+    ['s = "one one" s.substitute!("one", "two") s', '"two two"'],
+    ['s = "one one" s.substitute_all!("one", "two") s', '"two two"'],
     ['"hello".index("l")', "2"],
     ['"hello".right_index("l")', "3"],
     ['"hello".index("z")', "nothing"],
     ['"hi".characters', '["h", "i"]'],
+    ['"hi".bytes', "[104, 105]"],
     ["\"a\\nb\".lines", '["a\n", "b"]'],
     ['"a b  c".words', '["a", "b", "c"]'],
     ['"hello".at(1)', '"e"'],
-    ['"hello"[10]', "nothing"]
+    ['"hello"[10]', "nothing"],
+    ['"hello".slice(1, 3)', '"ell"'],
+    ['"hello".slice(1..3)', '"ell"'],
+    ['"  hello  ".left_strip', '"hello  "'],
+    ['"  hello  ".right_strip', '"  hello"'],
+    ['"hi".left_justify(5, ".")', '"hi..."'],
+    ['"hi".right_justify(5, ".")', '"...hi"']
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
