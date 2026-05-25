@@ -16,8 +16,52 @@ class Code
           end
       end
 
-      def call(...)
-        raw.call(...)
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+
+        case code_operator.to_s
+        when "functions"
+          sig(args)
+          code_functions
+        when "instance_functions"
+          sig(args)
+          code_instance_functions
+        when "class_functions"
+          sig(args)
+          code_class_functions
+        when "extend"
+          sig(args) { Function }
+          code_extend(args.fetch(:arguments).code_first)
+        else
+          raw.call(**args)
+        end
+      end
+
+      def code_call(*arguments, **_globals)
+        raw.code_new(*arguments)
+      end
+
+      def code_extend(function)
+        code_function = function.to_code
+
+        Function.new(
+          code_function.code_parameters,
+          code_function.code_body.raw,
+          code_function.definition_context,
+          parent: self
+        )
+      end
+
+      def code_functions
+        code_class_functions
+      end
+
+      def code_instance_functions
+        Object.documented_functions_for(raw, :instance)
+      end
+
+      def code_class_functions
+        Object.documented_functions_for(raw, :class)
       end
 
       def code_to_string

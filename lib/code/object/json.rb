@@ -12,6 +12,14 @@ class Code
         when "parse"
           sig(args) { String }
           code_parse(code_value)
+        when "generate"
+          sig(args) { [Object, { pretty: Object::Boolean.maybe }] }
+
+          if code_arguments.code_second.something?
+            code_generate(code_value, pretty: code_arguments.code_second.code_get(:pretty))
+          else
+            code_generate(code_value)
+          end
         else
           super
         end
@@ -23,6 +31,10 @@ class Code
         ::JSON.parse(code_value.raw).to_code
       rescue JSON::ParserError
         Nothing.new
+      end
+
+      def self.code_generate(value, pretty: nil)
+        value.to_code.code_to_json(pretty: pretty)
       end
     end
   end

@@ -9,22 +9,22 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
-        when "encode"
+        when "encode", "encode_64"
           sig(args) { String }
           code_encode(code_value)
-        when "decode"
+        when "decode", "decode_64"
           sig(args) { String }
           code_decode(code_value)
-        when "strict_encode"
+        when "strict_encode", "strict_encode_64"
           sig(args) { String }
           code_strict_encode(code_value)
-        when "strict_decode"
+        when "strict_decode", "strict_decode_64"
           sig(args) { String }
           code_strict_decode(code_value)
-        when "urlsafe_encode"
+        when "urlsafe_encode", "url_safe_encode_64"
           sig(args) { String }
           code_urlsafe_encode(code_value)
-        when "urlsafe_decode"
+        when "urlsafe_decode", "url_safe_decode_64"
           sig(args) { String }
           code_urlsafe_decode(code_value)
         else

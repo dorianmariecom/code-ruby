@@ -129,6 +129,29 @@ class Code
             .merge(kargs.transform_keys(&:to_code).transform_values(&:to_code))
       end
 
+      def self.call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+        code_arguments = args.fetch(:arguments, List.new).to_code
+        code_value = code_arguments.code_first
+
+        case code_operator.to_s
+        when "entries"
+          sig(args) { Dictionary }
+          code_entries(code_value)
+        when "from_entries"
+          sig(args) { List }
+          code_from_entries(code_value)
+        when "assign"
+          sig(args) { Dictionary.repeat(1) }
+          code_assign(*code_arguments.raw)
+        when "has_own?"
+          sig(args) { [Dictionary, Object] }
+          code_has_own?(*code_arguments.raw)
+        else
+          super
+        end
+      end
+
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, List.new).to_code
@@ -171,6 +194,15 @@ class Code
         when "each"
           sig(args) { Function }
           code_each(code_value, **globals)
+        when "each_key"
+          sig(args) { Function }
+          code_each_key(code_value, **globals)
+        when "each_value"
+          sig(args) { Function }
+          code_each_value(code_value, **globals)
+        when "each_pair"
+          sig(args) { Function }
+          code_each_pair(code_value, **globals)
         when "empty?"
           sig(args)
           code_empty?
@@ -189,6 +221,9 @@ class Code
         when "has_key?", "key?", "include?", "member?"
           sig(args) { Object }
           code_has_key?(code_value)
+        when "has_own?"
+          sig(args) { Object }
+          code_has_own?(code_value)
         when "has_value?", "value?"
           sig(args) { Object }
           code_has_value?(code_value)
@@ -216,6 +251,18 @@ class Code
         when "merge!"
           sig(args) { [Dictionary.repeat, Function.maybe] }
           code_merge!(*code_arguments.raw, **globals)
+        when "update"
+          sig(args) { [Dictionary.repeat, Function.maybe] }
+          code_update(*code_arguments.raw, **globals)
+        when "replace"
+          sig(args) { Dictionary }
+          code_replace(code_value)
+        when "store"
+          sig(args) { [Object, Object] }
+          code_store(*code_arguments.raw)
+        when "shift"
+          sig(args)
+          code_shift
         when "reject!"
           sig(args) { Function | Class }
           code_reject!(code_value, **globals)
@@ -249,9 +296,24 @@ class Code
         when "to_query"
           sig(args) { String.maybe }
           code_to_query(code_value)
+        when "to_list", "entries"
+          sig(args)
+          code_to_list
+        when "to_dictionary"
+          sig(args)
+          code_to_dictionary
         when "values"
           sig(args) { [Object.repeat, Function.maybe] }
           code_values(*code_arguments.raw, **globals)
+        when "values_at"
+          sig(args) { Object.repeat(1) }
+          code_values_at(*code_arguments.raw)
+        when "associate"
+          sig(args) { Object }
+          code_associate(code_value)
+        when "right_associate"
+          sig(args) { Object }
+          code_right_associate(code_value)
         when "many?"
           sig(args)
           code_many?
@@ -611,6 +673,22 @@ class Code
         self
       end
 
+      def self.code_entries(dictionary)
+        dictionary.to_code.code_to_list
+      end
+
+      def self.code_from_entries(entries)
+        entries.to_code.code_to_dictionary
+      end
+
+      def self.code_assign(*dictionaries)
+        Dictionary.new(dictionaries.to_code.raw.reduce({}) { |acc, item| acc.merge(item.raw) })
+      end
+
+      def self.code_has_own?(dictionary, key)
+        dictionary.to_code.code_has_key?(key)
+      end
+
       def code_compact(argument = nil, **globals)
         code_argument = argument.to_code
 
@@ -785,6 +863,31 @@ class Code
         e.code_value
       end
 
+      def code_each_key(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.each.with_index do |(key, value), index|
+          code_argument.call(
+            arguments: List.new([key, value, Integer.new(index), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_each_value(argument, **globals)
+        code_each_key(argument, **globals)
+      end
+
+      def code_each_pair(argument, **globals)
+        code_each_key(argument, **globals)
+      end
+
       def code_empty?
         Boolean.new(raw.empty?)
       end
@@ -868,6 +971,10 @@ class Code
       def code_has_key?(key)
         code_key = key.to_code
         Boolean.new(raw.key?(code_key))
+      end
+
+      def code_has_own?(key)
+        code_has_key?(key)
       end
 
       def code_has_value?(key)
@@ -1038,6 +1145,27 @@ class Code
         e.code_value
       end
 
+      def code_update(*arguments, **globals)
+        code_merge!(*arguments, **globals)
+      end
+
+      def code_replace(dictionary)
+        code_dictionary = dictionary.to_code
+
+        self.raw = code_dictionary.raw.dup
+        self
+      end
+
+      def code_store(key, value)
+        code_set(key, value)
+      end
+
+      def code_shift
+        pair = raw.shift
+
+        pair ? List.new(pair) : Nothing.new
+      end
+
       def code_select!(argument, **globals)
         code_argument = argument.to_code
 
@@ -1142,6 +1270,14 @@ class Code
         Dictionary.new(raw.slice(*code_arguments.raw))
       end
 
+      def code_to_list
+        List.new(raw.map { |key, value| List.new([key, value]) })
+      end
+
+      def code_to_dictionary
+        self
+      end
+
       def code_to_context
         Context.new(raw)
       end
@@ -1239,6 +1375,25 @@ class Code
         end
       rescue Error::Break => e
         e.code_value
+      end
+
+      def code_values_at(*keys)
+        code_keys = keys.to_code
+
+        List.new(raw.values_at(*code_keys.raw))
+      end
+
+      def code_associate(key)
+        code_key = key.to_code
+
+        raw.key?(code_key) ? List.new([code_key, raw[code_key]]) : Nothing.new
+      end
+
+      def code_right_associate(value)
+        code_value = value.to_code
+        pair = raw.detect { |_, entry_value| entry_value == code_value }
+
+        pair ? List.new(pair) : Nothing.new
       end
 
       def code_deep_duplicate

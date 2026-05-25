@@ -136,6 +136,18 @@ class Code
         when "[]", "at", "get"
           sig(args) { Integer }
           code_get(code_value)
+        when "fetch"
+          sig(args) { Integer }
+          code_fetch(code_value)
+        when "values_at"
+          sig(args) { Integer.repeat(1) }
+          code_values_at(*code_arguments.raw)
+        when "slice"
+          sig(args) { [Object, Integer.maybe] }
+          code_slice(*code_arguments.raw)
+        when "slice!"
+          sig(args) { [Object, Integer.maybe] }
+          code_slice!(*code_arguments.raw)
         when "clear"
           sig(args)
           code_clear
@@ -160,6 +172,12 @@ class Code
         when "insert"
           sig(args) { [Integer, Object] }
           code_insert(*code_arguments.raw)
+        when "concat"
+          sig(args) { List.repeat(1) }
+          code_concat(*code_arguments.raw)
+        when "fill"
+          sig(args) { [Object, Integer.maybe, Integer.maybe] }
+          code_fill(*code_arguments.raw)
         when "+", "plus"
           sig(args) { List.maybe }
           code_arguments.any? ? code_plus(code_value) : code_self
@@ -175,9 +193,15 @@ class Code
         when "index", "find_index"
           sig(args) { (Object | Function | Class).maybe }
           code_index(code_value, **globals)
+        when "right_index"
+          sig(args) { (Object | Function | Class).maybe }
+          code_right_index(code_value, **globals)
         when "each"
           sig(args) { (Function | Class).maybe }
           code_each(code_value, **globals)
+        when "each_index"
+          sig(args) { Function }
+          code_each_index(code_value, **globals)
         when "first"
           sig(args) { Integer.maybe }
           code_first(code_value)
@@ -496,6 +520,12 @@ class Code
         when "delete_at"
           sig(args) { Integer }
           code_delete_at(code_value)
+        when "delete_if"
+          sig(args) { Function | Class }
+          code_delete_if(code_value, **globals)
+        when "keep_if"
+          sig(args) { Function | Class }
+          code_keep_if(code_value, **globals)
         when "pop"
           sig(args) { Integer.maybe }
           code_pop(code_value)
@@ -517,6 +547,12 @@ class Code
         when "drop"
           sig(args) { Integer }
           code_drop(code_value)
+        when "drop_while"
+          sig(args) { Function | Class }
+          code_drop_while(code_value, **globals)
+        when "take_while"
+          sig(args) { Function | Class }
+          code_take_while(code_value, **globals)
         when "zip"
           sig(args) { List.repeat(1) }
           code_zip(*code_arguments.raw)
@@ -526,6 +562,9 @@ class Code
         when "map!"
           sig(args) { (Function | Class).maybe }
           code_map!(code_value, **globals)
+        when "flat_map"
+          sig(args) { Function | Class }
+          code_flat_map(code_value, **globals)
         when "max"
           sig(args) { (Function | Class).maybe }
           code_max(code_value, **globals)
@@ -535,6 +574,9 @@ class Code
         when "minimum"
           sig(args) { (Function | Class).maybe }
           code_minimum(code_value, **globals)
+        when "minimum_maximum"
+          sig(args) { (Function | Class).maybe }
+          code_minimum_maximum(code_value, **globals)
         when "none?"
           sig(args) { (Function | Class).maybe }
           code_none?(code_value, **globals)
@@ -562,12 +604,48 @@ class Code
         when "permutation"
           sig(args) { Integer.maybe }
           code_permutation(code_value)
+        when "product"
+          sig(args) { List.repeat(1) }
+          code_product(*code_arguments.raw)
+        when "repeated_combination"
+          sig(args) { Integer }
+          code_repeated_combination(code_value)
+        when "repeated_permutation"
+          sig(args) { Integer }
+          code_repeated_permutation(code_value)
         when "reverse"
           sig(args)
           code_reverse
         when "reverse!"
           sig(args)
           code_reverse!
+        when "reverse_each"
+          sig(args) { Function }
+          code_reverse_each(code_value, **globals)
+        when "rotate"
+          sig(args) { Integer.maybe }
+          code_rotate(code_value)
+        when "rotate!"
+          sig(args) { Integer.maybe }
+          code_rotate!(code_value)
+        when "union"
+          sig(args) { List.repeat(1) }
+          code_union(*code_arguments.raw)
+        when "intersection"
+          sig(args) { List.repeat(1) }
+          code_intersection(*code_arguments.raw)
+        when "difference"
+          sig(args) { List.repeat(1) }
+          code_difference(*code_arguments.raw)
+        when "intersect?"
+          sig(args) { List }
+          code_intersect?(code_value)
+        when "associate"
+          sig(args) { Object }
+          code_associate(code_value)
+        when "right_associate"
+          sig(args) { Object }
+          code_right_associate(code_value)
         when "select"
           sig(args) { (Function | Class).maybe }
           code_select(code_value, **globals)
@@ -601,9 +679,18 @@ class Code
         when "tally"
           sig(args)
           code_tally
+        when "entries"
+          sig(args)
+          code_entries
+        when "to_dictionary"
+          sig(args)
+          code_to_dictionary
         when "uniq"
           sig(args) { (Function | Class).maybe }
           code_uniq(code_value, **globals)
+        when "sort_by!"
+          sig(args) { (Function | Class).maybe }
+          code_sort_by!(code_value, **globals)
         when "uniq!"
           sig(args) { (Function | Class).maybe }
           code_uniq!(code_value, **globals)
@@ -982,6 +1069,27 @@ class Code
         self
       end
 
+      def code_concat(*lists)
+        lists.to_code.raw.each { |list| raw.concat(list.raw) }
+        self
+      end
+
+      def code_fill(value, start = nil, length = nil)
+        code_value = value.to_code
+        code_start = start.to_code
+        code_length = length.to_code
+
+        if code_start.nothing?
+          raw.fill(code_value)
+        elsif code_length.nothing?
+          raw.fill(code_value, code_start.raw)
+        else
+          raw.fill(code_value, code_start.raw, code_length.raw)
+        end
+
+        self
+      end
+
       def code_plus(other)
         code_other = other.to_code
 
@@ -1041,6 +1149,33 @@ class Code
         e.code_value
       end
 
+      def code_right_index(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        if code_argument.nothing?
+          return Nothing.new
+        elsif code_argument.is_a?(Function)
+          index =
+            raw.rindex.with_index do |code_element, index|
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            rescue Error::Next => e
+              e.code_value.truthy?
+            end
+        elsif code_argument.is_a?(Class)
+          index =
+            raw.rindex { |code_element| code_element.is_a?(code_argument.raw) }
+        else
+          index = raw.rindex(code_argument)
+        end
+
+        index.nil? ? Nothing.new : Integer.new(index)
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_each(argument = nil, **globals)
         code_argument = argument.to_code
 
@@ -1053,6 +1188,24 @@ class Code
           elsif code_argument.is_a?(Class)
             code_argument.raw.new(code_element)
           end
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_each_index(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.each_index do |index|
+          code_index = Integer.new(index)
+          code_argument.call(
+            arguments: List.new([code_index, code_index, self]),
+            **globals
+          )
         rescue Error::Next => e
           e.code_value
         end
@@ -1521,6 +1674,48 @@ class Code
         raw.delete_at(code_index.raw) || Nothing.new
       end
 
+      def code_delete_if(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.delete_if.with_index do |code_element, index|
+          if code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw)
+          else
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          end
+        rescue Error::Next => e
+          e.code_value.truthy?
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_keep_if(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.keep_if.with_index do |code_element, index|
+          if code_argument.is_a?(Class)
+            code_element.is_a?(code_argument.raw)
+          else
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            ).truthy?
+          end
+        rescue Error::Next => e
+          e.code_value.truthy?
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_pop(n = nil)
         code_n = n.to_code
         n = code_n.raw
@@ -1560,6 +1755,48 @@ class Code
       def code_drop(n)
         code_n = n.to_code
         List.new(raw.drop(code_n.raw))
+      end
+
+      def code_drop_while(argument, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.drop_while.with_index do |code_element, index|
+            if code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw)
+            else
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            end
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_take_while(argument, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.take_while.with_index do |code_element, index|
+            if code_argument.is_a?(Class)
+              code_element.is_a?(code_argument.raw)
+            else
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            end
+          rescue Error::Next => e
+            e.code_value.truthy?
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
       end
 
       def code_zip(*arguments)
@@ -1613,6 +1850,32 @@ class Code
         e.code_value
       end
 
+      def code_flat_map(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        List.new(
+          raw.flat_map.with_index do |code_element, index|
+            result =
+              if code_argument.is_a?(Function)
+                code_argument.call(
+                  arguments: List.new([code_element, Integer.new(index), self]),
+                  **globals
+                )
+              elsif code_argument.is_a?(Class)
+                code_argument.raw.new(code_element)
+              else
+                Nothing.new
+              end
+
+            result.is_a?(List) ? result.raw : result
+          rescue Error::Next => e
+            e.code_value.is_a?(List) ? e.code_value.raw : e.code_value
+          end
+        )
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_max(argument = nil, **globals)
         code_argument = argument.to_code
 
@@ -1651,6 +1914,28 @@ class Code
         rescue Error::Next => e
           e.code_value
         end || Nothing.new
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_minimum_maximum(argument = nil, **globals)
+        code_argument = argument.to_code
+
+        values =
+          raw.minmax_by.with_index do |code_element, index|
+            if code_argument.is_a?(Function)
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              )
+            else
+              code_element
+            end
+          rescue Error::Next => e
+            e.code_value
+          end
+
+        List.new(values)
       rescue Error::Break => e
         e.code_value
       end
@@ -1830,6 +2115,36 @@ class Code
         List.new(raw.permutation(size).map { |values| List.new(values) })
       end
 
+      def code_product(*lists)
+        code_lists = lists.to_code
+
+        List.new(
+          raw
+            .product(*code_lists.raw.map(&:raw))
+            .map { |values| List.new(values) }
+        )
+      end
+
+      def code_repeated_combination(size)
+        code_size = size.to_code
+
+        List.new(
+          raw
+            .repeated_combination(code_size.raw)
+            .map { |values| List.new(values) }
+        )
+      end
+
+      def code_repeated_permutation(size)
+        code_size = size.to_code
+
+        List.new(
+          raw
+            .repeated_permutation(code_size.raw)
+            .map { |values| List.new(values) }
+        )
+      end
+
       def code_reverse
         List.new(raw.reverse)
       end
@@ -1837,6 +2152,73 @@ class Code
       def code_reverse!
         raw.reverse!
         self
+      end
+
+      def code_reverse_each(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.reverse_each.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_rotate(count = nil)
+        code_count = count.to_code
+        code_count = Integer.new(1) if code_count.nothing?
+
+        List.new(raw.rotate(code_count.raw))
+      end
+
+      def code_rotate!(count = nil)
+        self.raw = code_rotate(count).raw
+        self
+      end
+
+      def code_union(*lists)
+        List.new(raw.union(*lists.to_code.raw.map(&:raw)))
+      end
+
+      def code_intersection(*lists)
+        List.new(raw.intersection(*lists.to_code.raw.map(&:raw)))
+      end
+
+      def code_difference(*lists)
+        List.new(raw.difference(*lists.to_code.raw.map(&:raw)))
+      end
+
+      def code_intersect?(list)
+        code_list = list.to_code
+
+        Boolean.new(raw.intersect?(code_list.raw))
+      end
+
+      def code_associate(value)
+        code_value = value.to_code
+        pair =
+          raw.detect do |element|
+            element.is_a?(List) && element.raw.first == code_value
+          end
+
+        pair || Nothing.new
+      end
+
+      def code_right_associate(value)
+        code_value = value.to_code
+        pair =
+          raw.detect do |element|
+            element.is_a?(List) && element.raw.second == code_value
+          end
+
+        pair || Nothing.new
       end
 
       def code_compact(argument = nil, **globals)
@@ -2013,6 +2395,10 @@ class Code
         self
       end
 
+      def code_sort_by!(argument = nil, **globals)
+        code_sort!(argument, **globals)
+      end
+
       def code_size
         Integer.new(raw.size)
       end
@@ -2050,6 +2436,10 @@ class Code
 
       def code_tally
         Dictionary.new(raw.tally)
+      end
+
+      def code_entries
+        List.new(raw)
       end
 
       def code_uniq(argument = nil, **globals)
@@ -2104,17 +2494,80 @@ class Code
         raw[code_argument.raw] || Nothing.new
       end
 
+      def code_values_at(*indices)
+        code_indices = indices.to_code
+
+        List.new(raw.values_at(*code_indices.raw.map(&:raw)))
+      end
+
+      def code_slice(*arguments)
+        code_arguments = arguments.to_code.raw
+
+        if code_arguments.first.is_a?(Range)
+          range = code_arguments.first
+          value =
+            raw.slice(
+              ::Range.new(
+                range.code_left.to_i,
+                range.code_right.to_i,
+                range.exclude_end?
+              )
+            )
+
+          return value.is_a?(::Array) ? List.new(value) : value.to_code
+        end
+
+        value = raw.slice(*code_arguments.map(&:raw))
+        value.is_a?(::Array) ? List.new(value) : value.to_code
+      end
+
+      def code_slice!(*arguments)
+        code_arguments = arguments.to_code.raw
+
+        if code_arguments.first.is_a?(Range)
+          range = code_arguments.first
+          value =
+            raw.slice!(
+              ::Range.new(
+                range.code_left.to_i,
+                range.code_right.to_i,
+                range.exclude_end?
+              )
+            )
+
+          return value.is_a?(::Array) ? List.new(value) : value.to_code
+        end
+
+        value = raw.slice!(*code_arguments.map(&:raw))
+        value.is_a?(::Array) ? List.new(value) : value.to_code
+      end
+
       def code_set(key, value)
-        code_key = key.to_code.code_to_integer
+        code_key = key.to_code
+        return super unless code_key.is_a?(Integer)
+
         code_value = value.to_code
-        raw[code_key.raw] = code_value
+        raw[code_key.code_to_integer.raw] = code_value
         code_value
       end
 
       def code_fetch(key)
-        code_key = key.to_code.code_to_integer
+        code_key = key.to_code
+        return super unless code_key.is_a?(Integer)
 
-        raw.fetch(code_key.raw, Nothing.new)
+        raw.fetch(code_key.code_to_integer.raw, Nothing.new)
+      end
+
+      def code_to_dictionary
+        Dictionary.new(
+          raw.map.with_index.to_h do |element, index|
+            if element.is_a?(List) && element.raw.many?
+              [element.raw.first, element.raw.second]
+            else
+              [Integer.new(index), element]
+            end
+          end
+        )
       end
 
       def any?

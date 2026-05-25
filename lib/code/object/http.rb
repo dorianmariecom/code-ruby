@@ -193,9 +193,7 @@ class Code
 
         http.open_timeout = open_timeout_value if open_timeout_value
         http.read_timeout = read_timeout_value if read_timeout_value
-        if http.respond_to?(:write_timeout=) && write_timeout_value
-          http.write_timeout = write_timeout_value
-        end
+        http.write_timeout = write_timeout_value if write_timeout_value
 
         request_class =
           case verb
@@ -248,7 +246,34 @@ class Code
           end
         else
           status = STATUS_CODES.key(code) || :ok
-          Dictionary.new(code: code, status: status, body: response.body.to_s)
+          response_headers = response.each_header.to_h
+          request_headers = request.to_hash.transform_values do |values|
+            List.new(values)
+          end
+          body = response.body.to_s
+
+          Dictionary.new(
+            code: code,
+            status: status,
+            body: body,
+            headers: response_headers,
+            method: verb,
+            url: url,
+            "success?" => code.between?(200, 299),
+            "redirect?" => code.between?(300, 399),
+            request: {
+              method: verb,
+              url: url,
+              headers: request_headers,
+              body: request.body.to_s
+            },
+            response: {
+              code: code,
+              status: status,
+              headers: response_headers,
+              body: body
+            }
+          )
         end
       end
     end

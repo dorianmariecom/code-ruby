@@ -15,7 +15,7 @@ class Code
         @forwarded_arguments = forwarded_arguments.to_code
         @code_self = code_self.to_code
         @definition_context = definition_context
-        self.methods = Dictionary.new
+        self.functions = Dictionary.new
         self.raw = @parent.raw
       end
 

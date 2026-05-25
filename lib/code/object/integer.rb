@@ -37,6 +37,9 @@ class Code
         when "**", "power"
           sig(args) { Integer | Decimal }
           code_power(code_value)
+        when "power_modulo"
+          sig(args) { [Integer, Integer] }
+          code_power_modulo(*code_arguments.raw)
         when "+", "plus"
           sig(args) { Object.maybe }
           code_arguments.any? ? code_plus(code_value) : code_self
@@ -52,9 +55,24 @@ class Code
         when "divide_modulo"
           sig(args) { Integer | Decimal }
           code_divide_modulo(code_value)
+        when "decimal_divide"
+          sig(args) { Integer | Decimal }
+          code_decimal_divide(code_value)
         when "digits"
           sig(args) { Integer.maybe }
           code_digits(code_value)
+        when "bit_length"
+          sig(args)
+          code_bit_length
+        when "all_bits?"
+          sig(args) { Integer }
+          code_all_bits?(code_value)
+        when "any_bits?"
+          sig(args) { Integer }
+          code_any_bits?(code_value)
+        when "no_bits?"
+          sig(args) { Integer }
+          code_no_bits?(code_value)
         when "character"
           sig(args)
           code_character
@@ -82,6 +100,9 @@ class Code
         when "ceil"
           sig(args) { Integer.maybe }
           code_ceil(code_value)
+        when "ceil_divide"
+          sig(args) { Integer | Decimal }
+          code_ceil_divide(code_value)
         when "clamp"
           sig(args) { [Integer | Decimal, Integer | Decimal] }
           code_clamp(*code_arguments.raw)
@@ -169,6 +190,27 @@ class Code
         when "negative?"
           sig(args)
           code_negative?
+        when "non_zero?"
+          sig(args)
+          code_non_zero?
+        when "integer?"
+          sig(args)
+          code_integer?
+        when "finite?"
+          sig(args)
+          code_finite?
+        when "infinite?"
+          sig(args)
+          code_infinite?
+        when "numerator"
+          sig(args)
+          code_numerator
+        when "denominator"
+          sig(args)
+          code_denominator
+        when "magnitude"
+          sig(args)
+          code_magnitude
         when "zero?"
           sig(args)
           code_zero?
@@ -496,10 +538,38 @@ class Code
         Integer.new(raw ^ code_other.raw.to_i)
       end
 
+      def code_bit_length
+        Integer.new(raw.bit_length)
+      end
+
+      def code_all_bits?(mask)
+        code_mask = mask.to_code
+
+        Boolean.new(raw.allbits?(code_mask.raw))
+      end
+
+      def code_any_bits?(mask)
+        code_mask = mask.to_code
+
+        Boolean.new(raw.anybits?(code_mask.raw))
+      end
+
+      def code_no_bits?(mask)
+        code_mask = mask.to_code
+
+        Boolean.new(raw.nobits?(code_mask.raw))
+      end
+
       def code_ceil(n = nil)
         code_n = n.to_code
         code_n = Integer.new(0) if code_n.nothing?
         Integer.new(raw.ceil(code_n.raw))
+      end
+
+      def code_ceil_divide(other)
+        code_other = other.to_code
+
+        Integer.new(raw.ceildiv(code_other.raw))
       end
 
       def code_decrement!(n = nil)
@@ -518,6 +588,10 @@ class Code
       def code_division(other)
         code_other = other.to_code
         Decimal.new(BigDecimal(raw) / code_other.raw)
+      end
+
+      def code_decimal_divide(other)
+        code_division(other)
       end
 
       def code_digits(base = nil)
@@ -624,10 +698,17 @@ class Code
         code_other = other.to_code
 
         if code_other.is_a?(Integer)
-          Integer.new(raw**other.raw)
+          Integer.new(raw**code_other.raw)
         else
-          Decimal.new(raw**other.raw)
+          Decimal.new(raw**code_other.raw)
         end
+      end
+
+      def code_power_modulo(power, modulo)
+        code_power = power.to_code
+        code_modulo = modulo.to_code
+
+        Integer.new(raw.pow(code_power.raw, code_modulo.raw))
       end
 
       def code_right_shift(other)
@@ -760,6 +841,34 @@ class Code
 
       def code_negative?
         Boolean.new(raw.negative?)
+      end
+
+      def code_non_zero?
+        Boolean.new(!raw.zero?)
+      end
+
+      def code_integer?
+        Boolean.new(true)
+      end
+
+      def code_finite?
+        Boolean.new(true)
+      end
+
+      def code_infinite?
+        Boolean.new(false)
+      end
+
+      def code_numerator
+        Integer.new(raw.numerator)
+      end
+
+      def code_denominator
+        Integer.new(raw.denominator)
+      end
+
+      def code_magnitude
+        code_abs
       end
 
       def code_zero?

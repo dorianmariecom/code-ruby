@@ -380,6 +380,14 @@ class Code
         return format_code_inline(Array(argument), indent: 0)
       end
 
+      if argument.key?(:operator)
+        return argument[:operator].to_s unless argument.key?(:value)
+
+        value = format_code_inline(argument[:value], indent: 0)
+
+        return "#{argument[:operator]}#{value}"
+      end
+
       value = format_code_inline(argument[:value], indent: 0)
       return value unless argument.key?(:name)
 
@@ -423,6 +431,8 @@ class Code
           parameter[:spread]
         elsif parameter.key?(:block)
           parameter[:block]
+        elsif parameter.key?(:blocks)
+          parameter[:blocks]
         else
           ""
         end

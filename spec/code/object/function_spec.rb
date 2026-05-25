@@ -179,7 +179,7 @@ RSpec.describe Code::Object::Function do
     expect(result).to eq(Code::Object::String.new("a"))
   end
 
-  it "supports constructor methods on functions" do
+  it "supports constructor functions on functions" do
     result = Code.evaluate(<<~CODE)
         User = (given_name:, family_name:) => {
           self.given_name = given_name
@@ -264,5 +264,262 @@ RSpec.describe Code::Object::Function do
         ]
       )
     )
+  end
+
+  it "captures rest, positional, keyword, and block arguments" do
+    result = Code.evaluate(<<~CODE)
+        increment = (value) => { value + 1 }
+        one = () => { 1 }
+        two = () => { 2 }
+
+        collect = (...rest, *arguments, **keyword_arguments, &block, &&blocks) => {
+          [
+            rest.size,
+            arguments,
+            keyword_arguments,
+            block(2),
+            blocks.size,
+            blocks.first.call
+          ]
+        }
+
+        collect(1, 2, topic: "docs", &increment, &&[one, two])
+      CODE
+
+    expect(result).to eq(
+      Code::Object::List.new(
+        [
+          Code::Object::Integer.new(6),
+          Code::Object::List.new(
+            [Code::Object::Integer.new(1), Code::Object::Integer.new(2)]
+          ),
+          Code::Object::Dictionary.new(
+            "topic" => Code::Object::String.new("docs")
+          ),
+          Code::Object::Integer.new(3),
+          Code::Object::Integer.new(2),
+          Code::Object::Integer.new(1)
+        ]
+      )
+    )
+  end
+
+  it "does not bind conventional names for unnamed argument operators" do
+    expect do
+      Code.evaluate(<<~CODE)
+        collect = (..., *, **) => {
+          [rest, arguments, keyword_arguments]
+        }
+
+        collect(1, 2, topic: "docs")
+      CODE
+    end.to raise_error(Code::Error, /rest is not defined/)
+  end
+
+  it "forwards unnamed argument operators as empty without matching locals" do
+    result = Code.evaluate(<<~CODE)
+        capture_rest = (...rest) => { rest }
+        capture_arguments = (*arguments) => { arguments }
+        capture_keywords = (**keyword_arguments) => { keyword_arguments }
+        capture_block = (&block) => { block.nothing? }
+        capture_blocks = (&&blocks) => {
+          blocks.map { |block| block.call }
+        }
+
+        caller = (..., *, **, &, &&) => {
+          [
+            capture_rest(...).size,
+            capture_arguments(*),
+            capture_keywords(**),
+            capture_block(&),
+            capture_blocks(&&)
+          ]
+        }
+
+        one = () => { 1 }
+        two = () => { 2 }
+        three = () => { 3 }
+
+        caller(1, 2, topic: "docs", &one, &&[two, three])
+      CODE
+
+    expect(result).to eq(
+      Code.evaluate(
+        "[0, [], {}, true, []]"
+      )
+    )
+  end
+
+  it "raises when unnamed argument operator captures are referenced by conventional name" do
+    expect do
+      Code.evaluate(<<~CODE)
+        collect = (..., &, &&, *, **) => {
+          [rest, block, blocks, arguments, keyword_arguments]
+        }
+
+        collect(..., &, &&, *, **)
+      CODE
+    end.to raise_error(Code::Error, /rest is not defined/)
+  end
+
+  it "treats forwarding operators without matching locals as empty" do
+    result = Code.evaluate(<<~CODE)
+        collect = (...rest, &block, &&blocks, *arguments, **keyword_arguments) => {
+          [rest, block, blocks, arguments, keyword_arguments]
+        }
+
+        collect(..., &, &&, *, **)
+      CODE
+
+    expect(result).to eq(Code.evaluate("[[], nothing, [], [], {}]"))
+  end
+
+  it "keeps function values in regular splat arguments without block captures" do
+    result = Code.evaluate(<<~CODE)
+        callback = () => { 1 }
+        collect = (*arguments) => { arguments.first.call }
+
+        collect(callback)
+      CODE
+
+    expect(result).to eq(Code::Object::Integer.new(1))
+  end
+
+  it "forwards rest arguments to extended functions" do
+    result = Code.evaluate(<<~CODE)
+        Item = (name:, amount:) => {
+          self.name = name
+          self.amount = amount
+          return(self)
+        }
+
+        DiscountedItem = Item.extend((...rest) => {
+          super(...rest)
+          self.amount = self.amount - 1
+          return(self)
+        })
+
+        item = DiscountedItem(name: "sample", amount: 3)
+        [item.name, item.amount]
+      CODE
+
+    expect(result).to eq(
+      Code::Object::List.new(
+        [Code::Object::String.new("sample"), Code::Object::Integer.new(2)]
+      )
+    )
+  end
+
+  it "extends built-in constructors and exposes instance function docs" do
+    result = Code.evaluate(<<~CODE)
+        List = List.extend((...) => {
+          super(...)
+
+          self.flat_compact = () => {
+            parent.flatten.compact
+          }
+
+          return(self)
+        })
+
+        list = [1, [2, 3], [nothing], nothing]
+        [
+          list.flat_compact == [1, 2, 3],
+          list.functions.keys.include?(:flat_compact),
+          List().functions.keys.include?(:flat_compact),
+          List().class_functions.keys.include?(:flat_compact),
+          List().instance_functions.keys.include?(:flat_compact),
+          List.functions.keys.include?(:flat_compact),
+          List.class_functions.keys.include?(:flat_compact),
+          List.instance_functions.keys.include?(:flat_compact)
+        ]
+      CODE
+
+    expect(result).to eq(
+      Code::Object::List.new(
+        [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true
+        ]
+      )
+    )
+  end
+
+  it "documents user-defined instance and class functions" do
+    result = Code.evaluate(<<~CODE)
+        Widget = () => {
+          describe = () => { "widget" }
+          describe.documentation({
+            description: "returns a label",
+            examples: ["Widget().describe"]
+          })
+          self.describe = describe
+          return(self)
+        }
+
+        build = () => {
+          Widget()
+        }
+
+        build.documentation({
+          description: "builds a widget",
+          examples: ["Widget.build"]
+        })
+
+        Widget.build = build
+
+        widget = Widget()
+
+        [
+          widget.instance_functions.fetch(:describe).description,
+          widget.instance_functions.fetch(:describe).examples.first,
+          Widget.class_functions.fetch(:build).description,
+          Widget.class_functions.fetch(:build).examples.first
+        ]
+      CODE
+
+    expect(result).to eq(
+      Code::Object::List.new(
+        [
+          Code::Object::String.new("returns a label"),
+          Code::Object::String.new("Widget().describe"),
+          Code::Object::String.new("builds a widget"),
+          Code::Object::String.new("Widget.build")
+        ]
+      )
+    )
+  end
+
+  it "inherits documented instance functions through extensions" do
+    result = Code.evaluate(<<~CODE)
+        Base = () => {
+          self.base_label = () => { "base" }
+          return(self)
+        }
+
+        Base().base_label
+
+        Child = Base.extend(() => {
+          super()
+          self.child_label = () => { "child" }
+          return(self)
+        })
+
+        Child().child_label
+
+        [
+          Base.instance_functions.keys.include?(:base_label),
+          Child.instance_functions.keys.include?(:base_label),
+          Child.instance_functions.keys.include?(:child_label)
+        ]
+      CODE
+
+    expect(result).to eq(Code::Object::List.new([true, true, true]))
   end
 end

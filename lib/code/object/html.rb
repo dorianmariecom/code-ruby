@@ -356,9 +356,15 @@ class Code
         when "to_html"
           sig(args)
           code_to_html
+        when "inner_text"
+          sig(args)
+          code_inner_text
         when "attribute"
           sig(args) { String }
           code_attribute(code_value)
+        when "attributes"
+          sig(args)
+          code_attributes
         else
           super
         end
@@ -409,9 +415,24 @@ class Code
         String.new(raw.text)
       end
 
+      def code_inner_text
+        code_to_string
+      end
+
       def code_attribute(value = nil)
         code_value = value.to_code
         String.new(raw.attr(code_value.to_s))
+      end
+
+      def code_attributes
+        node = raw.is_a?(::Nokogiri::XML::NodeSet) ? raw.first : raw
+        return Dictionary.new if node.blank?
+
+        Dictionary.new(
+          node.attribute_nodes.to_h do |attribute|
+            [attribute.name.to_code, attribute.value.to_code]
+          end
+        )
       end
     end
   end

@@ -12,6 +12,21 @@ class Code
         code_value = code_arguments.code_first
         globals = multi_fetch(args, *GLOBALS)
 
+        if code_context.code_has_key?(code_operator).truthy?
+          code_result = code_context.code_fetch(code_operator)
+
+          if code_result.is_a?(Super) ||
+               (
+                 code_result.is_a?(Function) &&
+                   args.fetch(:explicit_arguments, false)
+               )
+            return code_result.call(**args, operator: nil)
+          end
+
+          sig(args)
+          return code_result
+        end
+
         case code_operator.to_s
         when "Boolean"
           sig(args) { Object.repeat }

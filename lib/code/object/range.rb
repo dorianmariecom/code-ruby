@@ -53,15 +53,33 @@ class Code
         when "each"
           sig(args) { Function }
           code_each(code_value, **globals)
+        when "reverse_each"
+          sig(args) { Function }
+          code_reverse_each(code_value, **globals)
         when "include?"
           sig(args) { Object }
           code_include?(code_value)
+        when "member?"
+          sig(args) { Object }
+          code_member?(code_value)
         when "cover?"
           sig(args) { Object }
           code_cover?(code_value)
+        when "overlap?"
+          sig(args) { Range }
+          code_overlap?(code_value)
         when "empty?"
           sig(args)
           code_empty?
+        when "begin"
+          sig(args)
+          code_begin
+        when "end"
+          sig(args)
+          code_end
+        when "exclude_end?"
+          sig(args)
+          code_exclude_end?
         when "first"
           sig(args)
           code_first
@@ -74,6 +92,9 @@ class Code
         when "maximum"
           sig(args)
           code_maximum
+        when "minimum_maximum"
+          sig(args)
+          code_minimum_maximum
         when "map"
           sig(args) { Function }
           code_map(code_value, **globals)
@@ -89,6 +110,9 @@ class Code
         when "step"
           sig(args) { [(Integer | Decimal).maybe, Function.maybe] }
           code_step(*code_arguments.raw, **globals)
+        when "binary_search"
+          sig(args) { Function }
+          code_binary_search(code_value, **globals)
         when "sample"
           sig(args)
           code_sample
@@ -101,6 +125,12 @@ class Code
         when "to_list"
           sig(args)
           code_to_list
+        when "entries"
+          sig(args)
+          code_entries
+        when "to_dictionary"
+          sig(args)
+          code_to_dictionary
         else
           super
         end
@@ -189,9 +219,30 @@ class Code
         e.code_value
       end
 
+      def code_reverse_each(argument, **globals)
+        code_argument = argument.to_code
+
+        raw.reverse_each.with_index do |code_element, index|
+          code_argument.call(
+            arguments: List.new([code_element, Integer.new(index), self]),
+            **globals
+          )
+        rescue Error::Next => e
+          e.code_value
+        end
+
+        self
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_include?(value)
         code_value = value.to_code
         Boolean.new(raw.include?(code_value))
+      end
+
+      def code_member?(value)
+        code_include?(value)
       end
 
       def code_cover?(value)
@@ -199,8 +250,26 @@ class Code
         Boolean.new(raw.cover?(code_value))
       end
 
+      def code_overlap?(range)
+        code_range = range.to_code
+
+        Boolean.new(raw.overlap?(code_range.raw))
+      end
+
       def code_empty?
         Boolean.new(raw.to_a.empty?)
+      end
+
+      def code_begin
+        code_left
+      end
+
+      def code_end
+        code_right
+      end
+
+      def code_exclude_end?
+        Boolean.new(exclude_end?)
       end
 
       def code_first
@@ -217,6 +286,10 @@ class Code
 
       def code_maximum
         raw.max || Nothing.new
+      end
+
+      def code_minimum_maximum
+        List.new([code_minimum, code_maximum])
       end
 
       def code_map(argument, **globals)
@@ -294,6 +367,39 @@ class Code
         code_exclude_end.truthy?
       end
 
+      def code_binary_search(argument, **globals)
+        code_argument = argument.to_code
+        values = raw.to_a
+        lower = 0
+        upper = values.length - 1
+        result = nil
+
+        while lower <= upper
+          index = (lower + upper) / 2
+          code_element = values[index]
+          matched =
+            begin
+              code_argument.call(
+                arguments: List.new([code_element, Integer.new(index), self]),
+                **globals
+              ).truthy?
+            rescue Error::Next => e
+              e.code_value.truthy?
+            end
+
+          if matched
+            result = code_element
+            upper = index - 1
+          else
+            lower = index + 1
+          end
+        end
+
+        result || Nothing.new
+      rescue Error::Break => e
+        e.code_value
+      end
+
       def code_step(argument = nil, function = nil, **globals)
         code_argument = argument.to_code
         code_function = function.to_code
@@ -340,6 +446,14 @@ class Code
 
       def code_to_list
         List.new(raw.to_a)
+      end
+
+      def code_entries
+        code_to_list
+      end
+
+      def code_to_dictionary
+        code_to_list.code_to_dictionary
       end
 
       def code_sample

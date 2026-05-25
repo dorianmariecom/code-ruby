@@ -15,6 +15,7 @@ class Code
         attendees
         geo
       ].freeze
+      MISSING_ATTRIBUTE = Object.new.freeze
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -44,9 +45,9 @@ class Code
       def self.serialize_event(event)
         EVENT_ATTRIBUTES
           .each_with_object({}) do |attribute, result|
-            next unless event.respond_to?(attribute)
+            serialized = serialize_value(event_attribute(event, attribute))
+            next if serialized == MISSING_ATTRIBUTE
 
-            serialized = serialize_value(event.public_send(attribute))
             serialized =
               if attribute == :categories && serialized.is_a?(::Array)
                 serialized.flatten(1)
@@ -67,6 +68,33 @@ class Code
           .compact
       end
 
+      def self.event_attribute(event, attribute)
+        case attribute
+        when :uid
+          event.uid
+        when :summary
+          event.summary
+        when :description
+          event.description
+        when :location
+          event.location
+        when :url
+          event.url
+        when :status
+          event.status
+        when :organizer
+          event.organizer
+        when :categories
+          event.categories
+        when :attendees
+          event.attendees
+        when :geo
+          event.geo
+        end
+      rescue NoMethodError
+        MISSING_ATTRIBUTE
+      end
+
       def self.serialize_value(value)
         case value
         when nil
@@ -83,10 +111,8 @@ class Code
           serialized_date = serialize_date_like(value)
           return serialized_date unless serialized_date.nil?
 
-          if value.respond_to?(:value)
+          if value.is_a?(::Icalendar::Value)
             serialize_value(value.value)
-          elsif value.respond_to?(:to_ical)
-            normalize_string(value.to_ical)
           else
             normalize_string(value.to_s)
           end

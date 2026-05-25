@@ -42,6 +42,14 @@ RSpec.describe Code::Format do
         "sum = (a, b: 2) => {\n  a + b\n}\n\nsum(1)"
       ],
       [
+        "wrapper = (...rest, *arguments, **keyword_arguments, &block, &&blocks) => { target(...rest, *arguments, **keyword_arguments, &block, &&blocks) }",
+        "wrapper = (...rest, *arguments, **keyword_arguments, &block, &&blocks) => {\n  target(\n    ...rest,\n    *arguments,\n    **keyword_arguments,\n    &block,\n    &&blocks\n  )\n}"
+      ],
+      [
+        "wrapper = (..., *, **, &, &&) => { target(..., *, **, &, &&) }",
+        "wrapper = (..., *, **, &, &&) => {\n  target(\n    ...,\n    *,\n    **,\n    &,\n    &&\n  )\n}"
+      ],
+      [
         "Http.post(\"https://api.openai.com/v1/chat/completions\", headers: { authorization: \"Bearer {open_ai_api_key}\", \"content-type\": \"application/json\" }, body: { model: model, messages: [{ role: \"system\", content: \"hello\" }, { role: \"user\", content: \"world\" }] }.to_json)",
         "Http.post(\n  \"https://api.openai.com/v1/chat/completions\",\n  headers: {\n    authorization: \"Bearer {open_ai_api_key}\",\n    \"content-type\": \"application/json\"\n  },\n  body: {\n    model: model,\n    messages: [\n      { role: :system, content: :hello },\n      { role: :user, content: :world }\n    ]\n  }.to_json\n)"
       ],

@@ -141,6 +141,10 @@ class Code
       Node::Code.new(parse_code)
     end
 
+    def lex_source(source)
+      lex(source.to_s)
+    end
+
     private
 
     attr_reader :input, :tokens
@@ -284,7 +288,12 @@ class Code
       case current.value
       when ".", "::", "&."
         operator = advance.value
-        statement = parse_expression(151)
+        statement =
+          if current.type == :keyword
+            { call: { name: advance.value } }
+          else
+            parse_expression(151)
+          end
         append_left_operation(left, operator, statement)
       when "["
         advance
@@ -565,6 +574,19 @@ class Code
     end
 
     def parse_argument
+      if current.type == :operator && %w[* ** & && ...].include?(current.value)
+        operator = advance.value
+        value =
+          if %w[, )].include?(next_significant_token.value)
+            skip_newlines
+            nil
+          else
+            parse_code(stop_values: %w[, )])
+          end
+
+        return { operator: operator, value: value }.compact
+      end
+
       if label_name_start?(current) && next_token_value == ":"
         name = advance.value
         advance
@@ -653,10 +675,11 @@ class Code
 
       {
         name: name,
-        regular_splat: (true if prefix == "*"),
-        keyword_splat: (true if prefix == "**"),
-        block: (true if prefix == "&"),
-        spread: (true if %w[. .. ...].include?(prefix)),
+        regular_splat: (prefix if prefix == "*"),
+        keyword_splat: (prefix if prefix == "**"),
+        block: (prefix if prefix == "&"),
+        blocks: (prefix if prefix == "&&"),
+        spread: (prefix if %w[. .. ...].include?(prefix)),
         default: default
       }.compact
     end
@@ -664,7 +687,7 @@ class Code
     def parse_parameter_prefix
       return unless current.type == :operator
 
-      advance.value if %w[* ** & .. ... .].include?(current.value)
+      advance.value if %w[* ** & && .. ... .].include?(current.value)
     end
 
     def parse_optional_code(stop_values)

@@ -33,7 +33,7 @@ RSpec.describe Code::Parser do
 
     allow(parser).to receive(:scan_string).and_return({ parts: [], index: 0 })
 
-    expect { parser.send(:lex, '"hello"') }.to raise_error(
+    expect { parser.lex_source('"hello"') }.to raise_error(
       Code::Parser::Error,
       /lexer made no progress/
     )

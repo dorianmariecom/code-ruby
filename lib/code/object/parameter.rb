@@ -27,6 +27,10 @@ class Code
         Boolean.new(code_get(:block?))
       end
 
+      def code_blocks?
+        Boolean.new(code_get(:blocks?))
+      end
+
       def code_spread?
         Boolean.new(code_get(:spread?))
       end
@@ -73,6 +77,10 @@ class Code
 
       def block?
         code_block?.truthy?
+      end
+
+      def blocks?
+        code_blocks?.truthy?
       end
     end
   end

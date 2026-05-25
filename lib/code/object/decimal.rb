@@ -51,6 +51,9 @@ class Code
         when "divide_modulo"
           sig(args) { Integer | Decimal }
           code_divide_modulo(code_value)
+        when "decimal_divide"
+          sig(args) { Integer | Decimal }
+          code_decimal_divide(code_value)
         when "<<", "left_shift"
           sig(args) { Integer | Decimal }
           code_left_shift(code_value)
@@ -90,9 +93,15 @@ class Code
         when "next", "successor"
           sig(args)
           code_next
+        when "next_decimal"
+          sig(args)
+          code_next_decimal
         when "previous", "predecessor"
           sig(args)
           code_previous
+        when "previous_decimal"
+          sig(args)
+          code_previous_decimal
         when "remainder"
           sig(args) { Integer | Decimal }
           code_remainder(code_value)
@@ -108,6 +117,15 @@ class Code
         when "truncate"
           sig(args) { Integer.maybe }
           code_truncate(code_value)
+        when "to_fixed"
+          sig(args) { Integer.maybe }
+          code_to_fixed(code_value)
+        when "to_precision"
+          sig(args) { Integer.maybe }
+          code_to_precision(code_value)
+        when "to_exponential"
+          sig(args) { Integer.maybe }
+          code_to_exponential(code_value)
         when "week", "weeks"
           sig(args)
           code_weeks
@@ -129,6 +147,30 @@ class Code
         when "negative?"
           sig(args)
           code_negative?
+        when "non_zero?"
+          sig(args)
+          code_non_zero?
+        when "integer?"
+          sig(args)
+          code_integer?
+        when "finite?"
+          sig(args)
+          code_finite?
+        when "infinite?"
+          sig(args)
+          code_infinite?
+        when "not_a_number?"
+          sig(args)
+          code_not_a_number?
+        when "numerator"
+          sig(args)
+          code_numerator
+        when "denominator"
+          sig(args)
+          code_denominator
+        when "magnitude"
+          sig(args)
+          code_magnitude
         when "zero?"
           sig(args)
           code_zero?
@@ -472,6 +514,10 @@ class Code
         Decimal.new(raw / code_other.raw)
       end
 
+      def code_decimal_divide(other)
+        code_division(other)
+      end
+
       def code_floor(n = nil)
         code_n = n.to_code
         code_n = Integer.new(0) if code_n.nothing?
@@ -568,6 +614,27 @@ class Code
         String.new(raw.to_s("F"))
       end
 
+      def code_to_fixed(digits = nil)
+        code_digits = digits.to_code
+        code_digits = Integer.new(0) if code_digits.nothing?
+
+        String.new(format("%.#{code_digits.raw}f", raw))
+      end
+
+      def code_to_precision(precision = nil)
+        code_precision = precision.to_code
+        code_precision = Integer.new(raw.to_s("F").delete(".-").length) if code_precision.nothing?
+
+        String.new(format("%.#{code_precision.raw}g", raw))
+      end
+
+      def code_to_exponential(digits = nil)
+        code_digits = digits.to_code
+        code_digits = Integer.new(6) if code_digits.nothing?
+
+        String.new(format("%.#{code_digits.raw}e", raw))
+      end
+
       def code_truncate(n = nil)
         code_n = n.to_code
         code_n = Integer.new(0) if code_n.nothing?
@@ -587,12 +654,52 @@ class Code
         Boolean.new(raw.positive?)
       end
 
+      def code_next_decimal
+        code_next
+      end
+
+      def code_previous_decimal
+        code_previous
+      end
+
       def code_positive?
         Boolean.new(raw.positive?)
       end
 
       def code_negative?
         Boolean.new(raw.negative?)
+      end
+
+      def code_non_zero?
+        Boolean.new(!raw.zero?)
+      end
+
+      def code_integer?
+        Boolean.new(raw.frac.zero?)
+      end
+
+      def code_finite?
+        Boolean.new(raw.finite?)
+      end
+
+      def code_infinite?
+        Boolean.new(!!raw.infinite?)
+      end
+
+      def code_not_a_number?
+        Boolean.new(raw.nan?)
+      end
+
+      def code_numerator
+        Integer.new(raw.to_r.numerator)
+      end
+
+      def code_denominator
+        Integer.new(raw.to_r.denominator)
+      end
+
+      def code_magnitude
+        code_abs
       end
 
       def code_zero?

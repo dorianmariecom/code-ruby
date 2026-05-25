@@ -8,15 +8,13 @@ class Code
       def initialize(parsed)
         return if parsed.blank?
 
-        @name =
-          parsed.delete(:name).presence || parsed[:regular_splat].presence ||
-            parsed[:keyword_splat].presence || parsed[:spread].presence ||
-            parsed[:block].presence
+        @name = parsed.delete(:name).presence
         @keyword = parsed.delete(:keyword).present?
         @regular_splat = parsed.delete(:regular_splat).present?
         @keyword_splat = parsed.delete(:keyword_splat).present?
         @spread = parsed.delete(:spread).present?
         @block = parsed.delete(:block).present?
+        @blocks = parsed.delete(:blocks).present?
         @default = Code.new(parsed.delete(:default)) if parsed.key?(:default)
       end
 
@@ -48,6 +46,10 @@ class Code
         !!@block
       end
 
+      def blocks?
+        !!@blocks
+      end
+
       def to_h
         {
           name: name,
@@ -57,6 +59,7 @@ class Code
           keyword_splat?: keyword_splat?,
           spread?: spread?,
           block?: block?,
+          blocks?: blocks?,
           default: default
         }
       end

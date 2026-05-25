@@ -3,9 +3,11 @@
 class Code
   class Object
     class Function < Object
-      attr_reader :code_parameters, :code_body, :definition_context, :parent
+      attr_accessor :documentation
+      attr_reader :code_parameters, :code_body, :definition_context,
+                  :instance_functions, :parent
 
-      def initialize(*args, parent: nil, methods: nil, **_kargs, &_block)
+      def initialize(*args, parent: nil, functions: nil, **_kargs, &_block)
         @code_parameters =
           List
             .new(args.first)
@@ -16,8 +18,14 @@ class Code
         @code_body = Code.new(args.second.presence)
         @definition_context = args.third if args.third.is_a?(Context)
         @parent = parent.to_code
-        self.methods = methods.to_code
-        self.methods = Dictionary.new if self.methods.nothing?
+        self.functions = functions.to_code
+        self.functions = Dictionary.new if self.functions.nothing?
+        @instance_functions = Dictionary.new
+        self.documentation = Dictionary.new(
+          "name" => String.new(""),
+          "description" => String.new(""),
+          "examples" => List.new
+        )
 
         self.raw = List.new([code_parameters, code_body])
       end
@@ -25,6 +33,7 @@ class Code
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, List.new).to_code
+        code_value = code_arguments.code_first
         globals = multi_fetch(args, *GLOBALS)
 
         case code_operator.to_s
@@ -34,11 +43,24 @@ class Code
             *code_arguments.raw,
             explicit_arguments: args.fetch(:explicit_arguments, true),
             bound_self: args.fetch(:bound_self, nil),
+            constructing_literal_classes:
+              args.fetch(:constructing_literal_classes, nil),
             **globals
           )
         when "extend"
           sig(args) { Function }
           code_extend(code_arguments.code_first)
+        when "documentation", "doc"
+          if code_arguments.any?
+            sig(args) { Dictionary }
+            self.documentation = code_value.code_to_dictionary
+          else
+            sig(args)
+            documentation
+          end
+        when "documentation=", "doc="
+          sig(args) { Dictionary }
+          self.documentation = code_value.code_to_dictionary
         when /=$/
           sig(args) { Object }
           code_set(code_operator.to_s.chop, code_value)
@@ -60,18 +82,22 @@ class Code
         *arguments,
         explicit_arguments: true,
         bound_self: nil,
+        constructing_literal_classes: nil,
         **globals
       )
         code_arguments = arguments.to_code
         code_context = Context.new({}, definition_context || globals[:context])
         code_self = bound_self.to_code
+        if (code_self.nil? || code_self.nothing?) && parent.is_a?(Class)
+          code_self = parent.code_call(*arguments, **globals)
+        end
         code_self = Dictionary.new if code_self.nil? || code_self.nothing?
         code_parent = captured_self.to_code
 
         code_context.code_set("self", code_self)
         bind_parent(code_context, code_self, code_parent)
 
-        if parent.is_a?(Function)
+        if parent.is_a?(Function) || parent.is_a?(Class)
           code_context.code_set(
             "super",
             Super.new(
@@ -84,19 +110,38 @@ class Code
           )
         end
 
+        captures_function_arguments =
+          code_parameters.raw.any? { |parameter| parameter.block? || parameter.blocks? }
+        reserved_function_arguments =
+          captures_function_arguments ? code_arguments.raw.grep(Function) : []
+        code_block_argument =
+          if code_parameters.raw.any?(&:block?)
+            code_arguments.raw.detect { |argument| argument.is_a?(Function) }
+          end
+
         code_parameters.raw.each.with_index do |code_parameter, index|
           code_argument =
-            if code_parameter.spread? || code_parameter.regular_splat?
+            if code_parameter.spread?
               code_arguments
+            elsif code_parameter.regular_splat?
+              Object::List.new(
+                code_arguments.raw.reject do |argument|
+                  argument.is_a?(Dictionary) ||
+                    reserved_function_arguments.include?(argument)
+                end
+              )
             elsif code_parameter.keyword_splat?
-              code_arguments.raw.detect do |code_argument|
-                code_argument.is_a?(Dictionary)
-              end || Dictionary.new
+              code_arguments.raw.grep(Dictionary).inject(Dictionary.new) do |memo, argument|
+                memo.code_merge!(argument)
+              end
             elsif code_parameter.block?
-              code_arguments
-                .raw
-                .detect { |code_argument| code_argument.is_a?(Function) }
-                .to_code
+              code_block_argument.to_code
+            elsif code_parameter.blocks?
+              Object::List.new(
+                code_arguments.raw.grep(Function).reject do |argument|
+                  argument == code_block_argument
+                end
+              )
             elsif code_parameter.keyword?
               code_arguments
                 .raw
@@ -125,11 +170,19 @@ class Code
               end
           end
 
-          code_context.code_set(code_parameter.code_name, code_argument)
+          code_name = code_parameter.code_name
+          code_context.code_set(code_name, code_argument) unless code_name.blank?
         end
 
-        code_body.code_evaluate(**globals, context: code_context)
+        code_body.code_evaluate(
+          **globals,
+          constructing_literal_classes: constructing_literal_classes,
+          context: code_context
+        ).tap do
+          persist_instance_functions(code_self)
+        end
       rescue Error::Return => e
+        persist_instance_functions(code_self)
         e.code_value
       end
 
@@ -139,8 +192,10 @@ class Code
           .inject([]) do |signature, code_parameter|
             if code_parameter.spread? || code_parameter.regular_splat?
               signature + [Object.repeat]
+            elsif code_parameter.blocks?
+              signature + [Function.repeat]
             elsif code_parameter.block?
-              signature + [Function]
+              signature + [Function.maybe]
             elsif code_parameter.keyword_splat?
               signature + [Dictionary.maybe]
             elsif code_parameter.keyword? && code_parameter.required?
@@ -191,27 +246,88 @@ class Code
           code_function.code_body.raw,
           code_function.definition_context,
           parent: self,
-          methods: methods.code_deep_duplicate
-        )
+          functions: functions.code_deep_duplicate
+        ).tap do |extended_function|
+          extended_function.instance_functions.code_merge!(instance_functions)
+        end
+      end
+
+      def code_functions
+        code_class_functions
+      end
+
+      def code_instance_functions
+        parent_functions =
+          if parent.is_a?(Function)
+            parent.code_instance_functions
+          else
+            Dictionary.new
+          end
+
+        parent_functions.code_merge(function_dictionary_for(instance_functions))
+      end
+
+      def code_class_functions
+        function_dictionary_for(functions)
       end
 
       def code_fetch(key)
-        methods.code_fetch(key)
+        functions.code_fetch(key)
       end
 
       def code_get(key)
-        methods.code_get(key)
+        functions.code_get(key)
       end
 
       def code_has_key?(key)
-        methods.code_has_key?(key)
+        functions.code_has_key?(key)
       end
 
       def code_set(key, value)
-        methods.code_set(key, value)
+        functions.code_set(key, value)
       end
 
       private
+
+      def function_dictionary_for(dictionary)
+        Dictionary.new(
+          dictionary.raw.to_h do |key, value|
+            name = key.to_s
+            [
+              name,
+              Dictionary.new(
+                "name" => String.new(name),
+                "description" => String.new(function_description(value)),
+                "examples" => List.new(function_examples(value))
+              )
+            ]
+          end
+        )
+      end
+
+      def function_description(value)
+        code_value = value.to_code
+        return "" unless code_value.is_a?(Function)
+
+        code_value.documentation.code_get("description").to_s
+      end
+
+      def function_examples(value)
+        code_value = value.to_code
+        return [] unless code_value.is_a?(Function)
+
+        code_value.documentation.code_get("examples").to_code.code_to_list.raw
+      end
+
+      def persist_instance_functions(code_self)
+        return unless code_self.is_a?(Object)
+
+        instance_functions.code_merge!(documentable_instance_functions(code_self))
+      end
+
+      def documentable_instance_functions(code_self)
+        code_self.code_documentable_functions
+      end
 
       def bind_parent(code_context, code_self, code_parent)
         return if code_parent.nothing?
@@ -247,7 +363,9 @@ class Code
 
       def parameter_to_raw(parameter)
         code_parameter = parameter.to_code
-        raw_parameter = { name: code_parameter.code_name.to_s }
+        raw_parameter = {}
+        code_name = code_parameter.code_name
+        raw_parameter[:name] = code_name.to_s unless code_name.blank?
 
         if code_parameter.keyword?
           raw_parameter[:keyword] = ":"
@@ -257,6 +375,8 @@ class Code
           raw_parameter[:regular_splat] = "*"
         elsif code_parameter.block?
           raw_parameter[:block] = "&"
+        elsif code_parameter.blocks?
+          raw_parameter[:blocks] = "&&"
         elsif code_parameter.spread?
           raw_parameter[:spread] = "..."
         end

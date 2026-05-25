@@ -65,7 +65,7 @@ RSpec.describe Code do
   end
 
   %w[return break next continue].each do |control_flow|
-    it "continues after #{control_flow} in block methods" do
+    it "continues after #{control_flow} in block functions" do
       aggregate_failures do
         control_flow_block_calls.each do |block_call|
           input = "#{block_call.sub("CONTROL", control_flow)} puts(:end)"
