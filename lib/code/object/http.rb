@@ -3,6 +3,96 @@
 class Code
   class Object
     class Http < Object
+      CLASS_FUNCTIONS = {
+        "get" => {
+          name: "get",
+          description: "performs an http get request.",
+          examples: [
+            "Http.get(\"https://example.com\")",
+            "Http.get(\"https://example.com\", query: { q: :ruby })",
+            "Http.get(\"https://example.com\", headers: { accept: \"application/json\" })"
+          ]
+        },
+        "head" => {
+          name: "head",
+          description: "performs an http head request.",
+          examples: [
+            "Http.head(\"https://example.com\")",
+            "Http.head(\"https://example.com\", timeout: 2)",
+            "Http.head(\"https://example.com\", headers: { accept: \"text/html\" })"
+          ]
+        },
+        "post" => {
+          name: "post",
+          description: "performs an http post request.",
+          examples: [
+            "Http.post(\"https://example.com\", body: :hello)",
+            "Http.post(\"https://example.com\", data: { a: 1 })",
+            "Http.post(\"https://example.com\", headers: { content_type: \"text/plain\" })"
+          ]
+        },
+        "put" => {
+          name: "put",
+          description: "performs an http put request.",
+          examples: [
+            "Http.put(\"https://example.com\", body: :hello)",
+            "Http.put(\"https://example.com\", data: { a: 1 })",
+            "Http.put(\"https://example.com\", timeout: 2)"
+          ]
+        },
+        "delete" => {
+          name: "delete",
+          description: "performs an http delete request.",
+          examples: [
+            "Http.delete(\"https://example.com\")",
+            "Http.delete(\"https://example.com\", body: :hello)",
+            "Http.delete(\"https://example.com\", timeout: 2)"
+          ]
+        },
+        "options" => {
+          name: "options",
+          description: "performs an http options request.",
+          examples: [
+            "Http.options(\"https://example.com\")",
+            "Http.options(\"https://example.com\", timeout: 2)",
+            "Http.options(\"https://example.com\", headers: { accept: \"*/*\" })"
+          ]
+        },
+        "trace" => {
+          name: "trace",
+          description: "performs an http trace request.",
+          examples: [
+            "Http.trace(\"https://example.com\")",
+            "Http.trace(\"https://example.com\", timeout: 2)",
+            "Http.trace(\"https://example.com\", headers: { accept: \"message/http\" })"
+          ]
+        },
+        "patch" => {
+          name: "patch",
+          description: "performs an http patch request.",
+          examples: [
+            "Http.patch(\"https://example.com\", body: :hello)",
+            "Http.patch(\"https://example.com\", data: { a: 1 })",
+            "Http.patch(\"https://example.com\", timeout: 2)"
+          ]
+        },
+        "fetch" => {
+          name: "fetch",
+          description: "performs an http request with an explicit method.",
+          examples: [
+            "Http.fetch(:get, \"https://example.com\")",
+            "Http.fetch(:post, \"https://example.com\", body: :hello)",
+            "Http.fetch(:patch, \"https://example.com\", data: { a: 1 })"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       SIG = [
         String,
         {

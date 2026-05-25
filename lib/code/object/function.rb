@@ -3,6 +3,78 @@
 class Code
   class Object
     class Function < Object
+      INSTANCE_FUNCTIONS = {
+        "call" => {
+          name: "call",
+          description: "calls the function with the provided arguments.",
+          examples: [
+            "((value) => { value + 1 }).call(1)",
+            "((name:) => { name }).call(name: :ada)",
+            "(() => { 1 }).call"
+          ]
+        },
+        "extend" => {
+          name: "extend",
+          description: "returns a function that extends the receiver.",
+          examples: [
+            "base.extend((value) => { super(value) })",
+            "parent.extend(() => { self.name = :child })",
+            "build.extend((name) => { self.name = name })"
+          ]
+        },
+        "documentation" => {
+          name: "documentation",
+          description: "gets or sets the function documentation dictionary.",
+          examples: [
+            "f.documentation",
+            "f.documentation(description: :runs, examples: [:f])",
+            "f.documentation(description: :runs, examples: [:f]).documentation"
+          ]
+        },
+        "doc" => {
+          name: "doc",
+          description: "alias for documentation.",
+          examples: [
+            "f.doc",
+            "f.doc(description: :runs, examples: [:f])",
+            "f.doc(description: :runs, examples: [:f]).doc"
+          ]
+        },
+        "documentation=" => {
+          name: "documentation=",
+          description: "sets the function documentation dictionary.",
+          examples: [
+            "f.documentation = { description: :runs, examples: [:f] }",
+            "f.documentation = { name: :f, description: :runs, examples: [:f] }",
+            "f.documentation = { description: :returns_one, examples: [\"f()\"] }"
+          ]
+        },
+        "doc=" => {
+          name: "doc=",
+          description: "alias for documentation=.",
+          examples: [
+            "f.doc = { description: :runs, examples: [:f] }",
+            "f.doc = { name: :f, description: :runs, examples: [:f] }",
+            "f.doc = { description: :returns_one, examples: [\"f()\"] }"
+          ]
+        },
+        "to_string" => {
+          name: "to_string",
+          description: "formats the function as source code.",
+          examples: [
+            "(() => { 1 }).to_string",
+            "((value) => { value + 1 }).to_string",
+            "((name:) => { name }).to_string"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       attr_accessor :documentation
       attr_reader :code_parameters, :code_body, :definition_context,
                   :instance_functions, :parent

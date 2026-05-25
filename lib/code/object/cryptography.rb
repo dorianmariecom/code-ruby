@@ -3,6 +3,60 @@
 class Code
   class Object
     class Cryptography < Object
+      CLASS_FUNCTIONS = {
+        "md5" => {
+          name: "md5",
+          description: "returns the md5 digest for a value.",
+          examples: [
+            "Cryptography.md5(:hello)",
+            "Cryptography.md5(:hello, format: :hex)",
+            "Cryptography.md5(:hello, format: :base64)"
+          ]
+        },
+        "sha1" => {
+          name: "sha1",
+          description: "returns the sha1 digest for a value.",
+          examples: [
+            "Cryptography.sha1(:hello)",
+            "Cryptography.sha1(:hello, format: :hex)",
+            "Cryptography.sha1(:hello, format: :base64)"
+          ]
+        },
+        "sha256" => {
+          name: "sha256",
+          description: "returns the sha256 digest for a value.",
+          examples: [
+            "Cryptography.sha256(:hello)",
+            "Cryptography.sha256(:hello, format: :hex)",
+            "Cryptography.sha256(:hello, format: :base64)"
+          ]
+        },
+        "sha384" => {
+          name: "sha384",
+          description: "returns the sha384 digest for a value.",
+          examples: [
+            "Cryptography.sha384(:hello)",
+            "Cryptography.sha384(:hello, format: :hex)",
+            "Cryptography.sha384(:hello, format: :base64)"
+          ]
+        },
+        "sha512" => {
+          name: "sha512",
+          description: "returns the sha512 digest for a value.",
+          examples: [
+            "Cryptography.sha512(:hello)",
+            "Cryptography.sha512(:hello, format: :hex)",
+            "Cryptography.sha512(:hello, format: :base64)"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code

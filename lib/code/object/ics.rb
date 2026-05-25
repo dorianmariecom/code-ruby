@@ -3,6 +3,24 @@
 class Code
   class Object
     class Ics < Object
+      CLASS_FUNCTIONS = {
+        "parse" => {
+          name: "parse",
+          description: "parses calendar text into event dictionaries.",
+          examples: [
+            "Ics.parse(\"\")",
+            "Ics.parse(calendar_text)",
+            "Ics.parse(\"BEGIN:VCALENDAR\\nEND:VCALENDAR\")"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       EVENT_ATTRIBUTES = %i[
         uid
         summary

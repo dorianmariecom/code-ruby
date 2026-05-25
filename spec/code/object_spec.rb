@@ -40,7 +40,7 @@ RSpec.describe Code::Object do
     ],
     [
       "List.instance_functions.fetch(:map).description",
-      "\"Returns a new list with each item transformed by a function or class.\""
+      "\"returns a new list with each item transformed by a function or class.\""
     ],
     [
       "List.instance_functions.fetch(:map).examples.first",
@@ -81,6 +81,80 @@ RSpec.describe Code::Object do
 
       expect(source).not_to include("const_defined?")
       expect(source).not_to include("singleton_class")
+    end
+
+    it "keeps concrete class documentation on the concrete class" do
+      source = File.read("lib/code/object.rb")
+
+      expect(source).not_to include("Code::Object::List")
+      expect(source).not_to include("Code::Object::Base64")
+      expect(source).not_to include("FUNCTION_DOCUMENTATION")
+    end
+
+    it "documents every shared function" do
+      documented_names =
+        described_class.instance_functions.raw.keys.map(&:to_s) +
+        described_class.class_functions.raw.keys.map(&:to_s)
+
+      Code::Concerns::Shared::SHARED_OPERATORS.each do |function_name|
+        expect(documented_names).to include(function_name)
+      end
+    end
+
+    it "provides at least three examples for documented built-in functions" do
+      documented_functions =
+        described_class.instance_functions.raw.values +
+        described_class.class_functions.raw.values +
+        described_class::Base64.class_functions.raw.values +
+        described_class::Boolean.instance_functions.raw.values +
+        described_class::Class.instance_functions.raw.values +
+        described_class::Code.instance_functions.raw.values +
+        described_class::Code.class_functions.raw.values +
+        described_class::Context.instance_functions.raw.values +
+        described_class::Cryptography.class_functions.raw.values +
+        described_class::Dictionary.instance_functions.raw.values +
+        described_class::Dictionary.class_functions.raw.values +
+        described_class::Duration.instance_functions.raw.values +
+        described_class::Function.instance_functions.raw.values +
+        described_class::Json.class_functions.raw.values +
+        described_class::List.instance_functions.raw.values +
+        described_class::Nothing.instance_functions.raw.values +
+        described_class::Number.instance_functions.raw.values +
+        described_class::Parameter.instance_functions.raw.values +
+        described_class::Url.class_functions.raw.values
+
+      documented_functions.each do |function|
+        expect(function.code_fetch("examples").raw.size).to be >= 3
+      end
+    end
+
+    it "uses lowercase descriptions for documented built-in functions" do
+      documented_functions =
+        described_class.instance_functions.raw.values +
+        described_class.class_functions.raw.values +
+        described_class::Base64.class_functions.raw.values +
+        described_class::Boolean.instance_functions.raw.values +
+        described_class::Class.instance_functions.raw.values +
+        described_class::Code.instance_functions.raw.values +
+        described_class::Code.class_functions.raw.values +
+        described_class::Context.instance_functions.raw.values +
+        described_class::Cryptography.class_functions.raw.values +
+        described_class::Dictionary.instance_functions.raw.values +
+        described_class::Dictionary.class_functions.raw.values +
+        described_class::Duration.instance_functions.raw.values +
+        described_class::Function.instance_functions.raw.values +
+        described_class::Json.class_functions.raw.values +
+        described_class::List.instance_functions.raw.values +
+        described_class::Nothing.instance_functions.raw.values +
+        described_class::Number.instance_functions.raw.values +
+        described_class::Parameter.instance_functions.raw.values +
+        described_class::Url.class_functions.raw.values
+
+      documented_functions.each do |function|
+        description = function.code_fetch("description").to_s
+
+        expect(description).to match(/\A[[:lower:]]/)
+      end
     end
   end
 end

@@ -3,6 +3,30 @@
 class Code
   class Object
     class Nothing < Object
+      INSTANCE_FUNCTIONS = {
+        "empty?" => {
+          name: "empty?",
+          description: "returns true because nothing is empty.",
+          examples: ["nothing.empty?", "Nothing.new.empty?", "nil.to_code.empty?"]
+        },
+        "to_string" => {
+          name: "to_string",
+          description: "returns an empty string.",
+          examples: ["nothing.to_string", "Nothing.new.to_string", "nil.to_code.to_string"]
+        },
+        "inspect" => {
+          name: "inspect",
+          description: "returns the string nothing.",
+          examples: ["nothing.inspect", "Nothing.new.inspect", "nil.to_code.inspect"]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       def initialize(*_args, **_kargs, &_block)
         self.raw = nil
       end

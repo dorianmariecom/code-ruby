@@ -3,6 +3,24 @@
 class Code
   class Object
     class List < Object
+      INSTANCE_FUNCTIONS = {
+        "map" => {
+          name: "map",
+          description: "returns a new list with each item transformed by a function or class.",
+          examples: [
+            "[1, 2, 3].map(Integer)",
+            "[:1, :2].map(Integer)",
+            "[1, 2].map((value) => { value + 1 })"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       delegate(
         :code_many?,
         :code_positive?,

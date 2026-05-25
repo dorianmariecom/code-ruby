@@ -3,6 +3,537 @@
 class Code
   class Object
     class Dictionary < ::Code::Object
+      CLASS_FUNCTIONS = {
+        "entries" => {
+          name: "entries",
+          description: "returns a dictionary as a list of key-value entries.",
+          examples: [
+            "Dictionary.entries({ a: 1 })",
+            "Dictionary.entries({ a: 1, b: 2 })",
+            "Dictionary.entries({})"
+          ]
+        },
+        "from_entries" => {
+          name: "from_entries",
+          description: "builds a dictionary from key-value entries.",
+          examples: [
+            "Dictionary.from_entries([[:a, 1]])",
+            "Dictionary.from_entries([[:a, 1], [:b, 2]])",
+            "Dictionary.from_entries([])"
+          ]
+        },
+        "assign" => {
+          name: "assign",
+          description: "merges dictionaries into a new dictionary.",
+          examples: [
+            "Dictionary.assign({ a: 1 })",
+            "Dictionary.assign({ a: 1 }, { b: 2 })",
+            "Dictionary.assign({ a: 1 }, { a: 2 })"
+          ]
+        },
+        "has_own?" => {
+          name: "has_own?",
+          description: "returns whether a dictionary has a key.",
+          examples: [
+            "Dictionary.has_own?({ a: 1 }, :a)",
+            "Dictionary.has_own?({ a: 1 }, :b)",
+            "Dictionary.has_own?({}, :a)"
+          ]
+        }
+      }.freeze
+      INSTANCE_FUNCTIONS = {
+        "[]" => {
+          name: "[]",
+          description: "returns the value for a key.",
+          examples: ["{ a: 1 }[:a]", "{ a: 1 }[:b]", "{ a: 1, b: 2 }[:b]"]
+        },
+        "at" => {
+          name: "at",
+          description: "alias for get.",
+          examples: ["{ a: 1 }.at(:a)", "{ a: 1 }.at(:b)", "{ a: 1, b: 2 }.at(:b)"]
+        },
+        "get" => {
+          name: "get",
+          description: "returns the value for a key.",
+          examples: ["{ a: 1 }.get(:a)", "{ a: 1 }.get(:b)", "{ a: 1, b: 2 }.get(:b)"]
+        },
+        "any?" => {
+          name: "any?",
+          description: "returns whether any entry exists or matches a function.",
+          examples: [
+            "{ a: 1 }.any?",
+            "{}.any?",
+            "{ a: 1 }.any?((key, value) => { value == 1 })"
+          ]
+        },
+        "clear" => {
+          name: "clear",
+          description: "removes all entries from the dictionary and returns it.",
+          examples: ["{ a: 1 }.clear", "{ a: 1, b: 2 }.clear", "{}.clear"]
+        },
+        "compact" => {
+          name: "compact",
+          description: "returns a dictionary without nothing values or matching values.",
+          examples: [
+            "{ a: 1, b: nothing }.compact",
+            "{ a: 1, b: :x }.compact(String)",
+            "{ a: 1, b: 2 }.compact((value) => { value > 1 })"
+          ]
+        },
+        "compact!" => {
+          name: "compact!",
+          description: "removes nothing values or matching values from the dictionary.",
+          examples: [
+            "{ a: 1, b: nothing }.compact!",
+            "{ a: 1, b: :x }.compact!(String)",
+            "{ a: 1, b: 2 }.compact!((value) => { value > 1 })"
+          ]
+        },
+        "delete" => {
+          name: "delete",
+          description: "removes entries by key and returns their values.",
+          examples: [
+            "{ a: 1 }.delete(:a)",
+            "{ a: 1 }.delete(:b)",
+            "{ a: 1, b: 2 }.delete(:a, :b)"
+          ]
+        },
+        "delete_if" => {
+          name: "delete_if",
+          description: "removes entries when a function returns truthy.",
+          examples: [
+            "{ a: 1, b: 2 }.delete_if((key, value) => { value > 1 })",
+            "{ a: 1 }.delete_if((key) => { key == :a })",
+            "{ a: 1, b: :x }.delete_if(String)"
+          ]
+        },
+        "delete_unless" => {
+          name: "delete_unless",
+          description: "removes entries unless a function returns truthy.",
+          examples: [
+            "{ a: 1, b: 2 }.delete_unless((key, value) => { value > 1 })",
+            "{ a: 1 }.delete_unless((key) => { key == :a })",
+            "{ a: 1, b: :x }.delete_unless(String)"
+          ]
+        },
+        "dig" => {
+          name: "dig",
+          description: "returns a nested value by following keys.",
+          examples: [
+            "{ a: { b: 1 } }.dig(:a, :b)",
+            "{ a: [1] }.dig(:a, 0)",
+            "{ a: 1 }.dig(:missing)"
+          ]
+        },
+        "each" => {
+          name: "each",
+          description: "calls a function for each key-value pair and returns the dictionary.",
+          examples: [
+            "{ a: 1 }.each((key, value) => { value })",
+            "{ a: 1 }.each((key, value, index) => { index })",
+            "{ a: 1 }.each((key, value, index, dictionary) => { dictionary })"
+          ]
+        },
+        "each_key" => {
+          name: "each_key",
+          description: "calls a function for each key and returns the dictionary.",
+          examples: [
+            "{ a: 1 }.each_key((key) => { key })",
+            "{ a: 1, b: 2 }.each_key((key, index) => { index })",
+            "{}.each_key((key) => { key })"
+          ]
+        },
+        "each_value" => {
+          name: "each_value",
+          description: "calls a function for each value and returns the dictionary.",
+          examples: [
+            "{ a: 1 }.each_value((value) => { value })",
+            "{ a: 1, b: 2 }.each_value((value, index) => { index })",
+            "{}.each_value((value) => { value })"
+          ]
+        },
+        "each_pair" => {
+          name: "each_pair",
+          description: "calls a function for each key-value pair and returns the dictionary.",
+          examples: [
+            "{ a: 1 }.each_pair((key, value) => { value })",
+            "{ a: 1, b: 2 }.each_pair((key, value, index) => { index })",
+            "{}.each_pair((key, value) => { value })"
+          ]
+        },
+        "empty?" => {
+          name: "empty?",
+          description: "returns whether the dictionary has no entries.",
+          examples: ["{}.empty?", "{ a: 1 }.empty?", "{ a: nothing }.empty?"]
+        },
+        "except" => {
+          name: "except",
+          description: "returns a dictionary without the given keys.",
+          examples: [
+            "{ a: 1, b: 2 }.except(:a)",
+            "{ a: 1, b: 2 }.except(:a, :b)",
+            "{ a: 1 }.except(:missing)"
+          ]
+        },
+        "fetch" => {
+          name: "fetch",
+          description: "returns a value by key or raises when missing.",
+          examples: [
+            "{ a: 1 }.fetch(:a)",
+            "{ a: 1 }.fetch(:b, () => { 2 })",
+            "{ a: 1 }.fetch(:missing)"
+          ]
+        },
+        "fetch_values" => {
+          name: "fetch_values",
+          description: "returns values for the given keys.",
+          examples: [
+            "{ a: 1, b: 2 }.fetch_values(:a)",
+            "{ a: 1, b: 2 }.fetch_values(:a, :b)",
+            "{ a: 1 }.fetch_values(:missing)"
+          ]
+        },
+        "flatten" => {
+          name: "flatten",
+          description: "returns a flattened list of dictionary keys and values.",
+          examples: ["{ a: 1 }.flatten", "{ a: { b: 1 } }.flatten", "{ a: 1 }.flatten(1)"]
+        },
+        "has_key?" => {
+          name: "has_key?",
+          description: "returns whether the dictionary has a key.",
+          examples: ["{ a: 1 }.has_key?(:a)", "{ a: 1 }.has_key?(:b)", "{}.has_key?(:a)"]
+        },
+        "key?" => {
+          name: "key?",
+          description: "alias for has_key?.",
+          examples: ["{ a: 1 }.key?(:a)", "{ a: 1 }.key?(:b)", "{}.key?(:a)"]
+        },
+        "include?" => {
+          name: "include?",
+          description: "alias for has_key?.",
+          examples: ["{ a: 1 }.include?(:a)", "{ a: 1 }.include?(:b)", "{}.include?(:a)"]
+        },
+        "member?" => {
+          name: "member?",
+          description: "alias for has_key?.",
+          examples: ["{ a: 1 }.member?(:a)", "{ a: 1 }.member?(:b)", "{}.member?(:a)"]
+        },
+        "has_own?" => {
+          name: "has_own?",
+          description: "returns whether the dictionary has a key.",
+          examples: ["{ a: 1 }.has_own?(:a)", "{ a: 1 }.has_own?(:b)", "{}.has_own?(:a)"]
+        },
+        "has_value?" => {
+          name: "has_value?",
+          description: "returns whether the dictionary has a value.",
+          examples: [
+            "{ a: 1 }.has_value?(1)",
+            "{ a: 1 }.has_value?(2)",
+            "{}.has_value?(1)"
+          ]
+        },
+        "value?" => {
+          name: "value?",
+          description: "alias for has_value?.",
+          examples: ["{ a: 1 }.value?(1)", "{ a: 1 }.value?(2)", "{}.value?(1)"]
+        },
+        "invert" => {
+          name: "invert",
+          description: "returns a dictionary with keys and values swapped.",
+          examples: ["{ a: 1 }.invert", "{ a: 1, b: 2 }.invert", "{}.invert"]
+        },
+        "keep_if" => {
+          name: "keep_if",
+          description: "keeps entries when a function returns truthy.",
+          examples: [
+            "{ a: 1, b: 2 }.keep_if((key, value) => { value > 1 })",
+            "{ a: 1 }.keep_if((key) => { key == :a })",
+            "{ a: 1, b: :x }.keep_if(String)"
+          ]
+        },
+        "keep_unless" => {
+          name: "keep_unless",
+          description: "keeps entries unless a function returns truthy.",
+          examples: [
+            "{ a: 1, b: 2 }.keep_unless((key, value) => { value > 1 })",
+            "{ a: 1 }.keep_unless((key) => { key == :a })",
+            "{ a: 1, b: :x }.keep_unless(String)"
+          ]
+        },
+        "key" => {
+          name: "key",
+          description: "returns the first key for a value or matching function.",
+          examples: [
+            "{ a: 1 }.key(1)",
+            "{ a: 1, b: 2 }.key(2)",
+            "{ a: 1, b: 2 }.key(0, (value) => { value > 1 })"
+          ]
+        },
+        "keys" => {
+          name: "keys",
+          description: "returns the dictionary keys.",
+          examples: ["{ a: 1 }.keys", "{ a: 1, b: 2 }.keys", "{}.keys"]
+        },
+        "map" => {
+          name: "map",
+          description: "returns a list by calling a function for each entry.",
+          examples: [
+            "{ a: 1 }.map((key, value) => { key })",
+            "{ a: 1 }.map((key, value) => { value })",
+            "{ a: 1 }.map((key, value, index) => { index })"
+          ]
+        },
+        "merge" => {
+          name: "merge",
+          description: "returns a dictionary merged with other dictionaries.",
+          examples: [
+            "{ a: 1 }.merge({ b: 2 })",
+            "{ a: 1 }.merge({ a: 2 })",
+            "{ a: 1 }.merge({ a: 2 }, (key, left, right) => { left })"
+          ]
+        },
+        "merge!" => {
+          name: "merge!",
+          description: "merges other dictionaries into the receiver.",
+          examples: [
+            "{ a: 1 }.merge!({ b: 2 })",
+            "{ a: 1 }.merge!({ a: 2 })",
+            "{ a: 1 }.merge!({ a: 2 }, (key, left, right) => { left })"
+          ]
+        },
+        "update" => {
+          name: "update",
+          description: "alias for merge!.",
+          examples: [
+            "{ a: 1 }.update({ b: 2 })",
+            "{ a: 1 }.update({ a: 2 })",
+            "{ a: 1 }.update({ a: 2 }, (key, left, right) => { left })"
+          ]
+        },
+        "replace" => {
+          name: "replace",
+          description: "replaces the dictionary contents with another dictionary.",
+          examples: [
+            "{ a: 1 }.replace({ b: 2 })",
+            "{ a: 1, b: 2 }.replace({})",
+            "{}.replace({ a: 1 })"
+          ]
+        },
+        "store" => {
+          name: "store",
+          description: "sets a key to a value and returns the value.",
+          examples: [
+            "{ a: 1 }.store(:b, 2)",
+            "{}.store(:a, 1)",
+            "{ a: 1 }.store(:a, 2)"
+          ]
+        },
+        "shift" => {
+          name: "shift",
+          description: "removes and returns the first key-value entry.",
+          examples: ["{ a: 1 }.shift", "{ a: 1, b: 2 }.shift", "{}.shift"]
+        },
+        "reject" => {
+          name: "reject",
+          description: "returns a dictionary without entries matching a function.",
+          examples: [
+            "{ a: 1, b: 2 }.reject((key, value) => { value > 1 })",
+            "{ a: 1 }.reject((key) => { key == :a })",
+            "{ a: 1, b: :x }.reject(String)"
+          ]
+        },
+        "reject!" => {
+          name: "reject!",
+          description: "removes entries matching a function.",
+          examples: [
+            "{ a: 1, b: 2 }.reject!((key, value) => { value > 1 })",
+            "{ a: 1 }.reject!((key) => { key == :a })",
+            "{ a: 1, b: :x }.reject!(String)"
+          ]
+        },
+        "select" => {
+          name: "select",
+          description: "returns a dictionary with entries matching a function.",
+          examples: [
+            "{ a: 1, b: 2 }.select((key, value) => { value > 1 })",
+            "{ a: 1 }.select((key) => { key == :a })",
+            "{ a: 1, b: :x }.select(String)"
+          ]
+        },
+        "filter" => {
+          name: "filter",
+          description: "alias for select.",
+          examples: [
+            "{ a: 1, b: 2 }.filter((key, value) => { value > 1 })",
+            "{ a: 1 }.filter((key) => { key == :a })",
+            "{ a: 1, b: :x }.filter(String)"
+          ]
+        },
+        "select!" => {
+          name: "select!",
+          description: "keeps entries matching a function.",
+          examples: [
+            "{ a: 1, b: 2 }.select!((key, value) => { value > 1 })",
+            "{ a: 1 }.select!((key) => { key == :a })",
+            "{ a: 1, b: :x }.select!(String)"
+          ]
+        },
+        "filter!" => {
+          name: "filter!",
+          description: "alias for select!.",
+          examples: [
+            "{ a: 1, b: 2 }.filter!((key, value) => { value > 1 })",
+            "{ a: 1 }.filter!((key) => { key == :a })",
+            "{ a: 1, b: :x }.filter!(String)"
+          ]
+        },
+        "set" => {
+          name: "set",
+          description: "sets a key to a value and returns the value.",
+          examples: ["{ a: 1 }.set(:b, 2)", "{}.set(:a, 1)", "{ a: 1 }.set(:a, 2)"]
+        },
+        "size" => {
+          name: "size",
+          description: "returns the number of entries.",
+          examples: ["{}.size", "{ a: 1 }.size", "{ a: 1, b: 2 }.size"]
+        },
+        "length" => {
+          name: "length",
+          description: "alias for size.",
+          examples: ["{}.length", "{ a: 1 }.length", "{ a: 1, b: 2 }.length"]
+        },
+        "slice" => {
+          name: "slice",
+          description: "returns a dictionary with only the given keys.",
+          examples: [
+            "{ a: 1, b: 2 }.slice(:a)",
+            "{ a: 1, b: 2 }.slice(:a, :b)",
+            "{ a: 1 }.slice(:missing)"
+          ]
+        },
+        "to_list" => {
+          name: "to_list",
+          description: "returns key-value entries as a list.",
+          examples: ["{ a: 1 }.to_list", "{ a: 1, b: 2 }.to_list", "{}.to_list"]
+        },
+        "entries" => {
+          name: "entries",
+          description: "returns key-value entries as a list.",
+          examples: ["{ a: 1 }.entries", "{ a: 1, b: 2 }.entries", "{}.entries"]
+        },
+        "to_dictionary" => {
+          name: "to_dictionary",
+          description: "returns the dictionary.",
+          examples: [
+            "{ a: 1 }.to_dictionary",
+            "{ a: 1, b: 2 }.to_dictionary",
+            "{}.to_dictionary"
+          ]
+        },
+        "to_context" => {
+          name: "to_context",
+          description: "converts the dictionary to a context.",
+          examples: ["{ a: 1 }.to_context", "{ a: 1, b: 2 }.to_context", "{}.to_context"]
+        },
+        "to_query" => {
+          name: "to_query",
+          description: "converts the dictionary to a query string.",
+          examples: [
+            "{ a: 1 }.to_query",
+            "{ a: 1, b: 2 }.to_query",
+            "{ q: :ruby }.to_query(:search)"
+          ]
+        },
+        "transform_keys" => {
+          name: "transform_keys",
+          description: "returns a dictionary with keys transformed by a function.",
+          examples: [
+            "{ a: 1 }.transform_keys((key) => { key.to_string })",
+            "{ a: 1 }.transform_keys((key, value) => { value })",
+            "{ a: 1 }.transform_keys((key, value, index) => { index })"
+          ]
+        },
+        "transform_keys!" => {
+          name: "transform_keys!",
+          description: "transforms keys in the receiver with a function.",
+          examples: [
+            "{ a: 1 }.transform_keys!((key) => { key.to_string })",
+            "{ a: 1 }.transform_keys!((key, value) => { value })",
+            "{ a: 1 }.transform_keys!((key, value, index) => { index })"
+          ]
+        },
+        "transform_values" => {
+          name: "transform_values",
+          description: "returns a dictionary with values transformed by a function.",
+          examples: [
+            "{ a: 1 }.transform_values((value) => { value + 1 })",
+            "{ a: 1 }.transform_values((value, key) => { key })",
+            "{ a: 1 }.transform_values((value, key, index) => { index })"
+          ]
+        },
+        "transform_values!" => {
+          name: "transform_values!",
+          description: "transforms values in the receiver with a function.",
+          examples: [
+            "{ a: 1 }.transform_values!((value) => { value + 1 })",
+            "{ a: 1 }.transform_values!((value, key) => { key })",
+            "{ a: 1 }.transform_values!((value, key, index) => { index })"
+          ]
+        },
+        "values" => {
+          name: "values",
+          description: "returns dictionary values or values for keys.",
+          examples: [
+            "{ a: 1, b: 2 }.values",
+            "{ a: 1, b: 2 }.values(:a)",
+            "{ a: 1, b: 2 }.values(:a, () => { 0 })"
+          ]
+        },
+        "values_at" => {
+          name: "values_at",
+          description: "returns values for the given keys.",
+          examples: [
+            "{ a: 1, b: 2 }.values_at(:a)",
+            "{ a: 1, b: 2 }.values_at(:a, :b)",
+            "{ a: 1 }.values_at(:missing)"
+          ]
+        },
+        "associate" => {
+          name: "associate",
+          description: "returns a dictionary associating each key to one value.",
+          examples: [
+            "{ a: 1 }.associate(2)",
+            "{ a: 1, b: 2 }.associate(:x)",
+            "{}.associate(:x)"
+          ]
+        },
+        "right_associate" => {
+          name: "right_associate",
+          description: "returns a dictionary associating one key to each value.",
+          examples: [
+            "{ a: 1 }.right_associate(:x)",
+            "{ a: 1, b: 2 }.right_associate(:x)",
+            "{}.right_associate(:x)"
+          ]
+        },
+        "deep_duplicate" => {
+          name: "deep_duplicate",
+          description: "returns a deep duplicate of the dictionary.",
+          examples: [
+            "{ a: 1 }.deep_duplicate",
+            "{ a: [1] }.deep_duplicate",
+            "{}.deep_duplicate"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       delegate(
         :code_many?,
         :code_positive?,

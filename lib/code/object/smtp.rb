@@ -3,6 +3,24 @@
 class Code
   class Object
     class Smtp < Dictionary
+      INSTANCE_FUNCTIONS = {
+        "send" => {
+          name: "send",
+          description: "sends an email using the receiver's smtp settings.",
+          examples: [
+            "smtp.send(to: \"you@example.com\", subject: :hello, body: :hi)",
+            "smtp.send(from: \"me@example.com\", to: \"you@example.com\", body_text: :hi)",
+            "smtp.send(to: \"you@example.com\", body_html: \"<p>hi</p>\")"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code

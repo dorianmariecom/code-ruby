@@ -3,6 +3,33 @@
 class Code
   class Object
     class Json < Object
+      CLASS_FUNCTIONS = {
+        "parse" => {
+          name: "parse",
+          description: "parses a json string into a value.",
+          examples: [
+            "Json.parse(\"{\\\"a\\\":1}\")",
+            "Json.parse(\"[1,2]\")",
+            "Json.parse(\"bad json\")"
+          ]
+        },
+        "generate" => {
+          name: "generate",
+          description: "serializes a value as json.",
+          examples: [
+            "Json.generate({ a: 1 })",
+            "Json.generate([1, 2])",
+            "Json.generate({ a: 1 }, pretty: true)"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code

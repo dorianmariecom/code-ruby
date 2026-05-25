@@ -3,6 +3,29 @@
 class Code
   class Object
     class Class < Object
+      INSTANCE_FUNCTIONS = {
+        "call" => {
+          name: "call",
+          description: "builds a new value by calling the wrapped class.",
+          examples: ["List.call([1, 2])", "String.call(:hello)", "Integer.call(1)"]
+        },
+        "extend" => {
+          name: "extend",
+          description: "returns a constructor function that extends the class.",
+          examples: [
+            "Widget = Dictionary.extend(() => { self.name = :widget })",
+            "Person = Dictionary.extend((name) => { self.name = name })",
+            "Counter = Dictionary.extend(() => { self.count = 0 })"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.is_a?(Class)

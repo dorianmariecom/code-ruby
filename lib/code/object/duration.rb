@@ -3,6 +3,25 @@
 class Code
   class Object
     class Duration < Object
+      INSTANCE_FUNCTIONS = {
+        "ago" => {
+          name: "ago",
+          description: "returns the time this duration before now.",
+          examples: ["1.day.ago", "2.hours.ago", "30.minutes.ago"]
+        },
+        "from_now" => {
+          name: "from_now",
+          description: "returns the time this duration after now.",
+          examples: ["1.day.from_now", "2.hours.from_now", "30.minutes.from_now"]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.is_an?(::ActiveSupport::Duration)

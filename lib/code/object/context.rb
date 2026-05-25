@@ -3,6 +3,24 @@
 class Code
   class Object
     class Context < Dictionary
+      INSTANCE_FUNCTIONS = {
+        "lookup!" => {
+          name: "lookup!",
+          description: "returns the context that defines an identifier or raises an error.",
+          examples: [
+            "Context.new(a: 1).lookup!(:a)",
+            "Context.new({ a: 1 }).lookup!(:a)",
+            "Context.new.lookup!(:missing)"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       attr_reader :parent
 
       def initialize(*args, **_kargs, &_block)

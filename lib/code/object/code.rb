@@ -3,6 +3,36 @@
 class Code
   class Object
     class Code < Object
+      CLASS_FUNCTIONS = {
+        "evaluate" => {
+          name: "evaluate",
+          description: "evaluates source code and returns the result.",
+          examples: [
+            "Code.evaluate(:1)",
+            "Code.evaluate(\"1 + 2\")",
+            "Code.evaluate(\"[1, 2].size\")"
+          ]
+        }
+      }.freeze
+      INSTANCE_FUNCTIONS = {
+        "evaluate" => {
+          name: "evaluate",
+          description: "evaluates the receiver's source code and returns the result.",
+          examples: [
+            "Code(:1).evaluate",
+            "Code(\"1 + 2\").evaluate",
+            "Code(\"[1, 2].size\").evaluate"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.is_a?(Node::Code)

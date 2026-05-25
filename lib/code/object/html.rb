@@ -3,6 +3,135 @@
 class Code
   class Object
     class Html < Object
+      CLASS_FUNCTIONS = {
+        "escape" => {
+          name: "escape",
+          description: "escapes a value for html text.",
+          examples: [
+            "Html.escape(\"<p>\")",
+            "Html.escape(:hello)",
+            "Html.escape(() => { \"<strong>hello</strong>\" })"
+          ]
+        },
+        "unescape" => {
+          name: "unescape",
+          description: "converts html entities and tags to text.",
+          examples: [
+            "Html.unescape(\"&lt;p&gt;\")",
+            "Html.unescape(\"<p>hello</p>\")",
+            "Html.unescape(() => { \"&amp;\" })"
+          ]
+        },
+        "join" => {
+          name: "join",
+          description: "joins html or text values with an optional separator.",
+          examples: [
+            "Html.join([:a, :b], \", \")",
+            "Html.join([Html.text(\"a\"), Html.text(\"b\")])",
+            "Html.join(\"<br>\", () => { [\"a\", \"b\"] })"
+          ]
+        },
+        "text" => {
+          name: "text",
+          description: "builds an escaped html text fragment.",
+          examples: [
+            "Html.text(:hello)",
+            "Html.text(\"<strong>hello</strong>\")",
+            "Html.text(() => { :hello })"
+          ]
+        },
+        "raw" => {
+          name: "raw",
+          description: "builds an html fragment without escaping the value.",
+          examples: [
+            "Html.raw(\"<strong>hello</strong>\")",
+            "Html.raw(Html.text(:hello))",
+            "Html.raw(() => { \"<em>hello</em>\" })"
+          ]
+        }
+      }.freeze
+      INSTANCE_FUNCTIONS = {
+        "css" => {
+          name: "css",
+          description: "returns all html nodes matching a css selector.",
+          examples: [
+            "Html.raw(\"<p>a</p><p>b</p>\").css(\"p\")",
+            "Html.raw(\"<main><p>a</p></main>\").css(\"main p\")",
+            "Html.raw(\"<p class='x'>a</p>\").css(\".x\")"
+          ]
+        },
+        "at_css" => {
+          name: "at_css",
+          description: "returns the first html node matching a css selector.",
+          examples: [
+            "Html.raw(\"<p>a</p><p>b</p>\").at_css(\"p\")",
+            "Html.raw(\"<main><p>a</p></main>\").at_css(\"main p\")",
+            "Html.raw(\"<p class='x'>a</p>\").at_css(\".x\")"
+          ]
+        },
+        "map" => {
+          name: "map",
+          description: "returns a list by calling a function for each html node.",
+          examples: [
+            "Html.raw(\"<p>a</p><p>b</p>\").css(\"p\").map((node) => { node.to_string })",
+            "Html.raw(\"<p>a</p>\").css(:p).map((node, index) => { index })",
+            "Html.raw(\"<p>a</p>\").css(:p).map((node, index, nodes) => { nodes.size })"
+          ]
+        },
+        "to_string" => {
+          name: "to_string",
+          description: "returns the html fragment's text content.",
+          examples: [
+            "Html.raw(\"<p>hello</p>\").to_string",
+            "Html.text(:hello).to_string",
+            "Html.raw(\"<p><strong>hello</strong></p>\").to_string"
+          ]
+        },
+        "to_html" => {
+          name: "to_html",
+          description: "returns the html fragment as html markup.",
+          examples: [
+            "Html.raw(\"<p>hello</p>\").to_html",
+            "Html.text(:p).to_html",
+            "Html.raw(\"<strong>hello</strong>\").to_html"
+          ]
+        },
+        "inner_text" => {
+          name: "inner_text",
+          description: "returns the html fragment's text content.",
+          examples: [
+            "Html.raw(\"<p>hello</p>\").inner_text",
+            "Html.text(:hello).inner_text",
+            "Html.raw(\"<p><strong>hello</strong></p>\").inner_text"
+          ]
+        },
+        "attribute" => {
+          name: "attribute",
+          description: "returns an html node attribute by name.",
+          examples: [
+            "Html.raw(\"<a href='/'>home</a>\").at_css(:a).attribute(:href)",
+            "Html.raw(\"<p class='x'>a</p>\").at_css(:p).attribute(:class)",
+            "Html.raw(\"<img alt='logo'>\").at_css(:img).attribute(:alt)"
+          ]
+        },
+        "attributes" => {
+          name: "attributes",
+          description: "returns an html node's attributes as a dictionary.",
+          examples: [
+            "Html.raw(\"<a href='/'>home</a>\").at_css(:a).attributes",
+            "Html.raw(\"<p class='x'>a</p>\").at_css(:p).attributes",
+            "Html.raw(\"<img alt='logo'>\").at_css(:img).attributes"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
+
       TAGS = %w[
         a
         abbr
