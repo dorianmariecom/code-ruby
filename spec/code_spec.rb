@@ -667,6 +667,46 @@ RSpec.describe Code do
     described_class.evaluate(format_input(input))
   end
 
+  it "allows dynamic values to override built-in instance functions" do
+    expect(described_class.evaluate("t = Time.now t.iso = :a t.iso")).to eq(
+      Code::Object::String.new("a")
+    )
+  end
+
+  it "allows dynamic values to override built-in class functions" do
+    expect(described_class.evaluate("Time.now = :a Time.now")).to eq(
+      Code::Object::String.new("a")
+    )
+  end
+
+  it "allows dynamic functions to override built-in class functions" do
+    expect(
+      described_class.evaluate(<<~CODE)
+        Time.zone = "Etc/UTC"
+        Time.now = () => { Time.new("2026-01-01 09:00:00 UTC") }
+        Time.now.iso
+      CODE
+    ).to eq(Code::Object::String.new("2026-01-01T09:00:00Z"))
+  end
+
+  it "does not leak dynamic class function overrides between runs" do
+    expect(described_class.evaluate("Time.now = :a Time.now")).to eq(
+      Code::Object::String.new("a")
+    )
+    expect(described_class.evaluate("Time.now.is_a?(Time)")).to eq(
+      Code::Object::Boolean.new(true)
+    )
+  end
+
+  it "allows globals to override built-in global functions and classes" do
+    expect(described_class.evaluate("puts = :a puts")).to eq(
+      Code::Object::String.new("a")
+    )
+    expect(described_class.evaluate("Time = :a Time")).to eq(
+      Code::Object::String.new("a")
+    )
+  end
+
   it "raises for undefined constant receiver assignment" do
     expect do
       described_class.evaluate("UnknownConstant.zone = 1")

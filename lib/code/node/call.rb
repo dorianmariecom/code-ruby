@@ -53,7 +53,17 @@ class Code
 
         name = Object::String.new(@name)
 
-        args.fetch(:object).call(
+        object = args.fetch(:object)
+        dynamic_result = object.code_dynamic_call(
+          name,
+          operator: name,
+          arguments: Object::List.new(arguments),
+          explicit_arguments: @explicit_arguments,
+          **args
+        )
+        return dynamic_result if dynamic_result
+
+        object.call(
           operator: name,
           arguments: Object::List.new(arguments),
           explicit_arguments: @explicit_arguments,

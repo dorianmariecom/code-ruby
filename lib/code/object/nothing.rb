@@ -3,21 +3,34 @@
 class Code
   class Object
     class Nothing < Object
+      CLASS_DOCUMENTATION = {
+        name: "Nothing",
+        description: "represents no value.",
+        examples: [
+          "nothing",
+          "Nothing.new",
+          "Nothing.new(1)"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "empty?" => {
           name: "empty?",
-          description: "returns true because nothing is empty.",
-          examples: ["nothing.empty?", "Nothing.new.empty?", "nil.to_code.empty?"]
+          description: "returns true because nothing has no contents.",
+          examples: ["nothing.empty?", "Nothing.new.empty?", "Nothing.new(1).empty?"]
         },
         "to_string" => {
           name: "to_string",
-          description: "returns an empty string.",
-          examples: ["nothing.to_string", "Nothing.new.to_string", "nil.to_code.to_string"]
+          description: "returns an empty string for nothing.",
+          examples: [
+            "nothing.to_string",
+            "Nothing.new.to_string",
+            "Nothing.new(1).to_string"
+          ]
         },
         "inspect" => {
           name: "inspect",
-          description: "returns the string nothing.",
-          examples: ["nothing.inspect", "Nothing.new.inspect", "nil.to_code.inspect"]
+          description: "returns the source string for nothing.",
+          examples: ["nothing.inspect", "Nothing.new.inspect", "Nothing.new(1).inspect"]
         }
       }.freeze
 

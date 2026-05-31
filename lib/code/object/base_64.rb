@@ -3,28 +3,37 @@
 class Code
   class Object
     class Base64 < Object
+      CLASS_DOCUMENTATION = {
+        name: "Base64",
+        description: "encodes and decodes strings with base64 text formats.",
+        examples: [
+          "Base64.encode(:hello)",
+          "Base64.decode(Base64.encode(:hello))",
+          "Base64.urlsafe_decode(Base64.urlsafe_encode(\"???\"))"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "encode" => {
           name: "encode",
-          description: "encodes a string with base64 and includes line breaks.",
+          description: "returns base64 text with line breaks for a string.",
           examples: [
             "Base64.encode(:hello)",
             "Base64.encode(:hello_world)",
-            "Base64.encode(123)"
+            "Base64.encode(\"123\")"
           ]
         },
         "encode_64" => {
           name: "encode_64",
-          description: "alias for encode.",
+          description: "returns base64 text with line breaks for a string.",
           examples: [
             "Base64.encode_64(:hello)",
             "Base64.encode_64(:hello_world)",
-            "Base64.encode_64(123)"
+            "Base64.encode_64(\"123\")"
           ]
         },
         "decode" => {
           name: "decode",
-          description: "decodes a base64 string.",
+          description: "returns a string decoded from base64 text.",
           examples: [
             "Base64.decode(\"aGVsbG8=\")",
             "Base64.decode(Base64.encode(:hello))",
@@ -33,7 +42,7 @@ class Code
         },
         "decode_64" => {
           name: "decode_64",
-          description: "alias for decode.",
+          description: "returns a string decoded from base64 text.",
           examples: [
             "Base64.decode_64(\"aGVsbG8=\")",
             "Base64.decode_64(Base64.encode(:hello))",
@@ -42,25 +51,25 @@ class Code
         },
         "strict_encode" => {
           name: "strict_encode",
-          description: "encodes a string with base64 without line breaks.",
+          description: "returns base64 text without line breaks for a string.",
           examples: [
             "Base64.strict_encode(:hello)",
             "Base64.strict_encode(:hello_world)",
-            "Base64.strict_encode(123)"
+            "Base64.strict_encode(\"123\")"
           ]
         },
         "strict_encode_64" => {
           name: "strict_encode_64",
-          description: "alias for strict_encode.",
+          description: "returns base64 text without line breaks for a string.",
           examples: [
             "Base64.strict_encode_64(:hello)",
             "Base64.strict_encode_64(:hello_world)",
-            "Base64.strict_encode_64(123)"
+            "Base64.strict_encode_64(\"123\")"
           ]
         },
         "strict_decode" => {
           name: "strict_decode",
-          description: "decodes a strict base64 string.",
+          description: "returns a string decoded from strict base64 text.",
           examples: [
             "Base64.strict_decode(\"aGVsbG8=\")",
             "Base64.strict_decode(Base64.strict_encode(:hello))",
@@ -69,7 +78,7 @@ class Code
         },
         "strict_decode_64" => {
           name: "strict_decode_64",
-          description: "alias for strict_decode.",
+          description: "returns a string decoded from strict base64 text.",
           examples: [
             "Base64.strict_decode_64(\"aGVsbG8=\")",
             "Base64.strict_decode_64(Base64.strict_encode(:hello))",
@@ -78,38 +87,38 @@ class Code
         },
         "urlsafe_encode" => {
           name: "urlsafe_encode",
-          description: "encodes a string with url-safe base64.",
+          description: "returns url-safe base64 text for a string.",
           examples: [
             "Base64.urlsafe_encode(:hello)",
-            "Base64.urlsafe_encode(:hello_world)",
-            "Base64.urlsafe_encode(123)"
+            "Base64.urlsafe_encode(\">>>\")",
+            "Base64.urlsafe_encode(\"???\")"
           ]
         },
         "url_safe_encode_64" => {
           name: "url_safe_encode_64",
-          description: "alias for urlsafe_encode.",
+          description: "returns url-safe base64 text for a string.",
           examples: [
             "Base64.url_safe_encode_64(:hello)",
-            "Base64.url_safe_encode_64(:hello_world)",
-            "Base64.url_safe_encode_64(123)"
+            "Base64.url_safe_encode_64(\">>>\")",
+            "Base64.url_safe_encode_64(\"???\")"
           ]
         },
         "urlsafe_decode" => {
           name: "urlsafe_decode",
-          description: "decodes a url-safe base64 string.",
+          description: "returns a string decoded from url-safe base64 text.",
           examples: [
             "Base64.urlsafe_decode(\"aGVsbG8=\")",
-            "Base64.urlsafe_decode(Base64.urlsafe_encode(:hello))",
-            "Base64.urlsafe_decode(\"MTIz\")"
+            "Base64.urlsafe_decode(\"Pj4-\")",
+            "Base64.urlsafe_decode(\"Pz8_\")"
           ]
         },
         "url_safe_decode_64" => {
           name: "url_safe_decode_64",
-          description: "alias for urlsafe_decode.",
+          description: "returns a string decoded from url-safe base64 text.",
           examples: [
             "Base64.url_safe_decode_64(\"aGVsbG8=\")",
-            "Base64.url_safe_decode_64(Base64.urlsafe_encode(:hello))",
-            "Base64.url_safe_decode_64(\"MTIz\")"
+            "Base64.url_safe_decode_64(\"Pj4-\")",
+            "Base64.url_safe_decode_64(\"Pz8_\")"
           ]
         }
       }.freeze

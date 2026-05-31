@@ -3,23 +3,32 @@
 class Code
   class Object
     class Json < Object
+      CLASS_DOCUMENTATION = {
+        name: "Json",
+        description: "parses json text and serializes values as json text.",
+        examples: [
+          "Json.parse(\"{}\")",
+          "Json.generate({ a: 1 })",
+          "Json.generate([1, 2], { pretty: true })"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "parse" => {
           name: "parse",
-          description: "parses a json string into a value.",
+          description: "returns a value parsed from json text, or nothing when parsing fails.",
           examples: [
-            "Json.parse(\"{\\\"a\\\":1}\")",
+            "Json.parse(\"{}\")",
             "Json.parse(\"[1,2]\")",
             "Json.parse(\"bad json\")"
           ]
         },
         "generate" => {
           name: "generate",
-          description: "serializes a value as json.",
+          description: "returns json text for a value, optionally formatted for readability.",
           examples: [
             "Json.generate({ a: 1 })",
             "Json.generate([1, 2])",
-            "Json.generate({ a: 1 }, pretty: true)"
+            "Json.generate({ a: 1 }, { pretty: true })"
           ]
         }
       }.freeze

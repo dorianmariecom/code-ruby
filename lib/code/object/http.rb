@@ -3,86 +3,95 @@
 class Code
   class Object
     class Http < Object
+      CLASS_DOCUMENTATION = {
+        name: "Http",
+        description: "sends http requests and returns dictionaries with request and response details.",
+        examples: [
+          "Http.get(\"http://httpbin.org/status/200\").success?",
+          "Http.post(\"http://httpbin.org/status/200\", body: :hello).request.body",
+          "Http.fetch(:get, \"http://httpbin.org/status/204\").code"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "get" => {
           name: "get",
-          description: "performs an http get request.",
+          description: "sends a get request and returns the response dictionary.",
           examples: [
-            "Http.get(\"https://example.com\")",
-            "Http.get(\"https://example.com\", query: { q: :ruby })",
-            "Http.get(\"https://example.com\", headers: { accept: \"application/json\" })"
+            "Http.get(\"http://httpbin.org/status/200\").code",
+            "Http.get(\"http://httpbin.org/status/200\", query: { q: :ruby }).url",
+            "Http.get(\"http://httpbin.org/status/200\", headers: { accept: \"application/json\" }).request.headers"
           ]
         },
         "head" => {
           name: "head",
-          description: "performs an http head request.",
+          description: "sends a head request and returns the response dictionary.",
           examples: [
-            "Http.head(\"https://example.com\")",
-            "Http.head(\"https://example.com\", timeout: 2)",
-            "Http.head(\"https://example.com\", headers: { accept: \"text/html\" })"
+            "Http.head(\"http://httpbin.org/status/200\").code",
+            "Http.head(\"http://httpbin.org/status/204\").status",
+            "Http.head(\"http://httpbin.org/status/200\", headers: { accept: \"text/html\" }).request.headers"
           ]
         },
         "post" => {
           name: "post",
-          description: "performs an http post request.",
+          description: "sends a post request with optional body, form data, and headers.",
           examples: [
-            "Http.post(\"https://example.com\", body: :hello)",
-            "Http.post(\"https://example.com\", data: { a: 1 })",
-            "Http.post(\"https://example.com\", headers: { content_type: \"text/plain\" })"
+            "Http.post(\"http://httpbin.org/status/200\", body: :hello).request.body",
+            "Http.post(\"http://httpbin.org/status/200\", data: { a: 1 }).success?",
+            "Http.post(\"http://httpbin.org/status/200\", headers: { content_type: \"text/plain\" }).request.headers"
           ]
         },
         "put" => {
           name: "put",
-          description: "performs an http put request.",
+          description: "sends a put request with optional body or form data.",
           examples: [
-            "Http.put(\"https://example.com\", body: :hello)",
-            "Http.put(\"https://example.com\", data: { a: 1 })",
-            "Http.put(\"https://example.com\", timeout: 2)"
+            "Http.put(\"http://httpbin.org/status/200\", body: :hello).request.body",
+            "Http.put(\"http://httpbin.org/status/200\", data: { a: 1 }).method",
+            "Http.put(\"http://httpbin.org/status/204\").code"
           ]
         },
         "delete" => {
           name: "delete",
-          description: "performs an http delete request.",
+          description: "sends a delete request and returns the response dictionary.",
           examples: [
-            "Http.delete(\"https://example.com\")",
-            "Http.delete(\"https://example.com\", body: :hello)",
-            "Http.delete(\"https://example.com\", timeout: 2)"
+            "Http.delete(\"http://httpbin.org/status/200\").success?",
+            "Http.delete(\"http://httpbin.org/status/200\", body: :hello).request.body",
+            "Http.delete(\"http://httpbin.org/status/204\").status"
           ]
         },
         "options" => {
           name: "options",
-          description: "performs an http options request.",
+          description: "sends an options request and returns the response dictionary.",
           examples: [
-            "Http.options(\"https://example.com\")",
-            "Http.options(\"https://example.com\", timeout: 2)",
-            "Http.options(\"https://example.com\", headers: { accept: \"*/*\" })"
+            "Http.options(\"http://httpbin.org/status/200\").method",
+            "Http.options(\"http://httpbin.org/status/204\").code",
+            "Http.options(\"http://httpbin.org/status/200\", headers: { accept: \"*/*\" }).request.headers"
           ]
         },
         "trace" => {
           name: "trace",
-          description: "performs an http trace request.",
+          description: "sends a trace request and returns the response dictionary.",
           examples: [
-            "Http.trace(\"https://example.com\")",
-            "Http.trace(\"https://example.com\", timeout: 2)",
-            "Http.trace(\"https://example.com\", headers: { accept: \"message/http\" })"
+            "Http.trace(\"http://httpbin.org/status/200\").method",
+            "Http.trace(\"http://httpbin.org/status/204\").code",
+            "Http.trace(\"http://httpbin.org/status/200\", headers: { accept: \"message/http\" }).request.headers"
           ]
         },
         "patch" => {
           name: "patch",
-          description: "performs an http patch request.",
+          description: "sends a patch request with optional body or form data.",
           examples: [
-            "Http.patch(\"https://example.com\", body: :hello)",
-            "Http.patch(\"https://example.com\", data: { a: 1 })",
-            "Http.patch(\"https://example.com\", timeout: 2)"
+            "Http.patch(\"http://httpbin.org/status/200\", body: :hello).request.body",
+            "Http.patch(\"http://httpbin.org/status/200\", data: { a: 1 }).method",
+            "Http.patch(\"http://httpbin.org/status/204\").code"
           ]
         },
         "fetch" => {
           name: "fetch",
-          description: "performs an http request with an explicit method.",
+          description: "sends an http request using the given method name.",
           examples: [
-            "Http.fetch(:get, \"https://example.com\")",
-            "Http.fetch(:post, \"https://example.com\", body: :hello)",
-            "Http.fetch(:patch, \"https://example.com\", data: { a: 1 })"
+            "Http.fetch(:get, \"http://httpbin.org/status/200\").success?",
+            "Http.fetch(:post, \"http://httpbin.org/status/200\", body: :hello).request.body",
+            "Http.fetch(:patch, \"http://httpbin.org/status/200\", data: { a: 1 }).method"
           ]
         }
       }.freeze

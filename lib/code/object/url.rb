@@ -3,30 +3,39 @@
 class Code
   class Object
     class Url < Object
+      CLASS_DOCUMENTATION = {
+        name: "Url",
+        description: "encodes text for urls, decodes url-escaped text, and parses strings as urls.",
+        examples: [
+          "Url.encode(\"hello world\")",
+          "Url.decode(\"a%2Fb%3Fx%3D1\")",
+          "Url.parse(\"https://example.com/a?b=1\")"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "encode" => {
           name: "encode",
-          description: "url-encodes a value.",
+          description: "returns url-escaped text for a value.",
           examples: [
-            "Url.encode(:hello)",
-            "Url.encode(\"a/b\")",
-            "Url.encode(\"a+b\")"
+            "Url.encode(\"hello world\")",
+            "Url.encode(\"a/b?x=1\")",
+            "Url.encode(:hello)"
           ]
         },
         "decode" => {
           name: "decode",
-          description: "url-decodes a value.",
+          description: "returns text decoded from url-escaped text.",
           examples: [
             "Url.decode(\"hello+world\")",
-            "Url.decode(\"a%2Fb\")",
+            "Url.decode(\"a%2Fb%3Fx%3D1\")",
             "Url.decode(Url.encode(\"a+b\"))"
           ]
         },
         "parse" => {
           name: "parse",
-          description: "parses a value as a url.",
+          description: "returns a url parsed from a value, or an empty url when parsing fails.",
           examples: [
-            "Url.parse(\"https://example.com\")",
+            "Url.parse(\"https://example.com/a?b=1\")",
             "Url.parse(\"/path\")",
             "Url.parse(\"not a url\")"
           ]

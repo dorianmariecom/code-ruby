@@ -11,7 +11,25 @@ class Code
       ::String,
       ::BigDecimal
     ].freeze
+    CLASS_DOCUMENTATION = {
+      name: "Object",
+      description: "provides the shared behavior available to every value.",
+      examples: [
+        "Object",
+        "Object.new",
+        "Object.documentation.description"
+      ]
+    }.freeze
     INSTANCE_FUNCTIONS = {
+      "documentation" => {
+        name: "documentation",
+        description: "returns documentation for the value's class.",
+        examples: [
+          "1.documentation.name",
+          "[].documentation.description",
+          "{}.documentation.examples"
+        ]
+      },
       "functions" => {
         name: "functions",
         description: "returns documented instance and class functions available on the value.",
@@ -129,7 +147,7 @@ class Code
       "+" => {
         name: "+",
         description: "returns the receiver for object types that do not override plus.",
-        examples: ["Object.new +", "+Object.new", "nothing +"]
+        examples: ["+Object.new", "+nothing", "+[]"]
       },
       "self" => {
         name: "self",
@@ -484,41 +502,10 @@ class Code
         {}
       end
     end
-    DOCUMENTATION_EXAMPLE_RECEIVERS = [
-      "Object.new",
-      "1",
-      "[]"
-    ].freeze
-    DOCUMENTATION_OPERATOR_NAMES = {
-      "code_bitwise_and" => ["&", "bitwise_and"],
-      "code_bitwise_or" => ["|", "bitwise_or"],
-      "code_bitwise_xor" => ["^", "bitwise_xor"],
-      "code_decimal_divide" => ["decimal_divide"],
-      "code_different" => ["!=", "different"],
-      "code_divide" => ["divide"],
-      "code_divide_modulo" => ["divide_modulo"],
-      "code_division" => ["/", "division"],
-      "code_exclusive_range" => ["...", "exclusive_range"],
-      "code_exclamation_mark" => ["!", "not"],
-      "code_get" => ["[]", "at", "get"],
-      "code_has_key?" => ["has_key?", "key?"],
-      "code_has_value?" => ["has_value?", "value?"],
-      "code_inclusive_range" => ["..", "inclusive_range"],
-      "code_left_shift" => ["<<", "left_shift"],
-      "code_minus" => ["-", "minus"],
-      "code_modulo" => ["%", "modulo"],
-      "code_multiplication" => ["*", "multiplication"],
-      "code_plus" => ["+", "plus"],
-      "code_power" => ["**", "power"],
-      "code_right_shift" => [">>", "right_shift"],
-      "code_select" => ["select", "filter"],
-      "code_select!" => ["select!", "filter!"],
-      "code_size" => ["size", "length"],
-      "code_strict_different" => ["!==", "strict_different"],
-      "code_strict_equal" => ["===", "strict_equal"],
-      "code_to_function" => ["&", "to_function"]
-    }.freeze
 
+    def self.class_documentation
+      self::CLASS_DOCUMENTATION
+    end
     include Concerns::Shared
     extend Concerns::Shared
 
@@ -545,6 +532,10 @@ class Code
       class_functions
     end
 
+    def self.documentation
+      documentation_for(self)
+    end
+
     def self.instance_functions
       documented_functions_for(self, :instance)
     end
@@ -554,15 +545,20 @@ class Code
     end
 
     def self.documented_functions_for(klass, scope)
-      Dictionary.new(
-        function_documentation_for(klass, scope).transform_keys(&:to_s)
-      )
+      sorted_dictionary(function_documentation_for(klass, scope).transform_keys(&:to_s))
+    end
+
+    def self.documentation_for(klass)
+      Dictionary.new(klass.class_documentation.transform_keys(&:to_s))
+    end
+
+    def self.sorted_dictionary(raw)
+      Dictionary.new(raw.sort_by { |key, _value| key.to_s }.to_h)
     end
 
     def self.function_documentation_for(klass, scope)
       documentation = function_documentation_registry_for(klass, scope)
       inherited_function_documentation_for(klass, scope)
-        .merge(automatic_function_documentation_for(klass, scope))
         .merge(documentation)
     end
 
@@ -579,59 +575,6 @@ class Code
 
     def self.function_documentation_registry_for(klass, scope)
       klass.function_documentation(scope)
-    end
-
-    def self.automatic_function_documentation_for(klass, scope)
-      automatic_function_methods_for(klass, scope).each_with_object({}) do |method_name, docs|
-        automatic_function_names_for(method_name).each do |function_name|
-          docs[function_name] = automatic_function_documentation(function_name, scope)
-        end
-      end
-    end
-
-    def self.automatic_function_methods_for(klass, scope)
-      methods =
-        case scope
-        when :instance
-          klass.public_instance_methods(false)
-        when :class
-          klass.public_methods(false)
-        else
-          []
-        end
-
-      methods.grep(/\Acode_/).map(&:to_s)
-    end
-
-    def self.automatic_function_names_for(method_name)
-      DOCUMENTATION_OPERATOR_NAMES.fetch(method_name) do
-        function_name = method_name.delete_prefix("code_").delete_suffix("_assign")
-        names = [function_name]
-        names << "#{function_name}=" if method_name.end_with?("_assign")
-        names
-      end
-    end
-
-    def self.automatic_function_documentation(function_name, scope)
-      {
-        name: function_name,
-        description: "calls the #{function_name} function.",
-        examples: automatic_function_examples(function_name, scope)
-      }
-    end
-
-    def self.automatic_function_examples(function_name, scope)
-      if scope == :class
-        [
-          "Object.#{function_name}",
-          "List.#{function_name}",
-          "String.#{function_name}"
-        ]
-      else
-        DOCUMENTATION_EXAMPLE_RECEIVERS.map do |receiver|
-          "#{receiver}.#{function_name}"
-        end
-      end
     end
 
     def name

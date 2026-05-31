@@ -3,59 +3,59 @@
 class Code
   class Object
     class Function < Object
+      CLASS_DOCUMENTATION = {
+        name: "Function",
+        description: "stores a callable block with parameters, captured context, and documentation.",
+        examples: [
+          "Function.new",
+          "((value) => { value + 1 }).call(1)",
+          "((value) => { value }).parameters.length"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "call" => {
           name: "call",
-          description: "calls the function with the provided arguments.",
+          description: "evaluates the function body with the provided arguments.",
           examples: [
             "((value) => { value + 1 }).call(1)",
             "((name:) => { name }).call(name: :ada)",
-            "(() => { 1 }).call"
+            "((a, b = 2) => { a + b }).call(3)"
           ]
         },
         "extend" => {
           name: "extend",
-          description: "returns a function that extends the receiver.",
+          description: "creates a child function that can call the receiver through super.",
           examples: [
-            "base.extend((value) => { super(value) })",
-            "parent.extend(() => { self.name = :child })",
-            "build.extend((name) => { self.name = name })"
+            "Base = () => { self.name = :base } Child = Base.extend(() => { super() }) Child().name",
+            "Base = () => { 1 } Child = Base.extend(() => { super() }) Child()",
+            "Base = (name) => { self.name = name } Child = Base.extend((...) => { super(...) }) Child(:a).name"
           ]
         },
         "documentation" => {
           name: "documentation",
-          description: "gets or sets the function documentation dictionary.",
+          description: "returns or replaces the function documentation dictionary.",
           examples: [
-            "f.documentation",
-            "f.documentation(description: :runs, examples: [:f])",
-            "f.documentation(description: :runs, examples: [:f]).documentation"
-          ]
-        },
-        "doc" => {
-          name: "doc",
-          description: "alias for documentation.",
-          examples: [
-            "f.doc",
-            "f.doc(description: :runs, examples: [:f])",
-            "f.doc(description: :runs, examples: [:f]).doc"
+            "f = () => { 1 } f.documentation",
+            "f = () => { 1 } f.documentation(description: \"returns one\", examples: [\"f()\"])",
+            "f = () => { 1 } f.documentation(description: \"returns one\", examples: [\"f()\"]).description"
           ]
         },
         "documentation=" => {
           name: "documentation=",
-          description: "sets the function documentation dictionary.",
+          description: "replaces the function documentation dictionary.",
           examples: [
-            "f.documentation = { description: :runs, examples: [:f] }",
-            "f.documentation = { name: :f, description: :runs, examples: [:f] }",
-            "f.documentation = { description: :returns_one, examples: [\"f()\"] }"
+            "f = () => { 1 } f.documentation = { description: \"returns one\", examples: [\"f()\"] }",
+            "f = () => { 1 } f.documentation = { name: \"one\", description: \"returns one\", examples: [\"one()\"] } f.documentation.name",
+            "f = () => { 1 } f.documentation = { description: \"returns one\", examples: [\"f()\"] } f.documentation.examples.first"
           ]
         },
-        "doc=" => {
-          name: "doc=",
-          description: "alias for documentation=.",
+        "parameters" => {
+          name: "parameters",
+          description: "returns a list of parameter descriptors for the function.",
           examples: [
-            "f.doc = { description: :runs, examples: [:f] }",
-            "f.doc = { name: :f, description: :runs, examples: [:f] }",
-            "f.doc = { description: :returns_one, examples: [\"f()\"] }"
+            "((name) => { name }).parameters.first.name",
+            "((name = :a) => { name }).parameters.first.default",
+            "((...values) => { values }).parameters.first.spread?"
           ]
         },
         "to_string" => {
@@ -122,7 +122,7 @@ class Code
         when "extend"
           sig(args) { Function }
           code_extend(code_arguments.code_first)
-        when "documentation", "doc"
+        when "documentation"
           if code_arguments.any?
             sig(args) { Dictionary }
             self.documentation = code_value.code_to_dictionary
@@ -130,9 +130,12 @@ class Code
             sig(args)
             documentation
           end
-        when "documentation=", "doc="
+        when "documentation="
           sig(args) { Dictionary }
           self.documentation = code_value.code_to_dictionary
+        when "parameters"
+          sig(args)
+          code_parameters
         when /=$/
           sig(args) { Object }
           code_set(code_operator.to_s.chop, code_value)
@@ -336,7 +339,9 @@ class Code
             Dictionary.new
           end
 
-        parent_functions.code_merge(function_dictionary_for(instance_functions))
+        Object.sorted_dictionary(
+          parent_functions.code_merge(function_dictionary_for(instance_functions)).raw
+        )
       end
 
       def code_class_functions
@@ -362,7 +367,7 @@ class Code
       private
 
       def function_dictionary_for(dictionary)
-        Dictionary.new(
+        Object.sorted_dictionary(
           dictionary.raw.to_h do |key, value|
             name = key.to_s
             [

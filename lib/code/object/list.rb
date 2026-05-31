@@ -3,7 +3,311 @@
 class Code
   class Object
     class List < Object
+      CLASS_DOCUMENTATION = {
+        name: "List",
+        description: "stores ordered values and provides enumerable operations.",
+        examples: [
+          "[1, 2, 3]",
+          "[1, 2, 3].map((value) => { value * 2 })",
+          "List.new([1, 2])"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
+        "[]" => {
+          name: "[]",
+          description: "returns the item at an index.",
+          examples: ["[1, 2, 3][0]", "[1, 2, 3][1]", "[:a, :b][0]"]
+        },
+        "at" => {
+          name: "at",
+          description: "returns the item at an index.",
+          examples: ["[1, 2, 3].at(0)", "[1, 2, 3].at(1)", "[:a, :b].at(0)"]
+        },
+        "get" => {
+          name: "get",
+          description: "returns the item at an index.",
+          examples: ["[1, 2, 3].get(0)", "[1, 2, 3].get(1)", "[:a, :b].get(0)"]
+        },
+        "fetch" => {
+          name: "fetch",
+          description: "returns the item at an index or nothing when missing.",
+          examples: [
+            "[1, 2, 3].fetch(0)",
+            "[1, 2, 3].fetch(2)",
+            "[1].fetch(2)"
+          ]
+        },
+        "values_at" => {
+          name: "values_at",
+          description: "returns items at multiple indexes.",
+          examples: [
+            "[1, 2, 3].values_at(0, 2)",
+            "[:a, :b, :c].values_at(1, 2)",
+            "[1, 2, 3].values_at(0)"
+          ]
+        },
+        "slice" => {
+          name: "slice",
+          description: "returns a slice from the list.",
+          examples: [
+            "[1, 2, 3].slice(0)",
+            "[1, 2, 3].slice(0, 2)",
+            "[:a, :b, :c].slice(1, 2)"
+          ]
+        },
+        "slice!" => {
+          name: "slice!",
+          description: "removes and returns a slice from the list.",
+          examples: [
+            "[1, 2, 3].slice!(0)",
+            "[1, 2, 3].slice!(0, 2)",
+            "[:a, :b, :c].slice!(1, 2)"
+          ]
+        },
+        "clear" => {
+          name: "clear",
+          description: "removes every item from the list and returns it.",
+          examples: ["[1, 2, 3].clear", "[].clear", "[:a].clear"]
+        },
+        "join" => {
+          name: "join",
+          description: "returns a string made by joining list items.",
+          examples: [
+            "[1, 2, 3].join",
+            "[1, 2, 3].join(\",\")",
+            "[:a, :b].join(\"-\")"
+          ]
+        },
+        "sort" => {
+          name: "sort",
+          description: "returns a new list sorted by item values or function results.",
+          examples: [
+            "[3, 1, 2].sort",
+            "[:b, :a].sort",
+            "[3, 1, 2].sort((x) => { x })"
+          ]
+        },
+        "sort!" => {
+          name: "sort!",
+          description: "sorts the list in place by item values or function results.",
+          examples: [
+            "[3, 1, 2].sort!",
+            "[:b, :a].sort!",
+            "[3, 1, 2].sort!((x) => { x })"
+          ]
+        },
+        "<<" => {
+          name: "<<",
+          description: "appends an item to the list and returns it.",
+          examples: ["[1, 2] << 3", "[] << :a", "[:a] << :b"]
+        },
+        "append" => {
+          name: "append",
+          description: "appends an item to the list and returns it.",
+          examples: [
+            "[1, 2].append(3)",
+            "[].append(:a)",
+            "[:a].append(:b)"
+          ]
+        },
+        "push" => {
+          name: "push",
+          description: "appends an item to the list and returns it.",
+          examples: ["[1, 2].push(3)", "[].push(:a)", "[:a].push(:b)"]
+        },
+        "prepend" => {
+          name: "prepend",
+          description: "prepends an item to the list and returns it.",
+          examples: [
+            "[2, 3].prepend(1)",
+            "[].prepend(:a)",
+            "[:b].prepend(:a)"
+          ]
+        },
+        "insert" => {
+          name: "insert",
+          description: "inserts an item at an index and returns the list.",
+          examples: [
+            "[1, 3].insert(1, 2)",
+            "[:b].insert(0, :a)",
+            "[1, 2].insert(2, 3)"
+          ]
+        },
+        "concat" => {
+          name: "concat",
+          description: "appends lists to the list and returns it.",
+          examples: [
+            "[1].concat([2])",
+            "[1].concat([2], [3])",
+            "[].concat([:a])"
+          ]
+        },
+        "fill" => {
+          name: "fill",
+          description: "replaces list items with a value and returns the list.",
+          examples: [
+            "[1, 2, 3].fill(0)",
+            "[1, 2, 3].fill(0, 1)",
+            "[1, 2, 3].fill(0, 1, 2)"
+          ]
+        },
+        "+" => {
+          name: "+",
+          description: "returns a new list with another list appended.",
+          examples: ["[1] + [2]", "[] + [:a]", "[1, 2] + [3]"]
+        },
+        "plus" => {
+          name: "plus",
+          description: "returns a new list with another list appended.",
+          examples: [
+            "[1].plus([2])",
+            "[].plus([:a])",
+            "[1, 2].plus([3])"
+          ]
+        },
+        "-" => {
+          name: "-",
+          description: "returns a new list without items from another list.",
+          examples: ["[1, 2] - [2]", "[:a, :b] - [:a]", "[1, 2] - []"]
+        },
+        "minus" => {
+          name: "minus",
+          description: "returns a new list without items from another list.",
+          examples: [
+            "[1, 2].minus([2])",
+            "[:a, :b].minus([:a])",
+            "[1, 2].minus([])"
+          ]
+        },
+        "any?" => {
+          name: "any?",
+          description: "returns whether any item is present or matches a function or class.",
+          examples: [
+            "[1, 2, 3].any?",
+            "[1, 2, 3].any?((x) => { x > 2 })",
+            "[].any?"
+          ]
+        },
+        "detect" => {
+          name: "detect",
+          description: "returns the first item matched by a function or class.",
+          examples: [
+            "[1, 2, 3].detect((x) => { x > 1 })",
+            "[1, 2, 3].detect(Integer)",
+            "[1, 2, 3].detect((x) => { x > 3 })"
+          ]
+        },
+        "index" => {
+          name: "index",
+          description: "returns the index of an item or first item matched by a function or class.",
+          examples: [
+            "[:a, :b].index(:b)",
+            "[1, 2, 3].index((x) => { x > 1 })",
+            "[:a].index(:missing)"
+          ]
+        },
+        "find_index" => {
+          name: "find_index",
+          description: "returns the index of an item or first item matched by a function or class.",
+          examples: [
+            "[:a, :b].find_index(:b)",
+            "[1, 2, 3].find_index((x) => { x > 1 })",
+            "[:a].find_index(:missing)"
+          ]
+        },
+        "right_index" => {
+          name: "right_index",
+          description: "returns the last index of an item or of an item matched by a function or class.",
+          examples: [
+            "[:a, :b, :a].right_index(:a)",
+            "[1, 2, 3].right_index((x) => { x > 1 })",
+            "[:a].right_index(:missing)"
+          ]
+        },
+        "each" => {
+          name: "each",
+          description: "calls a function or class for each item and returns the list.",
+          examples: [
+            "[1, 2, 3].each((x) => { x })",
+            "[:a, :b].each((x) => { x })",
+            "[].each((x) => { x })"
+          ]
+        },
+        "each_index" => {
+          name: "each_index",
+          description: "calls a function for each item index and returns the list.",
+          examples: [
+            "[1, 2, 3].each_index((i) => { i })",
+            "[:a, :b].each_index((i) => { i })",
+            "[].each_index((i) => { i })"
+          ]
+        },
+        "first" => {
+          name: "first",
+          description: "returns the first item or first items.",
+          examples: ["[1, 2, 3].first", "[1, 2, 3].first(2)", "[].first"]
+        },
+        "second" => {
+          name: "second",
+          description: "returns the second item.",
+          examples: ["[1, 2, 3].second", "[:a, :b].second", "[1].second"]
+        },
+        "third" => {
+          name: "third",
+          description: "returns the third item.",
+          examples: ["[1, 2, 3].third", "[:a, :b, :c].third", "[1].third"]
+        },
+        "fourth" => {
+          name: "fourth",
+          description: "returns the fourth item.",
+          examples: ["[1, 2, 3, 4].fourth", "(1..5).to_list.fourth", "[1].fourth"]
+        },
+        "fifth" => {
+          name: "fifth",
+          description: "returns the fifth item.",
+          examples: ["[1, 2, 3, 4, 5].fifth", "(1..6).to_list.fifth", "[1].fifth"]
+        },
+        "sixth" => {
+          name: "sixth",
+          description: "returns the sixth item.",
+          examples: ["(1..6).to_list.sixth", "(1..7).to_list.sixth", "[1].sixth"]
+        },
+        "seventh" => {
+          name: "seventh",
+          description: "returns the seventh item.",
+          examples: [
+            "(1..7).to_list.seventh",
+            "(1..8).to_list.seventh",
+            "[1].seventh"
+          ]
+        },
+        "eighth" => {
+          name: "eighth",
+          description: "returns the eighth item.",
+          examples: [
+            "(1..8).to_list.eighth",
+            "(1..9).to_list.eighth",
+            "[1].eighth"
+          ]
+        },
+        "ninth" => {
+          name: "ninth",
+          description: "returns the ninth item.",
+          examples: [
+            "(1..9).to_list.ninth",
+            "(1..10).to_list.ninth",
+            "[1].ninth"
+          ]
+        },
+        "tenth" => {
+          name: "tenth",
+          description: "returns the tenth item.",
+          examples: [
+            "(1..10).to_list.tenth",
+            "(1..11).to_list.tenth",
+            "[1].tenth"
+          ]
+        },
         "map" => {
           name: "map",
           description: "returns a new list with each item transformed by a function or class.",
@@ -12,9 +316,2277 @@ class Code
             "[:1, :2].map(Integer)",
             "[1, 2].map((value) => { value + 1 })"
           ]
+        },
+        "sample" => {
+          name: "sample",
+          description: "returns a random item or random items from the list.",
+          examples: ["[1, 2, 3].sample", "[1, 2, 3].sample(2)", "[:a].sample"]
+        },
+        "shuffle" => {
+          name: "shuffle",
+          description: "returns a new list with items shuffled.",
+          examples: ["[1, 2, 3].shuffle", "[:a, :b].shuffle", "[].shuffle"]
+        },
+        "shuffle!" => {
+          name: "shuffle!",
+          description: "shuffles the list in place and returns it.",
+          examples: ["[1, 2, 3].shuffle!", "[:a, :b].shuffle!", "[].shuffle!"]
+        },
+        "flatten" => {
+          name: "flatten",
+          description: "returns a new list with nested lists flattened.",
+          examples: [
+            "[1, [2, 3]].flatten",
+            "[[1], [2]].flatten",
+            "[1, 2].flatten"
+          ]
+        },
+        "delete" => {
+          name: "delete",
+          description: "removes matching items from the list and returns the removed value.",
+          examples: [
+            "[1, 2, 2].delete(2)",
+            "[:a, :b].delete(:a)",
+            "[1].delete(2)"
+          ]
+        },
+        "delete_at" => {
+          name: "delete_at",
+          description: "removes and returns the item at an index.",
+          examples: [
+            "[1, 2, 3].delete_at(1)",
+            "[:a, :b].delete_at(0)",
+            "[1].delete_at(2)"
+          ]
+        },
+        "delete_if" => {
+          name: "delete_if",
+          description: "removes items matched by a function or class and returns the list.",
+          examples: [
+            "[1, 2, 3].delete_if((x) => { x > 1 })",
+            "[:a, :b].delete_if((x) => { x == :a })",
+            "[].delete_if((x) => { x })"
+          ]
+        },
+        "keep_if" => {
+          name: "keep_if",
+          description: "keeps items matched by a function or class and returns the list.",
+          examples: [
+            "[1, 2, 3].keep_if((x) => { x > 1 })",
+            "[:a, :b].keep_if((x) => { x == :a })",
+            "[].keep_if((x) => { x })"
+          ]
+        },
+        "pop" => {
+          name: "pop",
+          description: "returns the last item or last items without mutating the list.",
+          examples: ["[1, 2, 3].pop", "[1, 2, 3].pop(2)", "[].pop"]
+        },
+        "pop!" => {
+          name: "pop!",
+          description: "removes and returns the last item or last items.",
+          examples: ["[1, 2, 3].pop!", "[1, 2, 3].pop!(2)", "[].pop!"]
+        },
+        "shift" => {
+          name: "shift",
+          description: "removes and returns the first item or first items.",
+          examples: ["[1, 2, 3].shift", "[1, 2, 3].shift(2)", "[].shift"]
+        },
+        "include?" => {
+          name: "include?",
+          description: "returns whether the list includes an item.",
+          examples: [
+            "[1, 2, 3].include?(2)",
+            "[:a, :b].include?(:c)",
+            "[].include?(1)"
+          ]
+        },
+        "member?" => {
+          name: "member?",
+          description: "returns whether the list includes an item.",
+          examples: [
+            "[1, 2, 3].member?(2)",
+            "[:a, :b].member?(:c)",
+            "[].member?(1)"
+          ]
+        },
+        "last" => {
+          name: "last",
+          description: "returns the last item.",
+          examples: ["[1, 2, 3].last", "[:a, :b].last", "[].last"]
+        },
+        "take" => {
+          name: "take",
+          description: "returns the first items from the list.",
+          examples: ["[1, 2, 3].take(2)", "[1, 2, 3].take(0)", "[].take(2)"]
+        },
+        "drop" => {
+          name: "drop",
+          description: "returns the list after dropping leading items.",
+          examples: ["[1, 2, 3].drop(1)", "[1, 2, 3].drop(3)", "[].drop(1)"]
+        },
+        "drop_while" => {
+          name: "drop_while",
+          description: "drops leading items while a function or class matches.",
+          examples: [
+            "[1, 2, 3].drop_while((x) => { x < 3 })",
+            "[1, 2, 3].drop_while((x) => { x < 1 })",
+            "[].drop_while((x) => { x })"
+          ]
+        },
+        "take_while" => {
+          name: "take_while",
+          description: "takes leading items while a function or class matches.",
+          examples: [
+            "[1, 2, 3].take_while((x) => { x < 3 })",
+            "[1, 2, 3].take_while((x) => { x < 1 })",
+            "[].take_while((x) => { x })"
+          ]
+        },
+        "zip" => {
+          name: "zip",
+          description: "returns a list by zipping items with other lists.",
+          examples: [
+            "[1, 2].zip([3, 4])",
+            "[:a, :b].zip([1, 2])",
+            "[].zip([])"
+          ]
+        },
+        "map!" => {
+          name: "map!",
+          description: "transforms each item in place and returns the list.",
+          examples: [
+            "[1, 2, 3].map!((x) => { x + 1 })",
+            "[:1, :2].map!(Integer)",
+            "[].map!((x) => { x })"
+          ]
+        },
+        "flat_map" => {
+          name: "flat_map",
+          description: "maps each item and flattens the result one level.",
+          examples: [
+            "[1, 2].flat_map((x) => { [x, x] })",
+            "[[1], [2]].flat_map((x) => { x })",
+            "[].flat_map((x) => { [x] })"
+          ]
+        },
+        "max" => {
+          name: "max",
+          description: "returns the maximum item.",
+          examples: ["[1, 3, 2].max", "[:a, :b].max", "[].max"]
+        },
+        "maximum" => {
+          name: "maximum",
+          description: "returns the maximum item.",
+          examples: [
+            "[1, 3, 2].maximum",
+            "[:a, :b].maximum",
+            "[].maximum"
+          ]
+        },
+        "minimum" => {
+          name: "minimum",
+          description: "returns the minimum item.",
+          examples: [
+            "[1, 3, 2].minimum",
+            "[:a, :b].minimum",
+            "[].minimum"
+          ]
+        },
+        "minimum_maximum" => {
+          name: "minimum_maximum",
+          description: "returns the minimum and maximum items.",
+          examples: [
+            "[1, 3, 2].minimum_maximum",
+            "[:a, :b].minimum_maximum",
+            "[].minimum_maximum"
+          ]
+        },
+        "none?" => {
+          name: "none?",
+          description: "returns whether no items are present or match a function or class.",
+          examples: [
+            "[].none?",
+            "[1, 2, 3].none?((x) => { x > 3 })",
+            "[1, 2, 3].none?((x) => { x > 1 })"
+          ]
+        },
+        "all?" => {
+          name: "all?",
+          description: "returns whether all items are present or match a function or class.",
+          examples: [
+            "[1, 2, 3].all?",
+            "[1, 2, 3].all?((x) => { x > 0 })",
+            "[1, 2, 3].all?((x) => { x > 1 })"
+          ]
+        },
+        "reduce" => {
+          name: "reduce",
+          description: "combines list items with a function.",
+          examples: [
+            "[1, 2, 3].reduce((sum, x) => { sum + x })",
+            "[1, 2, 3].reduce((sum, x) => { sum * x })",
+            "[:a, :b].reduce((left, right) => { left + right })"
+          ]
+        },
+        "group" => {
+          name: "group",
+          description: "returns a dictionary grouping items by a function result or class match.",
+          examples: [
+            "[1, 2, 3].group((x) => { x.even? })",
+            "[:a, :b].group(String)",
+            "[].group((x) => { x })"
+          ]
+        },
+        "partition" => {
+          name: "partition",
+          description: "splits items into matching and non-matching lists.",
+          examples: [
+            "[1, 2, 3].partition((x) => { x > 1 })",
+            "[:a, :b].partition((x) => { x == :a })",
+            "[].partition((x) => { x })"
+          ]
+        },
+        "cycle" => {
+          name: "cycle",
+          description: "returns cycled items or calls a function for each cycled item.",
+          examples: [
+            "[1, 2].cycle(2)",
+            "[1, 2].cycle(2, (x) => { x })",
+            "[:a].cycle(3, (x) => { x })"
+          ]
+        },
+        "transpose" => {
+          name: "transpose",
+          description: "returns rows and columns swapped.",
+          examples: [
+            "[[1, 2], [3, 4]].transpose",
+            "[[:a, :b], [:c, :d]].transpose",
+            "[].transpose"
+          ]
+        },
+        "combination" => {
+          name: "combination",
+          description: "returns combinations of list items.",
+          examples: [
+            "[1, 2, 3].combination(2)",
+            "[:a, :b, :c].combination(1)",
+            "[].combination(2)"
+          ]
+        },
+        "permutation" => {
+          name: "permutation",
+          description: "returns permutations of list items.",
+          examples: [
+            "[1, 2, 3].permutation(2)",
+            "[:a, :b].permutation",
+            "[].permutation"
+          ]
+        },
+        "product" => {
+          name: "product",
+          description: "returns cartesian products with other lists.",
+          examples: [
+            "[1, 2].product([3, 4])",
+            "[:a, :b].product([1])",
+            "[].product([1, 2])"
+          ]
+        },
+        "repeated_combination" => {
+          name: "repeated_combination",
+          description: "returns repeated combinations of list items.",
+          examples: [
+            "[1, 2].repeated_combination(2)",
+            "[:a, :b].repeated_combination(3)",
+            "[].repeated_combination(2)"
+          ]
+        },
+        "repeated_permutation" => {
+          name: "repeated_permutation",
+          description: "returns repeated permutations of list items.",
+          examples: [
+            "[1, 2].repeated_permutation(2)",
+            "[:a, :b].repeated_permutation(3)",
+            "[].repeated_permutation(2)"
+          ]
+        },
+        "reverse" => {
+          name: "reverse",
+          description: "returns a new list with items in reverse order.",
+          examples: ["[1, 2, 3].reverse", "[:a, :b].reverse", "[].reverse"]
+        },
+        "reverse!" => {
+          name: "reverse!",
+          description: "reverses the list in place and returns it.",
+          examples: ["[1, 2, 3].reverse!", "[:a, :b].reverse!", "[].reverse!"]
+        },
+        "reverse_each" => {
+          name: "reverse_each",
+          description: "calls a function for each item in reverse order.",
+          examples: [
+            "[1, 2, 3].reverse_each((x) => { x })",
+            "[:a, :b].reverse_each((x) => { x })",
+            "[].reverse_each((x) => { x })"
+          ]
+        },
+        "rotate" => {
+          name: "rotate",
+          description: "returns a new list rotated by an offset.",
+          examples: [
+            "[1, 2, 3].rotate",
+            "[1, 2, 3].rotate(2)",
+            "[:a, :b].rotate"
+          ]
+        },
+        "rotate!" => {
+          name: "rotate!",
+          description: "rotates the list in place and returns it.",
+          examples: [
+            "[1, 2, 3].rotate!",
+            "[1, 2, 3].rotate!(2)",
+            "[:a, :b].rotate!"
+          ]
+        },
+        "union" => {
+          name: "union",
+          description: "returns a list containing unique items from each list.",
+          examples: [
+            "[1, 2].union([2, 3])",
+            "[:a].union([:b])",
+            "[].union([1])"
+          ]
+        },
+        "intersection" => {
+          name: "intersection",
+          description: "returns items present in every list.",
+          examples: [
+            "[1, 2].intersection([2, 3])",
+            "[:a, :b].intersection([:b])",
+            "[].intersection([1])"
+          ]
+        },
+        "difference" => {
+          name: "difference",
+          description: "returns items not present in another list.",
+          examples: [
+            "[1, 2].difference([2])",
+            "[:a, :b].difference([:a])",
+            "[].difference([1])"
+          ]
+        },
+        "intersect?" => {
+          name: "intersect?",
+          description: "returns whether the list shares items with another list.",
+          examples: [
+            "[1, 2].intersect?([2, 3])",
+            "[:a].intersect?([:b])",
+            "[].intersect?([1])"
+          ]
+        },
+        "associate" => {
+          name: "associate",
+          description: "returns the first nested list whose first item matches a value.",
+          examples: [
+            "[[:a, 1], [:b, 2]].associate(:a)",
+            "[[1, :a], [2, :b]].associate(2)",
+            "[[:a, 1]].associate(:missing)"
+          ]
+        },
+        "right_associate" => {
+          name: "right_associate",
+          description: "returns the first nested list whose second item matches a value.",
+          examples: [
+            "[[1, :a], [2, :b]].right_associate(:a)",
+            "[[:a, 1], [:b, 2]].right_associate(2)",
+            "[[:a, 1]].right_associate(:missing)"
+          ]
+        },
+        "select" => {
+          name: "select",
+          description: "returns items matched by a function or class.",
+          examples: [
+            "[1, 2, 3].select((x) => { x > 1 })",
+            "[1, :a, 2].select(Integer)",
+            "[].select((x) => { x })"
+          ]
+        },
+        "filter" => {
+          name: "filter",
+          description: "returns items matched by a function or class.",
+          examples: [
+            "[1, 2, 3].filter((x) => { x > 1 })",
+            "[1, :a, 2].filter(Integer)",
+            "[].filter((x) => { x })"
+          ]
+        },
+        "select!" => {
+          name: "select!",
+          description: "keeps items matched by a function or class and returns the list.",
+          examples: [
+            "[1, 2, 3].select!((x) => { x > 1 })",
+            "[1, :a, 2].select!(Integer)",
+            "[].select!((x) => { x })"
+          ]
+        },
+        "filter!" => {
+          name: "filter!",
+          description: "keeps items matched by a function or class and returns the list.",
+          examples: [
+            "[1, 2, 3].filter!((x) => { x > 1 })",
+            "[1, :a, 2].filter!(Integer)",
+            "[].filter!((x) => { x })"
+          ]
+        },
+        "compact" => {
+          name: "compact",
+          description: "returns a new list without nothing values or matched items.",
+          examples: [
+            "[1, nothing, 2].compact",
+            "[1, :a, 2].compact(String)",
+            "[1, 2, 3].compact((x) => { x > 1 })"
+          ]
+        },
+        "compact!" => {
+          name: "compact!",
+          description: "removes nothing values or matched items in place and returns the list.",
+          examples: [
+            "[1, nothing, 2].compact!",
+            "[1, :a, 2].compact!(String)",
+            "[1, 2, 3].compact!((x) => { x > 1 })"
+          ]
+        },
+        "reject" => {
+          name: "reject",
+          description: "returns items not matched by a function or class.",
+          examples: [
+            "[1, 2, 3].reject((x) => { x > 1 })",
+            "[1, :a, 2].reject(Integer)",
+            "[].reject((x) => { x })"
+          ]
+        },
+        "reject!" => {
+          name: "reject!",
+          description: "removes items matched by a function or class and returns the list.",
+          examples: [
+            "[1, 2, 3].reject!((x) => { x > 1 })",
+            "[1, :a, 2].reject!(Integer)",
+            "[].reject!((x) => { x })"
+          ]
+        },
+        "size" => {
+          name: "size",
+          description: "returns the number of items in the list.",
+          examples: ["[1, 2, 3].size", "[].size", "[:a].size"]
+        },
+        "length" => {
+          name: "length",
+          description: "returns the number of items in the list.",
+          examples: ["[1, 2, 3].length", "[].length", "[:a].length"]
+        },
+        "empty?" => {
+          name: "empty?",
+          description: "returns whether the list has no items.",
+          examples: ["[].empty?", "[1].empty?", "[:a, :b].empty?"]
+        },
+        "count" => {
+          name: "count",
+          description: "returns the number of items or matching items.",
+          examples: [
+            "[1, 2, 3].count",
+            "[1, 2, 2].count((x) => { x == 2 })",
+            "[1, 2, 3].count((x) => { x > 1 })"
+          ]
+        },
+        "sum" => {
+          name: "sum",
+          description: "returns the sum of list items.",
+          examples: ["[1, 2, 3].sum", "[].sum", "[10, 20].sum"]
+        },
+        "tally" => {
+          name: "tally",
+          description: "returns a dictionary counting each item.",
+          examples: [
+            "[:a, :b, :a].tally",
+            "[1, 1, 2].tally",
+            "[].tally"
+          ]
+        },
+        "entries" => {
+          name: "entries",
+          description: "returns the list itself.",
+          examples: ["[1, 2, 3].entries", "[].entries", "[:a].entries"]
+        },
+        "to_dictionary" => {
+          name: "to_dictionary",
+          description: "converts the list to a dictionary using entry pairs or indexes.",
+          examples: [
+            "[[:a, 1], [:b, 2]].to_dictionary",
+            "[\"a\", \"b\"].to_dictionary",
+            "[].to_dictionary"
+          ]
+        },
+        "uniq" => {
+          name: "uniq",
+          description: "returns a new list with duplicate items removed.",
+          examples: [
+            "[1, 1, 2].uniq",
+            "[:a, :a].uniq",
+            "[1, 2, 3].uniq((x) => { x > 1 })"
+          ]
+        },
+        "sort_by!" => {
+          name: "sort_by!",
+          description: "sorts the list in place by function results.",
+          examples: [
+            "[3, 1, 2].sort_by!((x) => { x })",
+            "[:bb, :a].sort_by!((x) => { x.size })",
+            "[].sort_by!((x) => { x })"
+          ]
+        },
+        "uniq!" => {
+          name: "uniq!",
+          description: "removes duplicate items in place and returns the list.",
+          examples: [
+            "[1, 1, 2].uniq!",
+            "[:a, :a].uniq!",
+            "[1, 2, 3].uniq!((x) => { x > 1 })"
+          ]
+        },
+        "eleventh" => {
+          name: "eleventh",
+          description: "returns the eleventh item.",
+          examples: [
+            "(1..11).to_list.eleventh",
+            "(1..12).to_list.eleventh",
+            "[].eleventh"
+          ]
+        },
+        "twelfth" => {
+          name: "twelfth",
+          description: "returns the twelfth item.",
+          examples: [
+            "(1..12).to_list.twelfth",
+            "(1..13).to_list.twelfth",
+            "[].twelfth"
+          ]
+        },
+        "thirteenth" => {
+          name: "thirteenth",
+          description: "returns the thirteenth item.",
+          examples: [
+            "(1..13).to_list.thirteenth",
+            "(1..14).to_list.thirteenth",
+            "[].thirteenth"
+          ]
+        },
+        "fourteenth" => {
+          name: "fourteenth",
+          description: "returns the fourteenth item.",
+          examples: [
+            "(1..14).to_list.fourteenth",
+            "(1..15).to_list.fourteenth",
+            "[].fourteenth"
+          ]
+        },
+        "fifteenth" => {
+          name: "fifteenth",
+          description: "returns the fifteenth item.",
+          examples: [
+            "(1..15).to_list.fifteenth",
+            "(1..16).to_list.fifteenth",
+            "[].fifteenth"
+          ]
+        },
+        "sixteenth" => {
+          name: "sixteenth",
+          description: "returns the sixteenth item.",
+          examples: [
+            "(1..16).to_list.sixteenth",
+            "(1..17).to_list.sixteenth",
+            "[].sixteenth"
+          ]
+        },
+        "seventeenth" => {
+          name: "seventeenth",
+          description: "returns the seventeenth item.",
+          examples: [
+            "(1..17).to_list.seventeenth",
+            "(1..18).to_list.seventeenth",
+            "[].seventeenth"
+          ]
+        },
+        "eighteenth" => {
+          name: "eighteenth",
+          description: "returns the eighteenth item.",
+          examples: [
+            "(1..18).to_list.eighteenth",
+            "(1..19).to_list.eighteenth",
+            "[].eighteenth"
+          ]
+        },
+        "nineteenth" => {
+          name: "nineteenth",
+          description: "returns the nineteenth item.",
+          examples: [
+            "(1..19).to_list.nineteenth",
+            "(1..20).to_list.nineteenth",
+            "[].nineteenth"
+          ]
+        },
+        "twentieth" => {
+          name: "twentieth",
+          description: "returns the twentieth item.",
+          examples: [
+            "(1..20).to_list.twentieth",
+            "(1..21).to_list.twentieth",
+            "[].twentieth"
+          ]
+        },
+        "twenty_first" => {
+          name: "twenty_first",
+          description: "returns the twenty first item.",
+          examples: [
+            "(1..21).to_list.twenty_first",
+            "(1..22).to_list.twenty_first",
+            "[].twenty_first"
+          ]
+        },
+        "twenty_second" => {
+          name: "twenty_second",
+          description: "returns the twenty second item.",
+          examples: [
+            "(1..22).to_list.twenty_second",
+            "(1..23).to_list.twenty_second",
+            "[].twenty_second"
+          ]
+        },
+        "twenty_third" => {
+          name: "twenty_third",
+          description: "returns the twenty third item.",
+          examples: [
+            "(1..23).to_list.twenty_third",
+            "(1..24).to_list.twenty_third",
+            "[].twenty_third"
+          ]
+        },
+        "twenty_fourth" => {
+          name: "twenty_fourth",
+          description: "returns the twenty fourth item.",
+          examples: [
+            "(1..24).to_list.twenty_fourth",
+            "(1..25).to_list.twenty_fourth",
+            "[].twenty_fourth"
+          ]
+        },
+        "twenty_fifth" => {
+          name: "twenty_fifth",
+          description: "returns the twenty fifth item.",
+          examples: [
+            "(1..25).to_list.twenty_fifth",
+            "(1..26).to_list.twenty_fifth",
+            "[].twenty_fifth"
+          ]
+        },
+        "twenty_sixth" => {
+          name: "twenty_sixth",
+          description: "returns the twenty sixth item.",
+          examples: [
+            "(1..26).to_list.twenty_sixth",
+            "(1..27).to_list.twenty_sixth",
+            "[].twenty_sixth"
+          ]
+        },
+        "twenty_seventh" => {
+          name: "twenty_seventh",
+          description: "returns the twenty seventh item.",
+          examples: [
+            "(1..27).to_list.twenty_seventh",
+            "(1..28).to_list.twenty_seventh",
+            "[].twenty_seventh"
+          ]
+        },
+        "twenty_eighth" => {
+          name: "twenty_eighth",
+          description: "returns the twenty eighth item.",
+          examples: [
+            "(1..28).to_list.twenty_eighth",
+            "(1..29).to_list.twenty_eighth",
+            "[].twenty_eighth"
+          ]
+        },
+        "twenty_ninth" => {
+          name: "twenty_ninth",
+          description: "returns the twenty ninth item.",
+          examples: [
+            "(1..29).to_list.twenty_ninth",
+            "(1..30).to_list.twenty_ninth",
+            "[].twenty_ninth"
+          ]
+        },
+        "thirtieth" => {
+          name: "thirtieth",
+          description: "returns the thirtieth item.",
+          examples: [
+            "(1..30).to_list.thirtieth",
+            "(1..31).to_list.thirtieth",
+            "[].thirtieth"
+          ]
+        },
+        "thirty_first" => {
+          name: "thirty_first",
+          description: "returns the thirty first item.",
+          examples: [
+            "(1..31).to_list.thirty_first",
+            "(1..32).to_list.thirty_first",
+            "[].thirty_first"
+          ]
+        },
+        "thirty_second" => {
+          name: "thirty_second",
+          description: "returns the thirty second item.",
+          examples: [
+            "(1..32).to_list.thirty_second",
+            "(1..33).to_list.thirty_second",
+            "[].thirty_second"
+          ]
+        },
+        "thirty_third" => {
+          name: "thirty_third",
+          description: "returns the thirty third item.",
+          examples: [
+            "(1..33).to_list.thirty_third",
+            "(1..34).to_list.thirty_third",
+            "[].thirty_third"
+          ]
+        },
+        "thirty_fourth" => {
+          name: "thirty_fourth",
+          description: "returns the thirty fourth item.",
+          examples: [
+            "(1..34).to_list.thirty_fourth",
+            "(1..35).to_list.thirty_fourth",
+            "[].thirty_fourth"
+          ]
+        },
+        "thirty_fifth" => {
+          name: "thirty_fifth",
+          description: "returns the thirty fifth item.",
+          examples: [
+            "(1..35).to_list.thirty_fifth",
+            "(1..36).to_list.thirty_fifth",
+            "[].thirty_fifth"
+          ]
+        },
+        "thirty_sixth" => {
+          name: "thirty_sixth",
+          description: "returns the thirty sixth item.",
+          examples: [
+            "(1..36).to_list.thirty_sixth",
+            "(1..37).to_list.thirty_sixth",
+            "[].thirty_sixth"
+          ]
+        },
+        "thirty_seventh" => {
+          name: "thirty_seventh",
+          description: "returns the thirty seventh item.",
+          examples: [
+            "(1..37).to_list.thirty_seventh",
+            "(1..38).to_list.thirty_seventh",
+            "[].thirty_seventh"
+          ]
+        },
+        "thirty_eighth" => {
+          name: "thirty_eighth",
+          description: "returns the thirty eighth item.",
+          examples: [
+            "(1..38).to_list.thirty_eighth",
+            "(1..39).to_list.thirty_eighth",
+            "[].thirty_eighth"
+          ]
+        },
+        "thirty_ninth" => {
+          name: "thirty_ninth",
+          description: "returns the thirty ninth item.",
+          examples: [
+            "(1..39).to_list.thirty_ninth",
+            "(1..40).to_list.thirty_ninth",
+            "[].thirty_ninth"
+          ]
+        },
+        "fortieth" => {
+          name: "fortieth",
+          description: "returns the fortieth item.",
+          examples: [
+            "(1..40).to_list.fortieth",
+            "(1..41).to_list.fortieth",
+            "[].fortieth"
+          ]
+        },
+        "forty_first" => {
+          name: "forty_first",
+          description: "returns the forty first item.",
+          examples: [
+            "(1..41).to_list.forty_first",
+            "(1..42).to_list.forty_first",
+            "[].forty_first"
+          ]
+        },
+        "forty_second" => {
+          name: "forty_second",
+          description: "returns the forty second item.",
+          examples: [
+            "(1..42).to_list.forty_second",
+            "(1..43).to_list.forty_second",
+            "[].forty_second"
+          ]
+        },
+        "forty_third" => {
+          name: "forty_third",
+          description: "returns the forty third item.",
+          examples: [
+            "(1..43).to_list.forty_third",
+            "(1..44).to_list.forty_third",
+            "[].forty_third"
+          ]
+        },
+        "forty_fourth" => {
+          name: "forty_fourth",
+          description: "returns the forty fourth item.",
+          examples: [
+            "(1..44).to_list.forty_fourth",
+            "(1..45).to_list.forty_fourth",
+            "[].forty_fourth"
+          ]
+        },
+        "forty_fifth" => {
+          name: "forty_fifth",
+          description: "returns the forty fifth item.",
+          examples: [
+            "(1..45).to_list.forty_fifth",
+            "(1..46).to_list.forty_fifth",
+            "[].forty_fifth"
+          ]
+        },
+        "forty_sixth" => {
+          name: "forty_sixth",
+          description: "returns the forty sixth item.",
+          examples: [
+            "(1..46).to_list.forty_sixth",
+            "(1..47).to_list.forty_sixth",
+            "[].forty_sixth"
+          ]
+        },
+        "forty_seventh" => {
+          name: "forty_seventh",
+          description: "returns the forty seventh item.",
+          examples: [
+            "(1..47).to_list.forty_seventh",
+            "(1..48).to_list.forty_seventh",
+            "[].forty_seventh"
+          ]
+        },
+        "forty_eighth" => {
+          name: "forty_eighth",
+          description: "returns the forty eighth item.",
+          examples: [
+            "(1..48).to_list.forty_eighth",
+            "(1..49).to_list.forty_eighth",
+            "[].forty_eighth"
+          ]
+        },
+        "forty_ninth" => {
+          name: "forty_ninth",
+          description: "returns the forty ninth item.",
+          examples: [
+            "(1..49).to_list.forty_ninth",
+            "(1..50).to_list.forty_ninth",
+            "[].forty_ninth"
+          ]
+        },
+        "fiftieth" => {
+          name: "fiftieth",
+          description: "returns the fiftieth item.",
+          examples: [
+            "(1..50).to_list.fiftieth",
+            "(1..51).to_list.fiftieth",
+            "[].fiftieth"
+          ]
+        },
+        "fifty_first" => {
+          name: "fifty_first",
+          description: "returns the fifty first item.",
+          examples: [
+            "(1..51).to_list.fifty_first",
+            "(1..52).to_list.fifty_first",
+            "[].fifty_first"
+          ]
+        },
+        "fifty_second" => {
+          name: "fifty_second",
+          description: "returns the fifty second item.",
+          examples: [
+            "(1..52).to_list.fifty_second",
+            "(1..53).to_list.fifty_second",
+            "[].fifty_second"
+          ]
+        },
+        "fifty_third" => {
+          name: "fifty_third",
+          description: "returns the fifty third item.",
+          examples: [
+            "(1..53).to_list.fifty_third",
+            "(1..54).to_list.fifty_third",
+            "[].fifty_third"
+          ]
+        },
+        "fifty_fourth" => {
+          name: "fifty_fourth",
+          description: "returns the fifty fourth item.",
+          examples: [
+            "(1..54).to_list.fifty_fourth",
+            "(1..55).to_list.fifty_fourth",
+            "[].fifty_fourth"
+          ]
+        },
+        "fifty_fifth" => {
+          name: "fifty_fifth",
+          description: "returns the fifty fifth item.",
+          examples: [
+            "(1..55).to_list.fifty_fifth",
+            "(1..56).to_list.fifty_fifth",
+            "[].fifty_fifth"
+          ]
+        },
+        "fifty_sixth" => {
+          name: "fifty_sixth",
+          description: "returns the fifty sixth item.",
+          examples: [
+            "(1..56).to_list.fifty_sixth",
+            "(1..57).to_list.fifty_sixth",
+            "[].fifty_sixth"
+          ]
+        },
+        "fifty_seventh" => {
+          name: "fifty_seventh",
+          description: "returns the fifty seventh item.",
+          examples: [
+            "(1..57).to_list.fifty_seventh",
+            "(1..58).to_list.fifty_seventh",
+            "[].fifty_seventh"
+          ]
+        },
+        "fifty_eighth" => {
+          name: "fifty_eighth",
+          description: "returns the fifty eighth item.",
+          examples: [
+            "(1..58).to_list.fifty_eighth",
+            "(1..59).to_list.fifty_eighth",
+            "[].fifty_eighth"
+          ]
+        },
+        "fifty_ninth" => {
+          name: "fifty_ninth",
+          description: "returns the fifty ninth item.",
+          examples: [
+            "(1..59).to_list.fifty_ninth",
+            "(1..60).to_list.fifty_ninth",
+            "[].fifty_ninth"
+          ]
+        },
+        "sixtieth" => {
+          name: "sixtieth",
+          description: "returns the sixtieth item.",
+          examples: [
+            "(1..60).to_list.sixtieth",
+            "(1..61).to_list.sixtieth",
+            "[].sixtieth"
+          ]
+        },
+        "sixty_first" => {
+          name: "sixty_first",
+          description: "returns the sixty first item.",
+          examples: [
+            "(1..61).to_list.sixty_first",
+            "(1..62).to_list.sixty_first",
+            "[].sixty_first"
+          ]
+        },
+        "sixty_second" => {
+          name: "sixty_second",
+          description: "returns the sixty second item.",
+          examples: [
+            "(1..62).to_list.sixty_second",
+            "(1..63).to_list.sixty_second",
+            "[].sixty_second"
+          ]
+        },
+        "sixty_third" => {
+          name: "sixty_third",
+          description: "returns the sixty third item.",
+          examples: [
+            "(1..63).to_list.sixty_third",
+            "(1..64).to_list.sixty_third",
+            "[].sixty_third"
+          ]
+        },
+        "sixty_fourth" => {
+          name: "sixty_fourth",
+          description: "returns the sixty fourth item.",
+          examples: [
+            "(1..64).to_list.sixty_fourth",
+            "(1..65).to_list.sixty_fourth",
+            "[].sixty_fourth"
+          ]
+        },
+        "sixty_fifth" => {
+          name: "sixty_fifth",
+          description: "returns the sixty fifth item.",
+          examples: [
+            "(1..65).to_list.sixty_fifth",
+            "(1..66).to_list.sixty_fifth",
+            "[].sixty_fifth"
+          ]
+        },
+        "sixty_sixth" => {
+          name: "sixty_sixth",
+          description: "returns the sixty sixth item.",
+          examples: [
+            "(1..66).to_list.sixty_sixth",
+            "(1..67).to_list.sixty_sixth",
+            "[].sixty_sixth"
+          ]
+        },
+        "sixty_seventh" => {
+          name: "sixty_seventh",
+          description: "returns the sixty seventh item.",
+          examples: [
+            "(1..67).to_list.sixty_seventh",
+            "(1..68).to_list.sixty_seventh",
+            "[].sixty_seventh"
+          ]
+        },
+        "sixty_eighth" => {
+          name: "sixty_eighth",
+          description: "returns the sixty eighth item.",
+          examples: [
+            "(1..68).to_list.sixty_eighth",
+            "(1..69).to_list.sixty_eighth",
+            "[].sixty_eighth"
+          ]
+        },
+        "sixty_ninth" => {
+          name: "sixty_ninth",
+          description: "returns the sixty ninth item.",
+          examples: [
+            "(1..69).to_list.sixty_ninth",
+            "(1..70).to_list.sixty_ninth",
+            "[].sixty_ninth"
+          ]
+        },
+        "seventieth" => {
+          name: "seventieth",
+          description: "returns the seventieth item.",
+          examples: [
+            "(1..70).to_list.seventieth",
+            "(1..71).to_list.seventieth",
+            "[].seventieth"
+          ]
+        },
+        "seventy_first" => {
+          name: "seventy_first",
+          description: "returns the seventy first item.",
+          examples: [
+            "(1..71).to_list.seventy_first",
+            "(1..72).to_list.seventy_first",
+            "[].seventy_first"
+          ]
+        },
+        "seventy_second" => {
+          name: "seventy_second",
+          description: "returns the seventy second item.",
+          examples: [
+            "(1..72).to_list.seventy_second",
+            "(1..73).to_list.seventy_second",
+            "[].seventy_second"
+          ]
+        },
+        "seventy_third" => {
+          name: "seventy_third",
+          description: "returns the seventy third item.",
+          examples: [
+            "(1..73).to_list.seventy_third",
+            "(1..74).to_list.seventy_third",
+            "[].seventy_third"
+          ]
+        },
+        "seventy_fourth" => {
+          name: "seventy_fourth",
+          description: "returns the seventy fourth item.",
+          examples: [
+            "(1..74).to_list.seventy_fourth",
+            "(1..75).to_list.seventy_fourth",
+            "[].seventy_fourth"
+          ]
+        },
+        "seventy_fifth" => {
+          name: "seventy_fifth",
+          description: "returns the seventy fifth item.",
+          examples: [
+            "(1..75).to_list.seventy_fifth",
+            "(1..76).to_list.seventy_fifth",
+            "[].seventy_fifth"
+          ]
+        },
+        "seventy_sixth" => {
+          name: "seventy_sixth",
+          description: "returns the seventy sixth item.",
+          examples: [
+            "(1..76).to_list.seventy_sixth",
+            "(1..77).to_list.seventy_sixth",
+            "[].seventy_sixth"
+          ]
+        },
+        "seventy_seventh" => {
+          name: "seventy_seventh",
+          description: "returns the seventy seventh item.",
+          examples: [
+            "(1..77).to_list.seventy_seventh",
+            "(1..78).to_list.seventy_seventh",
+            "[].seventy_seventh"
+          ]
+        },
+        "seventy_eighth" => {
+          name: "seventy_eighth",
+          description: "returns the seventy eighth item.",
+          examples: [
+            "(1..78).to_list.seventy_eighth",
+            "(1..79).to_list.seventy_eighth",
+            "[].seventy_eighth"
+          ]
+        },
+        "seventy_ninth" => {
+          name: "seventy_ninth",
+          description: "returns the seventy ninth item.",
+          examples: [
+            "(1..79).to_list.seventy_ninth",
+            "(1..80).to_list.seventy_ninth",
+            "[].seventy_ninth"
+          ]
+        },
+        "eightieth" => {
+          name: "eightieth",
+          description: "returns the eightieth item.",
+          examples: [
+            "(1..80).to_list.eightieth",
+            "(1..81).to_list.eightieth",
+            "[].eightieth"
+          ]
+        },
+        "eighty_first" => {
+          name: "eighty_first",
+          description: "returns the eighty first item.",
+          examples: [
+            "(1..81).to_list.eighty_first",
+            "(1..82).to_list.eighty_first",
+            "[].eighty_first"
+          ]
+        },
+        "eighty_second" => {
+          name: "eighty_second",
+          description: "returns the eighty second item.",
+          examples: [
+            "(1..82).to_list.eighty_second",
+            "(1..83).to_list.eighty_second",
+            "[].eighty_second"
+          ]
+        },
+        "eighty_third" => {
+          name: "eighty_third",
+          description: "returns the eighty third item.",
+          examples: [
+            "(1..83).to_list.eighty_third",
+            "(1..84).to_list.eighty_third",
+            "[].eighty_third"
+          ]
+        },
+        "eighty_fourth" => {
+          name: "eighty_fourth",
+          description: "returns the eighty fourth item.",
+          examples: [
+            "(1..84).to_list.eighty_fourth",
+            "(1..85).to_list.eighty_fourth",
+            "[].eighty_fourth"
+          ]
+        },
+        "eighty_fifth" => {
+          name: "eighty_fifth",
+          description: "returns the eighty fifth item.",
+          examples: [
+            "(1..85).to_list.eighty_fifth",
+            "(1..86).to_list.eighty_fifth",
+            "[].eighty_fifth"
+          ]
+        },
+        "eighty_sixth" => {
+          name: "eighty_sixth",
+          description: "returns the eighty sixth item.",
+          examples: [
+            "(1..86).to_list.eighty_sixth",
+            "(1..87).to_list.eighty_sixth",
+            "[].eighty_sixth"
+          ]
+        },
+        "eighty_seventh" => {
+          name: "eighty_seventh",
+          description: "returns the eighty seventh item.",
+          examples: [
+            "(1..87).to_list.eighty_seventh",
+            "(1..88).to_list.eighty_seventh",
+            "[].eighty_seventh"
+          ]
+        },
+        "eighty_eighth" => {
+          name: "eighty_eighth",
+          description: "returns the eighty eighth item.",
+          examples: [
+            "(1..88).to_list.eighty_eighth",
+            "(1..89).to_list.eighty_eighth",
+            "[].eighty_eighth"
+          ]
+        },
+        "eighty_ninth" => {
+          name: "eighty_ninth",
+          description: "returns the eighty ninth item.",
+          examples: [
+            "(1..89).to_list.eighty_ninth",
+            "(1..90).to_list.eighty_ninth",
+            "[].eighty_ninth"
+          ]
+        },
+        "ninetieth" => {
+          name: "ninetieth",
+          description: "returns the ninetieth item.",
+          examples: [
+            "(1..90).to_list.ninetieth",
+            "(1..91).to_list.ninetieth",
+            "[].ninetieth"
+          ]
+        },
+        "ninety_first" => {
+          name: "ninety_first",
+          description: "returns the ninety first item.",
+          examples: [
+            "(1..91).to_list.ninety_first",
+            "(1..92).to_list.ninety_first",
+            "[].ninety_first"
+          ]
+        },
+        "ninety_second" => {
+          name: "ninety_second",
+          description: "returns the ninety second item.",
+          examples: [
+            "(1..92).to_list.ninety_second",
+            "(1..93).to_list.ninety_second",
+            "[].ninety_second"
+          ]
+        },
+        "ninety_third" => {
+          name: "ninety_third",
+          description: "returns the ninety third item.",
+          examples: [
+            "(1..93).to_list.ninety_third",
+            "(1..94).to_list.ninety_third",
+            "[].ninety_third"
+          ]
+        },
+        "ninety_fourth" => {
+          name: "ninety_fourth",
+          description: "returns the ninety fourth item.",
+          examples: [
+            "(1..94).to_list.ninety_fourth",
+            "(1..95).to_list.ninety_fourth",
+            "[].ninety_fourth"
+          ]
+        },
+        "ninety_fifth" => {
+          name: "ninety_fifth",
+          description: "returns the ninety fifth item.",
+          examples: [
+            "(1..95).to_list.ninety_fifth",
+            "(1..96).to_list.ninety_fifth",
+            "[].ninety_fifth"
+          ]
+        },
+        "ninety_sixth" => {
+          name: "ninety_sixth",
+          description: "returns the ninety sixth item.",
+          examples: [
+            "(1..96).to_list.ninety_sixth",
+            "(1..97).to_list.ninety_sixth",
+            "[].ninety_sixth"
+          ]
+        },
+        "ninety_seventh" => {
+          name: "ninety_seventh",
+          description: "returns the ninety seventh item.",
+          examples: [
+            "(1..97).to_list.ninety_seventh",
+            "(1..98).to_list.ninety_seventh",
+            "[].ninety_seventh"
+          ]
+        },
+        "ninety_eighth" => {
+          name: "ninety_eighth",
+          description: "returns the ninety eighth item.",
+          examples: [
+            "(1..98).to_list.ninety_eighth",
+            "(1..99).to_list.ninety_eighth",
+            "[].ninety_eighth"
+          ]
+        },
+        "ninety_ninth" => {
+          name: "ninety_ninth",
+          description: "returns the ninety ninth item.",
+          examples: [
+            "(1..99).to_list.ninety_ninth",
+            "(1..100).to_list.ninety_ninth",
+            "[].ninety_ninth"
+          ]
+        },
+        "one_hundredth" => {
+          name: "one_hundredth",
+          description: "returns the one hundredth item.",
+          examples: [
+            "(1..100).to_list.one_hundredth",
+            "(1..101).to_list.one_hundredth",
+            "[].one_hundredth"
+          ]
+        },
+        "many?" => {
+          name: "many?",
+          description: "returns whether the list has more than one item.",
+          examples: ["[1, 2].many?", "[1].many?", "[].many?"]
+        },
+        "positive?" => {
+          name: "positive?",
+          description: "returns whether the list size is positive.",
+          examples: ["[1].positive?", "[].positive?", "[1, 2].positive?"]
+        },
+        "negative?" => {
+          name: "negative?",
+          description: "returns whether the list size is negative.",
+          examples: ["[].negative?", "[1].negative?", "[1, 2].negative?"]
+        },
+        "zero?" => {
+          name: "zero?",
+          description: "returns whether the list size is zero.",
+          examples: [
+            "(1..0).to_list.zero?",
+            "(1..1).to_list.zero?",
+            "[].zero?"
+          ]
+        },
+        "one?" => {
+          name: "one?",
+          description: "returns whether the list size is one.",
+          examples: [
+            "(1..1).to_list.one?",
+            "(1..2).to_list.one?",
+            "[].one?"
+          ]
+        },
+        "two?" => {
+          name: "two?",
+          description: "returns whether the list size is two.",
+          examples: [
+            "(1..2).to_list.two?",
+            "(1..3).to_list.two?",
+            "[].two?"
+          ]
+        },
+        "three?" => {
+          name: "three?",
+          description: "returns whether the list size is three.",
+          examples: [
+            "(1..3).to_list.three?",
+            "(1..4).to_list.three?",
+            "[].three?"
+          ]
+        },
+        "four?" => {
+          name: "four?",
+          description: "returns whether the list size is four.",
+          examples: [
+            "(1..4).to_list.four?",
+            "(1..5).to_list.four?",
+            "[].four?"
+          ]
+        },
+        "five?" => {
+          name: "five?",
+          description: "returns whether the list size is five.",
+          examples: [
+            "(1..5).to_list.five?",
+            "(1..6).to_list.five?",
+            "[].five?"
+          ]
+        },
+        "six?" => {
+          name: "six?",
+          description: "returns whether the list size is six.",
+          examples: [
+            "(1..6).to_list.six?",
+            "(1..7).to_list.six?",
+            "[].six?"
+          ]
+        },
+        "seven?" => {
+          name: "seven?",
+          description: "returns whether the list size is seven.",
+          examples: [
+            "(1..7).to_list.seven?",
+            "(1..8).to_list.seven?",
+            "[].seven?"
+          ]
+        },
+        "eight?" => {
+          name: "eight?",
+          description: "returns whether the list size is eight.",
+          examples: [
+            "(1..8).to_list.eight?",
+            "(1..9).to_list.eight?",
+            "[].eight?"
+          ]
+        },
+        "nine?" => {
+          name: "nine?",
+          description: "returns whether the list size is nine.",
+          examples: [
+            "(1..9).to_list.nine?",
+            "(1..10).to_list.nine?",
+            "[].nine?"
+          ]
+        },
+        "ten?" => {
+          name: "ten?",
+          description: "returns whether the list size is ten.",
+          examples: [
+            "(1..10).to_list.ten?",
+            "(1..11).to_list.ten?",
+            "[].ten?"
+          ]
+        },
+        "eleven?" => {
+          name: "eleven?",
+          description: "returns whether the list size is eleven.",
+          examples: [
+            "(1..11).to_list.eleven?",
+            "(1..12).to_list.eleven?",
+            "[].eleven?"
+          ]
+        },
+        "twelve?" => {
+          name: "twelve?",
+          description: "returns whether the list size is twelve.",
+          examples: [
+            "(1..12).to_list.twelve?",
+            "(1..13).to_list.twelve?",
+            "[].twelve?"
+          ]
+        },
+        "thirteen?" => {
+          name: "thirteen?",
+          description: "returns whether the list size is thirteen.",
+          examples: [
+            "(1..13).to_list.thirteen?",
+            "(1..14).to_list.thirteen?",
+            "[].thirteen?"
+          ]
+        },
+        "fourteen?" => {
+          name: "fourteen?",
+          description: "returns whether the list size is fourteen.",
+          examples: [
+            "(1..14).to_list.fourteen?",
+            "(1..15).to_list.fourteen?",
+            "[].fourteen?"
+          ]
+        },
+        "fifteen?" => {
+          name: "fifteen?",
+          description: "returns whether the list size is fifteen.",
+          examples: [
+            "(1..15).to_list.fifteen?",
+            "(1..16).to_list.fifteen?",
+            "[].fifteen?"
+          ]
+        },
+        "sixteen?" => {
+          name: "sixteen?",
+          description: "returns whether the list size is sixteen.",
+          examples: [
+            "(1..16).to_list.sixteen?",
+            "(1..17).to_list.sixteen?",
+            "[].sixteen?"
+          ]
+        },
+        "seventeen?" => {
+          name: "seventeen?",
+          description: "returns whether the list size is seventeen.",
+          examples: [
+            "(1..17).to_list.seventeen?",
+            "(1..18).to_list.seventeen?",
+            "[].seventeen?"
+          ]
+        },
+        "eighteen?" => {
+          name: "eighteen?",
+          description: "returns whether the list size is eighteen.",
+          examples: [
+            "(1..18).to_list.eighteen?",
+            "(1..19).to_list.eighteen?",
+            "[].eighteen?"
+          ]
+        },
+        "nineteen?" => {
+          name: "nineteen?",
+          description: "returns whether the list size is nineteen.",
+          examples: [
+            "(1..19).to_list.nineteen?",
+            "(1..20).to_list.nineteen?",
+            "[].nineteen?"
+          ]
+        },
+        "twenty?" => {
+          name: "twenty?",
+          description: "returns whether the list size is twenty.",
+          examples: [
+            "(1..20).to_list.twenty?",
+            "(1..21).to_list.twenty?",
+            "[].twenty?"
+          ]
+        },
+        "twenty_one?" => {
+          name: "twenty_one?",
+          description: "returns whether the list size is twenty one.",
+          examples: [
+            "(1..21).to_list.twenty_one?",
+            "(1..22).to_list.twenty_one?",
+            "[].twenty_one?"
+          ]
+        },
+        "twenty_two?" => {
+          name: "twenty_two?",
+          description: "returns whether the list size is twenty two.",
+          examples: [
+            "(1..22).to_list.twenty_two?",
+            "(1..23).to_list.twenty_two?",
+            "[].twenty_two?"
+          ]
+        },
+        "twenty_three?" => {
+          name: "twenty_three?",
+          description: "returns whether the list size is twenty three.",
+          examples: [
+            "(1..23).to_list.twenty_three?",
+            "(1..24).to_list.twenty_three?",
+            "[].twenty_three?"
+          ]
+        },
+        "twenty_four?" => {
+          name: "twenty_four?",
+          description: "returns whether the list size is twenty four.",
+          examples: [
+            "(1..24).to_list.twenty_four?",
+            "(1..25).to_list.twenty_four?",
+            "[].twenty_four?"
+          ]
+        },
+        "twenty_five?" => {
+          name: "twenty_five?",
+          description: "returns whether the list size is twenty five.",
+          examples: [
+            "(1..25).to_list.twenty_five?",
+            "(1..26).to_list.twenty_five?",
+            "[].twenty_five?"
+          ]
+        },
+        "twenty_six?" => {
+          name: "twenty_six?",
+          description: "returns whether the list size is twenty six.",
+          examples: [
+            "(1..26).to_list.twenty_six?",
+            "(1..27).to_list.twenty_six?",
+            "[].twenty_six?"
+          ]
+        },
+        "twenty_seven?" => {
+          name: "twenty_seven?",
+          description: "returns whether the list size is twenty seven.",
+          examples: [
+            "(1..27).to_list.twenty_seven?",
+            "(1..28).to_list.twenty_seven?",
+            "[].twenty_seven?"
+          ]
+        },
+        "twenty_eight?" => {
+          name: "twenty_eight?",
+          description: "returns whether the list size is twenty eight.",
+          examples: [
+            "(1..28).to_list.twenty_eight?",
+            "(1..29).to_list.twenty_eight?",
+            "[].twenty_eight?"
+          ]
+        },
+        "twenty_nine?" => {
+          name: "twenty_nine?",
+          description: "returns whether the list size is twenty nine.",
+          examples: [
+            "(1..29).to_list.twenty_nine?",
+            "(1..30).to_list.twenty_nine?",
+            "[].twenty_nine?"
+          ]
+        },
+        "thirty?" => {
+          name: "thirty?",
+          description: "returns whether the list size is thirty.",
+          examples: [
+            "(1..30).to_list.thirty?",
+            "(1..31).to_list.thirty?",
+            "[].thirty?"
+          ]
+        },
+        "thirty_one?" => {
+          name: "thirty_one?",
+          description: "returns whether the list size is thirty one.",
+          examples: [
+            "(1..31).to_list.thirty_one?",
+            "(1..32).to_list.thirty_one?",
+            "[].thirty_one?"
+          ]
+        },
+        "thirty_two?" => {
+          name: "thirty_two?",
+          description: "returns whether the list size is thirty two.",
+          examples: [
+            "(1..32).to_list.thirty_two?",
+            "(1..33).to_list.thirty_two?",
+            "[].thirty_two?"
+          ]
+        },
+        "thirty_three?" => {
+          name: "thirty_three?",
+          description: "returns whether the list size is thirty three.",
+          examples: [
+            "(1..33).to_list.thirty_three?",
+            "(1..34).to_list.thirty_three?",
+            "[].thirty_three?"
+          ]
+        },
+        "thirty_four?" => {
+          name: "thirty_four?",
+          description: "returns whether the list size is thirty four.",
+          examples: [
+            "(1..34).to_list.thirty_four?",
+            "(1..35).to_list.thirty_four?",
+            "[].thirty_four?"
+          ]
+        },
+        "thirty_five?" => {
+          name: "thirty_five?",
+          description: "returns whether the list size is thirty five.",
+          examples: [
+            "(1..35).to_list.thirty_five?",
+            "(1..36).to_list.thirty_five?",
+            "[].thirty_five?"
+          ]
+        },
+        "thirty_six?" => {
+          name: "thirty_six?",
+          description: "returns whether the list size is thirty six.",
+          examples: [
+            "(1..36).to_list.thirty_six?",
+            "(1..37).to_list.thirty_six?",
+            "[].thirty_six?"
+          ]
+        },
+        "thirty_seven?" => {
+          name: "thirty_seven?",
+          description: "returns whether the list size is thirty seven.",
+          examples: [
+            "(1..37).to_list.thirty_seven?",
+            "(1..38).to_list.thirty_seven?",
+            "[].thirty_seven?"
+          ]
+        },
+        "thirty_eight?" => {
+          name: "thirty_eight?",
+          description: "returns whether the list size is thirty eight.",
+          examples: [
+            "(1..38).to_list.thirty_eight?",
+            "(1..39).to_list.thirty_eight?",
+            "[].thirty_eight?"
+          ]
+        },
+        "thirty_nine?" => {
+          name: "thirty_nine?",
+          description: "returns whether the list size is thirty nine.",
+          examples: [
+            "(1..39).to_list.thirty_nine?",
+            "(1..40).to_list.thirty_nine?",
+            "[].thirty_nine?"
+          ]
+        },
+        "forty?" => {
+          name: "forty?",
+          description: "returns whether the list size is forty.",
+          examples: [
+            "(1..40).to_list.forty?",
+            "(1..41).to_list.forty?",
+            "[].forty?"
+          ]
+        },
+        "forty_one?" => {
+          name: "forty_one?",
+          description: "returns whether the list size is forty one.",
+          examples: [
+            "(1..41).to_list.forty_one?",
+            "(1..42).to_list.forty_one?",
+            "[].forty_one?"
+          ]
+        },
+        "forty_two?" => {
+          name: "forty_two?",
+          description: "returns whether the list size is forty two.",
+          examples: [
+            "(1..42).to_list.forty_two?",
+            "(1..43).to_list.forty_two?",
+            "[].forty_two?"
+          ]
+        },
+        "forty_three?" => {
+          name: "forty_three?",
+          description: "returns whether the list size is forty three.",
+          examples: [
+            "(1..43).to_list.forty_three?",
+            "(1..44).to_list.forty_three?",
+            "[].forty_three?"
+          ]
+        },
+        "forty_four?" => {
+          name: "forty_four?",
+          description: "returns whether the list size is forty four.",
+          examples: [
+            "(1..44).to_list.forty_four?",
+            "(1..45).to_list.forty_four?",
+            "[].forty_four?"
+          ]
+        },
+        "forty_five?" => {
+          name: "forty_five?",
+          description: "returns whether the list size is forty five.",
+          examples: [
+            "(1..45).to_list.forty_five?",
+            "(1..46).to_list.forty_five?",
+            "[].forty_five?"
+          ]
+        },
+        "forty_six?" => {
+          name: "forty_six?",
+          description: "returns whether the list size is forty six.",
+          examples: [
+            "(1..46).to_list.forty_six?",
+            "(1..47).to_list.forty_six?",
+            "[].forty_six?"
+          ]
+        },
+        "forty_seven?" => {
+          name: "forty_seven?",
+          description: "returns whether the list size is forty seven.",
+          examples: [
+            "(1..47).to_list.forty_seven?",
+            "(1..48).to_list.forty_seven?",
+            "[].forty_seven?"
+          ]
+        },
+        "forty_eight?" => {
+          name: "forty_eight?",
+          description: "returns whether the list size is forty eight.",
+          examples: [
+            "(1..48).to_list.forty_eight?",
+            "(1..49).to_list.forty_eight?",
+            "[].forty_eight?"
+          ]
+        },
+        "forty_nine?" => {
+          name: "forty_nine?",
+          description: "returns whether the list size is forty nine.",
+          examples: [
+            "(1..49).to_list.forty_nine?",
+            "(1..50).to_list.forty_nine?",
+            "[].forty_nine?"
+          ]
+        },
+        "fifty?" => {
+          name: "fifty?",
+          description: "returns whether the list size is fifty.",
+          examples: [
+            "(1..50).to_list.fifty?",
+            "(1..51).to_list.fifty?",
+            "[].fifty?"
+          ]
+        },
+        "fifty_one?" => {
+          name: "fifty_one?",
+          description: "returns whether the list size is fifty one.",
+          examples: [
+            "(1..51).to_list.fifty_one?",
+            "(1..52).to_list.fifty_one?",
+            "[].fifty_one?"
+          ]
+        },
+        "fifty_two?" => {
+          name: "fifty_two?",
+          description: "returns whether the list size is fifty two.",
+          examples: [
+            "(1..52).to_list.fifty_two?",
+            "(1..53).to_list.fifty_two?",
+            "[].fifty_two?"
+          ]
+        },
+        "fifty_three?" => {
+          name: "fifty_three?",
+          description: "returns whether the list size is fifty three.",
+          examples: [
+            "(1..53).to_list.fifty_three?",
+            "(1..54).to_list.fifty_three?",
+            "[].fifty_three?"
+          ]
+        },
+        "fifty_four?" => {
+          name: "fifty_four?",
+          description: "returns whether the list size is fifty four.",
+          examples: [
+            "(1..54).to_list.fifty_four?",
+            "(1..55).to_list.fifty_four?",
+            "[].fifty_four?"
+          ]
+        },
+        "fifty_five?" => {
+          name: "fifty_five?",
+          description: "returns whether the list size is fifty five.",
+          examples: [
+            "(1..55).to_list.fifty_five?",
+            "(1..56).to_list.fifty_five?",
+            "[].fifty_five?"
+          ]
+        },
+        "fifty_six?" => {
+          name: "fifty_six?",
+          description: "returns whether the list size is fifty six.",
+          examples: [
+            "(1..56).to_list.fifty_six?",
+            "(1..57).to_list.fifty_six?",
+            "[].fifty_six?"
+          ]
+        },
+        "fifty_seven?" => {
+          name: "fifty_seven?",
+          description: "returns whether the list size is fifty seven.",
+          examples: [
+            "(1..57).to_list.fifty_seven?",
+            "(1..58).to_list.fifty_seven?",
+            "[].fifty_seven?"
+          ]
+        },
+        "fifty_eight?" => {
+          name: "fifty_eight?",
+          description: "returns whether the list size is fifty eight.",
+          examples: [
+            "(1..58).to_list.fifty_eight?",
+            "(1..59).to_list.fifty_eight?",
+            "[].fifty_eight?"
+          ]
+        },
+        "fifty_nine?" => {
+          name: "fifty_nine?",
+          description: "returns whether the list size is fifty nine.",
+          examples: [
+            "(1..59).to_list.fifty_nine?",
+            "(1..60).to_list.fifty_nine?",
+            "[].fifty_nine?"
+          ]
+        },
+        "sixty?" => {
+          name: "sixty?",
+          description: "returns whether the list size is sixty.",
+          examples: [
+            "(1..60).to_list.sixty?",
+            "(1..61).to_list.sixty?",
+            "[].sixty?"
+          ]
+        },
+        "sixty_one?" => {
+          name: "sixty_one?",
+          description: "returns whether the list size is sixty one.",
+          examples: [
+            "(1..61).to_list.sixty_one?",
+            "(1..62).to_list.sixty_one?",
+            "[].sixty_one?"
+          ]
+        },
+        "sixty_two?" => {
+          name: "sixty_two?",
+          description: "returns whether the list size is sixty two.",
+          examples: [
+            "(1..62).to_list.sixty_two?",
+            "(1..63).to_list.sixty_two?",
+            "[].sixty_two?"
+          ]
+        },
+        "sixty_three?" => {
+          name: "sixty_three?",
+          description: "returns whether the list size is sixty three.",
+          examples: [
+            "(1..63).to_list.sixty_three?",
+            "(1..64).to_list.sixty_three?",
+            "[].sixty_three?"
+          ]
+        },
+        "sixty_four?" => {
+          name: "sixty_four?",
+          description: "returns whether the list size is sixty four.",
+          examples: [
+            "(1..64).to_list.sixty_four?",
+            "(1..65).to_list.sixty_four?",
+            "[].sixty_four?"
+          ]
+        },
+        "sixty_five?" => {
+          name: "sixty_five?",
+          description: "returns whether the list size is sixty five.",
+          examples: [
+            "(1..65).to_list.sixty_five?",
+            "(1..66).to_list.sixty_five?",
+            "[].sixty_five?"
+          ]
+        },
+        "sixty_six?" => {
+          name: "sixty_six?",
+          description: "returns whether the list size is sixty six.",
+          examples: [
+            "(1..66).to_list.sixty_six?",
+            "(1..67).to_list.sixty_six?",
+            "[].sixty_six?"
+          ]
+        },
+        "sixty_seven?" => {
+          name: "sixty_seven?",
+          description: "returns whether the list size is sixty seven.",
+          examples: [
+            "(1..67).to_list.sixty_seven?",
+            "(1..68).to_list.sixty_seven?",
+            "[].sixty_seven?"
+          ]
+        },
+        "sixty_eight?" => {
+          name: "sixty_eight?",
+          description: "returns whether the list size is sixty eight.",
+          examples: [
+            "(1..68).to_list.sixty_eight?",
+            "(1..69).to_list.sixty_eight?",
+            "[].sixty_eight?"
+          ]
+        },
+        "sixty_nine?" => {
+          name: "sixty_nine?",
+          description: "returns whether the list size is sixty nine.",
+          examples: [
+            "(1..69).to_list.sixty_nine?",
+            "(1..70).to_list.sixty_nine?",
+            "[].sixty_nine?"
+          ]
+        },
+        "seventy?" => {
+          name: "seventy?",
+          description: "returns whether the list size is seventy.",
+          examples: [
+            "(1..70).to_list.seventy?",
+            "(1..71).to_list.seventy?",
+            "[].seventy?"
+          ]
+        },
+        "seventy_one?" => {
+          name: "seventy_one?",
+          description: "returns whether the list size is seventy one.",
+          examples: [
+            "(1..71).to_list.seventy_one?",
+            "(1..72).to_list.seventy_one?",
+            "[].seventy_one?"
+          ]
+        },
+        "seventy_two?" => {
+          name: "seventy_two?",
+          description: "returns whether the list size is seventy two.",
+          examples: [
+            "(1..72).to_list.seventy_two?",
+            "(1..73).to_list.seventy_two?",
+            "[].seventy_two?"
+          ]
+        },
+        "seventy_three?" => {
+          name: "seventy_three?",
+          description: "returns whether the list size is seventy three.",
+          examples: [
+            "(1..73).to_list.seventy_three?",
+            "(1..74).to_list.seventy_three?",
+            "[].seventy_three?"
+          ]
+        },
+        "seventy_four?" => {
+          name: "seventy_four?",
+          description: "returns whether the list size is seventy four.",
+          examples: [
+            "(1..74).to_list.seventy_four?",
+            "(1..75).to_list.seventy_four?",
+            "[].seventy_four?"
+          ]
+        },
+        "seventy_five?" => {
+          name: "seventy_five?",
+          description: "returns whether the list size is seventy five.",
+          examples: [
+            "(1..75).to_list.seventy_five?",
+            "(1..76).to_list.seventy_five?",
+            "[].seventy_five?"
+          ]
+        },
+        "seventy_six?" => {
+          name: "seventy_six?",
+          description: "returns whether the list size is seventy six.",
+          examples: [
+            "(1..76).to_list.seventy_six?",
+            "(1..77).to_list.seventy_six?",
+            "[].seventy_six?"
+          ]
+        },
+        "seventy_seven?" => {
+          name: "seventy_seven?",
+          description: "returns whether the list size is seventy seven.",
+          examples: [
+            "(1..77).to_list.seventy_seven?",
+            "(1..78).to_list.seventy_seven?",
+            "[].seventy_seven?"
+          ]
+        },
+        "seventy_eight?" => {
+          name: "seventy_eight?",
+          description: "returns whether the list size is seventy eight.",
+          examples: [
+            "(1..78).to_list.seventy_eight?",
+            "(1..79).to_list.seventy_eight?",
+            "[].seventy_eight?"
+          ]
+        },
+        "seventy_nine?" => {
+          name: "seventy_nine?",
+          description: "returns whether the list size is seventy nine.",
+          examples: [
+            "(1..79).to_list.seventy_nine?",
+            "(1..80).to_list.seventy_nine?",
+            "[].seventy_nine?"
+          ]
+        },
+        "eighty?" => {
+          name: "eighty?",
+          description: "returns whether the list size is eighty.",
+          examples: [
+            "(1..80).to_list.eighty?",
+            "(1..81).to_list.eighty?",
+            "[].eighty?"
+          ]
+        },
+        "eighty_one?" => {
+          name: "eighty_one?",
+          description: "returns whether the list size is eighty one.",
+          examples: [
+            "(1..81).to_list.eighty_one?",
+            "(1..82).to_list.eighty_one?",
+            "[].eighty_one?"
+          ]
+        },
+        "eighty_two?" => {
+          name: "eighty_two?",
+          description: "returns whether the list size is eighty two.",
+          examples: [
+            "(1..82).to_list.eighty_two?",
+            "(1..83).to_list.eighty_two?",
+            "[].eighty_two?"
+          ]
+        },
+        "eighty_three?" => {
+          name: "eighty_three?",
+          description: "returns whether the list size is eighty three.",
+          examples: [
+            "(1..83).to_list.eighty_three?",
+            "(1..84).to_list.eighty_three?",
+            "[].eighty_three?"
+          ]
+        },
+        "eighty_four?" => {
+          name: "eighty_four?",
+          description: "returns whether the list size is eighty four.",
+          examples: [
+            "(1..84).to_list.eighty_four?",
+            "(1..85).to_list.eighty_four?",
+            "[].eighty_four?"
+          ]
+        },
+        "eighty_five?" => {
+          name: "eighty_five?",
+          description: "returns whether the list size is eighty five.",
+          examples: [
+            "(1..85).to_list.eighty_five?",
+            "(1..86).to_list.eighty_five?",
+            "[].eighty_five?"
+          ]
+        },
+        "eighty_six?" => {
+          name: "eighty_six?",
+          description: "returns whether the list size is eighty six.",
+          examples: [
+            "(1..86).to_list.eighty_six?",
+            "(1..87).to_list.eighty_six?",
+            "[].eighty_six?"
+          ]
+        },
+        "eighty_seven?" => {
+          name: "eighty_seven?",
+          description: "returns whether the list size is eighty seven.",
+          examples: [
+            "(1..87).to_list.eighty_seven?",
+            "(1..88).to_list.eighty_seven?",
+            "[].eighty_seven?"
+          ]
+        },
+        "eighty_eight?" => {
+          name: "eighty_eight?",
+          description: "returns whether the list size is eighty eight.",
+          examples: [
+            "(1..88).to_list.eighty_eight?",
+            "(1..89).to_list.eighty_eight?",
+            "[].eighty_eight?"
+          ]
+        },
+        "eighty_nine?" => {
+          name: "eighty_nine?",
+          description: "returns whether the list size is eighty nine.",
+          examples: [
+            "(1..89).to_list.eighty_nine?",
+            "(1..90).to_list.eighty_nine?",
+            "[].eighty_nine?"
+          ]
+        },
+        "ninety?" => {
+          name: "ninety?",
+          description: "returns whether the list size is ninety.",
+          examples: [
+            "(1..90).to_list.ninety?",
+            "(1..91).to_list.ninety?",
+            "[].ninety?"
+          ]
+        },
+        "ninety_one?" => {
+          name: "ninety_one?",
+          description: "returns whether the list size is ninety one.",
+          examples: [
+            "(1..91).to_list.ninety_one?",
+            "(1..92).to_list.ninety_one?",
+            "[].ninety_one?"
+          ]
+        },
+        "ninety_two?" => {
+          name: "ninety_two?",
+          description: "returns whether the list size is ninety two.",
+          examples: [
+            "(1..92).to_list.ninety_two?",
+            "(1..93).to_list.ninety_two?",
+            "[].ninety_two?"
+          ]
+        },
+        "ninety_three?" => {
+          name: "ninety_three?",
+          description: "returns whether the list size is ninety three.",
+          examples: [
+            "(1..93).to_list.ninety_three?",
+            "(1..94).to_list.ninety_three?",
+            "[].ninety_three?"
+          ]
+        },
+        "ninety_four?" => {
+          name: "ninety_four?",
+          description: "returns whether the list size is ninety four.",
+          examples: [
+            "(1..94).to_list.ninety_four?",
+            "(1..95).to_list.ninety_four?",
+            "[].ninety_four?"
+          ]
+        },
+        "ninety_five?" => {
+          name: "ninety_five?",
+          description: "returns whether the list size is ninety five.",
+          examples: [
+            "(1..95).to_list.ninety_five?",
+            "(1..96).to_list.ninety_five?",
+            "[].ninety_five?"
+          ]
+        },
+        "ninety_six?" => {
+          name: "ninety_six?",
+          description: "returns whether the list size is ninety six.",
+          examples: [
+            "(1..96).to_list.ninety_six?",
+            "(1..97).to_list.ninety_six?",
+            "[].ninety_six?"
+          ]
+        },
+        "ninety_seven?" => {
+          name: "ninety_seven?",
+          description: "returns whether the list size is ninety seven.",
+          examples: [
+            "(1..97).to_list.ninety_seven?",
+            "(1..98).to_list.ninety_seven?",
+            "[].ninety_seven?"
+          ]
+        },
+        "ninety_eight?" => {
+          name: "ninety_eight?",
+          description: "returns whether the list size is ninety eight.",
+          examples: [
+            "(1..98).to_list.ninety_eight?",
+            "(1..99).to_list.ninety_eight?",
+            "[].ninety_eight?"
+          ]
+        },
+        "ninety_nine?" => {
+          name: "ninety_nine?",
+          description: "returns whether the list size is ninety nine.",
+          examples: [
+            "(1..99).to_list.ninety_nine?",
+            "(1..100).to_list.ninety_nine?",
+            "[].ninety_nine?"
+          ]
+        },
+        "one_hundred?" => {
+          name: "one_hundred?",
+          description: "returns whether the list size is one hundred.",
+          examples: [
+            "(1..100).to_list.one_hundred?",
+            "(1..101).to_list.one_hundred?",
+            "[].one_hundred?"
+          ]
         }
       }.freeze
-
       def self.function_documentation(scope)
         return INSTANCE_FUNCTIONS if scope == :instance
 
@@ -553,7 +3125,7 @@ class Code
         when "shift"
           sig(args) { Integer.maybe }
           code_shift(code_value)
-        when "include?"
+        when "include?", "member?"
           sig(args) { Object }
           code_include?(code_value)
         when "last"
@@ -664,10 +3236,10 @@ class Code
         when "right_associate"
           sig(args) { Object }
           code_right_associate(code_value)
-        when "select"
+        when "select", "filter"
           sig(args) { (Function | Class).maybe }
           code_select(code_value, **globals)
-        when "select!"
+        when "select!", "filter!"
           sig(args) { (Function | Class).maybe }
           code_select!(code_value, **globals)
         when "compact"
@@ -682,7 +3254,7 @@ class Code
         when "reject!"
           sig(args) { (Function | Class).maybe }
           code_reject!(code_value, **globals)
-        when "size"
+        when "size", "length"
           sig(args)
           code_size
         when "empty?"

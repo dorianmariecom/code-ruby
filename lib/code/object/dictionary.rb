@@ -3,10 +3,19 @@
 class Code
   class Object
     class Dictionary < ::Code::Object
+      CLASS_DOCUMENTATION = {
+        name: "Dictionary",
+        description: "stores keyed values and provides lookup, merge, and enumerable operations.",
+        examples: [
+          "{ a: 1 }",
+          "Dictionary.from_entries([[:a, 1]])",
+          "{ a: 1 }.fetch(:a)"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "entries" => {
           name: "entries",
-          description: "returns a dictionary as a list of key-value entries.",
+          description: "converts a dictionary to a list of key-value entries.",
           examples: [
             "Dictionary.entries({ a: 1 })",
             "Dictionary.entries({ a: 1, b: 2 })",
@@ -24,7 +33,7 @@ class Code
         },
         "assign" => {
           name: "assign",
-          description: "merges dictionaries into a new dictionary.",
+          description: "merges one or more dictionaries into a new dictionary.",
           examples: [
             "Dictionary.assign({ a: 1 })",
             "Dictionary.assign({ a: 1 }, { b: 2 })",
@@ -33,7 +42,7 @@ class Code
         },
         "has_own?" => {
           name: "has_own?",
-          description: "returns whether a dictionary has a key.",
+          description: "returns whether a dictionary contains a key.",
           examples: [
             "Dictionary.has_own?({ a: 1 }, :a)",
             "Dictionary.has_own?({ a: 1 }, :b)",
@@ -44,7 +53,7 @@ class Code
       INSTANCE_FUNCTIONS = {
         "[]" => {
           name: "[]",
-          description: "returns the value for a key.",
+          description: "returns the value for a key, otherwise nothing.",
           examples: ["{ a: 1 }[:a]", "{ a: 1 }[:b]", "{ a: 1, b: 2 }[:b]"]
         },
         "at" => {
@@ -54,12 +63,12 @@ class Code
         },
         "get" => {
           name: "get",
-          description: "returns the value for a key.",
+          description: "returns the value for a key, otherwise nothing.",
           examples: ["{ a: 1 }.get(:a)", "{ a: 1 }.get(:b)", "{ a: 1, b: 2 }.get(:b)"]
         },
         "any?" => {
           name: "any?",
-          description: "returns whether any entry exists or matches a function.",
+          description: "returns whether any entry exists, has a class value, or matches a function.",
           examples: [
             "{ a: 1 }.any?",
             "{}.any?",
@@ -68,7 +77,7 @@ class Code
         },
         "clear" => {
           name: "clear",
-          description: "removes all entries from the dictionary and returns it.",
+          description: "removes every entry from the dictionary and returns it.",
           examples: ["{ a: 1 }.clear", "{ a: 1, b: 2 }.clear", "{}.clear"]
         },
         "compact" => {
@@ -177,7 +186,7 @@ class Code
         },
         "fetch" => {
           name: "fetch",
-          description: "returns a value by key or raises when missing.",
+          description: "returns values by key, default function, or nothing.",
           examples: [
             "{ a: 1 }.fetch(:a)",
             "{ a: 1 }.fetch(:b, () => { 2 })",
@@ -190,7 +199,7 @@ class Code
           examples: [
             "{ a: 1, b: 2 }.fetch_values(:a)",
             "{ a: 1, b: 2 }.fetch_values(:a, :b)",
-            "{ a: 1 }.fetch_values(:missing)"
+            "{ a: 1, b: 2 }.fetch_values(:b)"
           ]
         },
         "flatten" => {
@@ -200,7 +209,7 @@ class Code
         },
         "has_key?" => {
           name: "has_key?",
-          description: "returns whether the dictionary has a key.",
+          description: "returns whether the dictionary contains a key.",
           examples: ["{ a: 1 }.has_key?(:a)", "{ a: 1 }.has_key?(:b)", "{}.has_key?(:a)"]
         },
         "key?" => {
@@ -220,7 +229,7 @@ class Code
         },
         "has_own?" => {
           name: "has_own?",
-          description: "returns whether the dictionary has a key.",
+          description: "returns whether the dictionary contains a key.",
           examples: ["{ a: 1 }.has_own?(:a)", "{ a: 1 }.has_own?(:b)", "{}.has_own?(:a)"]
         },
         "has_value?" => {
@@ -262,11 +271,11 @@ class Code
         },
         "key" => {
           name: "key",
-          description: "returns the first key for a value or matching function.",
+          description: "returns the first key for a value, or a fallback result.",
           examples: [
             "{ a: 1 }.key(1)",
             "{ a: 1, b: 2 }.key(2)",
-            "{ a: 1, b: 2 }.key(0, (value) => { value > 1 })"
+            "{ a: 1, b: 2 }.key(0, (value) => { :missing })"
           ]
         },
         "keys" => {
@@ -464,25 +473,25 @@ class Code
         },
         "transform_values" => {
           name: "transform_values",
-          description: "returns a dictionary with values transformed by a function.",
+          description: "returns a dictionary with values transformed by a key-value function.",
           examples: [
-            "{ a: 1 }.transform_values((value) => { value + 1 })",
-            "{ a: 1 }.transform_values((value, key) => { key })",
-            "{ a: 1 }.transform_values((value, key, index) => { index })"
+            "{ a: 1 }.transform_values((key, value) => { value + 1 })",
+            "{ a: 1 }.transform_values((key, value) => { key })",
+            "{ a: 1 }.transform_values((key, value, index) => { index })"
           ]
         },
         "transform_values!" => {
           name: "transform_values!",
-          description: "transforms values in the receiver with a function.",
+          description: "transforms values in the receiver with a key-value function.",
           examples: [
-            "{ a: 1 }.transform_values!((value) => { value + 1 })",
-            "{ a: 1 }.transform_values!((value, key) => { key })",
-            "{ a: 1 }.transform_values!((value, key, index) => { index })"
+            "{ a: 1 }.transform_values!((key, value) => { value + 1 })",
+            "{ a: 1 }.transform_values!((key, value) => { key })",
+            "{ a: 1 }.transform_values!((key, value, index) => { index })"
           ]
         },
         "values" => {
           name: "values",
-          description: "returns dictionary values or values for keys.",
+          description: "returns all values, values for keys, or mapped values.",
           examples: [
             "{ a: 1, b: 2 }.values",
             "{ a: 1, b: 2 }.values(:a)",
@@ -500,20 +509,20 @@ class Code
         },
         "associate" => {
           name: "associate",
-          description: "returns a dictionary associating each key to one value.",
+          description: "returns the key-value entry for a key, otherwise nothing.",
           examples: [
-            "{ a: 1 }.associate(2)",
-            "{ a: 1, b: 2 }.associate(:x)",
-            "{}.associate(:x)"
+            "{ a: 1 }.associate(:a)",
+            "{ a: 1, b: 2 }.associate(:b)",
+            "{}.associate(:a)"
           ]
         },
         "right_associate" => {
           name: "right_associate",
-          description: "returns a dictionary associating one key to each value.",
+          description: "returns the first key-value entry for a value, otherwise nothing.",
           examples: [
-            "{ a: 1 }.right_associate(:x)",
-            "{ a: 1, b: 2 }.right_associate(:x)",
-            "{}.right_associate(:x)"
+            "{ a: 1 }.right_associate(1)",
+            "{ a: 1, b: 2 }.right_associate(2)",
+            "{}.right_associate(1)"
           ]
         },
         "deep_duplicate" => {
@@ -523,6 +532,930 @@ class Code
             "{ a: 1 }.deep_duplicate",
             "{ a: [1] }.deep_duplicate",
             "{}.deep_duplicate"
+          ]
+        },
+        "many?" => {
+          name: "many?",
+          description: "returns whether the dictionary has more than one entry.",
+          examples: ["{ a: 1, b: 2 }.many?", "{ a: 1 }.many?", "{}.many?"]
+        },
+        "positive?" => {
+          name: "positive?",
+          description: "returns whether the dictionary size is positive.",
+          examples: ["{ a: 1 }.positive?", "{}.positive?", "{ a: 1, b: 2 }.positive?"]
+        },
+        "negative?" => {
+          name: "negative?",
+          description: "returns whether the dictionary size is negative.",
+          examples: ["{}.negative?", "{ a: 1 }.negative?", "{ a: 1, b: 2 }.negative?"]
+        },
+        "zero?" => {
+          name: "zero?",
+          description: "returns whether the dictionary size is zero.",
+          examples: [
+            "{}.zero?",
+            "{ a: 1 }.zero?",
+            "{ a: 1, b: 2 }.zero?"
+          ]
+        },
+        "one?" => {
+          name: "one?",
+          description: "returns whether the dictionary size is one.",
+          examples: [
+            "Dictionary.from_entries((1..1).to_list.map((x) => { [x, x] })).one?",
+            "Dictionary.from_entries((1..2).to_list.map((x) => { [x, x] })).one?",
+            "{}.one?"
+          ]
+        },
+        "two?" => {
+          name: "two?",
+          description: "returns whether the dictionary size is two.",
+          examples: [
+            "Dictionary.from_entries((1..2).to_list.map((x) => { [x, x] })).two?",
+            "Dictionary.from_entries((1..3).to_list.map((x) => { [x, x] })).two?",
+            "{}.two?"
+          ]
+        },
+        "three?" => {
+          name: "three?",
+          description: "returns whether the dictionary size is three.",
+          examples: [
+            "Dictionary.from_entries((1..3).to_list.map((x) => { [x, x] })).three?",
+            "Dictionary.from_entries((1..4).to_list.map((x) => { [x, x] })).three?",
+            "{}.three?"
+          ]
+        },
+        "four?" => {
+          name: "four?",
+          description: "returns whether the dictionary size is four.",
+          examples: [
+            "Dictionary.from_entries((1..4).to_list.map((x) => { [x, x] })).four?",
+            "Dictionary.from_entries((1..5).to_list.map((x) => { [x, x] })).four?",
+            "{}.four?"
+          ]
+        },
+        "five?" => {
+          name: "five?",
+          description: "returns whether the dictionary size is five.",
+          examples: [
+            "Dictionary.from_entries((1..5).to_list.map((x) => { [x, x] })).five?",
+            "Dictionary.from_entries((1..6).to_list.map((x) => { [x, x] })).five?",
+            "{}.five?"
+          ]
+        },
+        "six?" => {
+          name: "six?",
+          description: "returns whether the dictionary size is six.",
+          examples: [
+            "Dictionary.from_entries((1..6).to_list.map((x) => { [x, x] })).six?",
+            "Dictionary.from_entries((1..7).to_list.map((x) => { [x, x] })).six?",
+            "{}.six?"
+          ]
+        },
+        "seven?" => {
+          name: "seven?",
+          description: "returns whether the dictionary size is seven.",
+          examples: [
+            "Dictionary.from_entries((1..7).to_list.map((x) => { [x, x] })).seven?",
+            "Dictionary.from_entries((1..8).to_list.map((x) => { [x, x] })).seven?",
+            "{}.seven?"
+          ]
+        },
+        "eight?" => {
+          name: "eight?",
+          description: "returns whether the dictionary size is eight.",
+          examples: [
+            "Dictionary.from_entries((1..8).to_list.map((x) => { [x, x] })).eight?",
+            "Dictionary.from_entries((1..9).to_list.map((x) => { [x, x] })).eight?",
+            "{}.eight?"
+          ]
+        },
+        "nine?" => {
+          name: "nine?",
+          description: "returns whether the dictionary size is nine.",
+          examples: [
+            "Dictionary.from_entries((1..9).to_list.map((x) => { [x, x] })).nine?",
+            "Dictionary.from_entries((1..10).to_list.map((x) => { [x, x] })).nine?",
+            "{}.nine?"
+          ]
+        },
+        "ten?" => {
+          name: "ten?",
+          description: "returns whether the dictionary size is ten.",
+          examples: [
+            "Dictionary.from_entries((1..10).to_list.map((x) => { [x, x] })).ten?",
+            "Dictionary.from_entries((1..11).to_list.map((x) => { [x, x] })).ten?",
+            "{}.ten?"
+          ]
+        },
+        "eleven?" => {
+          name: "eleven?",
+          description: "returns whether the dictionary size is eleven.",
+          examples: [
+            "Dictionary.from_entries((1..11).to_list.map((x) => { [x, x] })).eleven?",
+            "Dictionary.from_entries((1..12).to_list.map((x) => { [x, x] })).eleven?",
+            "{}.eleven?"
+          ]
+        },
+        "twelve?" => {
+          name: "twelve?",
+          description: "returns whether the dictionary size is twelve.",
+          examples: [
+            "Dictionary.from_entries((1..12).to_list.map((x) => { [x, x] })).twelve?",
+            "Dictionary.from_entries((1..13).to_list.map((x) => { [x, x] })).twelve?",
+            "{}.twelve?"
+          ]
+        },
+        "thirteen?" => {
+          name: "thirteen?",
+          description: "returns whether the dictionary size is thirteen.",
+          examples: [
+            "Dictionary.from_entries((1..13).to_list.map((x) => { [x, x] })).thirteen?",
+            "Dictionary.from_entries((1..14).to_list.map((x) => { [x, x] })).thirteen?",
+            "{}.thirteen?"
+          ]
+        },
+        "fourteen?" => {
+          name: "fourteen?",
+          description: "returns whether the dictionary size is fourteen.",
+          examples: [
+            "Dictionary.from_entries((1..14).to_list.map((x) => { [x, x] })).fourteen?",
+            "Dictionary.from_entries((1..15).to_list.map((x) => { [x, x] })).fourteen?",
+            "{}.fourteen?"
+          ]
+        },
+        "fifteen?" => {
+          name: "fifteen?",
+          description: "returns whether the dictionary size is fifteen.",
+          examples: [
+            "Dictionary.from_entries((1..15).to_list.map((x) => { [x, x] })).fifteen?",
+            "Dictionary.from_entries((1..16).to_list.map((x) => { [x, x] })).fifteen?",
+            "{}.fifteen?"
+          ]
+        },
+        "sixteen?" => {
+          name: "sixteen?",
+          description: "returns whether the dictionary size is sixteen.",
+          examples: [
+            "Dictionary.from_entries((1..16).to_list.map((x) => { [x, x] })).sixteen?",
+            "Dictionary.from_entries((1..17).to_list.map((x) => { [x, x] })).sixteen?",
+            "{}.sixteen?"
+          ]
+        },
+        "seventeen?" => {
+          name: "seventeen?",
+          description: "returns whether the dictionary size is seventeen.",
+          examples: [
+            "Dictionary.from_entries((1..17).to_list.map((x) => { [x, x] })).seventeen?",
+            "Dictionary.from_entries((1..18).to_list.map((x) => { [x, x] })).seventeen?",
+            "{}.seventeen?"
+          ]
+        },
+        "eighteen?" => {
+          name: "eighteen?",
+          description: "returns whether the dictionary size is eighteen.",
+          examples: [
+            "Dictionary.from_entries((1..18).to_list.map((x) => { [x, x] })).eighteen?",
+            "Dictionary.from_entries((1..19).to_list.map((x) => { [x, x] })).eighteen?",
+            "{}.eighteen?"
+          ]
+        },
+        "nineteen?" => {
+          name: "nineteen?",
+          description: "returns whether the dictionary size is nineteen.",
+          examples: [
+            "Dictionary.from_entries((1..19).to_list.map((x) => { [x, x] })).nineteen?",
+            "Dictionary.from_entries((1..20).to_list.map((x) => { [x, x] })).nineteen?",
+            "{}.nineteen?"
+          ]
+        },
+        "twenty?" => {
+          name: "twenty?",
+          description: "returns whether the dictionary size is twenty.",
+          examples: [
+            "Dictionary.from_entries((1..20).to_list.map((x) => { [x, x] })).twenty?",
+            "Dictionary.from_entries((1..21).to_list.map((x) => { [x, x] })).twenty?",
+            "{}.twenty?"
+          ]
+        },
+        "twenty_one?" => {
+          name: "twenty_one?",
+          description: "returns whether the dictionary size is twenty one.",
+          examples: [
+            "Dictionary.from_entries((1..21).to_list.map((x) => { [x, x] })).twenty_one?",
+            "Dictionary.from_entries((1..22).to_list.map((x) => { [x, x] })).twenty_one?",
+            "{}.twenty_one?"
+          ]
+        },
+        "twenty_two?" => {
+          name: "twenty_two?",
+          description: "returns whether the dictionary size is twenty two.",
+          examples: [
+            "Dictionary.from_entries((1..22).to_list.map((x) => { [x, x] })).twenty_two?",
+            "Dictionary.from_entries((1..23).to_list.map((x) => { [x, x] })).twenty_two?",
+            "{}.twenty_two?"
+          ]
+        },
+        "twenty_three?" => {
+          name: "twenty_three?",
+          description: "returns whether the dictionary size is twenty three.",
+          examples: [
+            "Dictionary.from_entries((1..23).to_list.map((x) => { [x, x] })).twenty_three?",
+            "Dictionary.from_entries((1..24).to_list.map((x) => { [x, x] })).twenty_three?",
+            "{}.twenty_three?"
+          ]
+        },
+        "twenty_four?" => {
+          name: "twenty_four?",
+          description: "returns whether the dictionary size is twenty four.",
+          examples: [
+            "Dictionary.from_entries((1..24).to_list.map((x) => { [x, x] })).twenty_four?",
+            "Dictionary.from_entries((1..25).to_list.map((x) => { [x, x] })).twenty_four?",
+            "{}.twenty_four?"
+          ]
+        },
+        "twenty_five?" => {
+          name: "twenty_five?",
+          description: "returns whether the dictionary size is twenty five.",
+          examples: [
+            "Dictionary.from_entries((1..25).to_list.map((x) => { [x, x] })).twenty_five?",
+            "Dictionary.from_entries((1..26).to_list.map((x) => { [x, x] })).twenty_five?",
+            "{}.twenty_five?"
+          ]
+        },
+        "twenty_six?" => {
+          name: "twenty_six?",
+          description: "returns whether the dictionary size is twenty six.",
+          examples: [
+            "Dictionary.from_entries((1..26).to_list.map((x) => { [x, x] })).twenty_six?",
+            "Dictionary.from_entries((1..27).to_list.map((x) => { [x, x] })).twenty_six?",
+            "{}.twenty_six?"
+          ]
+        },
+        "twenty_seven?" => {
+          name: "twenty_seven?",
+          description: "returns whether the dictionary size is twenty seven.",
+          examples: [
+            "Dictionary.from_entries((1..27).to_list.map((x) => { [x, x] })).twenty_seven?",
+            "Dictionary.from_entries((1..28).to_list.map((x) => { [x, x] })).twenty_seven?",
+            "{}.twenty_seven?"
+          ]
+        },
+        "twenty_eight?" => {
+          name: "twenty_eight?",
+          description: "returns whether the dictionary size is twenty eight.",
+          examples: [
+            "Dictionary.from_entries((1..28).to_list.map((x) => { [x, x] })).twenty_eight?",
+            "Dictionary.from_entries((1..29).to_list.map((x) => { [x, x] })).twenty_eight?",
+            "{}.twenty_eight?"
+          ]
+        },
+        "twenty_nine?" => {
+          name: "twenty_nine?",
+          description: "returns whether the dictionary size is twenty nine.",
+          examples: [
+            "Dictionary.from_entries((1..29).to_list.map((x) => { [x, x] })).twenty_nine?",
+            "Dictionary.from_entries((1..30).to_list.map((x) => { [x, x] })).twenty_nine?",
+            "{}.twenty_nine?"
+          ]
+        },
+        "thirty?" => {
+          name: "thirty?",
+          description: "returns whether the dictionary size is thirty.",
+          examples: [
+            "Dictionary.from_entries((1..30).to_list.map((x) => { [x, x] })).thirty?",
+            "Dictionary.from_entries((1..31).to_list.map((x) => { [x, x] })).thirty?",
+            "{}.thirty?"
+          ]
+        },
+        "thirty_one?" => {
+          name: "thirty_one?",
+          description: "returns whether the dictionary size is thirty one.",
+          examples: [
+            "Dictionary.from_entries((1..31).to_list.map((x) => { [x, x] })).thirty_one?",
+            "Dictionary.from_entries((1..32).to_list.map((x) => { [x, x] })).thirty_one?",
+            "{}.thirty_one?"
+          ]
+        },
+        "thirty_two?" => {
+          name: "thirty_two?",
+          description: "returns whether the dictionary size is thirty two.",
+          examples: [
+            "Dictionary.from_entries((1..32).to_list.map((x) => { [x, x] })).thirty_two?",
+            "Dictionary.from_entries((1..33).to_list.map((x) => { [x, x] })).thirty_two?",
+            "{}.thirty_two?"
+          ]
+        },
+        "thirty_three?" => {
+          name: "thirty_three?",
+          description: "returns whether the dictionary size is thirty three.",
+          examples: [
+            "Dictionary.from_entries((1..33).to_list.map((x) => { [x, x] })).thirty_three?",
+            "Dictionary.from_entries((1..34).to_list.map((x) => { [x, x] })).thirty_three?",
+            "{}.thirty_three?"
+          ]
+        },
+        "thirty_four?" => {
+          name: "thirty_four?",
+          description: "returns whether the dictionary size is thirty four.",
+          examples: [
+            "Dictionary.from_entries((1..34).to_list.map((x) => { [x, x] })).thirty_four?",
+            "Dictionary.from_entries((1..35).to_list.map((x) => { [x, x] })).thirty_four?",
+            "{}.thirty_four?"
+          ]
+        },
+        "thirty_five?" => {
+          name: "thirty_five?",
+          description: "returns whether the dictionary size is thirty five.",
+          examples: [
+            "Dictionary.from_entries((1..35).to_list.map((x) => { [x, x] })).thirty_five?",
+            "Dictionary.from_entries((1..36).to_list.map((x) => { [x, x] })).thirty_five?",
+            "{}.thirty_five?"
+          ]
+        },
+        "thirty_six?" => {
+          name: "thirty_six?",
+          description: "returns whether the dictionary size is thirty six.",
+          examples: [
+            "Dictionary.from_entries((1..36).to_list.map((x) => { [x, x] })).thirty_six?",
+            "Dictionary.from_entries((1..37).to_list.map((x) => { [x, x] })).thirty_six?",
+            "{}.thirty_six?"
+          ]
+        },
+        "thirty_seven?" => {
+          name: "thirty_seven?",
+          description: "returns whether the dictionary size is thirty seven.",
+          examples: [
+            "Dictionary.from_entries((1..37).to_list.map((x) => { [x, x] })).thirty_seven?",
+            "Dictionary.from_entries((1..38).to_list.map((x) => { [x, x] })).thirty_seven?",
+            "{}.thirty_seven?"
+          ]
+        },
+        "thirty_eight?" => {
+          name: "thirty_eight?",
+          description: "returns whether the dictionary size is thirty eight.",
+          examples: [
+            "Dictionary.from_entries((1..38).to_list.map((x) => { [x, x] })).thirty_eight?",
+            "Dictionary.from_entries((1..39).to_list.map((x) => { [x, x] })).thirty_eight?",
+            "{}.thirty_eight?"
+          ]
+        },
+        "thirty_nine?" => {
+          name: "thirty_nine?",
+          description: "returns whether the dictionary size is thirty nine.",
+          examples: [
+            "Dictionary.from_entries((1..39).to_list.map((x) => { [x, x] })).thirty_nine?",
+            "Dictionary.from_entries((1..40).to_list.map((x) => { [x, x] })).thirty_nine?",
+            "{}.thirty_nine?"
+          ]
+        },
+        "forty?" => {
+          name: "forty?",
+          description: "returns whether the dictionary size is forty.",
+          examples: [
+            "Dictionary.from_entries((1..40).to_list.map((x) => { [x, x] })).forty?",
+            "Dictionary.from_entries((1..41).to_list.map((x) => { [x, x] })).forty?",
+            "{}.forty?"
+          ]
+        },
+        "forty_one?" => {
+          name: "forty_one?",
+          description: "returns whether the dictionary size is forty one.",
+          examples: [
+            "Dictionary.from_entries((1..41).to_list.map((x) => { [x, x] })).forty_one?",
+            "Dictionary.from_entries((1..42).to_list.map((x) => { [x, x] })).forty_one?",
+            "{}.forty_one?"
+          ]
+        },
+        "forty_two?" => {
+          name: "forty_two?",
+          description: "returns whether the dictionary size is forty two.",
+          examples: [
+            "Dictionary.from_entries((1..42).to_list.map((x) => { [x, x] })).forty_two?",
+            "Dictionary.from_entries((1..43).to_list.map((x) => { [x, x] })).forty_two?",
+            "{}.forty_two?"
+          ]
+        },
+        "forty_three?" => {
+          name: "forty_three?",
+          description: "returns whether the dictionary size is forty three.",
+          examples: [
+            "Dictionary.from_entries((1..43).to_list.map((x) => { [x, x] })).forty_three?",
+            "Dictionary.from_entries((1..44).to_list.map((x) => { [x, x] })).forty_three?",
+            "{}.forty_three?"
+          ]
+        },
+        "forty_four?" => {
+          name: "forty_four?",
+          description: "returns whether the dictionary size is forty four.",
+          examples: [
+            "Dictionary.from_entries((1..44).to_list.map((x) => { [x, x] })).forty_four?",
+            "Dictionary.from_entries((1..45).to_list.map((x) => { [x, x] })).forty_four?",
+            "{}.forty_four?"
+          ]
+        },
+        "forty_five?" => {
+          name: "forty_five?",
+          description: "returns whether the dictionary size is forty five.",
+          examples: [
+            "Dictionary.from_entries((1..45).to_list.map((x) => { [x, x] })).forty_five?",
+            "Dictionary.from_entries((1..46).to_list.map((x) => { [x, x] })).forty_five?",
+            "{}.forty_five?"
+          ]
+        },
+        "forty_six?" => {
+          name: "forty_six?",
+          description: "returns whether the dictionary size is forty six.",
+          examples: [
+            "Dictionary.from_entries((1..46).to_list.map((x) => { [x, x] })).forty_six?",
+            "Dictionary.from_entries((1..47).to_list.map((x) => { [x, x] })).forty_six?",
+            "{}.forty_six?"
+          ]
+        },
+        "forty_seven?" => {
+          name: "forty_seven?",
+          description: "returns whether the dictionary size is forty seven.",
+          examples: [
+            "Dictionary.from_entries((1..47).to_list.map((x) => { [x, x] })).forty_seven?",
+            "Dictionary.from_entries((1..48).to_list.map((x) => { [x, x] })).forty_seven?",
+            "{}.forty_seven?"
+          ]
+        },
+        "forty_eight?" => {
+          name: "forty_eight?",
+          description: "returns whether the dictionary size is forty eight.",
+          examples: [
+            "Dictionary.from_entries((1..48).to_list.map((x) => { [x, x] })).forty_eight?",
+            "Dictionary.from_entries((1..49).to_list.map((x) => { [x, x] })).forty_eight?",
+            "{}.forty_eight?"
+          ]
+        },
+        "forty_nine?" => {
+          name: "forty_nine?",
+          description: "returns whether the dictionary size is forty nine.",
+          examples: [
+            "Dictionary.from_entries((1..49).to_list.map((x) => { [x, x] })).forty_nine?",
+            "Dictionary.from_entries((1..50).to_list.map((x) => { [x, x] })).forty_nine?",
+            "{}.forty_nine?"
+          ]
+        },
+        "fifty?" => {
+          name: "fifty?",
+          description: "returns whether the dictionary size is fifty.",
+          examples: [
+            "Dictionary.from_entries((1..50).to_list.map((x) => { [x, x] })).fifty?",
+            "Dictionary.from_entries((1..51).to_list.map((x) => { [x, x] })).fifty?",
+            "{}.fifty?"
+          ]
+        },
+        "fifty_one?" => {
+          name: "fifty_one?",
+          description: "returns whether the dictionary size is fifty one.",
+          examples: [
+            "Dictionary.from_entries((1..51).to_list.map((x) => { [x, x] })).fifty_one?",
+            "Dictionary.from_entries((1..52).to_list.map((x) => { [x, x] })).fifty_one?",
+            "{}.fifty_one?"
+          ]
+        },
+        "fifty_two?" => {
+          name: "fifty_two?",
+          description: "returns whether the dictionary size is fifty two.",
+          examples: [
+            "Dictionary.from_entries((1..52).to_list.map((x) => { [x, x] })).fifty_two?",
+            "Dictionary.from_entries((1..53).to_list.map((x) => { [x, x] })).fifty_two?",
+            "{}.fifty_two?"
+          ]
+        },
+        "fifty_three?" => {
+          name: "fifty_three?",
+          description: "returns whether the dictionary size is fifty three.",
+          examples: [
+            "Dictionary.from_entries((1..53).to_list.map((x) => { [x, x] })).fifty_three?",
+            "Dictionary.from_entries((1..54).to_list.map((x) => { [x, x] })).fifty_three?",
+            "{}.fifty_three?"
+          ]
+        },
+        "fifty_four?" => {
+          name: "fifty_four?",
+          description: "returns whether the dictionary size is fifty four.",
+          examples: [
+            "Dictionary.from_entries((1..54).to_list.map((x) => { [x, x] })).fifty_four?",
+            "Dictionary.from_entries((1..55).to_list.map((x) => { [x, x] })).fifty_four?",
+            "{}.fifty_four?"
+          ]
+        },
+        "fifty_five?" => {
+          name: "fifty_five?",
+          description: "returns whether the dictionary size is fifty five.",
+          examples: [
+            "Dictionary.from_entries((1..55).to_list.map((x) => { [x, x] })).fifty_five?",
+            "Dictionary.from_entries((1..56).to_list.map((x) => { [x, x] })).fifty_five?",
+            "{}.fifty_five?"
+          ]
+        },
+        "fifty_six?" => {
+          name: "fifty_six?",
+          description: "returns whether the dictionary size is fifty six.",
+          examples: [
+            "Dictionary.from_entries((1..56).to_list.map((x) => { [x, x] })).fifty_six?",
+            "Dictionary.from_entries((1..57).to_list.map((x) => { [x, x] })).fifty_six?",
+            "{}.fifty_six?"
+          ]
+        },
+        "fifty_seven?" => {
+          name: "fifty_seven?",
+          description: "returns whether the dictionary size is fifty seven.",
+          examples: [
+            "Dictionary.from_entries((1..57).to_list.map((x) => { [x, x] })).fifty_seven?",
+            "Dictionary.from_entries((1..58).to_list.map((x) => { [x, x] })).fifty_seven?",
+            "{}.fifty_seven?"
+          ]
+        },
+        "fifty_eight?" => {
+          name: "fifty_eight?",
+          description: "returns whether the dictionary size is fifty eight.",
+          examples: [
+            "Dictionary.from_entries((1..58).to_list.map((x) => { [x, x] })).fifty_eight?",
+            "Dictionary.from_entries((1..59).to_list.map((x) => { [x, x] })).fifty_eight?",
+            "{}.fifty_eight?"
+          ]
+        },
+        "fifty_nine?" => {
+          name: "fifty_nine?",
+          description: "returns whether the dictionary size is fifty nine.",
+          examples: [
+            "Dictionary.from_entries((1..59).to_list.map((x) => { [x, x] })).fifty_nine?",
+            "Dictionary.from_entries((1..60).to_list.map((x) => { [x, x] })).fifty_nine?",
+            "{}.fifty_nine?"
+          ]
+        },
+        "sixty?" => {
+          name: "sixty?",
+          description: "returns whether the dictionary size is sixty.",
+          examples: [
+            "Dictionary.from_entries((1..60).to_list.map((x) => { [x, x] })).sixty?",
+            "Dictionary.from_entries((1..61).to_list.map((x) => { [x, x] })).sixty?",
+            "{}.sixty?"
+          ]
+        },
+        "sixty_one?" => {
+          name: "sixty_one?",
+          description: "returns whether the dictionary size is sixty one.",
+          examples: [
+            "Dictionary.from_entries((1..61).to_list.map((x) => { [x, x] })).sixty_one?",
+            "Dictionary.from_entries((1..62).to_list.map((x) => { [x, x] })).sixty_one?",
+            "{}.sixty_one?"
+          ]
+        },
+        "sixty_two?" => {
+          name: "sixty_two?",
+          description: "returns whether the dictionary size is sixty two.",
+          examples: [
+            "Dictionary.from_entries((1..62).to_list.map((x) => { [x, x] })).sixty_two?",
+            "Dictionary.from_entries((1..63).to_list.map((x) => { [x, x] })).sixty_two?",
+            "{}.sixty_two?"
+          ]
+        },
+        "sixty_three?" => {
+          name: "sixty_three?",
+          description: "returns whether the dictionary size is sixty three.",
+          examples: [
+            "Dictionary.from_entries((1..63).to_list.map((x) => { [x, x] })).sixty_three?",
+            "Dictionary.from_entries((1..64).to_list.map((x) => { [x, x] })).sixty_three?",
+            "{}.sixty_three?"
+          ]
+        },
+        "sixty_four?" => {
+          name: "sixty_four?",
+          description: "returns whether the dictionary size is sixty four.",
+          examples: [
+            "Dictionary.from_entries((1..64).to_list.map((x) => { [x, x] })).sixty_four?",
+            "Dictionary.from_entries((1..65).to_list.map((x) => { [x, x] })).sixty_four?",
+            "{}.sixty_four?"
+          ]
+        },
+        "sixty_five?" => {
+          name: "sixty_five?",
+          description: "returns whether the dictionary size is sixty five.",
+          examples: [
+            "Dictionary.from_entries((1..65).to_list.map((x) => { [x, x] })).sixty_five?",
+            "Dictionary.from_entries((1..66).to_list.map((x) => { [x, x] })).sixty_five?",
+            "{}.sixty_five?"
+          ]
+        },
+        "sixty_six?" => {
+          name: "sixty_six?",
+          description: "returns whether the dictionary size is sixty six.",
+          examples: [
+            "Dictionary.from_entries((1..66).to_list.map((x) => { [x, x] })).sixty_six?",
+            "Dictionary.from_entries((1..67).to_list.map((x) => { [x, x] })).sixty_six?",
+            "{}.sixty_six?"
+          ]
+        },
+        "sixty_seven?" => {
+          name: "sixty_seven?",
+          description: "returns whether the dictionary size is sixty seven.",
+          examples: [
+            "Dictionary.from_entries((1..67).to_list.map((x) => { [x, x] })).sixty_seven?",
+            "Dictionary.from_entries((1..68).to_list.map((x) => { [x, x] })).sixty_seven?",
+            "{}.sixty_seven?"
+          ]
+        },
+        "sixty_eight?" => {
+          name: "sixty_eight?",
+          description: "returns whether the dictionary size is sixty eight.",
+          examples: [
+            "Dictionary.from_entries((1..68).to_list.map((x) => { [x, x] })).sixty_eight?",
+            "Dictionary.from_entries((1..69).to_list.map((x) => { [x, x] })).sixty_eight?",
+            "{}.sixty_eight?"
+          ]
+        },
+        "sixty_nine?" => {
+          name: "sixty_nine?",
+          description: "returns whether the dictionary size is sixty nine.",
+          examples: [
+            "Dictionary.from_entries((1..69).to_list.map((x) => { [x, x] })).sixty_nine?",
+            "Dictionary.from_entries((1..70).to_list.map((x) => { [x, x] })).sixty_nine?",
+            "{}.sixty_nine?"
+          ]
+        },
+        "seventy?" => {
+          name: "seventy?",
+          description: "returns whether the dictionary size is seventy.",
+          examples: [
+            "Dictionary.from_entries((1..70).to_list.map((x) => { [x, x] })).seventy?",
+            "Dictionary.from_entries((1..71).to_list.map((x) => { [x, x] })).seventy?",
+            "{}.seventy?"
+          ]
+        },
+        "seventy_one?" => {
+          name: "seventy_one?",
+          description: "returns whether the dictionary size is seventy one.",
+          examples: [
+            "Dictionary.from_entries((1..71).to_list.map((x) => { [x, x] })).seventy_one?",
+            "Dictionary.from_entries((1..72).to_list.map((x) => { [x, x] })).seventy_one?",
+            "{}.seventy_one?"
+          ]
+        },
+        "seventy_two?" => {
+          name: "seventy_two?",
+          description: "returns whether the dictionary size is seventy two.",
+          examples: [
+            "Dictionary.from_entries((1..72).to_list.map((x) => { [x, x] })).seventy_two?",
+            "Dictionary.from_entries((1..73).to_list.map((x) => { [x, x] })).seventy_two?",
+            "{}.seventy_two?"
+          ]
+        },
+        "seventy_three?" => {
+          name: "seventy_three?",
+          description: "returns whether the dictionary size is seventy three.",
+          examples: [
+            "Dictionary.from_entries((1..73).to_list.map((x) => { [x, x] })).seventy_three?",
+            "Dictionary.from_entries((1..74).to_list.map((x) => { [x, x] })).seventy_three?",
+            "{}.seventy_three?"
+          ]
+        },
+        "seventy_four?" => {
+          name: "seventy_four?",
+          description: "returns whether the dictionary size is seventy four.",
+          examples: [
+            "Dictionary.from_entries((1..74).to_list.map((x) => { [x, x] })).seventy_four?",
+            "Dictionary.from_entries((1..75).to_list.map((x) => { [x, x] })).seventy_four?",
+            "{}.seventy_four?"
+          ]
+        },
+        "seventy_five?" => {
+          name: "seventy_five?",
+          description: "returns whether the dictionary size is seventy five.",
+          examples: [
+            "Dictionary.from_entries((1..75).to_list.map((x) => { [x, x] })).seventy_five?",
+            "Dictionary.from_entries((1..76).to_list.map((x) => { [x, x] })).seventy_five?",
+            "{}.seventy_five?"
+          ]
+        },
+        "seventy_six?" => {
+          name: "seventy_six?",
+          description: "returns whether the dictionary size is seventy six.",
+          examples: [
+            "Dictionary.from_entries((1..76).to_list.map((x) => { [x, x] })).seventy_six?",
+            "Dictionary.from_entries((1..77).to_list.map((x) => { [x, x] })).seventy_six?",
+            "{}.seventy_six?"
+          ]
+        },
+        "seventy_seven?" => {
+          name: "seventy_seven?",
+          description: "returns whether the dictionary size is seventy seven.",
+          examples: [
+            "Dictionary.from_entries((1..77).to_list.map((x) => { [x, x] })).seventy_seven?",
+            "Dictionary.from_entries((1..78).to_list.map((x) => { [x, x] })).seventy_seven?",
+            "{}.seventy_seven?"
+          ]
+        },
+        "seventy_eight?" => {
+          name: "seventy_eight?",
+          description: "returns whether the dictionary size is seventy eight.",
+          examples: [
+            "Dictionary.from_entries((1..78).to_list.map((x) => { [x, x] })).seventy_eight?",
+            "Dictionary.from_entries((1..79).to_list.map((x) => { [x, x] })).seventy_eight?",
+            "{}.seventy_eight?"
+          ]
+        },
+        "seventy_nine?" => {
+          name: "seventy_nine?",
+          description: "returns whether the dictionary size is seventy nine.",
+          examples: [
+            "Dictionary.from_entries((1..79).to_list.map((x) => { [x, x] })).seventy_nine?",
+            "Dictionary.from_entries((1..80).to_list.map((x) => { [x, x] })).seventy_nine?",
+            "{}.seventy_nine?"
+          ]
+        },
+        "eighty?" => {
+          name: "eighty?",
+          description: "returns whether the dictionary size is eighty.",
+          examples: [
+            "Dictionary.from_entries((1..80).to_list.map((x) => { [x, x] })).eighty?",
+            "Dictionary.from_entries((1..81).to_list.map((x) => { [x, x] })).eighty?",
+            "{}.eighty?"
+          ]
+        },
+        "eighty_one?" => {
+          name: "eighty_one?",
+          description: "returns whether the dictionary size is eighty one.",
+          examples: [
+            "Dictionary.from_entries((1..81).to_list.map((x) => { [x, x] })).eighty_one?",
+            "Dictionary.from_entries((1..82).to_list.map((x) => { [x, x] })).eighty_one?",
+            "{}.eighty_one?"
+          ]
+        },
+        "eighty_two?" => {
+          name: "eighty_two?",
+          description: "returns whether the dictionary size is eighty two.",
+          examples: [
+            "Dictionary.from_entries((1..82).to_list.map((x) => { [x, x] })).eighty_two?",
+            "Dictionary.from_entries((1..83).to_list.map((x) => { [x, x] })).eighty_two?",
+            "{}.eighty_two?"
+          ]
+        },
+        "eighty_three?" => {
+          name: "eighty_three?",
+          description: "returns whether the dictionary size is eighty three.",
+          examples: [
+            "Dictionary.from_entries((1..83).to_list.map((x) => { [x, x] })).eighty_three?",
+            "Dictionary.from_entries((1..84).to_list.map((x) => { [x, x] })).eighty_three?",
+            "{}.eighty_three?"
+          ]
+        },
+        "eighty_four?" => {
+          name: "eighty_four?",
+          description: "returns whether the dictionary size is eighty four.",
+          examples: [
+            "Dictionary.from_entries((1..84).to_list.map((x) => { [x, x] })).eighty_four?",
+            "Dictionary.from_entries((1..85).to_list.map((x) => { [x, x] })).eighty_four?",
+            "{}.eighty_four?"
+          ]
+        },
+        "eighty_five?" => {
+          name: "eighty_five?",
+          description: "returns whether the dictionary size is eighty five.",
+          examples: [
+            "Dictionary.from_entries((1..85).to_list.map((x) => { [x, x] })).eighty_five?",
+            "Dictionary.from_entries((1..86).to_list.map((x) => { [x, x] })).eighty_five?",
+            "{}.eighty_five?"
+          ]
+        },
+        "eighty_six?" => {
+          name: "eighty_six?",
+          description: "returns whether the dictionary size is eighty six.",
+          examples: [
+            "Dictionary.from_entries((1..86).to_list.map((x) => { [x, x] })).eighty_six?",
+            "Dictionary.from_entries((1..87).to_list.map((x) => { [x, x] })).eighty_six?",
+            "{}.eighty_six?"
+          ]
+        },
+        "eighty_seven?" => {
+          name: "eighty_seven?",
+          description: "returns whether the dictionary size is eighty seven.",
+          examples: [
+            "Dictionary.from_entries((1..87).to_list.map((x) => { [x, x] })).eighty_seven?",
+            "Dictionary.from_entries((1..88).to_list.map((x) => { [x, x] })).eighty_seven?",
+            "{}.eighty_seven?"
+          ]
+        },
+        "eighty_eight?" => {
+          name: "eighty_eight?",
+          description: "returns whether the dictionary size is eighty eight.",
+          examples: [
+            "Dictionary.from_entries((1..88).to_list.map((x) => { [x, x] })).eighty_eight?",
+            "Dictionary.from_entries((1..89).to_list.map((x) => { [x, x] })).eighty_eight?",
+            "{}.eighty_eight?"
+          ]
+        },
+        "eighty_nine?" => {
+          name: "eighty_nine?",
+          description: "returns whether the dictionary size is eighty nine.",
+          examples: [
+            "Dictionary.from_entries((1..89).to_list.map((x) => { [x, x] })).eighty_nine?",
+            "Dictionary.from_entries((1..90).to_list.map((x) => { [x, x] })).eighty_nine?",
+            "{}.eighty_nine?"
+          ]
+        },
+        "ninety?" => {
+          name: "ninety?",
+          description: "returns whether the dictionary size is ninety.",
+          examples: [
+            "Dictionary.from_entries((1..90).to_list.map((x) => { [x, x] })).ninety?",
+            "Dictionary.from_entries((1..91).to_list.map((x) => { [x, x] })).ninety?",
+            "{}.ninety?"
+          ]
+        },
+        "ninety_one?" => {
+          name: "ninety_one?",
+          description: "returns whether the dictionary size is ninety one.",
+          examples: [
+            "Dictionary.from_entries((1..91).to_list.map((x) => { [x, x] })).ninety_one?",
+            "Dictionary.from_entries((1..92).to_list.map((x) => { [x, x] })).ninety_one?",
+            "{}.ninety_one?"
+          ]
+        },
+        "ninety_two?" => {
+          name: "ninety_two?",
+          description: "returns whether the dictionary size is ninety two.",
+          examples: [
+            "Dictionary.from_entries((1..92).to_list.map((x) => { [x, x] })).ninety_two?",
+            "Dictionary.from_entries((1..93).to_list.map((x) => { [x, x] })).ninety_two?",
+            "{}.ninety_two?"
+          ]
+        },
+        "ninety_three?" => {
+          name: "ninety_three?",
+          description: "returns whether the dictionary size is ninety three.",
+          examples: [
+            "Dictionary.from_entries((1..93).to_list.map((x) => { [x, x] })).ninety_three?",
+            "Dictionary.from_entries((1..94).to_list.map((x) => { [x, x] })).ninety_three?",
+            "{}.ninety_three?"
+          ]
+        },
+        "ninety_four?" => {
+          name: "ninety_four?",
+          description: "returns whether the dictionary size is ninety four.",
+          examples: [
+            "Dictionary.from_entries((1..94).to_list.map((x) => { [x, x] })).ninety_four?",
+            "Dictionary.from_entries((1..95).to_list.map((x) => { [x, x] })).ninety_four?",
+            "{}.ninety_four?"
+          ]
+        },
+        "ninety_five?" => {
+          name: "ninety_five?",
+          description: "returns whether the dictionary size is ninety five.",
+          examples: [
+            "Dictionary.from_entries((1..95).to_list.map((x) => { [x, x] })).ninety_five?",
+            "Dictionary.from_entries((1..96).to_list.map((x) => { [x, x] })).ninety_five?",
+            "{}.ninety_five?"
+          ]
+        },
+        "ninety_six?" => {
+          name: "ninety_six?",
+          description: "returns whether the dictionary size is ninety six.",
+          examples: [
+            "Dictionary.from_entries((1..96).to_list.map((x) => { [x, x] })).ninety_six?",
+            "Dictionary.from_entries((1..97).to_list.map((x) => { [x, x] })).ninety_six?",
+            "{}.ninety_six?"
+          ]
+        },
+        "ninety_seven?" => {
+          name: "ninety_seven?",
+          description: "returns whether the dictionary size is ninety seven.",
+          examples: [
+            "Dictionary.from_entries((1..97).to_list.map((x) => { [x, x] })).ninety_seven?",
+            "Dictionary.from_entries((1..98).to_list.map((x) => { [x, x] })).ninety_seven?",
+            "{}.ninety_seven?"
+          ]
+        },
+        "ninety_eight?" => {
+          name: "ninety_eight?",
+          description: "returns whether the dictionary size is ninety eight.",
+          examples: [
+            "Dictionary.from_entries((1..98).to_list.map((x) => { [x, x] })).ninety_eight?",
+            "Dictionary.from_entries((1..99).to_list.map((x) => { [x, x] })).ninety_eight?",
+            "{}.ninety_eight?"
+          ]
+        },
+        "ninety_nine?" => {
+          name: "ninety_nine?",
+          description: "returns whether the dictionary size is ninety nine.",
+          examples: [
+            "Dictionary.from_entries((1..99).to_list.map((x) => { [x, x] })).ninety_nine?",
+            "Dictionary.from_entries((1..100).to_list.map((x) => { [x, x] })).ninety_nine?",
+            "{}.ninety_nine?"
+          ]
+        },
+        "one_hundred?" => {
+          name: "one_hundred?",
+          description: "returns whether the dictionary size is one hundred.",
+          examples: [
+            "Dictionary.from_entries((1..100).to_list.map((x) => { [x, x] })).one_hundred?",
+            "Dictionary.from_entries((1..101).to_list.map((x) => { [x, x] })).one_hundred?",
+            "{}.one_hundred?"
           ]
         }
       }.freeze
@@ -788,7 +1721,7 @@ class Code
         when "replace"
           sig(args) { Dictionary }
           code_replace(code_value)
-        when "store"
+        when "store", "set"
           sig(args) { [Object, Object] }
           code_store(*code_arguments.raw)
         when "shift"
@@ -833,6 +1766,9 @@ class Code
         when "to_dictionary"
           sig(args)
           code_to_dictionary
+        when "to_context"
+          sig(args)
+          code_to_context
         when "values"
           sig(args) { [Object.repeat, Function.maybe] }
           code_values(*code_arguments.raw, **globals)

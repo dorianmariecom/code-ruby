@@ -3,43 +3,52 @@
 class Code
   class Object
     class Boolean < ::Code::Object
+      CLASS_DOCUMENTATION = {
+        name: "Boolean",
+        description: "represents true or false.",
+        examples: [
+          "Boolean",
+          "Boolean.new(true)",
+          "Boolean.new(false)"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "&" => {
           name: "&",
-          description: "returns the boolean bitwise and of two booleans.",
-          examples: ["true & true", "true & false", "false & true"]
+          description: "returns true when both booleans are true.",
+          examples: ["true & true", "true & false", "false & false"]
         },
         "bitwise_and" => {
           name: "bitwise_and",
-          description: "returns the boolean bitwise and of two booleans.",
+          description: "returns true when both booleans are true.",
           examples: [
             "true.bitwise_and(true)",
             "true.bitwise_and(false)",
-            "false.bitwise_and(true)"
+            "false.bitwise_and(false)"
           ]
         },
         "|" => {
           name: "|",
-          description: "returns the boolean bitwise or of two booleans.",
-          examples: ["true | false", "false | false", "false | true"]
+          description: "returns true when either boolean is true.",
+          examples: ["true | false", "false | true", "false | false"]
         },
         "bitwise_or" => {
           name: "bitwise_or",
-          description: "returns the boolean bitwise or of two booleans.",
+          description: "returns true when either boolean is true.",
           examples: [
             "true.bitwise_or(false)",
-            "false.bitwise_or(false)",
-            "false.bitwise_or(true)"
+            "false.bitwise_or(true)",
+            "false.bitwise_or(false)"
           ]
         },
         "^" => {
           name: "^",
-          description: "returns the boolean bitwise exclusive or of two booleans.",
+          description: "returns true when exactly one boolean is true.",
           examples: ["true ^ false", "true ^ true", "false ^ false"]
         },
         "bitwise_xor" => {
           name: "bitwise_xor",
-          description: "returns the boolean bitwise exclusive or of two booleans.",
+          description: "returns true when exactly one boolean is true.",
           examples: [
             "true.bitwise_xor(false)",
             "true.bitwise_xor(true)",

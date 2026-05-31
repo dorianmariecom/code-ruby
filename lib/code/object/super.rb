@@ -3,6 +3,15 @@
 class Code
   class Object
     class Super < Function
+      CLASS_DOCUMENTATION = {
+        name: "Super",
+        description: "calls the captured parent function available inside an extended function.",
+        examples: [
+          "Base = () => { self.name = :base self } Child = Base.extend(() => { super() }) Child().name",
+          "Base = (name) => { self.name = name self } Child = Base.extend((...) => { super(...) }) Child(:ada).name",
+          "Base = () => { 1 } Child = Base.extend(() => { super() + 1 }) Child()"
+        ]
+      }.freeze
       def initialize(
         parent,
         forwarded_arguments,

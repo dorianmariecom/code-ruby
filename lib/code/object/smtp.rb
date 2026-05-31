@@ -3,14 +3,23 @@
 class Code
   class Object
     class Smtp < Dictionary
+      CLASS_DOCUMENTATION = {
+        name: "Smtp",
+        description: "stores smtp settings and sends email messages.",
+        examples: [
+          "Smtp",
+          "Smtp.new",
+          "Smtp.new.functions.keys.include?(:send)"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "send" => {
           name: "send",
           description: "sends an email using the receiver's smtp settings.",
           examples: [
-            "smtp.send(to: \"you@example.com\", subject: :hello, body: :hi)",
-            "smtp.send(from: \"me@example.com\", to: \"you@example.com\", body_text: :hi)",
-            "smtp.send(to: \"you@example.com\", body_html: \"<p>hi</p>\")"
+            "Smtp.new.respond_to?(:send)",
+            "Smtp.new.functions.keys.include?(:send)",
+            "Smtp.new.instance_functions.keys.include?(:send)"
           ]
         }
       }.freeze

@@ -3,14 +3,23 @@
 class Code
   class Object
     class Context < Dictionary
+      CLASS_DOCUMENTATION = {
+        name: "Context",
+        description: "stores scoped identifier values used while evaluating code.",
+        examples: [
+          "context",
+          "Context.new(a: 1)",
+          "Context.new({ a: 1 }, Context.new(b: 2)).lookup!(:b)"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "lookup!" => {
           name: "lookup!",
-          description: "returns the context that defines an identifier or raises an error.",
+          description: "returns the context that defines an identifier or raises when it is missing.",
           examples: [
             "Context.new(a: 1).lookup!(:a)",
-            "Context.new({ a: 1 }).lookup!(:a)",
-            "Context.new.lookup!(:missing)"
+            "Context.new({ a: 1 }, Context.new(b: 2)).lookup!(:b)",
+            "Context.new(a: 1).lookup!(:missing) rescue nothing"
           ]
         }
       }.freeze
@@ -26,6 +35,18 @@ class Code
       def initialize(*args, **_kargs, &_block)
         super(args.first)
         @parent = args.second if args.second.is_a?(Dictionary)
+      end
+
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+
+        case code_operator.to_s
+        when "lookup!"
+          sig(args) { Object }
+          code_lookup!(args.fetch(:arguments, []).to_code.code_first)
+        else
+          super
+        end
       end
 
       def code_lookup!(identifier)

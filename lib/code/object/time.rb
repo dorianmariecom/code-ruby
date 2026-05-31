@@ -3,7 +3,6047 @@
 class Code
   class Object
     class Time < Object
+      CLASS_DOCUMENTATION = {
+        name: "Time",
+        description: "represents a zoned point in time with arithmetic and formatting.",
+        examples: [
+          "Time.now",
+          "Time.new(\"2024-03-05.06:10:59.UTC\")",
+          "Time.zone = \"Etc/UTC\""
+        ]
+      }.freeze
       DEFAULT_ZONE = "Etc/UTC"
+      CLASS_FUNCTIONS = {
+        "zone" => {
+          name: "zone",
+          description: "returns the current default time zone name.",
+          examples: [
+            "Time.zone",
+            "Time.zone = \"Etc/UTC\" Time.zone",
+            "Time.zone = \"Europe/Paris\" Time.zone"
+          ]
+        },
+        "zone=" => {
+          name: "zone=",
+          description: "sets the default time zone and returns it.",
+          examples: [
+            "Time.zone = \"Etc/UTC\"",
+            "Time.zone = \"Europe/Paris\"",
+            "Time.zone = \"America/New_York\""
+          ]
+        },
+        "now" => {
+          name: "now",
+          description: "returns the current time.",
+          examples: [
+            "Time.now",
+            "Time.zone = \"Etc/UTC\" Time.now",
+            "Time.zone = \"Europe/Paris\" Time.now"
+          ]
+        },
+        "tomorrow" => {
+          name: "tomorrow",
+          description: "returns this time tomorrow.",
+          examples: [
+            "Time.tomorrow",
+            "Time.zone = \"Etc/UTC\" Time.tomorrow",
+            "Time.now.tomorrow"
+          ]
+        },
+        "yesterday" => {
+          name: "yesterday",
+          description: "returns this time yesterday.",
+          examples: [
+            "Time.yesterday",
+            "Time.zone = \"Etc/UTC\" Time.yesterday",
+            "Time.now.yesterday"
+          ]
+        }
+      }.freeze
+      INSTANCE_FUNCTIONS = {
+        "zone" => {
+          name: "zone",
+          description: "returns the current default time zone name.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").zone",
+            "Time.zone = \"Etc/UTC\" Time.new(\"2024-03-05 06:10:59 UTC\").zone",
+            "Time.zone = \"Europe/Paris\" Time.new(\"2024-03-05 06:10:59 UTC\").zone"
+          ]
+        },
+        "after?" => {
+          name: "after?",
+          description: "returns whether the time is after another date or time.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").after?(Time.new(\"2024-03-05 06:10:58 UTC\"))",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").after?(Time.new(\"2024-03-05 06:11:00 UTC\"))",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").after?"
+          ]
+        },
+        "before?" => {
+          name: "before?",
+          description: "returns whether the time is before another date or time.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").before?(Time.new(\"2024-03-05 06:11:00 UTC\"))",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").before?(Time.new(\"2024-03-05 06:10:58 UTC\"))",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").before?"
+          ]
+        },
+        "past?" => {
+          name: "past?",
+          description: "returns whether the time is before the current time.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").past?",
+            "Time.now.past?",
+            "Time.tomorrow.past?"
+          ]
+        },
+        "future?" => {
+          name: "future?",
+          description: "returns whether the time is after the current time.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").future?",
+            "Time.now.future?",
+            "Time.tomorrow.future?"
+          ]
+        },
+        "year" => {
+          name: "year",
+          description: "returns the year component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").year",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").year",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").year"
+          ]
+        },
+        "years" => {
+          name: "years",
+          description: "returns the year component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").years",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").years",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").years"
+          ]
+        },
+        "month" => {
+          name: "month",
+          description: "returns the month component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").month",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").month",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").month"
+          ]
+        },
+        "months" => {
+          name: "months",
+          description: "returns the month component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").months",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").months",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").months"
+          ]
+        },
+        "week" => {
+          name: "week",
+          description: "returns the ISO week component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").week",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").week",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").week"
+          ]
+        },
+        "weeks" => {
+          name: "weeks",
+          description: "returns the ISO week component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").weeks",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").weeks",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").weeks"
+          ]
+        },
+        "week_day" => {
+          name: "week_day",
+          description: "returns the week day component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").week_day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").week_day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").week_day"
+          ]
+        },
+        "week_days" => {
+          name: "week_days",
+          description: "returns the week day component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").week_days",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").week_days",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").week_days"
+          ]
+        },
+        "day" => {
+          name: "day",
+          description: "returns the day component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").day"
+          ]
+        },
+        "days" => {
+          name: "days",
+          description: "returns the day component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").days",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").days",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").days"
+          ]
+        },
+        "hour" => {
+          name: "hour",
+          description: "returns the hour component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").hour",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").hour",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").hour"
+          ]
+        },
+        "hours" => {
+          name: "hours",
+          description: "returns the hour component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").hours",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").hours",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").hours"
+          ]
+        },
+        "minute" => {
+          name: "minute",
+          description: "returns the minute component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").minute",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").minute",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").minute"
+          ]
+        },
+        "minutes" => {
+          name: "minutes",
+          description: "returns the minute component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").minutes",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").minutes",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").minutes"
+          ]
+        },
+        "second" => {
+          name: "second",
+          description: "returns the second component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").second",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").second",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").second"
+          ]
+        },
+        "seconds" => {
+          name: "seconds",
+          description: "returns the second component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").seconds",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").seconds",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").seconds"
+          ]
+        },
+        "monday?" => {
+          name: "monday?",
+          description: "returns whether the time is a monday.",
+          examples: [
+            "Time.new(\"2024-03-04 00:00:00 UTC\").monday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").monday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").monday?"
+          ]
+        },
+        "tuesday?" => {
+          name: "tuesday?",
+          description: "returns whether the time is a tuesday.",
+          examples: [
+            "Time.new(\"2024-03-05 00:00:00 UTC\").tuesday?",
+            "Time.new(\"2024-03-04 00:00:00 UTC\").tuesday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").tuesday?"
+          ]
+        },
+        "wednesday?" => {
+          name: "wednesday?",
+          description: "returns whether the time is a wednesday.",
+          examples: [
+            "Time.new(\"2024-03-06 00:00:00 UTC\").wednesday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").wednesday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").wednesday?"
+          ]
+        },
+        "thursday?" => {
+          name: "thursday?",
+          description: "returns whether the time is a thursday.",
+          examples: [
+            "Time.new(\"2024-03-07 00:00:00 UTC\").thursday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").thursday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").thursday?"
+          ]
+        },
+        "friday?" => {
+          name: "friday?",
+          description: "returns whether the time is a friday.",
+          examples: [
+            "Time.new(\"2024-03-08 00:00:00 UTC\").friday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").friday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").friday?"
+          ]
+        },
+        "saturday?" => {
+          name: "saturday?",
+          description: "returns whether the time is a saturday.",
+          examples: [
+            "Time.new(\"2024-03-09 00:00:00 UTC\").saturday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").saturday?",
+            "Time.new(\"2024-03-10 00:00:00 UTC\").saturday?"
+          ]
+        },
+        "sunday?" => {
+          name: "sunday?",
+          description: "returns whether the time is a sunday.",
+          examples: [
+            "Time.new(\"2024-03-10 00:00:00 UTC\").sunday?",
+            "Time.new(\"2024-03-05 00:00:00 UTC\").sunday?",
+            "Time.new(\"2024-03-04 00:00:00 UTC\").sunday?"
+          ]
+        },
+        "january?" => {
+          name: "january?",
+          description: "returns whether the time is in january.",
+          examples: [
+            "Time.new(\"2024-01-01 00:00:00 UTC\").january?",
+            "Time.new(\"2024-02-01 00:00:00 UTC\").january?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").january?"
+          ]
+        },
+        "february?" => {
+          name: "february?",
+          description: "returns whether the time is in february.",
+          examples: [
+            "Time.new(\"2024-02-01 00:00:00 UTC\").february?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").february?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").february?"
+          ]
+        },
+        "march?" => {
+          name: "march?",
+          description: "returns whether the time is in march.",
+          examples: [
+            "Time.new(\"2024-03-01 00:00:00 UTC\").march?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").march?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").march?"
+          ]
+        },
+        "april?" => {
+          name: "april?",
+          description: "returns whether the time is in april.",
+          examples: [
+            "Time.new(\"2024-04-01 00:00:00 UTC\").april?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").april?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").april?"
+          ]
+        },
+        "may?" => {
+          name: "may?",
+          description: "returns whether the time is in may.",
+          examples: [
+            "Time.new(\"2024-05-01 00:00:00 UTC\").may?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").may?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").may?"
+          ]
+        },
+        "june?" => {
+          name: "june?",
+          description: "returns whether the time is in june.",
+          examples: [
+            "Time.new(\"2024-06-01 00:00:00 UTC\").june?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").june?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").june?"
+          ]
+        },
+        "july?" => {
+          name: "july?",
+          description: "returns whether the time is in july.",
+          examples: [
+            "Time.new(\"2024-07-01 00:00:00 UTC\").july?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").july?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").july?"
+          ]
+        },
+        "august?" => {
+          name: "august?",
+          description: "returns whether the time is in august.",
+          examples: [
+            "Time.new(\"2024-08-01 00:00:00 UTC\").august?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").august?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").august?"
+          ]
+        },
+        "september?" => {
+          name: "september?",
+          description: "returns whether the time is in september.",
+          examples: [
+            "Time.new(\"2024-09-01 00:00:00 UTC\").september?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").september?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").september?"
+          ]
+        },
+        "october?" => {
+          name: "october?",
+          description: "returns whether the time is in october.",
+          examples: [
+            "Time.new(\"2024-10-01 00:00:00 UTC\").october?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").october?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").october?"
+          ]
+        },
+        "november?" => {
+          name: "november?",
+          description: "returns whether the time is in november.",
+          examples: [
+            "Time.new(\"2024-11-01 00:00:00 UTC\").november?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").november?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").november?"
+          ]
+        },
+        "december?" => {
+          name: "december?",
+          description: "returns whether the time is in december.",
+          examples: [
+            "Time.new(\"2024-12-01 00:00:00 UTC\").december?",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").december?",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").december?"
+          ]
+        },
+        "format" => {
+          name: "format",
+          description: "formats the time with an optional format and locale.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").format",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").format(:default)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").format(\"%Y-%m-%d %H:%M:%S\")"
+          ]
+        },
+        "iso8601" => {
+          name: "iso8601",
+          description: "formats the time as an ISO 8601 string.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").iso8601",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").iso8601",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").iso8601"
+          ]
+        },
+        "iso" => {
+          name: "iso",
+          description: "formats the time as an ISO 8601 string.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").iso",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").iso",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").iso"
+          ]
+        },
+        "rfc2822" => {
+          name: "rfc2822",
+          description: "formats the time as an RFC 2822 string.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").rfc2822",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").rfc2822",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").rfc2822"
+          ]
+        },
+        "rfc3339" => {
+          name: "rfc3339",
+          description: "formats the time as an RFC 3339 string.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").rfc3339",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").rfc3339",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").rfc3339"
+          ]
+        },
+        "rfc" => {
+          name: "rfc",
+          description: "formats the time as an RFC 3339 string.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").rfc",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").rfc",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").rfc"
+          ]
+        },
+        "to_list" => {
+          name: "to_list",
+          description: "returns the time parts as a list.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").to_list",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").to_list",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").to_list"
+          ]
+        },
+        "to_integer" => {
+          name: "to_integer",
+          description: "converts the time to an integer timestamp.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").to_integer",
+            "Time.new(\"1970-01-01 00:00:00 UTC\").to_integer",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").to_integer"
+          ]
+        },
+        "to_decimal" => {
+          name: "to_decimal",
+          description: "converts the time to a decimal timestamp.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").to_decimal",
+            "Time.new(\"1970-01-01 00:00:00 UTC\").to_decimal",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").to_decimal"
+          ]
+        },
+        "utc_offset" => {
+          name: "utc_offset",
+          description: "returns the time zone UTC offset in seconds.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").utc_offset",
+            "Time.zone = \"Etc/UTC\" Time.new(\"2024-03-05 06:10:59 UTC\").utc_offset",
+            "Time.zone = \"Europe/Paris\" Time.new(\"2024-03-05 06:10:59 UTC\").utc_offset"
+          ]
+        },
+        "year_day" => {
+          name: "year_day",
+          description: "returns the day number within the year.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").year_day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").year_day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").year_day"
+          ]
+        },
+        "month_day" => {
+          name: "month_day",
+          description: "returns the day number within the month.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").month_day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").month_day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").month_day"
+          ]
+        },
+        "nanosecond" => {
+          name: "nanosecond",
+          description: "returns the nanosecond component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").nanosecond",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").nanosecond",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").nanosecond"
+          ]
+        },
+        "nanoseconds" => {
+          name: "nanoseconds",
+          description: "returns the nanosecond component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").nanoseconds",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").nanoseconds",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").nanoseconds"
+          ]
+        },
+        "millisecond" => {
+          name: "millisecond",
+          description: "returns the millisecond component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").millisecond",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").millisecond",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").millisecond"
+          ]
+        },
+        "milliseconds" => {
+          name: "milliseconds",
+          description: "returns the millisecond component.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").milliseconds",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").milliseconds",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").milliseconds"
+          ]
+        },
+        "utc" => {
+          name: "utc",
+          description: "returns the time converted to UTC.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").utc",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").utc",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").utc"
+          ]
+        },
+        "utc?" => {
+          name: "utc?",
+          description: "returns whether the time is in the UTC time zone.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").utc?",
+            "Time.zone = \"Etc/UTC\" Time.new(\"2024-03-05 06:10:59 UTC\").utc?",
+            "Time.zone = \"Europe/Paris\" Time.new(\"2024-03-05 06:10:59 UTC\").utc?"
+          ]
+        },
+        "local" => {
+          name: "local",
+          description: "returns the time converted to the current local zone.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").local",
+            "Time.zone = \"Etc/UTC\" Time.new(\"2024-03-05 06:10:59 UTC\").local",
+            "Time.zone = \"Europe/Paris\" Time.new(\"2024-03-05 06:10:59 UTC\").local"
+          ]
+        },
+        "beginning_of_day" => {
+          name: "beginning_of_day",
+          description: "returns a time at the beginning of the day.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").beginning_of_day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").beginning_of_day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").beginning_of_day"
+          ]
+        },
+        "end_of_day" => {
+          name: "end_of_day",
+          description: "returns a time at the end of the day.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").end_of_day",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").end_of_day",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").end_of_day"
+          ]
+        },
+        "tomorrow" => {
+          name: "tomorrow",
+          description: "returns the time one day later.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").tomorrow",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").tomorrow",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").tomorrow"
+          ]
+        },
+        "yesterday" => {
+          name: "yesterday",
+          description: "returns the time one day earlier.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").yesterday",
+            "Time.new(\"2024-01-01 00:00:00 UTC\").yesterday",
+            "Time.new(\"2024-12-31 23:59:59 UTC\").yesterday"
+          ]
+        },
+        "add" => {
+          name: "add",
+          description: "returns a time with date or time parts added.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").add(second: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").add(day: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").add(year: 1)"
+          ]
+        },
+        "substract" => {
+          name: "substract",
+          description: "returns a time with date or time parts subtracted.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").substract(second: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").substract(day: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").substract(year: 1)"
+          ]
+        },
+        "subtract" => {
+          name: "subtract",
+          description: "returns a time with date or time parts subtracted.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").subtract(second: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").subtract(day: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").subtract(year: 1)"
+          ]
+        },
+        "change" => {
+          name: "change",
+          description: "returns a time with selected date or time parts changed.",
+          examples: [
+            "Time.new(\"2024-03-05 06:10:59 UTC\").change(second: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").change(day: 1)",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").change(year: 2025)"
+          ]
+        },
+        "africa_abidjan?" => {
+          name: "africa_abidjan?",
+          description: "returns whether the current time zone matches africa/abidjan.",
+          examples: [
+            "Time.africa_abidjan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_abidjan?",
+            "Time.zone = \"Etc/UTC\" Time.africa_abidjan?"
+          ]
+        },
+        "africa_accra?" => {
+          name: "africa_accra?",
+          description: "returns whether the current time zone matches africa/accra.",
+          examples: [
+            "Time.africa_accra?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_accra?",
+            "Time.zone = \"Etc/UTC\" Time.africa_accra?"
+          ]
+        },
+        "africa_addis_ababa?" => {
+          name: "africa_addis_ababa?",
+          description: "returns whether the current time zone matches africa/addis/ababa.",
+          examples: [
+            "Time.africa_addis_ababa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_addis_ababa?",
+            "Time.zone = \"Etc/UTC\" Time.africa_addis_ababa?"
+          ]
+        },
+        "africa_algiers?" => {
+          name: "africa_algiers?",
+          description: "returns whether the current time zone matches africa/algiers.",
+          examples: [
+            "Time.africa_algiers?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_algiers?",
+            "Time.zone = \"Etc/UTC\" Time.africa_algiers?"
+          ]
+        },
+        "africa_asmara?" => {
+          name: "africa_asmara?",
+          description: "returns whether the current time zone matches africa/asmara.",
+          examples: [
+            "Time.africa_asmara?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_asmara?",
+            "Time.zone = \"Etc/UTC\" Time.africa_asmara?"
+          ]
+        },
+        "africa_asmera?" => {
+          name: "africa_asmera?",
+          description: "returns whether the current time zone matches africa/asmera.",
+          examples: [
+            "Time.africa_asmera?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_asmera?",
+            "Time.zone = \"Etc/UTC\" Time.africa_asmera?"
+          ]
+        },
+        "africa_bamako?" => {
+          name: "africa_bamako?",
+          description: "returns whether the current time zone matches africa/bamako.",
+          examples: [
+            "Time.africa_bamako?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_bamako?",
+            "Time.zone = \"Etc/UTC\" Time.africa_bamako?"
+          ]
+        },
+        "africa_bangui?" => {
+          name: "africa_bangui?",
+          description: "returns whether the current time zone matches africa/bangui.",
+          examples: [
+            "Time.africa_bangui?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_bangui?",
+            "Time.zone = \"Etc/UTC\" Time.africa_bangui?"
+          ]
+        },
+        "africa_banjul?" => {
+          name: "africa_banjul?",
+          description: "returns whether the current time zone matches africa/banjul.",
+          examples: [
+            "Time.africa_banjul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_banjul?",
+            "Time.zone = \"Etc/UTC\" Time.africa_banjul?"
+          ]
+        },
+        "africa_bissau?" => {
+          name: "africa_bissau?",
+          description: "returns whether the current time zone matches africa/bissau.",
+          examples: [
+            "Time.africa_bissau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_bissau?",
+            "Time.zone = \"Etc/UTC\" Time.africa_bissau?"
+          ]
+        },
+        "africa_blantyre?" => {
+          name: "africa_blantyre?",
+          description: "returns whether the current time zone matches africa/blantyre.",
+          examples: [
+            "Time.africa_blantyre?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_blantyre?",
+            "Time.zone = \"Etc/UTC\" Time.africa_blantyre?"
+          ]
+        },
+        "africa_brazzaville?" => {
+          name: "africa_brazzaville?",
+          description: "returns whether the current time zone matches africa/brazzaville.",
+          examples: [
+            "Time.africa_brazzaville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_brazzaville?",
+            "Time.zone = \"Etc/UTC\" Time.africa_brazzaville?"
+          ]
+        },
+        "africa_bujumbura?" => {
+          name: "africa_bujumbura?",
+          description: "returns whether the current time zone matches africa/bujumbura.",
+          examples: [
+            "Time.africa_bujumbura?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_bujumbura?",
+            "Time.zone = \"Etc/UTC\" Time.africa_bujumbura?"
+          ]
+        },
+        "africa_cairo?" => {
+          name: "africa_cairo?",
+          description: "returns whether the current time zone matches africa/cairo.",
+          examples: [
+            "Time.africa_cairo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_cairo?",
+            "Time.zone = \"Etc/UTC\" Time.africa_cairo?"
+          ]
+        },
+        "africa_casablanca?" => {
+          name: "africa_casablanca?",
+          description: "returns whether the current time zone matches africa/casablanca.",
+          examples: [
+            "Time.africa_casablanca?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_casablanca?",
+            "Time.zone = \"Etc/UTC\" Time.africa_casablanca?"
+          ]
+        },
+        "africa_ceuta?" => {
+          name: "africa_ceuta?",
+          description: "returns whether the current time zone matches africa/ceuta.",
+          examples: [
+            "Time.africa_ceuta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_ceuta?",
+            "Time.zone = \"Etc/UTC\" Time.africa_ceuta?"
+          ]
+        },
+        "africa_conakry?" => {
+          name: "africa_conakry?",
+          description: "returns whether the current time zone matches africa/conakry.",
+          examples: [
+            "Time.africa_conakry?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_conakry?",
+            "Time.zone = \"Etc/UTC\" Time.africa_conakry?"
+          ]
+        },
+        "africa_dakar?" => {
+          name: "africa_dakar?",
+          description: "returns whether the current time zone matches africa/dakar.",
+          examples: [
+            "Time.africa_dakar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_dakar?",
+            "Time.zone = \"Etc/UTC\" Time.africa_dakar?"
+          ]
+        },
+        "africa_dar_es_salaam?" => {
+          name: "africa_dar_es_salaam?",
+          description: "returns whether the current time zone matches africa/dar/es/salaam.",
+          examples: [
+            "Time.africa_dar_es_salaam?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_dar_es_salaam?",
+            "Time.zone = \"Etc/UTC\" Time.africa_dar_es_salaam?"
+          ]
+        },
+        "africa_djibouti?" => {
+          name: "africa_djibouti?",
+          description: "returns whether the current time zone matches africa/djibouti.",
+          examples: [
+            "Time.africa_djibouti?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_djibouti?",
+            "Time.zone = \"Etc/UTC\" Time.africa_djibouti?"
+          ]
+        },
+        "africa_douala?" => {
+          name: "africa_douala?",
+          description: "returns whether the current time zone matches africa/douala.",
+          examples: [
+            "Time.africa_douala?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_douala?",
+            "Time.zone = \"Etc/UTC\" Time.africa_douala?"
+          ]
+        },
+        "africa_el_aaiun?" => {
+          name: "africa_el_aaiun?",
+          description: "returns whether the current time zone matches africa/el/aaiun.",
+          examples: [
+            "Time.africa_el_aaiun?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_el_aaiun?",
+            "Time.zone = \"Etc/UTC\" Time.africa_el_aaiun?"
+          ]
+        },
+        "africa_freetown?" => {
+          name: "africa_freetown?",
+          description: "returns whether the current time zone matches africa/freetown.",
+          examples: [
+            "Time.africa_freetown?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_freetown?",
+            "Time.zone = \"Etc/UTC\" Time.africa_freetown?"
+          ]
+        },
+        "africa_gaborone?" => {
+          name: "africa_gaborone?",
+          description: "returns whether the current time zone matches africa/gaborone.",
+          examples: [
+            "Time.africa_gaborone?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_gaborone?",
+            "Time.zone = \"Etc/UTC\" Time.africa_gaborone?"
+          ]
+        },
+        "africa_harare?" => {
+          name: "africa_harare?",
+          description: "returns whether the current time zone matches africa/harare.",
+          examples: [
+            "Time.africa_harare?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_harare?",
+            "Time.zone = \"Etc/UTC\" Time.africa_harare?"
+          ]
+        },
+        "africa_johannesburg?" => {
+          name: "africa_johannesburg?",
+          description: "returns whether the current time zone matches africa/johannesburg.",
+          examples: [
+            "Time.africa_johannesburg?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_johannesburg?",
+            "Time.zone = \"Etc/UTC\" Time.africa_johannesburg?"
+          ]
+        },
+        "africa_juba?" => {
+          name: "africa_juba?",
+          description: "returns whether the current time zone matches africa/juba.",
+          examples: [
+            "Time.africa_juba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_juba?",
+            "Time.zone = \"Etc/UTC\" Time.africa_juba?"
+          ]
+        },
+        "africa_kampala?" => {
+          name: "africa_kampala?",
+          description: "returns whether the current time zone matches africa/kampala.",
+          examples: [
+            "Time.africa_kampala?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_kampala?",
+            "Time.zone = \"Etc/UTC\" Time.africa_kampala?"
+          ]
+        },
+        "africa_khartoum?" => {
+          name: "africa_khartoum?",
+          description: "returns whether the current time zone matches africa/khartoum.",
+          examples: [
+            "Time.africa_khartoum?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_khartoum?",
+            "Time.zone = \"Etc/UTC\" Time.africa_khartoum?"
+          ]
+        },
+        "africa_kigali?" => {
+          name: "africa_kigali?",
+          description: "returns whether the current time zone matches africa/kigali.",
+          examples: [
+            "Time.africa_kigali?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_kigali?",
+            "Time.zone = \"Etc/UTC\" Time.africa_kigali?"
+          ]
+        },
+        "africa_kinshasa?" => {
+          name: "africa_kinshasa?",
+          description: "returns whether the current time zone matches africa/kinshasa.",
+          examples: [
+            "Time.africa_kinshasa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_kinshasa?",
+            "Time.zone = \"Etc/UTC\" Time.africa_kinshasa?"
+          ]
+        },
+        "africa_lagos?" => {
+          name: "africa_lagos?",
+          description: "returns whether the current time zone matches africa/lagos.",
+          examples: [
+            "Time.africa_lagos?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_lagos?",
+            "Time.zone = \"Etc/UTC\" Time.africa_lagos?"
+          ]
+        },
+        "africa_libreville?" => {
+          name: "africa_libreville?",
+          description: "returns whether the current time zone matches africa/libreville.",
+          examples: [
+            "Time.africa_libreville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_libreville?",
+            "Time.zone = \"Etc/UTC\" Time.africa_libreville?"
+          ]
+        },
+        "africa_lome?" => {
+          name: "africa_lome?",
+          description: "returns whether the current time zone matches africa/lome.",
+          examples: [
+            "Time.africa_lome?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_lome?",
+            "Time.zone = \"Etc/UTC\" Time.africa_lome?"
+          ]
+        },
+        "africa_luanda?" => {
+          name: "africa_luanda?",
+          description: "returns whether the current time zone matches africa/luanda.",
+          examples: [
+            "Time.africa_luanda?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_luanda?",
+            "Time.zone = \"Etc/UTC\" Time.africa_luanda?"
+          ]
+        },
+        "africa_lubumbashi?" => {
+          name: "africa_lubumbashi?",
+          description: "returns whether the current time zone matches africa/lubumbashi.",
+          examples: [
+            "Time.africa_lubumbashi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_lubumbashi?",
+            "Time.zone = \"Etc/UTC\" Time.africa_lubumbashi?"
+          ]
+        },
+        "africa_lusaka?" => {
+          name: "africa_lusaka?",
+          description: "returns whether the current time zone matches africa/lusaka.",
+          examples: [
+            "Time.africa_lusaka?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_lusaka?",
+            "Time.zone = \"Etc/UTC\" Time.africa_lusaka?"
+          ]
+        },
+        "africa_malabo?" => {
+          name: "africa_malabo?",
+          description: "returns whether the current time zone matches africa/malabo.",
+          examples: [
+            "Time.africa_malabo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_malabo?",
+            "Time.zone = \"Etc/UTC\" Time.africa_malabo?"
+          ]
+        },
+        "africa_maputo?" => {
+          name: "africa_maputo?",
+          description: "returns whether the current time zone matches africa/maputo.",
+          examples: [
+            "Time.africa_maputo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_maputo?",
+            "Time.zone = \"Etc/UTC\" Time.africa_maputo?"
+          ]
+        },
+        "africa_maseru?" => {
+          name: "africa_maseru?",
+          description: "returns whether the current time zone matches africa/maseru.",
+          examples: [
+            "Time.africa_maseru?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_maseru?",
+            "Time.zone = \"Etc/UTC\" Time.africa_maseru?"
+          ]
+        },
+        "africa_mbabane?" => {
+          name: "africa_mbabane?",
+          description: "returns whether the current time zone matches africa/mbabane.",
+          examples: [
+            "Time.africa_mbabane?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_mbabane?",
+            "Time.zone = \"Etc/UTC\" Time.africa_mbabane?"
+          ]
+        },
+        "africa_mogadishu?" => {
+          name: "africa_mogadishu?",
+          description: "returns whether the current time zone matches africa/mogadishu.",
+          examples: [
+            "Time.africa_mogadishu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_mogadishu?",
+            "Time.zone = \"Etc/UTC\" Time.africa_mogadishu?"
+          ]
+        },
+        "africa_monrovia?" => {
+          name: "africa_monrovia?",
+          description: "returns whether the current time zone matches africa/monrovia.",
+          examples: [
+            "Time.africa_monrovia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_monrovia?",
+            "Time.zone = \"Etc/UTC\" Time.africa_monrovia?"
+          ]
+        },
+        "africa_nairobi?" => {
+          name: "africa_nairobi?",
+          description: "returns whether the current time zone matches africa/nairobi.",
+          examples: [
+            "Time.africa_nairobi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_nairobi?",
+            "Time.zone = \"Etc/UTC\" Time.africa_nairobi?"
+          ]
+        },
+        "africa_ndjamena?" => {
+          name: "africa_ndjamena?",
+          description: "returns whether the current time zone matches africa/ndjamena.",
+          examples: [
+            "Time.africa_ndjamena?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_ndjamena?",
+            "Time.zone = \"Etc/UTC\" Time.africa_ndjamena?"
+          ]
+        },
+        "africa_niamey?" => {
+          name: "africa_niamey?",
+          description: "returns whether the current time zone matches africa/niamey.",
+          examples: [
+            "Time.africa_niamey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_niamey?",
+            "Time.zone = \"Etc/UTC\" Time.africa_niamey?"
+          ]
+        },
+        "africa_nouakchott?" => {
+          name: "africa_nouakchott?",
+          description: "returns whether the current time zone matches africa/nouakchott.",
+          examples: [
+            "Time.africa_nouakchott?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_nouakchott?",
+            "Time.zone = \"Etc/UTC\" Time.africa_nouakchott?"
+          ]
+        },
+        "africa_ouagadougou?" => {
+          name: "africa_ouagadougou?",
+          description: "returns whether the current time zone matches africa/ouagadougou.",
+          examples: [
+            "Time.africa_ouagadougou?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_ouagadougou?",
+            "Time.zone = \"Etc/UTC\" Time.africa_ouagadougou?"
+          ]
+        },
+        "africa_porto_minus_novo?" => {
+          name: "africa_porto_minus_novo?",
+          description: "returns whether the current time zone matches africa/porto/minus/novo.",
+          examples: [
+            "Time.africa_porto_minus_novo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_porto_minus_novo?",
+            "Time.zone = \"Etc/UTC\" Time.africa_porto_minus_novo?"
+          ]
+        },
+        "africa_sao_tome?" => {
+          name: "africa_sao_tome?",
+          description: "returns whether the current time zone matches africa/sao/tome.",
+          examples: [
+            "Time.africa_sao_tome?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_sao_tome?",
+            "Time.zone = \"Etc/UTC\" Time.africa_sao_tome?"
+          ]
+        },
+        "africa_timbuktu?" => {
+          name: "africa_timbuktu?",
+          description: "returns whether the current time zone matches africa/timbuktu.",
+          examples: [
+            "Time.africa_timbuktu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_timbuktu?",
+            "Time.zone = \"Etc/UTC\" Time.africa_timbuktu?"
+          ]
+        },
+        "africa_tripoli?" => {
+          name: "africa_tripoli?",
+          description: "returns whether the current time zone matches africa/tripoli.",
+          examples: [
+            "Time.africa_tripoli?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_tripoli?",
+            "Time.zone = \"Etc/UTC\" Time.africa_tripoli?"
+          ]
+        },
+        "africa_tunis?" => {
+          name: "africa_tunis?",
+          description: "returns whether the current time zone matches africa/tunis.",
+          examples: [
+            "Time.africa_tunis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_tunis?",
+            "Time.zone = \"Etc/UTC\" Time.africa_tunis?"
+          ]
+        },
+        "africa_windhoek?" => {
+          name: "africa_windhoek?",
+          description: "returns whether the current time zone matches africa/windhoek.",
+          examples: [
+            "Time.africa_windhoek?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").africa_windhoek?",
+            "Time.zone = \"Etc/UTC\" Time.africa_windhoek?"
+          ]
+        },
+        "america_adak?" => {
+          name: "america_adak?",
+          description: "returns whether the current time zone matches america/adak.",
+          examples: [
+            "Time.america_adak?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_adak?",
+            "Time.zone = \"Etc/UTC\" Time.america_adak?"
+          ]
+        },
+        "america_anchorage?" => {
+          name: "america_anchorage?",
+          description: "returns whether the current time zone matches america/anchorage.",
+          examples: [
+            "Time.america_anchorage?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_anchorage?",
+            "Time.zone = \"Etc/UTC\" Time.america_anchorage?"
+          ]
+        },
+        "america_anguilla?" => {
+          name: "america_anguilla?",
+          description: "returns whether the current time zone matches america/anguilla.",
+          examples: [
+            "Time.america_anguilla?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_anguilla?",
+            "Time.zone = \"Etc/UTC\" Time.america_anguilla?"
+          ]
+        },
+        "america_antigua?" => {
+          name: "america_antigua?",
+          description: "returns whether the current time zone matches america/antigua.",
+          examples: [
+            "Time.america_antigua?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_antigua?",
+            "Time.zone = \"Etc/UTC\" Time.america_antigua?"
+          ]
+        },
+        "america_araguaina?" => {
+          name: "america_araguaina?",
+          description: "returns whether the current time zone matches america/araguaina.",
+          examples: [
+            "Time.america_araguaina?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_araguaina?",
+            "Time.zone = \"Etc/UTC\" Time.america_araguaina?"
+          ]
+        },
+        "america_argentina_buenos_aires?" => {
+          name: "america_argentina_buenos_aires?",
+          description: "returns whether the current time zone matches america/argentina/buenos/aires.",
+          examples: [
+            "Time.america_argentina_buenos_aires?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_buenos_aires?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_buenos_aires?"
+          ]
+        },
+        "america_argentina_catamarca?" => {
+          name: "america_argentina_catamarca?",
+          description: "returns whether the current time zone matches america/argentina/catamarca.",
+          examples: [
+            "Time.america_argentina_catamarca?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_catamarca?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_catamarca?"
+          ]
+        },
+        "america_argentina_comodrivadavia?" => {
+          name: "america_argentina_comodrivadavia?",
+          description: "returns whether the current time zone matches america/argentina/comodrivadavia.",
+          examples: [
+            "Time.america_argentina_comodrivadavia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_comodrivadavia?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_comodrivadavia?"
+          ]
+        },
+        "america_argentina_cordoba?" => {
+          name: "america_argentina_cordoba?",
+          description: "returns whether the current time zone matches america/argentina/cordoba.",
+          examples: [
+            "Time.america_argentina_cordoba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_cordoba?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_cordoba?"
+          ]
+        },
+        "america_argentina_jujuy?" => {
+          name: "america_argentina_jujuy?",
+          description: "returns whether the current time zone matches america/argentina/jujuy.",
+          examples: [
+            "Time.america_argentina_jujuy?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_jujuy?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_jujuy?"
+          ]
+        },
+        "america_argentina_la_rioja?" => {
+          name: "america_argentina_la_rioja?",
+          description: "returns whether the current time zone matches america/argentina/la/rioja.",
+          examples: [
+            "Time.america_argentina_la_rioja?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_la_rioja?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_la_rioja?"
+          ]
+        },
+        "america_argentina_mendoza?" => {
+          name: "america_argentina_mendoza?",
+          description: "returns whether the current time zone matches america/argentina/mendoza.",
+          examples: [
+            "Time.america_argentina_mendoza?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_mendoza?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_mendoza?"
+          ]
+        },
+        "america_argentina_rio_gallegos?" => {
+          name: "america_argentina_rio_gallegos?",
+          description: "returns whether the current time zone matches america/argentina/rio/gallegos.",
+          examples: [
+            "Time.america_argentina_rio_gallegos?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_rio_gallegos?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_rio_gallegos?"
+          ]
+        },
+        "america_argentina_salta?" => {
+          name: "america_argentina_salta?",
+          description: "returns whether the current time zone matches america/argentina/salta.",
+          examples: [
+            "Time.america_argentina_salta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_salta?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_salta?"
+          ]
+        },
+        "america_argentina_san_juan?" => {
+          name: "america_argentina_san_juan?",
+          description: "returns whether the current time zone matches america/argentina/san/juan.",
+          examples: [
+            "Time.america_argentina_san_juan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_san_juan?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_san_juan?"
+          ]
+        },
+        "america_argentina_san_luis?" => {
+          name: "america_argentina_san_luis?",
+          description: "returns whether the current time zone matches america/argentina/san/luis.",
+          examples: [
+            "Time.america_argentina_san_luis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_san_luis?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_san_luis?"
+          ]
+        },
+        "america_argentina_tucuman?" => {
+          name: "america_argentina_tucuman?",
+          description: "returns whether the current time zone matches america/argentina/tucuman.",
+          examples: [
+            "Time.america_argentina_tucuman?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_tucuman?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_tucuman?"
+          ]
+        },
+        "america_argentina_ushuaia?" => {
+          name: "america_argentina_ushuaia?",
+          description: "returns whether the current time zone matches america/argentina/ushuaia.",
+          examples: [
+            "Time.america_argentina_ushuaia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_argentina_ushuaia?",
+            "Time.zone = \"Etc/UTC\" Time.america_argentina_ushuaia?"
+          ]
+        },
+        "america_aruba?" => {
+          name: "america_aruba?",
+          description: "returns whether the current time zone matches america/aruba.",
+          examples: [
+            "Time.america_aruba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_aruba?",
+            "Time.zone = \"Etc/UTC\" Time.america_aruba?"
+          ]
+        },
+        "america_asuncion?" => {
+          name: "america_asuncion?",
+          description: "returns whether the current time zone matches america/asuncion.",
+          examples: [
+            "Time.america_asuncion?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_asuncion?",
+            "Time.zone = \"Etc/UTC\" Time.america_asuncion?"
+          ]
+        },
+        "america_atikokan?" => {
+          name: "america_atikokan?",
+          description: "returns whether the current time zone matches america/atikokan.",
+          examples: [
+            "Time.america_atikokan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_atikokan?",
+            "Time.zone = \"Etc/UTC\" Time.america_atikokan?"
+          ]
+        },
+        "america_atka?" => {
+          name: "america_atka?",
+          description: "returns whether the current time zone matches america/atka.",
+          examples: [
+            "Time.america_atka?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_atka?",
+            "Time.zone = \"Etc/UTC\" Time.america_atka?"
+          ]
+        },
+        "america_bahia?" => {
+          name: "america_bahia?",
+          description: "returns whether the current time zone matches america/bahia.",
+          examples: [
+            "Time.america_bahia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_bahia?",
+            "Time.zone = \"Etc/UTC\" Time.america_bahia?"
+          ]
+        },
+        "america_bahia_banderas?" => {
+          name: "america_bahia_banderas?",
+          description: "returns whether the current time zone matches america/bahia/banderas.",
+          examples: [
+            "Time.america_bahia_banderas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_bahia_banderas?",
+            "Time.zone = \"Etc/UTC\" Time.america_bahia_banderas?"
+          ]
+        },
+        "america_barbados?" => {
+          name: "america_barbados?",
+          description: "returns whether the current time zone matches america/barbados.",
+          examples: [
+            "Time.america_barbados?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_barbados?",
+            "Time.zone = \"Etc/UTC\" Time.america_barbados?"
+          ]
+        },
+        "america_belem?" => {
+          name: "america_belem?",
+          description: "returns whether the current time zone matches america/belem.",
+          examples: [
+            "Time.america_belem?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_belem?",
+            "Time.zone = \"Etc/UTC\" Time.america_belem?"
+          ]
+        },
+        "america_belize?" => {
+          name: "america_belize?",
+          description: "returns whether the current time zone matches america/belize.",
+          examples: [
+            "Time.america_belize?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_belize?",
+            "Time.zone = \"Etc/UTC\" Time.america_belize?"
+          ]
+        },
+        "america_blanc_minus_sablon?" => {
+          name: "america_blanc_minus_sablon?",
+          description: "returns whether the current time zone matches america/blanc/minus/sablon.",
+          examples: [
+            "Time.america_blanc_minus_sablon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_blanc_minus_sablon?",
+            "Time.zone = \"Etc/UTC\" Time.america_blanc_minus_sablon?"
+          ]
+        },
+        "america_boa_vista?" => {
+          name: "america_boa_vista?",
+          description: "returns whether the current time zone matches america/boa/vista.",
+          examples: [
+            "Time.america_boa_vista?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_boa_vista?",
+            "Time.zone = \"Etc/UTC\" Time.america_boa_vista?"
+          ]
+        },
+        "america_bogota?" => {
+          name: "america_bogota?",
+          description: "returns whether the current time zone matches america/bogota.",
+          examples: [
+            "Time.america_bogota?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_bogota?",
+            "Time.zone = \"Etc/UTC\" Time.america_bogota?"
+          ]
+        },
+        "america_boise?" => {
+          name: "america_boise?",
+          description: "returns whether the current time zone matches america/boise.",
+          examples: [
+            "Time.america_boise?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_boise?",
+            "Time.zone = \"Etc/UTC\" Time.america_boise?"
+          ]
+        },
+        "america_buenos_aires?" => {
+          name: "america_buenos_aires?",
+          description: "returns whether the current time zone matches america/buenos/aires.",
+          examples: [
+            "Time.america_buenos_aires?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_buenos_aires?",
+            "Time.zone = \"Etc/UTC\" Time.america_buenos_aires?"
+          ]
+        },
+        "america_cambridge_bay?" => {
+          name: "america_cambridge_bay?",
+          description: "returns whether the current time zone matches america/cambridge/bay.",
+          examples: [
+            "Time.america_cambridge_bay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cambridge_bay?",
+            "Time.zone = \"Etc/UTC\" Time.america_cambridge_bay?"
+          ]
+        },
+        "america_campo_grande?" => {
+          name: "america_campo_grande?",
+          description: "returns whether the current time zone matches america/campo/grande.",
+          examples: [
+            "Time.america_campo_grande?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_campo_grande?",
+            "Time.zone = \"Etc/UTC\" Time.america_campo_grande?"
+          ]
+        },
+        "america_cancun?" => {
+          name: "america_cancun?",
+          description: "returns whether the current time zone matches america/cancun.",
+          examples: [
+            "Time.america_cancun?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cancun?",
+            "Time.zone = \"Etc/UTC\" Time.america_cancun?"
+          ]
+        },
+        "america_caracas?" => {
+          name: "america_caracas?",
+          description: "returns whether the current time zone matches america/caracas.",
+          examples: [
+            "Time.america_caracas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_caracas?",
+            "Time.zone = \"Etc/UTC\" Time.america_caracas?"
+          ]
+        },
+        "america_catamarca?" => {
+          name: "america_catamarca?",
+          description: "returns whether the current time zone matches america/catamarca.",
+          examples: [
+            "Time.america_catamarca?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_catamarca?",
+            "Time.zone = \"Etc/UTC\" Time.america_catamarca?"
+          ]
+        },
+        "america_cayenne?" => {
+          name: "america_cayenne?",
+          description: "returns whether the current time zone matches america/cayenne.",
+          examples: [
+            "Time.america_cayenne?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cayenne?",
+            "Time.zone = \"Etc/UTC\" Time.america_cayenne?"
+          ]
+        },
+        "america_cayman?" => {
+          name: "america_cayman?",
+          description: "returns whether the current time zone matches america/cayman.",
+          examples: [
+            "Time.america_cayman?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cayman?",
+            "Time.zone = \"Etc/UTC\" Time.america_cayman?"
+          ]
+        },
+        "america_chicago?" => {
+          name: "america_chicago?",
+          description: "returns whether the current time zone matches america/chicago.",
+          examples: [
+            "Time.america_chicago?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_chicago?",
+            "Time.zone = \"Etc/UTC\" Time.america_chicago?"
+          ]
+        },
+        "america_chihuahua?" => {
+          name: "america_chihuahua?",
+          description: "returns whether the current time zone matches america/chihuahua.",
+          examples: [
+            "Time.america_chihuahua?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_chihuahua?",
+            "Time.zone = \"Etc/UTC\" Time.america_chihuahua?"
+          ]
+        },
+        "america_ciudad_juarez?" => {
+          name: "america_ciudad_juarez?",
+          description: "returns whether the current time zone matches america/ciudad/juarez.",
+          examples: [
+            "Time.america_ciudad_juarez?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_ciudad_juarez?",
+            "Time.zone = \"Etc/UTC\" Time.america_ciudad_juarez?"
+          ]
+        },
+        "america_coral_harbour?" => {
+          name: "america_coral_harbour?",
+          description: "returns whether the current time zone matches america/coral/harbour.",
+          examples: [
+            "Time.america_coral_harbour?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_coral_harbour?",
+            "Time.zone = \"Etc/UTC\" Time.america_coral_harbour?"
+          ]
+        },
+        "america_cordoba?" => {
+          name: "america_cordoba?",
+          description: "returns whether the current time zone matches america/cordoba.",
+          examples: [
+            "Time.america_cordoba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cordoba?",
+            "Time.zone = \"Etc/UTC\" Time.america_cordoba?"
+          ]
+        },
+        "america_costa_rica?" => {
+          name: "america_costa_rica?",
+          description: "returns whether the current time zone matches america/costa/rica.",
+          examples: [
+            "Time.america_costa_rica?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_costa_rica?",
+            "Time.zone = \"Etc/UTC\" Time.america_costa_rica?"
+          ]
+        },
+        "america_coyhaique?" => {
+          name: "america_coyhaique?",
+          description: "returns whether the current time zone matches america/coyhaique.",
+          examples: [
+            "Time.america_coyhaique?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_coyhaique?",
+            "Time.zone = \"Etc/UTC\" Time.america_coyhaique?"
+          ]
+        },
+        "america_creston?" => {
+          name: "america_creston?",
+          description: "returns whether the current time zone matches america/creston.",
+          examples: [
+            "Time.america_creston?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_creston?",
+            "Time.zone = \"Etc/UTC\" Time.america_creston?"
+          ]
+        },
+        "america_cuiaba?" => {
+          name: "america_cuiaba?",
+          description: "returns whether the current time zone matches america/cuiaba.",
+          examples: [
+            "Time.america_cuiaba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_cuiaba?",
+            "Time.zone = \"Etc/UTC\" Time.america_cuiaba?"
+          ]
+        },
+        "america_curacao?" => {
+          name: "america_curacao?",
+          description: "returns whether the current time zone matches america/curacao.",
+          examples: [
+            "Time.america_curacao?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_curacao?",
+            "Time.zone = \"Etc/UTC\" Time.america_curacao?"
+          ]
+        },
+        "america_danmarkshavn?" => {
+          name: "america_danmarkshavn?",
+          description: "returns whether the current time zone matches america/danmarkshavn.",
+          examples: [
+            "Time.america_danmarkshavn?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_danmarkshavn?",
+            "Time.zone = \"Etc/UTC\" Time.america_danmarkshavn?"
+          ]
+        },
+        "america_dawson?" => {
+          name: "america_dawson?",
+          description: "returns whether the current time zone matches america/dawson.",
+          examples: [
+            "Time.america_dawson?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_dawson?",
+            "Time.zone = \"Etc/UTC\" Time.america_dawson?"
+          ]
+        },
+        "america_dawson_creek?" => {
+          name: "america_dawson_creek?",
+          description: "returns whether the current time zone matches america/dawson/creek.",
+          examples: [
+            "Time.america_dawson_creek?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_dawson_creek?",
+            "Time.zone = \"Etc/UTC\" Time.america_dawson_creek?"
+          ]
+        },
+        "america_denver?" => {
+          name: "america_denver?",
+          description: "returns whether the current time zone matches america/denver.",
+          examples: [
+            "Time.america_denver?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_denver?",
+            "Time.zone = \"Etc/UTC\" Time.america_denver?"
+          ]
+        },
+        "america_detroit?" => {
+          name: "america_detroit?",
+          description: "returns whether the current time zone matches america/detroit.",
+          examples: [
+            "Time.america_detroit?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_detroit?",
+            "Time.zone = \"Etc/UTC\" Time.america_detroit?"
+          ]
+        },
+        "america_dominica?" => {
+          name: "america_dominica?",
+          description: "returns whether the current time zone matches america/dominica.",
+          examples: [
+            "Time.america_dominica?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_dominica?",
+            "Time.zone = \"Etc/UTC\" Time.america_dominica?"
+          ]
+        },
+        "america_edmonton?" => {
+          name: "america_edmonton?",
+          description: "returns whether the current time zone matches america/edmonton.",
+          examples: [
+            "Time.america_edmonton?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_edmonton?",
+            "Time.zone = \"Etc/UTC\" Time.america_edmonton?"
+          ]
+        },
+        "america_eirunepe?" => {
+          name: "america_eirunepe?",
+          description: "returns whether the current time zone matches america/eirunepe.",
+          examples: [
+            "Time.america_eirunepe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_eirunepe?",
+            "Time.zone = \"Etc/UTC\" Time.america_eirunepe?"
+          ]
+        },
+        "america_el_salvador?" => {
+          name: "america_el_salvador?",
+          description: "returns whether the current time zone matches america/el/salvador.",
+          examples: [
+            "Time.america_el_salvador?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_el_salvador?",
+            "Time.zone = \"Etc/UTC\" Time.america_el_salvador?"
+          ]
+        },
+        "america_ensenada?" => {
+          name: "america_ensenada?",
+          description: "returns whether the current time zone matches america/ensenada.",
+          examples: [
+            "Time.america_ensenada?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_ensenada?",
+            "Time.zone = \"Etc/UTC\" Time.america_ensenada?"
+          ]
+        },
+        "america_fort_nelson?" => {
+          name: "america_fort_nelson?",
+          description: "returns whether the current time zone matches america/fort/nelson.",
+          examples: [
+            "Time.america_fort_nelson?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_fort_nelson?",
+            "Time.zone = \"Etc/UTC\" Time.america_fort_nelson?"
+          ]
+        },
+        "america_fort_wayne?" => {
+          name: "america_fort_wayne?",
+          description: "returns whether the current time zone matches america/fort/wayne.",
+          examples: [
+            "Time.america_fort_wayne?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_fort_wayne?",
+            "Time.zone = \"Etc/UTC\" Time.america_fort_wayne?"
+          ]
+        },
+        "america_fortaleza?" => {
+          name: "america_fortaleza?",
+          description: "returns whether the current time zone matches america/fortaleza.",
+          examples: [
+            "Time.america_fortaleza?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_fortaleza?",
+            "Time.zone = \"Etc/UTC\" Time.america_fortaleza?"
+          ]
+        },
+        "america_glace_bay?" => {
+          name: "america_glace_bay?",
+          description: "returns whether the current time zone matches america/glace/bay.",
+          examples: [
+            "Time.america_glace_bay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_glace_bay?",
+            "Time.zone = \"Etc/UTC\" Time.america_glace_bay?"
+          ]
+        },
+        "america_godthab?" => {
+          name: "america_godthab?",
+          description: "returns whether the current time zone matches america/godthab.",
+          examples: [
+            "Time.america_godthab?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_godthab?",
+            "Time.zone = \"Etc/UTC\" Time.america_godthab?"
+          ]
+        },
+        "america_goose_bay?" => {
+          name: "america_goose_bay?",
+          description: "returns whether the current time zone matches america/goose/bay.",
+          examples: [
+            "Time.america_goose_bay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_goose_bay?",
+            "Time.zone = \"Etc/UTC\" Time.america_goose_bay?"
+          ]
+        },
+        "america_grand_turk?" => {
+          name: "america_grand_turk?",
+          description: "returns whether the current time zone matches america/grand/turk.",
+          examples: [
+            "Time.america_grand_turk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_grand_turk?",
+            "Time.zone = \"Etc/UTC\" Time.america_grand_turk?"
+          ]
+        },
+        "america_grenada?" => {
+          name: "america_grenada?",
+          description: "returns whether the current time zone matches america/grenada.",
+          examples: [
+            "Time.america_grenada?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_grenada?",
+            "Time.zone = \"Etc/UTC\" Time.america_grenada?"
+          ]
+        },
+        "america_guadeloupe?" => {
+          name: "america_guadeloupe?",
+          description: "returns whether the current time zone matches america/guadeloupe.",
+          examples: [
+            "Time.america_guadeloupe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_guadeloupe?",
+            "Time.zone = \"Etc/UTC\" Time.america_guadeloupe?"
+          ]
+        },
+        "america_guatemala?" => {
+          name: "america_guatemala?",
+          description: "returns whether the current time zone matches america/guatemala.",
+          examples: [
+            "Time.america_guatemala?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_guatemala?",
+            "Time.zone = \"Etc/UTC\" Time.america_guatemala?"
+          ]
+        },
+        "america_guayaquil?" => {
+          name: "america_guayaquil?",
+          description: "returns whether the current time zone matches america/guayaquil.",
+          examples: [
+            "Time.america_guayaquil?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_guayaquil?",
+            "Time.zone = \"Etc/UTC\" Time.america_guayaquil?"
+          ]
+        },
+        "america_guyana?" => {
+          name: "america_guyana?",
+          description: "returns whether the current time zone matches america/guyana.",
+          examples: [
+            "Time.america_guyana?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_guyana?",
+            "Time.zone = \"Etc/UTC\" Time.america_guyana?"
+          ]
+        },
+        "america_halifax?" => {
+          name: "america_halifax?",
+          description: "returns whether the current time zone matches america/halifax.",
+          examples: [
+            "Time.america_halifax?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_halifax?",
+            "Time.zone = \"Etc/UTC\" Time.america_halifax?"
+          ]
+        },
+        "america_havana?" => {
+          name: "america_havana?",
+          description: "returns whether the current time zone matches america/havana.",
+          examples: [
+            "Time.america_havana?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_havana?",
+            "Time.zone = \"Etc/UTC\" Time.america_havana?"
+          ]
+        },
+        "america_hermosillo?" => {
+          name: "america_hermosillo?",
+          description: "returns whether the current time zone matches america/hermosillo.",
+          examples: [
+            "Time.america_hermosillo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_hermosillo?",
+            "Time.zone = \"Etc/UTC\" Time.america_hermosillo?"
+          ]
+        },
+        "america_indiana_indianapolis?" => {
+          name: "america_indiana_indianapolis?",
+          description: "returns whether the current time zone matches america/indiana/indianapolis.",
+          examples: [
+            "Time.america_indiana_indianapolis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_indianapolis?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_indianapolis?"
+          ]
+        },
+        "america_indiana_knox?" => {
+          name: "america_indiana_knox?",
+          description: "returns whether the current time zone matches america/indiana/knox.",
+          examples: [
+            "Time.america_indiana_knox?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_knox?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_knox?"
+          ]
+        },
+        "america_indiana_marengo?" => {
+          name: "america_indiana_marengo?",
+          description: "returns whether the current time zone matches america/indiana/marengo.",
+          examples: [
+            "Time.america_indiana_marengo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_marengo?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_marengo?"
+          ]
+        },
+        "america_indiana_petersburg?" => {
+          name: "america_indiana_petersburg?",
+          description: "returns whether the current time zone matches america/indiana/petersburg.",
+          examples: [
+            "Time.america_indiana_petersburg?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_petersburg?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_petersburg?"
+          ]
+        },
+        "america_indiana_tell_city?" => {
+          name: "america_indiana_tell_city?",
+          description: "returns whether the current time zone matches america/indiana/tell/city.",
+          examples: [
+            "Time.america_indiana_tell_city?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_tell_city?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_tell_city?"
+          ]
+        },
+        "america_indiana_vevay?" => {
+          name: "america_indiana_vevay?",
+          description: "returns whether the current time zone matches america/indiana/vevay.",
+          examples: [
+            "Time.america_indiana_vevay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_vevay?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_vevay?"
+          ]
+        },
+        "america_indiana_vincennes?" => {
+          name: "america_indiana_vincennes?",
+          description: "returns whether the current time zone matches america/indiana/vincennes.",
+          examples: [
+            "Time.america_indiana_vincennes?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_vincennes?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_vincennes?"
+          ]
+        },
+        "america_indiana_winamac?" => {
+          name: "america_indiana_winamac?",
+          description: "returns whether the current time zone matches america/indiana/winamac.",
+          examples: [
+            "Time.america_indiana_winamac?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indiana_winamac?",
+            "Time.zone = \"Etc/UTC\" Time.america_indiana_winamac?"
+          ]
+        },
+        "america_indianapolis?" => {
+          name: "america_indianapolis?",
+          description: "returns whether the current time zone matches america/indianapolis.",
+          examples: [
+            "Time.america_indianapolis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_indianapolis?",
+            "Time.zone = \"Etc/UTC\" Time.america_indianapolis?"
+          ]
+        },
+        "america_inuvik?" => {
+          name: "america_inuvik?",
+          description: "returns whether the current time zone matches america/inuvik.",
+          examples: [
+            "Time.america_inuvik?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_inuvik?",
+            "Time.zone = \"Etc/UTC\" Time.america_inuvik?"
+          ]
+        },
+        "america_iqaluit?" => {
+          name: "america_iqaluit?",
+          description: "returns whether the current time zone matches america/iqaluit.",
+          examples: [
+            "Time.america_iqaluit?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_iqaluit?",
+            "Time.zone = \"Etc/UTC\" Time.america_iqaluit?"
+          ]
+        },
+        "america_jamaica?" => {
+          name: "america_jamaica?",
+          description: "returns whether the current time zone matches america/jamaica.",
+          examples: [
+            "Time.america_jamaica?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_jamaica?",
+            "Time.zone = \"Etc/UTC\" Time.america_jamaica?"
+          ]
+        },
+        "america_jujuy?" => {
+          name: "america_jujuy?",
+          description: "returns whether the current time zone matches america/jujuy.",
+          examples: [
+            "Time.america_jujuy?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_jujuy?",
+            "Time.zone = \"Etc/UTC\" Time.america_jujuy?"
+          ]
+        },
+        "america_juneau?" => {
+          name: "america_juneau?",
+          description: "returns whether the current time zone matches america/juneau.",
+          examples: [
+            "Time.america_juneau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_juneau?",
+            "Time.zone = \"Etc/UTC\" Time.america_juneau?"
+          ]
+        },
+        "america_kentucky_louisville?" => {
+          name: "america_kentucky_louisville?",
+          description: "returns whether the current time zone matches america/kentucky/louisville.",
+          examples: [
+            "Time.america_kentucky_louisville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_kentucky_louisville?",
+            "Time.zone = \"Etc/UTC\" Time.america_kentucky_louisville?"
+          ]
+        },
+        "america_kentucky_monticello?" => {
+          name: "america_kentucky_monticello?",
+          description: "returns whether the current time zone matches america/kentucky/monticello.",
+          examples: [
+            "Time.america_kentucky_monticello?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_kentucky_monticello?",
+            "Time.zone = \"Etc/UTC\" Time.america_kentucky_monticello?"
+          ]
+        },
+        "america_knox_in?" => {
+          name: "america_knox_in?",
+          description: "returns whether the current time zone matches america/knox/in.",
+          examples: [
+            "Time.america_knox_in?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_knox_in?",
+            "Time.zone = \"Etc/UTC\" Time.america_knox_in?"
+          ]
+        },
+        "america_kralendijk?" => {
+          name: "america_kralendijk?",
+          description: "returns whether the current time zone matches america/kralendijk.",
+          examples: [
+            "Time.america_kralendijk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_kralendijk?",
+            "Time.zone = \"Etc/UTC\" Time.america_kralendijk?"
+          ]
+        },
+        "america_la_paz?" => {
+          name: "america_la_paz?",
+          description: "returns whether the current time zone matches america/la/paz.",
+          examples: [
+            "Time.america_la_paz?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_la_paz?",
+            "Time.zone = \"Etc/UTC\" Time.america_la_paz?"
+          ]
+        },
+        "america_lima?" => {
+          name: "america_lima?",
+          description: "returns whether the current time zone matches america/lima.",
+          examples: [
+            "Time.america_lima?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_lima?",
+            "Time.zone = \"Etc/UTC\" Time.america_lima?"
+          ]
+        },
+        "america_los_angeles?" => {
+          name: "america_los_angeles?",
+          description: "returns whether the current time zone matches america/los/angeles.",
+          examples: [
+            "Time.america_los_angeles?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_los_angeles?",
+            "Time.zone = \"Etc/UTC\" Time.america_los_angeles?"
+          ]
+        },
+        "america_louisville?" => {
+          name: "america_louisville?",
+          description: "returns whether the current time zone matches america/louisville.",
+          examples: [
+            "Time.america_louisville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_louisville?",
+            "Time.zone = \"Etc/UTC\" Time.america_louisville?"
+          ]
+        },
+        "america_lower_princes?" => {
+          name: "america_lower_princes?",
+          description: "returns whether the current time zone matches america/lower/princes.",
+          examples: [
+            "Time.america_lower_princes?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_lower_princes?",
+            "Time.zone = \"Etc/UTC\" Time.america_lower_princes?"
+          ]
+        },
+        "america_maceio?" => {
+          name: "america_maceio?",
+          description: "returns whether the current time zone matches america/maceio.",
+          examples: [
+            "Time.america_maceio?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_maceio?",
+            "Time.zone = \"Etc/UTC\" Time.america_maceio?"
+          ]
+        },
+        "america_managua?" => {
+          name: "america_managua?",
+          description: "returns whether the current time zone matches america/managua.",
+          examples: [
+            "Time.america_managua?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_managua?",
+            "Time.zone = \"Etc/UTC\" Time.america_managua?"
+          ]
+        },
+        "america_manaus?" => {
+          name: "america_manaus?",
+          description: "returns whether the current time zone matches america/manaus.",
+          examples: [
+            "Time.america_manaus?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_manaus?",
+            "Time.zone = \"Etc/UTC\" Time.america_manaus?"
+          ]
+        },
+        "america_marigot?" => {
+          name: "america_marigot?",
+          description: "returns whether the current time zone matches america/marigot.",
+          examples: [
+            "Time.america_marigot?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_marigot?",
+            "Time.zone = \"Etc/UTC\" Time.america_marigot?"
+          ]
+        },
+        "america_martinique?" => {
+          name: "america_martinique?",
+          description: "returns whether the current time zone matches america/martinique.",
+          examples: [
+            "Time.america_martinique?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_martinique?",
+            "Time.zone = \"Etc/UTC\" Time.america_martinique?"
+          ]
+        },
+        "america_matamoros?" => {
+          name: "america_matamoros?",
+          description: "returns whether the current time zone matches america/matamoros.",
+          examples: [
+            "Time.america_matamoros?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_matamoros?",
+            "Time.zone = \"Etc/UTC\" Time.america_matamoros?"
+          ]
+        },
+        "america_mazatlan?" => {
+          name: "america_mazatlan?",
+          description: "returns whether the current time zone matches america/mazatlan.",
+          examples: [
+            "Time.america_mazatlan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_mazatlan?",
+            "Time.zone = \"Etc/UTC\" Time.america_mazatlan?"
+          ]
+        },
+        "america_mendoza?" => {
+          name: "america_mendoza?",
+          description: "returns whether the current time zone matches america/mendoza.",
+          examples: [
+            "Time.america_mendoza?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_mendoza?",
+            "Time.zone = \"Etc/UTC\" Time.america_mendoza?"
+          ]
+        },
+        "america_menominee?" => {
+          name: "america_menominee?",
+          description: "returns whether the current time zone matches america/menominee.",
+          examples: [
+            "Time.america_menominee?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_menominee?",
+            "Time.zone = \"Etc/UTC\" Time.america_menominee?"
+          ]
+        },
+        "america_merida?" => {
+          name: "america_merida?",
+          description: "returns whether the current time zone matches america/merida.",
+          examples: [
+            "Time.america_merida?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_merida?",
+            "Time.zone = \"Etc/UTC\" Time.america_merida?"
+          ]
+        },
+        "america_metlakatla?" => {
+          name: "america_metlakatla?",
+          description: "returns whether the current time zone matches america/metlakatla.",
+          examples: [
+            "Time.america_metlakatla?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_metlakatla?",
+            "Time.zone = \"Etc/UTC\" Time.america_metlakatla?"
+          ]
+        },
+        "america_mexico_city?" => {
+          name: "america_mexico_city?",
+          description: "returns whether the current time zone matches america/mexico/city.",
+          examples: [
+            "Time.america_mexico_city?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_mexico_city?",
+            "Time.zone = \"Etc/UTC\" Time.america_mexico_city?"
+          ]
+        },
+        "america_miquelon?" => {
+          name: "america_miquelon?",
+          description: "returns whether the current time zone matches america/miquelon.",
+          examples: [
+            "Time.america_miquelon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_miquelon?",
+            "Time.zone = \"Etc/UTC\" Time.america_miquelon?"
+          ]
+        },
+        "america_moncton?" => {
+          name: "america_moncton?",
+          description: "returns whether the current time zone matches america/moncton.",
+          examples: [
+            "Time.america_moncton?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_moncton?",
+            "Time.zone = \"Etc/UTC\" Time.america_moncton?"
+          ]
+        },
+        "america_monterrey?" => {
+          name: "america_monterrey?",
+          description: "returns whether the current time zone matches america/monterrey.",
+          examples: [
+            "Time.america_monterrey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_monterrey?",
+            "Time.zone = \"Etc/UTC\" Time.america_monterrey?"
+          ]
+        },
+        "america_montevideo?" => {
+          name: "america_montevideo?",
+          description: "returns whether the current time zone matches america/montevideo.",
+          examples: [
+            "Time.america_montevideo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_montevideo?",
+            "Time.zone = \"Etc/UTC\" Time.america_montevideo?"
+          ]
+        },
+        "america_montreal?" => {
+          name: "america_montreal?",
+          description: "returns whether the current time zone matches america/montreal.",
+          examples: [
+            "Time.america_montreal?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_montreal?",
+            "Time.zone = \"Etc/UTC\" Time.america_montreal?"
+          ]
+        },
+        "america_montserrat?" => {
+          name: "america_montserrat?",
+          description: "returns whether the current time zone matches america/montserrat.",
+          examples: [
+            "Time.america_montserrat?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_montserrat?",
+            "Time.zone = \"Etc/UTC\" Time.america_montserrat?"
+          ]
+        },
+        "america_nassau?" => {
+          name: "america_nassau?",
+          description: "returns whether the current time zone matches america/nassau.",
+          examples: [
+            "Time.america_nassau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_nassau?",
+            "Time.zone = \"Etc/UTC\" Time.america_nassau?"
+          ]
+        },
+        "america_new_york?" => {
+          name: "america_new_york?",
+          description: "returns whether the current time zone matches america/new/york.",
+          examples: [
+            "Time.america_new_york?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_new_york?",
+            "Time.zone = \"Etc/UTC\" Time.america_new_york?"
+          ]
+        },
+        "america_nipigon?" => {
+          name: "america_nipigon?",
+          description: "returns whether the current time zone matches america/nipigon.",
+          examples: [
+            "Time.america_nipigon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_nipigon?",
+            "Time.zone = \"Etc/UTC\" Time.america_nipigon?"
+          ]
+        },
+        "america_nome?" => {
+          name: "america_nome?",
+          description: "returns whether the current time zone matches america/nome.",
+          examples: [
+            "Time.america_nome?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_nome?",
+            "Time.zone = \"Etc/UTC\" Time.america_nome?"
+          ]
+        },
+        "america_noronha?" => {
+          name: "america_noronha?",
+          description: "returns whether the current time zone matches america/noronha.",
+          examples: [
+            "Time.america_noronha?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_noronha?",
+            "Time.zone = \"Etc/UTC\" Time.america_noronha?"
+          ]
+        },
+        "america_north_dakota_beulah?" => {
+          name: "america_north_dakota_beulah?",
+          description: "returns whether the current time zone matches america/north/dakota/beulah.",
+          examples: [
+            "Time.america_north_dakota_beulah?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_north_dakota_beulah?",
+            "Time.zone = \"Etc/UTC\" Time.america_north_dakota_beulah?"
+          ]
+        },
+        "america_north_dakota_center?" => {
+          name: "america_north_dakota_center?",
+          description: "returns whether the current time zone matches america/north/dakota/center.",
+          examples: [
+            "Time.america_north_dakota_center?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_north_dakota_center?",
+            "Time.zone = \"Etc/UTC\" Time.america_north_dakota_center?"
+          ]
+        },
+        "america_north_dakota_new_salem?" => {
+          name: "america_north_dakota_new_salem?",
+          description: "returns whether the current time zone matches america/north/dakota/new/salem.",
+          examples: [
+            "Time.america_north_dakota_new_salem?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_north_dakota_new_salem?",
+            "Time.zone = \"Etc/UTC\" Time.america_north_dakota_new_salem?"
+          ]
+        },
+        "america_nuuk?" => {
+          name: "america_nuuk?",
+          description: "returns whether the current time zone matches america/nuuk.",
+          examples: [
+            "Time.america_nuuk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_nuuk?",
+            "Time.zone = \"Etc/UTC\" Time.america_nuuk?"
+          ]
+        },
+        "america_ojinaga?" => {
+          name: "america_ojinaga?",
+          description: "returns whether the current time zone matches america/ojinaga.",
+          examples: [
+            "Time.america_ojinaga?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_ojinaga?",
+            "Time.zone = \"Etc/UTC\" Time.america_ojinaga?"
+          ]
+        },
+        "america_panama?" => {
+          name: "america_panama?",
+          description: "returns whether the current time zone matches america/panama.",
+          examples: [
+            "Time.america_panama?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_panama?",
+            "Time.zone = \"Etc/UTC\" Time.america_panama?"
+          ]
+        },
+        "america_pangnirtung?" => {
+          name: "america_pangnirtung?",
+          description: "returns whether the current time zone matches america/pangnirtung.",
+          examples: [
+            "Time.america_pangnirtung?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_pangnirtung?",
+            "Time.zone = \"Etc/UTC\" Time.america_pangnirtung?"
+          ]
+        },
+        "america_paramaribo?" => {
+          name: "america_paramaribo?",
+          description: "returns whether the current time zone matches america/paramaribo.",
+          examples: [
+            "Time.america_paramaribo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_paramaribo?",
+            "Time.zone = \"Etc/UTC\" Time.america_paramaribo?"
+          ]
+        },
+        "america_phoenix?" => {
+          name: "america_phoenix?",
+          description: "returns whether the current time zone matches america/phoenix.",
+          examples: [
+            "Time.america_phoenix?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_phoenix?",
+            "Time.zone = \"Etc/UTC\" Time.america_phoenix?"
+          ]
+        },
+        "america_port_minus_au_minus_prince?" => {
+          name: "america_port_minus_au_minus_prince?",
+          description: "returns whether the current time zone matches america/port/minus/au/minus/prince.",
+          examples: [
+            "Time.america_port_minus_au_minus_prince?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_port_minus_au_minus_prince?",
+            "Time.zone = \"Etc/UTC\" Time.america_port_minus_au_minus_prince?"
+          ]
+        },
+        "america_port_of_spain?" => {
+          name: "america_port_of_spain?",
+          description: "returns whether the current time zone matches america/port/of/spain.",
+          examples: [
+            "Time.america_port_of_spain?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_port_of_spain?",
+            "Time.zone = \"Etc/UTC\" Time.america_port_of_spain?"
+          ]
+        },
+        "america_porto_acre?" => {
+          name: "america_porto_acre?",
+          description: "returns whether the current time zone matches america/porto/acre.",
+          examples: [
+            "Time.america_porto_acre?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_porto_acre?",
+            "Time.zone = \"Etc/UTC\" Time.america_porto_acre?"
+          ]
+        },
+        "america_porto_velho?" => {
+          name: "america_porto_velho?",
+          description: "returns whether the current time zone matches america/porto/velho.",
+          examples: [
+            "Time.america_porto_velho?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_porto_velho?",
+            "Time.zone = \"Etc/UTC\" Time.america_porto_velho?"
+          ]
+        },
+        "america_puerto_rico?" => {
+          name: "america_puerto_rico?",
+          description: "returns whether the current time zone matches america/puerto/rico.",
+          examples: [
+            "Time.america_puerto_rico?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_puerto_rico?",
+            "Time.zone = \"Etc/UTC\" Time.america_puerto_rico?"
+          ]
+        },
+        "america_punta_arenas?" => {
+          name: "america_punta_arenas?",
+          description: "returns whether the current time zone matches america/punta/arenas.",
+          examples: [
+            "Time.america_punta_arenas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_punta_arenas?",
+            "Time.zone = \"Etc/UTC\" Time.america_punta_arenas?"
+          ]
+        },
+        "america_rainy_river?" => {
+          name: "america_rainy_river?",
+          description: "returns whether the current time zone matches america/rainy/river.",
+          examples: [
+            "Time.america_rainy_river?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_rainy_river?",
+            "Time.zone = \"Etc/UTC\" Time.america_rainy_river?"
+          ]
+        },
+        "america_rankin_inlet?" => {
+          name: "america_rankin_inlet?",
+          description: "returns whether the current time zone matches america/rankin/inlet.",
+          examples: [
+            "Time.america_rankin_inlet?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_rankin_inlet?",
+            "Time.zone = \"Etc/UTC\" Time.america_rankin_inlet?"
+          ]
+        },
+        "america_recife?" => {
+          name: "america_recife?",
+          description: "returns whether the current time zone matches america/recife.",
+          examples: [
+            "Time.america_recife?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_recife?",
+            "Time.zone = \"Etc/UTC\" Time.america_recife?"
+          ]
+        },
+        "america_regina?" => {
+          name: "america_regina?",
+          description: "returns whether the current time zone matches america/regina.",
+          examples: [
+            "Time.america_regina?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_regina?",
+            "Time.zone = \"Etc/UTC\" Time.america_regina?"
+          ]
+        },
+        "america_resolute?" => {
+          name: "america_resolute?",
+          description: "returns whether the current time zone matches america/resolute.",
+          examples: [
+            "Time.america_resolute?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_resolute?",
+            "Time.zone = \"Etc/UTC\" Time.america_resolute?"
+          ]
+        },
+        "america_rio_branco?" => {
+          name: "america_rio_branco?",
+          description: "returns whether the current time zone matches america/rio/branco.",
+          examples: [
+            "Time.america_rio_branco?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_rio_branco?",
+            "Time.zone = \"Etc/UTC\" Time.america_rio_branco?"
+          ]
+        },
+        "america_rosario?" => {
+          name: "america_rosario?",
+          description: "returns whether the current time zone matches america/rosario.",
+          examples: [
+            "Time.america_rosario?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_rosario?",
+            "Time.zone = \"Etc/UTC\" Time.america_rosario?"
+          ]
+        },
+        "america_santa_isabel?" => {
+          name: "america_santa_isabel?",
+          description: "returns whether the current time zone matches america/santa/isabel.",
+          examples: [
+            "Time.america_santa_isabel?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_santa_isabel?",
+            "Time.zone = \"Etc/UTC\" Time.america_santa_isabel?"
+          ]
+        },
+        "america_santarem?" => {
+          name: "america_santarem?",
+          description: "returns whether the current time zone matches america/santarem.",
+          examples: [
+            "Time.america_santarem?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_santarem?",
+            "Time.zone = \"Etc/UTC\" Time.america_santarem?"
+          ]
+        },
+        "america_santiago?" => {
+          name: "america_santiago?",
+          description: "returns whether the current time zone matches america/santiago.",
+          examples: [
+            "Time.america_santiago?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_santiago?",
+            "Time.zone = \"Etc/UTC\" Time.america_santiago?"
+          ]
+        },
+        "america_santo_domingo?" => {
+          name: "america_santo_domingo?",
+          description: "returns whether the current time zone matches america/santo/domingo.",
+          examples: [
+            "Time.america_santo_domingo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_santo_domingo?",
+            "Time.zone = \"Etc/UTC\" Time.america_santo_domingo?"
+          ]
+        },
+        "america_sao_paulo?" => {
+          name: "america_sao_paulo?",
+          description: "returns whether the current time zone matches america/sao/paulo.",
+          examples: [
+            "Time.america_sao_paulo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_sao_paulo?",
+            "Time.zone = \"Etc/UTC\" Time.america_sao_paulo?"
+          ]
+        },
+        "america_scoresbysund?" => {
+          name: "america_scoresbysund?",
+          description: "returns whether the current time zone matches america/scoresbysund.",
+          examples: [
+            "Time.america_scoresbysund?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_scoresbysund?",
+            "Time.zone = \"Etc/UTC\" Time.america_scoresbysund?"
+          ]
+        },
+        "america_shiprock?" => {
+          name: "america_shiprock?",
+          description: "returns whether the current time zone matches america/shiprock.",
+          examples: [
+            "Time.america_shiprock?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_shiprock?",
+            "Time.zone = \"Etc/UTC\" Time.america_shiprock?"
+          ]
+        },
+        "america_sitka?" => {
+          name: "america_sitka?",
+          description: "returns whether the current time zone matches america/sitka.",
+          examples: [
+            "Time.america_sitka?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_sitka?",
+            "Time.zone = \"Etc/UTC\" Time.america_sitka?"
+          ]
+        },
+        "america_st_barthelemy?" => {
+          name: "america_st_barthelemy?",
+          description: "returns whether the current time zone matches america/st/barthelemy.",
+          examples: [
+            "Time.america_st_barthelemy?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_barthelemy?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_barthelemy?"
+          ]
+        },
+        "america_st_johns?" => {
+          name: "america_st_johns?",
+          description: "returns whether the current time zone matches america/st/johns.",
+          examples: [
+            "Time.america_st_johns?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_johns?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_johns?"
+          ]
+        },
+        "america_st_kitts?" => {
+          name: "america_st_kitts?",
+          description: "returns whether the current time zone matches america/st/kitts.",
+          examples: [
+            "Time.america_st_kitts?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_kitts?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_kitts?"
+          ]
+        },
+        "america_st_lucia?" => {
+          name: "america_st_lucia?",
+          description: "returns whether the current time zone matches america/st/lucia.",
+          examples: [
+            "Time.america_st_lucia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_lucia?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_lucia?"
+          ]
+        },
+        "america_st_thomas?" => {
+          name: "america_st_thomas?",
+          description: "returns whether the current time zone matches america/st/thomas.",
+          examples: [
+            "Time.america_st_thomas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_thomas?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_thomas?"
+          ]
+        },
+        "america_st_vincent?" => {
+          name: "america_st_vincent?",
+          description: "returns whether the current time zone matches america/st/vincent.",
+          examples: [
+            "Time.america_st_vincent?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_st_vincent?",
+            "Time.zone = \"Etc/UTC\" Time.america_st_vincent?"
+          ]
+        },
+        "america_swift_current?" => {
+          name: "america_swift_current?",
+          description: "returns whether the current time zone matches america/swift/current.",
+          examples: [
+            "Time.america_swift_current?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_swift_current?",
+            "Time.zone = \"Etc/UTC\" Time.america_swift_current?"
+          ]
+        },
+        "america_tegucigalpa?" => {
+          name: "america_tegucigalpa?",
+          description: "returns whether the current time zone matches america/tegucigalpa.",
+          examples: [
+            "Time.america_tegucigalpa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_tegucigalpa?",
+            "Time.zone = \"Etc/UTC\" Time.america_tegucigalpa?"
+          ]
+        },
+        "america_thule?" => {
+          name: "america_thule?",
+          description: "returns whether the current time zone matches america/thule.",
+          examples: [
+            "Time.america_thule?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_thule?",
+            "Time.zone = \"Etc/UTC\" Time.america_thule?"
+          ]
+        },
+        "america_thunder_bay?" => {
+          name: "america_thunder_bay?",
+          description: "returns whether the current time zone matches america/thunder/bay.",
+          examples: [
+            "Time.america_thunder_bay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_thunder_bay?",
+            "Time.zone = \"Etc/UTC\" Time.america_thunder_bay?"
+          ]
+        },
+        "america_tijuana?" => {
+          name: "america_tijuana?",
+          description: "returns whether the current time zone matches america/tijuana.",
+          examples: [
+            "Time.america_tijuana?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_tijuana?",
+            "Time.zone = \"Etc/UTC\" Time.america_tijuana?"
+          ]
+        },
+        "america_toronto?" => {
+          name: "america_toronto?",
+          description: "returns whether the current time zone matches america/toronto.",
+          examples: [
+            "Time.america_toronto?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_toronto?",
+            "Time.zone = \"Etc/UTC\" Time.america_toronto?"
+          ]
+        },
+        "america_tortola?" => {
+          name: "america_tortola?",
+          description: "returns whether the current time zone matches america/tortola.",
+          examples: [
+            "Time.america_tortola?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_tortola?",
+            "Time.zone = \"Etc/UTC\" Time.america_tortola?"
+          ]
+        },
+        "america_vancouver?" => {
+          name: "america_vancouver?",
+          description: "returns whether the current time zone matches america/vancouver.",
+          examples: [
+            "Time.america_vancouver?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_vancouver?",
+            "Time.zone = \"Etc/UTC\" Time.america_vancouver?"
+          ]
+        },
+        "america_virgin?" => {
+          name: "america_virgin?",
+          description: "returns whether the current time zone matches america/virgin.",
+          examples: [
+            "Time.america_virgin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_virgin?",
+            "Time.zone = \"Etc/UTC\" Time.america_virgin?"
+          ]
+        },
+        "america_whitehorse?" => {
+          name: "america_whitehorse?",
+          description: "returns whether the current time zone matches america/whitehorse.",
+          examples: [
+            "Time.america_whitehorse?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_whitehorse?",
+            "Time.zone = \"Etc/UTC\" Time.america_whitehorse?"
+          ]
+        },
+        "america_winnipeg?" => {
+          name: "america_winnipeg?",
+          description: "returns whether the current time zone matches america/winnipeg.",
+          examples: [
+            "Time.america_winnipeg?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_winnipeg?",
+            "Time.zone = \"Etc/UTC\" Time.america_winnipeg?"
+          ]
+        },
+        "america_yakutat?" => {
+          name: "america_yakutat?",
+          description: "returns whether the current time zone matches america/yakutat.",
+          examples: [
+            "Time.america_yakutat?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_yakutat?",
+            "Time.zone = \"Etc/UTC\" Time.america_yakutat?"
+          ]
+        },
+        "america_yellowknife?" => {
+          name: "america_yellowknife?",
+          description: "returns whether the current time zone matches america/yellowknife.",
+          examples: [
+            "Time.america_yellowknife?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").america_yellowknife?",
+            "Time.zone = \"Etc/UTC\" Time.america_yellowknife?"
+          ]
+        },
+        "antarctica_casey?" => {
+          name: "antarctica_casey?",
+          description: "returns whether the current time zone matches antarctica/casey.",
+          examples: [
+            "Time.antarctica_casey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_casey?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_casey?"
+          ]
+        },
+        "antarctica_davis?" => {
+          name: "antarctica_davis?",
+          description: "returns whether the current time zone matches antarctica/davis.",
+          examples: [
+            "Time.antarctica_davis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_davis?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_davis?"
+          ]
+        },
+        "antarctica_dumontdurville?" => {
+          name: "antarctica_dumontdurville?",
+          description: "returns whether the current time zone matches antarctica/dumontdurville.",
+          examples: [
+            "Time.antarctica_dumontdurville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_dumontdurville?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_dumontdurville?"
+          ]
+        },
+        "antarctica_macquarie?" => {
+          name: "antarctica_macquarie?",
+          description: "returns whether the current time zone matches antarctica/macquarie.",
+          examples: [
+            "Time.antarctica_macquarie?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_macquarie?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_macquarie?"
+          ]
+        },
+        "antarctica_mawson?" => {
+          name: "antarctica_mawson?",
+          description: "returns whether the current time zone matches antarctica/mawson.",
+          examples: [
+            "Time.antarctica_mawson?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_mawson?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_mawson?"
+          ]
+        },
+        "antarctica_mcmurdo?" => {
+          name: "antarctica_mcmurdo?",
+          description: "returns whether the current time zone matches antarctica/mcmurdo.",
+          examples: [
+            "Time.antarctica_mcmurdo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_mcmurdo?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_mcmurdo?"
+          ]
+        },
+        "antarctica_palmer?" => {
+          name: "antarctica_palmer?",
+          description: "returns whether the current time zone matches antarctica/palmer.",
+          examples: [
+            "Time.antarctica_palmer?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_palmer?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_palmer?"
+          ]
+        },
+        "antarctica_rothera?" => {
+          name: "antarctica_rothera?",
+          description: "returns whether the current time zone matches antarctica/rothera.",
+          examples: [
+            "Time.antarctica_rothera?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_rothera?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_rothera?"
+          ]
+        },
+        "antarctica_south_pole?" => {
+          name: "antarctica_south_pole?",
+          description: "returns whether the current time zone matches antarctica/south/pole.",
+          examples: [
+            "Time.antarctica_south_pole?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_south_pole?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_south_pole?"
+          ]
+        },
+        "antarctica_syowa?" => {
+          name: "antarctica_syowa?",
+          description: "returns whether the current time zone matches antarctica/syowa.",
+          examples: [
+            "Time.antarctica_syowa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_syowa?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_syowa?"
+          ]
+        },
+        "antarctica_troll?" => {
+          name: "antarctica_troll?",
+          description: "returns whether the current time zone matches antarctica/troll.",
+          examples: [
+            "Time.antarctica_troll?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_troll?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_troll?"
+          ]
+        },
+        "antarctica_vostok?" => {
+          name: "antarctica_vostok?",
+          description: "returns whether the current time zone matches antarctica/vostok.",
+          examples: [
+            "Time.antarctica_vostok?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").antarctica_vostok?",
+            "Time.zone = \"Etc/UTC\" Time.antarctica_vostok?"
+          ]
+        },
+        "arctic_longyearbyen?" => {
+          name: "arctic_longyearbyen?",
+          description: "returns whether the current time zone matches arctic/longyearbyen.",
+          examples: [
+            "Time.arctic_longyearbyen?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").arctic_longyearbyen?",
+            "Time.zone = \"Etc/UTC\" Time.arctic_longyearbyen?"
+          ]
+        },
+        "asia_aden?" => {
+          name: "asia_aden?",
+          description: "returns whether the current time zone matches asia/aden.",
+          examples: [
+            "Time.asia_aden?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_aden?",
+            "Time.zone = \"Etc/UTC\" Time.asia_aden?"
+          ]
+        },
+        "asia_almaty?" => {
+          name: "asia_almaty?",
+          description: "returns whether the current time zone matches asia/almaty.",
+          examples: [
+            "Time.asia_almaty?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_almaty?",
+            "Time.zone = \"Etc/UTC\" Time.asia_almaty?"
+          ]
+        },
+        "asia_amman?" => {
+          name: "asia_amman?",
+          description: "returns whether the current time zone matches asia/amman.",
+          examples: [
+            "Time.asia_amman?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_amman?",
+            "Time.zone = \"Etc/UTC\" Time.asia_amman?"
+          ]
+        },
+        "asia_anadyr?" => {
+          name: "asia_anadyr?",
+          description: "returns whether the current time zone matches asia/anadyr.",
+          examples: [
+            "Time.asia_anadyr?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_anadyr?",
+            "Time.zone = \"Etc/UTC\" Time.asia_anadyr?"
+          ]
+        },
+        "asia_aqtau?" => {
+          name: "asia_aqtau?",
+          description: "returns whether the current time zone matches asia/aqtau.",
+          examples: [
+            "Time.asia_aqtau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_aqtau?",
+            "Time.zone = \"Etc/UTC\" Time.asia_aqtau?"
+          ]
+        },
+        "asia_aqtobe?" => {
+          name: "asia_aqtobe?",
+          description: "returns whether the current time zone matches asia/aqtobe.",
+          examples: [
+            "Time.asia_aqtobe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_aqtobe?",
+            "Time.zone = \"Etc/UTC\" Time.asia_aqtobe?"
+          ]
+        },
+        "asia_ashgabat?" => {
+          name: "asia_ashgabat?",
+          description: "returns whether the current time zone matches asia/ashgabat.",
+          examples: [
+            "Time.asia_ashgabat?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ashgabat?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ashgabat?"
+          ]
+        },
+        "asia_ashkhabad?" => {
+          name: "asia_ashkhabad?",
+          description: "returns whether the current time zone matches asia/ashkhabad.",
+          examples: [
+            "Time.asia_ashkhabad?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ashkhabad?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ashkhabad?"
+          ]
+        },
+        "asia_atyrau?" => {
+          name: "asia_atyrau?",
+          description: "returns whether the current time zone matches asia/atyrau.",
+          examples: [
+            "Time.asia_atyrau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_atyrau?",
+            "Time.zone = \"Etc/UTC\" Time.asia_atyrau?"
+          ]
+        },
+        "asia_baghdad?" => {
+          name: "asia_baghdad?",
+          description: "returns whether the current time zone matches asia/baghdad.",
+          examples: [
+            "Time.asia_baghdad?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_baghdad?",
+            "Time.zone = \"Etc/UTC\" Time.asia_baghdad?"
+          ]
+        },
+        "asia_bahrain?" => {
+          name: "asia_bahrain?",
+          description: "returns whether the current time zone matches asia/bahrain.",
+          examples: [
+            "Time.asia_bahrain?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_bahrain?",
+            "Time.zone = \"Etc/UTC\" Time.asia_bahrain?"
+          ]
+        },
+        "asia_baku?" => {
+          name: "asia_baku?",
+          description: "returns whether the current time zone matches asia/baku.",
+          examples: [
+            "Time.asia_baku?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_baku?",
+            "Time.zone = \"Etc/UTC\" Time.asia_baku?"
+          ]
+        },
+        "asia_bangkok?" => {
+          name: "asia_bangkok?",
+          description: "returns whether the current time zone matches asia/bangkok.",
+          examples: [
+            "Time.asia_bangkok?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_bangkok?",
+            "Time.zone = \"Etc/UTC\" Time.asia_bangkok?"
+          ]
+        },
+        "asia_barnaul?" => {
+          name: "asia_barnaul?",
+          description: "returns whether the current time zone matches asia/barnaul.",
+          examples: [
+            "Time.asia_barnaul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_barnaul?",
+            "Time.zone = \"Etc/UTC\" Time.asia_barnaul?"
+          ]
+        },
+        "asia_beirut?" => {
+          name: "asia_beirut?",
+          description: "returns whether the current time zone matches asia/beirut.",
+          examples: [
+            "Time.asia_beirut?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_beirut?",
+            "Time.zone = \"Etc/UTC\" Time.asia_beirut?"
+          ]
+        },
+        "asia_bishkek?" => {
+          name: "asia_bishkek?",
+          description: "returns whether the current time zone matches asia/bishkek.",
+          examples: [
+            "Time.asia_bishkek?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_bishkek?",
+            "Time.zone = \"Etc/UTC\" Time.asia_bishkek?"
+          ]
+        },
+        "asia_brunei?" => {
+          name: "asia_brunei?",
+          description: "returns whether the current time zone matches asia/brunei.",
+          examples: [
+            "Time.asia_brunei?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_brunei?",
+            "Time.zone = \"Etc/UTC\" Time.asia_brunei?"
+          ]
+        },
+        "asia_calcutta?" => {
+          name: "asia_calcutta?",
+          description: "returns whether the current time zone matches asia/calcutta.",
+          examples: [
+            "Time.asia_calcutta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_calcutta?",
+            "Time.zone = \"Etc/UTC\" Time.asia_calcutta?"
+          ]
+        },
+        "asia_chita?" => {
+          name: "asia_chita?",
+          description: "returns whether the current time zone matches asia/chita.",
+          examples: [
+            "Time.asia_chita?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_chita?",
+            "Time.zone = \"Etc/UTC\" Time.asia_chita?"
+          ]
+        },
+        "asia_choibalsan?" => {
+          name: "asia_choibalsan?",
+          description: "returns whether the current time zone matches asia/choibalsan.",
+          examples: [
+            "Time.asia_choibalsan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_choibalsan?",
+            "Time.zone = \"Etc/UTC\" Time.asia_choibalsan?"
+          ]
+        },
+        "asia_chongqing?" => {
+          name: "asia_chongqing?",
+          description: "returns whether the current time zone matches asia/chongqing.",
+          examples: [
+            "Time.asia_chongqing?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_chongqing?",
+            "Time.zone = \"Etc/UTC\" Time.asia_chongqing?"
+          ]
+        },
+        "asia_chungking?" => {
+          name: "asia_chungking?",
+          description: "returns whether the current time zone matches asia/chungking.",
+          examples: [
+            "Time.asia_chungking?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_chungking?",
+            "Time.zone = \"Etc/UTC\" Time.asia_chungking?"
+          ]
+        },
+        "asia_colombo?" => {
+          name: "asia_colombo?",
+          description: "returns whether the current time zone matches asia/colombo.",
+          examples: [
+            "Time.asia_colombo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_colombo?",
+            "Time.zone = \"Etc/UTC\" Time.asia_colombo?"
+          ]
+        },
+        "asia_dacca?" => {
+          name: "asia_dacca?",
+          description: "returns whether the current time zone matches asia/dacca.",
+          examples: [
+            "Time.asia_dacca?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_dacca?",
+            "Time.zone = \"Etc/UTC\" Time.asia_dacca?"
+          ]
+        },
+        "asia_damascus?" => {
+          name: "asia_damascus?",
+          description: "returns whether the current time zone matches asia/damascus.",
+          examples: [
+            "Time.asia_damascus?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_damascus?",
+            "Time.zone = \"Etc/UTC\" Time.asia_damascus?"
+          ]
+        },
+        "asia_dhaka?" => {
+          name: "asia_dhaka?",
+          description: "returns whether the current time zone matches asia/dhaka.",
+          examples: [
+            "Time.asia_dhaka?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_dhaka?",
+            "Time.zone = \"Etc/UTC\" Time.asia_dhaka?"
+          ]
+        },
+        "asia_dili?" => {
+          name: "asia_dili?",
+          description: "returns whether the current time zone matches asia/dili.",
+          examples: [
+            "Time.asia_dili?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_dili?",
+            "Time.zone = \"Etc/UTC\" Time.asia_dili?"
+          ]
+        },
+        "asia_dubai?" => {
+          name: "asia_dubai?",
+          description: "returns whether the current time zone matches asia/dubai.",
+          examples: [
+            "Time.asia_dubai?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_dubai?",
+            "Time.zone = \"Etc/UTC\" Time.asia_dubai?"
+          ]
+        },
+        "asia_dushanbe?" => {
+          name: "asia_dushanbe?",
+          description: "returns whether the current time zone matches asia/dushanbe.",
+          examples: [
+            "Time.asia_dushanbe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_dushanbe?",
+            "Time.zone = \"Etc/UTC\" Time.asia_dushanbe?"
+          ]
+        },
+        "asia_famagusta?" => {
+          name: "asia_famagusta?",
+          description: "returns whether the current time zone matches asia/famagusta.",
+          examples: [
+            "Time.asia_famagusta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_famagusta?",
+            "Time.zone = \"Etc/UTC\" Time.asia_famagusta?"
+          ]
+        },
+        "asia_gaza?" => {
+          name: "asia_gaza?",
+          description: "returns whether the current time zone matches asia/gaza.",
+          examples: [
+            "Time.asia_gaza?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_gaza?",
+            "Time.zone = \"Etc/UTC\" Time.asia_gaza?"
+          ]
+        },
+        "asia_harbin?" => {
+          name: "asia_harbin?",
+          description: "returns whether the current time zone matches asia/harbin.",
+          examples: [
+            "Time.asia_harbin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_harbin?",
+            "Time.zone = \"Etc/UTC\" Time.asia_harbin?"
+          ]
+        },
+        "asia_hebron?" => {
+          name: "asia_hebron?",
+          description: "returns whether the current time zone matches asia/hebron.",
+          examples: [
+            "Time.asia_hebron?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_hebron?",
+            "Time.zone = \"Etc/UTC\" Time.asia_hebron?"
+          ]
+        },
+        "asia_ho_chi_minh?" => {
+          name: "asia_ho_chi_minh?",
+          description: "returns whether the current time zone matches asia/ho/chi/minh.",
+          examples: [
+            "Time.asia_ho_chi_minh?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ho_chi_minh?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ho_chi_minh?"
+          ]
+        },
+        "asia_hong_kong?" => {
+          name: "asia_hong_kong?",
+          description: "returns whether the current time zone matches asia/hong/kong.",
+          examples: [
+            "Time.asia_hong_kong?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_hong_kong?",
+            "Time.zone = \"Etc/UTC\" Time.asia_hong_kong?"
+          ]
+        },
+        "asia_hovd?" => {
+          name: "asia_hovd?",
+          description: "returns whether the current time zone matches asia/hovd.",
+          examples: [
+            "Time.asia_hovd?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_hovd?",
+            "Time.zone = \"Etc/UTC\" Time.asia_hovd?"
+          ]
+        },
+        "asia_irkutsk?" => {
+          name: "asia_irkutsk?",
+          description: "returns whether the current time zone matches asia/irkutsk.",
+          examples: [
+            "Time.asia_irkutsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_irkutsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_irkutsk?"
+          ]
+        },
+        "asia_istanbul?" => {
+          name: "asia_istanbul?",
+          description: "returns whether the current time zone matches asia/istanbul.",
+          examples: [
+            "Time.asia_istanbul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_istanbul?",
+            "Time.zone = \"Etc/UTC\" Time.asia_istanbul?"
+          ]
+        },
+        "asia_jakarta?" => {
+          name: "asia_jakarta?",
+          description: "returns whether the current time zone matches asia/jakarta.",
+          examples: [
+            "Time.asia_jakarta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_jakarta?",
+            "Time.zone = \"Etc/UTC\" Time.asia_jakarta?"
+          ]
+        },
+        "asia_jayapura?" => {
+          name: "asia_jayapura?",
+          description: "returns whether the current time zone matches asia/jayapura.",
+          examples: [
+            "Time.asia_jayapura?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_jayapura?",
+            "Time.zone = \"Etc/UTC\" Time.asia_jayapura?"
+          ]
+        },
+        "asia_jerusalem?" => {
+          name: "asia_jerusalem?",
+          description: "returns whether the current time zone matches asia/jerusalem.",
+          examples: [
+            "Time.asia_jerusalem?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_jerusalem?",
+            "Time.zone = \"Etc/UTC\" Time.asia_jerusalem?"
+          ]
+        },
+        "asia_kabul?" => {
+          name: "asia_kabul?",
+          description: "returns whether the current time zone matches asia/kabul.",
+          examples: [
+            "Time.asia_kabul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kabul?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kabul?"
+          ]
+        },
+        "asia_kamchatka?" => {
+          name: "asia_kamchatka?",
+          description: "returns whether the current time zone matches asia/kamchatka.",
+          examples: [
+            "Time.asia_kamchatka?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kamchatka?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kamchatka?"
+          ]
+        },
+        "asia_karachi?" => {
+          name: "asia_karachi?",
+          description: "returns whether the current time zone matches asia/karachi.",
+          examples: [
+            "Time.asia_karachi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_karachi?",
+            "Time.zone = \"Etc/UTC\" Time.asia_karachi?"
+          ]
+        },
+        "asia_kashgar?" => {
+          name: "asia_kashgar?",
+          description: "returns whether the current time zone matches asia/kashgar.",
+          examples: [
+            "Time.asia_kashgar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kashgar?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kashgar?"
+          ]
+        },
+        "asia_kathmandu?" => {
+          name: "asia_kathmandu?",
+          description: "returns whether the current time zone matches asia/kathmandu.",
+          examples: [
+            "Time.asia_kathmandu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kathmandu?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kathmandu?"
+          ]
+        },
+        "asia_katmandu?" => {
+          name: "asia_katmandu?",
+          description: "returns whether the current time zone matches asia/katmandu.",
+          examples: [
+            "Time.asia_katmandu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_katmandu?",
+            "Time.zone = \"Etc/UTC\" Time.asia_katmandu?"
+          ]
+        },
+        "asia_khandyga?" => {
+          name: "asia_khandyga?",
+          description: "returns whether the current time zone matches asia/khandyga.",
+          examples: [
+            "Time.asia_khandyga?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_khandyga?",
+            "Time.zone = \"Etc/UTC\" Time.asia_khandyga?"
+          ]
+        },
+        "asia_kolkata?" => {
+          name: "asia_kolkata?",
+          description: "returns whether the current time zone matches asia/kolkata.",
+          examples: [
+            "Time.asia_kolkata?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kolkata?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kolkata?"
+          ]
+        },
+        "asia_krasnoyarsk?" => {
+          name: "asia_krasnoyarsk?",
+          description: "returns whether the current time zone matches asia/krasnoyarsk.",
+          examples: [
+            "Time.asia_krasnoyarsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_krasnoyarsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_krasnoyarsk?"
+          ]
+        },
+        "asia_kuala_lumpur?" => {
+          name: "asia_kuala_lumpur?",
+          description: "returns whether the current time zone matches asia/kuala/lumpur.",
+          examples: [
+            "Time.asia_kuala_lumpur?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kuala_lumpur?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kuala_lumpur?"
+          ]
+        },
+        "asia_kuching?" => {
+          name: "asia_kuching?",
+          description: "returns whether the current time zone matches asia/kuching.",
+          examples: [
+            "Time.asia_kuching?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kuching?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kuching?"
+          ]
+        },
+        "asia_kuwait?" => {
+          name: "asia_kuwait?",
+          description: "returns whether the current time zone matches asia/kuwait.",
+          examples: [
+            "Time.asia_kuwait?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_kuwait?",
+            "Time.zone = \"Etc/UTC\" Time.asia_kuwait?"
+          ]
+        },
+        "asia_macao?" => {
+          name: "asia_macao?",
+          description: "returns whether the current time zone matches asia/macao.",
+          examples: [
+            "Time.asia_macao?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_macao?",
+            "Time.zone = \"Etc/UTC\" Time.asia_macao?"
+          ]
+        },
+        "asia_macau?" => {
+          name: "asia_macau?",
+          description: "returns whether the current time zone matches asia/macau.",
+          examples: [
+            "Time.asia_macau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_macau?",
+            "Time.zone = \"Etc/UTC\" Time.asia_macau?"
+          ]
+        },
+        "asia_magadan?" => {
+          name: "asia_magadan?",
+          description: "returns whether the current time zone matches asia/magadan.",
+          examples: [
+            "Time.asia_magadan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_magadan?",
+            "Time.zone = \"Etc/UTC\" Time.asia_magadan?"
+          ]
+        },
+        "asia_makassar?" => {
+          name: "asia_makassar?",
+          description: "returns whether the current time zone matches asia/makassar.",
+          examples: [
+            "Time.asia_makassar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_makassar?",
+            "Time.zone = \"Etc/UTC\" Time.asia_makassar?"
+          ]
+        },
+        "asia_manila?" => {
+          name: "asia_manila?",
+          description: "returns whether the current time zone matches asia/manila.",
+          examples: [
+            "Time.asia_manila?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_manila?",
+            "Time.zone = \"Etc/UTC\" Time.asia_manila?"
+          ]
+        },
+        "asia_muscat?" => {
+          name: "asia_muscat?",
+          description: "returns whether the current time zone matches asia/muscat.",
+          examples: [
+            "Time.asia_muscat?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_muscat?",
+            "Time.zone = \"Etc/UTC\" Time.asia_muscat?"
+          ]
+        },
+        "asia_nicosia?" => {
+          name: "asia_nicosia?",
+          description: "returns whether the current time zone matches asia/nicosia.",
+          examples: [
+            "Time.asia_nicosia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_nicosia?",
+            "Time.zone = \"Etc/UTC\" Time.asia_nicosia?"
+          ]
+        },
+        "asia_novokuznetsk?" => {
+          name: "asia_novokuznetsk?",
+          description: "returns whether the current time zone matches asia/novokuznetsk.",
+          examples: [
+            "Time.asia_novokuznetsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_novokuznetsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_novokuznetsk?"
+          ]
+        },
+        "asia_novosibirsk?" => {
+          name: "asia_novosibirsk?",
+          description: "returns whether the current time zone matches asia/novosibirsk.",
+          examples: [
+            "Time.asia_novosibirsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_novosibirsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_novosibirsk?"
+          ]
+        },
+        "asia_omsk?" => {
+          name: "asia_omsk?",
+          description: "returns whether the current time zone matches asia/omsk.",
+          examples: [
+            "Time.asia_omsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_omsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_omsk?"
+          ]
+        },
+        "asia_oral?" => {
+          name: "asia_oral?",
+          description: "returns whether the current time zone matches asia/oral.",
+          examples: [
+            "Time.asia_oral?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_oral?",
+            "Time.zone = \"Etc/UTC\" Time.asia_oral?"
+          ]
+        },
+        "asia_phnom_penh?" => {
+          name: "asia_phnom_penh?",
+          description: "returns whether the current time zone matches asia/phnom/penh.",
+          examples: [
+            "Time.asia_phnom_penh?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_phnom_penh?",
+            "Time.zone = \"Etc/UTC\" Time.asia_phnom_penh?"
+          ]
+        },
+        "asia_pontianak?" => {
+          name: "asia_pontianak?",
+          description: "returns whether the current time zone matches asia/pontianak.",
+          examples: [
+            "Time.asia_pontianak?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_pontianak?",
+            "Time.zone = \"Etc/UTC\" Time.asia_pontianak?"
+          ]
+        },
+        "asia_pyongyang?" => {
+          name: "asia_pyongyang?",
+          description: "returns whether the current time zone matches asia/pyongyang.",
+          examples: [
+            "Time.asia_pyongyang?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_pyongyang?",
+            "Time.zone = \"Etc/UTC\" Time.asia_pyongyang?"
+          ]
+        },
+        "asia_qatar?" => {
+          name: "asia_qatar?",
+          description: "returns whether the current time zone matches asia/qatar.",
+          examples: [
+            "Time.asia_qatar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_qatar?",
+            "Time.zone = \"Etc/UTC\" Time.asia_qatar?"
+          ]
+        },
+        "asia_qostanay?" => {
+          name: "asia_qostanay?",
+          description: "returns whether the current time zone matches asia/qostanay.",
+          examples: [
+            "Time.asia_qostanay?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_qostanay?",
+            "Time.zone = \"Etc/UTC\" Time.asia_qostanay?"
+          ]
+        },
+        "asia_qyzylorda?" => {
+          name: "asia_qyzylorda?",
+          description: "returns whether the current time zone matches asia/qyzylorda.",
+          examples: [
+            "Time.asia_qyzylorda?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_qyzylorda?",
+            "Time.zone = \"Etc/UTC\" Time.asia_qyzylorda?"
+          ]
+        },
+        "asia_rangoon?" => {
+          name: "asia_rangoon?",
+          description: "returns whether the current time zone matches asia/rangoon.",
+          examples: [
+            "Time.asia_rangoon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_rangoon?",
+            "Time.zone = \"Etc/UTC\" Time.asia_rangoon?"
+          ]
+        },
+        "asia_riyadh?" => {
+          name: "asia_riyadh?",
+          description: "returns whether the current time zone matches asia/riyadh.",
+          examples: [
+            "Time.asia_riyadh?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_riyadh?",
+            "Time.zone = \"Etc/UTC\" Time.asia_riyadh?"
+          ]
+        },
+        "asia_saigon?" => {
+          name: "asia_saigon?",
+          description: "returns whether the current time zone matches asia/saigon.",
+          examples: [
+            "Time.asia_saigon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_saigon?",
+            "Time.zone = \"Etc/UTC\" Time.asia_saigon?"
+          ]
+        },
+        "asia_sakhalin?" => {
+          name: "asia_sakhalin?",
+          description: "returns whether the current time zone matches asia/sakhalin.",
+          examples: [
+            "Time.asia_sakhalin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_sakhalin?",
+            "Time.zone = \"Etc/UTC\" Time.asia_sakhalin?"
+          ]
+        },
+        "asia_samarkand?" => {
+          name: "asia_samarkand?",
+          description: "returns whether the current time zone matches asia/samarkand.",
+          examples: [
+            "Time.asia_samarkand?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_samarkand?",
+            "Time.zone = \"Etc/UTC\" Time.asia_samarkand?"
+          ]
+        },
+        "asia_seoul?" => {
+          name: "asia_seoul?",
+          description: "returns whether the current time zone matches asia/seoul.",
+          examples: [
+            "Time.asia_seoul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_seoul?",
+            "Time.zone = \"Etc/UTC\" Time.asia_seoul?"
+          ]
+        },
+        "asia_shanghai?" => {
+          name: "asia_shanghai?",
+          description: "returns whether the current time zone matches asia/shanghai.",
+          examples: [
+            "Time.asia_shanghai?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_shanghai?",
+            "Time.zone = \"Etc/UTC\" Time.asia_shanghai?"
+          ]
+        },
+        "asia_singapore?" => {
+          name: "asia_singapore?",
+          description: "returns whether the current time zone matches asia/singapore.",
+          examples: [
+            "Time.asia_singapore?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_singapore?",
+            "Time.zone = \"Etc/UTC\" Time.asia_singapore?"
+          ]
+        },
+        "asia_srednekolymsk?" => {
+          name: "asia_srednekolymsk?",
+          description: "returns whether the current time zone matches asia/srednekolymsk.",
+          examples: [
+            "Time.asia_srednekolymsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_srednekolymsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_srednekolymsk?"
+          ]
+        },
+        "asia_taipei?" => {
+          name: "asia_taipei?",
+          description: "returns whether the current time zone matches asia/taipei.",
+          examples: [
+            "Time.asia_taipei?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_taipei?",
+            "Time.zone = \"Etc/UTC\" Time.asia_taipei?"
+          ]
+        },
+        "asia_tashkent?" => {
+          name: "asia_tashkent?",
+          description: "returns whether the current time zone matches asia/tashkent.",
+          examples: [
+            "Time.asia_tashkent?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tashkent?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tashkent?"
+          ]
+        },
+        "asia_tbilisi?" => {
+          name: "asia_tbilisi?",
+          description: "returns whether the current time zone matches asia/tbilisi.",
+          examples: [
+            "Time.asia_tbilisi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tbilisi?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tbilisi?"
+          ]
+        },
+        "asia_tehran?" => {
+          name: "asia_tehran?",
+          description: "returns whether the current time zone matches asia/tehran.",
+          examples: [
+            "Time.asia_tehran?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tehran?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tehran?"
+          ]
+        },
+        "asia_tel_aviv?" => {
+          name: "asia_tel_aviv?",
+          description: "returns whether the current time zone matches asia/tel/aviv.",
+          examples: [
+            "Time.asia_tel_aviv?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tel_aviv?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tel_aviv?"
+          ]
+        },
+        "asia_thimbu?" => {
+          name: "asia_thimbu?",
+          description: "returns whether the current time zone matches asia/thimbu.",
+          examples: [
+            "Time.asia_thimbu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_thimbu?",
+            "Time.zone = \"Etc/UTC\" Time.asia_thimbu?"
+          ]
+        },
+        "asia_thimphu?" => {
+          name: "asia_thimphu?",
+          description: "returns whether the current time zone matches asia/thimphu.",
+          examples: [
+            "Time.asia_thimphu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_thimphu?",
+            "Time.zone = \"Etc/UTC\" Time.asia_thimphu?"
+          ]
+        },
+        "asia_tokyo?" => {
+          name: "asia_tokyo?",
+          description: "returns whether the current time zone matches asia/tokyo.",
+          examples: [
+            "Time.asia_tokyo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tokyo?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tokyo?"
+          ]
+        },
+        "asia_tomsk?" => {
+          name: "asia_tomsk?",
+          description: "returns whether the current time zone matches asia/tomsk.",
+          examples: [
+            "Time.asia_tomsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_tomsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_tomsk?"
+          ]
+        },
+        "asia_ujung_pandang?" => {
+          name: "asia_ujung_pandang?",
+          description: "returns whether the current time zone matches asia/ujung/pandang.",
+          examples: [
+            "Time.asia_ujung_pandang?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ujung_pandang?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ujung_pandang?"
+          ]
+        },
+        "asia_ulaanbaatar?" => {
+          name: "asia_ulaanbaatar?",
+          description: "returns whether the current time zone matches asia/ulaanbaatar.",
+          examples: [
+            "Time.asia_ulaanbaatar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ulaanbaatar?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ulaanbaatar?"
+          ]
+        },
+        "asia_ulan_bator?" => {
+          name: "asia_ulan_bator?",
+          description: "returns whether the current time zone matches asia/ulan/bator.",
+          examples: [
+            "Time.asia_ulan_bator?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ulan_bator?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ulan_bator?"
+          ]
+        },
+        "asia_urumqi?" => {
+          name: "asia_urumqi?",
+          description: "returns whether the current time zone matches asia/urumqi.",
+          examples: [
+            "Time.asia_urumqi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_urumqi?",
+            "Time.zone = \"Etc/UTC\" Time.asia_urumqi?"
+          ]
+        },
+        "asia_ust_minus_nera?" => {
+          name: "asia_ust_minus_nera?",
+          description: "returns whether the current time zone matches asia/ust/minus/nera.",
+          examples: [
+            "Time.asia_ust_minus_nera?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_ust_minus_nera?",
+            "Time.zone = \"Etc/UTC\" Time.asia_ust_minus_nera?"
+          ]
+        },
+        "asia_vientiane?" => {
+          name: "asia_vientiane?",
+          description: "returns whether the current time zone matches asia/vientiane.",
+          examples: [
+            "Time.asia_vientiane?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_vientiane?",
+            "Time.zone = \"Etc/UTC\" Time.asia_vientiane?"
+          ]
+        },
+        "asia_vladivostok?" => {
+          name: "asia_vladivostok?",
+          description: "returns whether the current time zone matches asia/vladivostok.",
+          examples: [
+            "Time.asia_vladivostok?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_vladivostok?",
+            "Time.zone = \"Etc/UTC\" Time.asia_vladivostok?"
+          ]
+        },
+        "asia_yakutsk?" => {
+          name: "asia_yakutsk?",
+          description: "returns whether the current time zone matches asia/yakutsk.",
+          examples: [
+            "Time.asia_yakutsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_yakutsk?",
+            "Time.zone = \"Etc/UTC\" Time.asia_yakutsk?"
+          ]
+        },
+        "asia_yangon?" => {
+          name: "asia_yangon?",
+          description: "returns whether the current time zone matches asia/yangon.",
+          examples: [
+            "Time.asia_yangon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_yangon?",
+            "Time.zone = \"Etc/UTC\" Time.asia_yangon?"
+          ]
+        },
+        "asia_yekaterinburg?" => {
+          name: "asia_yekaterinburg?",
+          description: "returns whether the current time zone matches asia/yekaterinburg.",
+          examples: [
+            "Time.asia_yekaterinburg?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_yekaterinburg?",
+            "Time.zone = \"Etc/UTC\" Time.asia_yekaterinburg?"
+          ]
+        },
+        "asia_yerevan?" => {
+          name: "asia_yerevan?",
+          description: "returns whether the current time zone matches asia/yerevan.",
+          examples: [
+            "Time.asia_yerevan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").asia_yerevan?",
+            "Time.zone = \"Etc/UTC\" Time.asia_yerevan?"
+          ]
+        },
+        "atlantic_azores?" => {
+          name: "atlantic_azores?",
+          description: "returns whether the current time zone matches atlantic/azores.",
+          examples: [
+            "Time.atlantic_azores?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_azores?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_azores?"
+          ]
+        },
+        "atlantic_bermuda?" => {
+          name: "atlantic_bermuda?",
+          description: "returns whether the current time zone matches atlantic/bermuda.",
+          examples: [
+            "Time.atlantic_bermuda?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_bermuda?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_bermuda?"
+          ]
+        },
+        "atlantic_canary?" => {
+          name: "atlantic_canary?",
+          description: "returns whether the current time zone matches atlantic/canary.",
+          examples: [
+            "Time.atlantic_canary?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_canary?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_canary?"
+          ]
+        },
+        "atlantic_cape_verde?" => {
+          name: "atlantic_cape_verde?",
+          description: "returns whether the current time zone matches atlantic/cape/verde.",
+          examples: [
+            "Time.atlantic_cape_verde?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_cape_verde?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_cape_verde?"
+          ]
+        },
+        "atlantic_faeroe?" => {
+          name: "atlantic_faeroe?",
+          description: "returns whether the current time zone matches atlantic/faeroe.",
+          examples: [
+            "Time.atlantic_faeroe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_faeroe?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_faeroe?"
+          ]
+        },
+        "atlantic_faroe?" => {
+          name: "atlantic_faroe?",
+          description: "returns whether the current time zone matches atlantic/faroe.",
+          examples: [
+            "Time.atlantic_faroe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_faroe?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_faroe?"
+          ]
+        },
+        "atlantic_jan_mayen?" => {
+          name: "atlantic_jan_mayen?",
+          description: "returns whether the current time zone matches atlantic/jan/mayen.",
+          examples: [
+            "Time.atlantic_jan_mayen?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_jan_mayen?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_jan_mayen?"
+          ]
+        },
+        "atlantic_madeira?" => {
+          name: "atlantic_madeira?",
+          description: "returns whether the current time zone matches atlantic/madeira.",
+          examples: [
+            "Time.atlantic_madeira?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_madeira?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_madeira?"
+          ]
+        },
+        "atlantic_reykjavik?" => {
+          name: "atlantic_reykjavik?",
+          description: "returns whether the current time zone matches atlantic/reykjavik.",
+          examples: [
+            "Time.atlantic_reykjavik?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_reykjavik?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_reykjavik?"
+          ]
+        },
+        "atlantic_south_georgia?" => {
+          name: "atlantic_south_georgia?",
+          description: "returns whether the current time zone matches atlantic/south/georgia.",
+          examples: [
+            "Time.atlantic_south_georgia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_south_georgia?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_south_georgia?"
+          ]
+        },
+        "atlantic_st_helena?" => {
+          name: "atlantic_st_helena?",
+          description: "returns whether the current time zone matches atlantic/st/helena.",
+          examples: [
+            "Time.atlantic_st_helena?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_st_helena?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_st_helena?"
+          ]
+        },
+        "atlantic_stanley?" => {
+          name: "atlantic_stanley?",
+          description: "returns whether the current time zone matches atlantic/stanley.",
+          examples: [
+            "Time.atlantic_stanley?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").atlantic_stanley?",
+            "Time.zone = \"Etc/UTC\" Time.atlantic_stanley?"
+          ]
+        },
+        "australia_act?" => {
+          name: "australia_act?",
+          description: "returns whether the current time zone matches australia/act.",
+          examples: [
+            "Time.australia_act?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_act?",
+            "Time.zone = \"Etc/UTC\" Time.australia_act?"
+          ]
+        },
+        "australia_adelaide?" => {
+          name: "australia_adelaide?",
+          description: "returns whether the current time zone matches australia/adelaide.",
+          examples: [
+            "Time.australia_adelaide?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_adelaide?",
+            "Time.zone = \"Etc/UTC\" Time.australia_adelaide?"
+          ]
+        },
+        "australia_brisbane?" => {
+          name: "australia_brisbane?",
+          description: "returns whether the current time zone matches australia/brisbane.",
+          examples: [
+            "Time.australia_brisbane?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_brisbane?",
+            "Time.zone = \"Etc/UTC\" Time.australia_brisbane?"
+          ]
+        },
+        "australia_broken_hill?" => {
+          name: "australia_broken_hill?",
+          description: "returns whether the current time zone matches australia/broken/hill.",
+          examples: [
+            "Time.australia_broken_hill?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_broken_hill?",
+            "Time.zone = \"Etc/UTC\" Time.australia_broken_hill?"
+          ]
+        },
+        "australia_canberra?" => {
+          name: "australia_canberra?",
+          description: "returns whether the current time zone matches australia/canberra.",
+          examples: [
+            "Time.australia_canberra?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_canberra?",
+            "Time.zone = \"Etc/UTC\" Time.australia_canberra?"
+          ]
+        },
+        "australia_currie?" => {
+          name: "australia_currie?",
+          description: "returns whether the current time zone matches australia/currie.",
+          examples: [
+            "Time.australia_currie?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_currie?",
+            "Time.zone = \"Etc/UTC\" Time.australia_currie?"
+          ]
+        },
+        "australia_darwin?" => {
+          name: "australia_darwin?",
+          description: "returns whether the current time zone matches australia/darwin.",
+          examples: [
+            "Time.australia_darwin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_darwin?",
+            "Time.zone = \"Etc/UTC\" Time.australia_darwin?"
+          ]
+        },
+        "australia_eucla?" => {
+          name: "australia_eucla?",
+          description: "returns whether the current time zone matches australia/eucla.",
+          examples: [
+            "Time.australia_eucla?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_eucla?",
+            "Time.zone = \"Etc/UTC\" Time.australia_eucla?"
+          ]
+        },
+        "australia_hobart?" => {
+          name: "australia_hobart?",
+          description: "returns whether the current time zone matches australia/hobart.",
+          examples: [
+            "Time.australia_hobart?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_hobart?",
+            "Time.zone = \"Etc/UTC\" Time.australia_hobart?"
+          ]
+        },
+        "australia_lhi?" => {
+          name: "australia_lhi?",
+          description: "returns whether the current time zone matches australia/lhi.",
+          examples: [
+            "Time.australia_lhi?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_lhi?",
+            "Time.zone = \"Etc/UTC\" Time.australia_lhi?"
+          ]
+        },
+        "australia_lindeman?" => {
+          name: "australia_lindeman?",
+          description: "returns whether the current time zone matches australia/lindeman.",
+          examples: [
+            "Time.australia_lindeman?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_lindeman?",
+            "Time.zone = \"Etc/UTC\" Time.australia_lindeman?"
+          ]
+        },
+        "australia_lord_howe?" => {
+          name: "australia_lord_howe?",
+          description: "returns whether the current time zone matches australia/lord/howe.",
+          examples: [
+            "Time.australia_lord_howe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_lord_howe?",
+            "Time.zone = \"Etc/UTC\" Time.australia_lord_howe?"
+          ]
+        },
+        "australia_melbourne?" => {
+          name: "australia_melbourne?",
+          description: "returns whether the current time zone matches australia/melbourne.",
+          examples: [
+            "Time.australia_melbourne?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_melbourne?",
+            "Time.zone = \"Etc/UTC\" Time.australia_melbourne?"
+          ]
+        },
+        "australia_nsw?" => {
+          name: "australia_nsw?",
+          description: "returns whether the current time zone matches australia/nsw.",
+          examples: [
+            "Time.australia_nsw?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_nsw?",
+            "Time.zone = \"Etc/UTC\" Time.australia_nsw?"
+          ]
+        },
+        "australia_north?" => {
+          name: "australia_north?",
+          description: "returns whether the current time zone matches australia/north.",
+          examples: [
+            "Time.australia_north?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_north?",
+            "Time.zone = \"Etc/UTC\" Time.australia_north?"
+          ]
+        },
+        "australia_perth?" => {
+          name: "australia_perth?",
+          description: "returns whether the current time zone matches australia/perth.",
+          examples: [
+            "Time.australia_perth?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_perth?",
+            "Time.zone = \"Etc/UTC\" Time.australia_perth?"
+          ]
+        },
+        "australia_queensland?" => {
+          name: "australia_queensland?",
+          description: "returns whether the current time zone matches australia/queensland.",
+          examples: [
+            "Time.australia_queensland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_queensland?",
+            "Time.zone = \"Etc/UTC\" Time.australia_queensland?"
+          ]
+        },
+        "australia_south?" => {
+          name: "australia_south?",
+          description: "returns whether the current time zone matches australia/south.",
+          examples: [
+            "Time.australia_south?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_south?",
+            "Time.zone = \"Etc/UTC\" Time.australia_south?"
+          ]
+        },
+        "australia_sydney?" => {
+          name: "australia_sydney?",
+          description: "returns whether the current time zone matches australia/sydney.",
+          examples: [
+            "Time.australia_sydney?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_sydney?",
+            "Time.zone = \"Etc/UTC\" Time.australia_sydney?"
+          ]
+        },
+        "australia_tasmania?" => {
+          name: "australia_tasmania?",
+          description: "returns whether the current time zone matches australia/tasmania.",
+          examples: [
+            "Time.australia_tasmania?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_tasmania?",
+            "Time.zone = \"Etc/UTC\" Time.australia_tasmania?"
+          ]
+        },
+        "australia_victoria?" => {
+          name: "australia_victoria?",
+          description: "returns whether the current time zone matches australia/victoria.",
+          examples: [
+            "Time.australia_victoria?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_victoria?",
+            "Time.zone = \"Etc/UTC\" Time.australia_victoria?"
+          ]
+        },
+        "australia_west?" => {
+          name: "australia_west?",
+          description: "returns whether the current time zone matches australia/west.",
+          examples: [
+            "Time.australia_west?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_west?",
+            "Time.zone = \"Etc/UTC\" Time.australia_west?"
+          ]
+        },
+        "australia_yancowinna?" => {
+          name: "australia_yancowinna?",
+          description: "returns whether the current time zone matches australia/yancowinna.",
+          examples: [
+            "Time.australia_yancowinna?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").australia_yancowinna?",
+            "Time.zone = \"Etc/UTC\" Time.australia_yancowinna?"
+          ]
+        },
+        "brazil_acre?" => {
+          name: "brazil_acre?",
+          description: "returns whether the current time zone matches brazil/acre.",
+          examples: [
+            "Time.brazil_acre?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").brazil_acre?",
+            "Time.zone = \"Etc/UTC\" Time.brazil_acre?"
+          ]
+        },
+        "brazil_denoronha?" => {
+          name: "brazil_denoronha?",
+          description: "returns whether the current time zone matches brazil/denoronha.",
+          examples: [
+            "Time.brazil_denoronha?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").brazil_denoronha?",
+            "Time.zone = \"Etc/UTC\" Time.brazil_denoronha?"
+          ]
+        },
+        "brazil_east?" => {
+          name: "brazil_east?",
+          description: "returns whether the current time zone matches brazil/east.",
+          examples: [
+            "Time.brazil_east?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").brazil_east?",
+            "Time.zone = \"Etc/UTC\" Time.brazil_east?"
+          ]
+        },
+        "brazil_west?" => {
+          name: "brazil_west?",
+          description: "returns whether the current time zone matches brazil/west.",
+          examples: [
+            "Time.brazil_west?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").brazil_west?",
+            "Time.zone = \"Etc/UTC\" Time.brazil_west?"
+          ]
+        },
+        "cet?" => {
+          name: "cet?",
+          description: "returns whether the current time zone matches cet.",
+          examples: [
+            "Time.cet?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").cet?",
+            "Time.zone = \"Etc/UTC\" Time.cet?"
+          ]
+        },
+        "cst6cdt?" => {
+          name: "cst6cdt?",
+          description: "returns whether the current time zone matches cst6cdt.",
+          examples: [
+            "Time.cst6cdt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").cst6cdt?",
+            "Time.zone = \"Etc/UTC\" Time.cst6cdt?"
+          ]
+        },
+        "canada_atlantic?" => {
+          name: "canada_atlantic?",
+          description: "returns whether the current time zone matches canada/atlantic.",
+          examples: [
+            "Time.canada_atlantic?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_atlantic?",
+            "Time.zone = \"Etc/UTC\" Time.canada_atlantic?"
+          ]
+        },
+        "canada_central?" => {
+          name: "canada_central?",
+          description: "returns whether the current time zone matches canada/central.",
+          examples: [
+            "Time.canada_central?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_central?",
+            "Time.zone = \"Etc/UTC\" Time.canada_central?"
+          ]
+        },
+        "canada_eastern?" => {
+          name: "canada_eastern?",
+          description: "returns whether the current time zone matches canada/eastern.",
+          examples: [
+            "Time.canada_eastern?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_eastern?",
+            "Time.zone = \"Etc/UTC\" Time.canada_eastern?"
+          ]
+        },
+        "canada_mountain?" => {
+          name: "canada_mountain?",
+          description: "returns whether the current time zone matches canada/mountain.",
+          examples: [
+            "Time.canada_mountain?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_mountain?",
+            "Time.zone = \"Etc/UTC\" Time.canada_mountain?"
+          ]
+        },
+        "canada_newfoundland?" => {
+          name: "canada_newfoundland?",
+          description: "returns whether the current time zone matches canada/newfoundland.",
+          examples: [
+            "Time.canada_newfoundland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_newfoundland?",
+            "Time.zone = \"Etc/UTC\" Time.canada_newfoundland?"
+          ]
+        },
+        "canada_pacific?" => {
+          name: "canada_pacific?",
+          description: "returns whether the current time zone matches canada/pacific.",
+          examples: [
+            "Time.canada_pacific?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_pacific?",
+            "Time.zone = \"Etc/UTC\" Time.canada_pacific?"
+          ]
+        },
+        "canada_saskatchewan?" => {
+          name: "canada_saskatchewan?",
+          description: "returns whether the current time zone matches canada/saskatchewan.",
+          examples: [
+            "Time.canada_saskatchewan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_saskatchewan?",
+            "Time.zone = \"Etc/UTC\" Time.canada_saskatchewan?"
+          ]
+        },
+        "canada_yukon?" => {
+          name: "canada_yukon?",
+          description: "returns whether the current time zone matches canada/yukon.",
+          examples: [
+            "Time.canada_yukon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").canada_yukon?",
+            "Time.zone = \"Etc/UTC\" Time.canada_yukon?"
+          ]
+        },
+        "chile_continental?" => {
+          name: "chile_continental?",
+          description: "returns whether the current time zone matches chile/continental.",
+          examples: [
+            "Time.chile_continental?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").chile_continental?",
+            "Time.zone = \"Etc/UTC\" Time.chile_continental?"
+          ]
+        },
+        "chile_easterisland?" => {
+          name: "chile_easterisland?",
+          description: "returns whether the current time zone matches chile/easterisland.",
+          examples: [
+            "Time.chile_easterisland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").chile_easterisland?",
+            "Time.zone = \"Etc/UTC\" Time.chile_easterisland?"
+          ]
+        },
+        "cuba?" => {
+          name: "cuba?",
+          description: "returns whether the current time zone matches cuba.",
+          examples: [
+            "Time.cuba?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").cuba?",
+            "Time.zone = \"Etc/UTC\" Time.cuba?"
+          ]
+        },
+        "eet?" => {
+          name: "eet?",
+          description: "returns whether the current time zone matches eet.",
+          examples: [
+            "Time.eet?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").eet?",
+            "Time.zone = \"Etc/UTC\" Time.eet?"
+          ]
+        },
+        "est?" => {
+          name: "est?",
+          description: "returns whether the current time zone matches est.",
+          examples: [
+            "Time.est?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").est?",
+            "Time.zone = \"Etc/UTC\" Time.est?"
+          ]
+        },
+        "est5edt?" => {
+          name: "est5edt?",
+          description: "returns whether the current time zone matches est5edt.",
+          examples: [
+            "Time.est5edt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").est5edt?",
+            "Time.zone = \"Etc/UTC\" Time.est5edt?"
+          ]
+        },
+        "egypt?" => {
+          name: "egypt?",
+          description: "returns whether the current time zone matches egypt.",
+          examples: [
+            "Time.egypt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").egypt?",
+            "Time.zone = \"Etc/UTC\" Time.egypt?"
+          ]
+        },
+        "eire?" => {
+          name: "eire?",
+          description: "returns whether the current time zone matches eire.",
+          examples: [
+            "Time.eire?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").eire?",
+            "Time.zone = \"Etc/UTC\" Time.eire?"
+          ]
+        },
+        "etc_gmt?" => {
+          name: "etc_gmt?",
+          description: "returns whether the current time zone matches etc/gmt.",
+          examples: [
+            "Time.etc_gmt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt?"
+          ]
+        },
+        "etc_gmt_plus_0?" => {
+          name: "etc_gmt_plus_0?",
+          description: "returns whether the current time zone matches etc/gmt/plus/0.",
+          examples: [
+            "Time.etc_gmt_plus_0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_0?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_0?"
+          ]
+        },
+        "etc_gmt_plus_1?" => {
+          name: "etc_gmt_plus_1?",
+          description: "returns whether the current time zone matches etc/gmt/plus/1.",
+          examples: [
+            "Time.etc_gmt_plus_1?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_1?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_1?"
+          ]
+        },
+        "etc_gmt_plus_10?" => {
+          name: "etc_gmt_plus_10?",
+          description: "returns whether the current time zone matches etc/gmt/plus/10.",
+          examples: [
+            "Time.etc_gmt_plus_10?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_10?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_10?"
+          ]
+        },
+        "etc_gmt_plus_11?" => {
+          name: "etc_gmt_plus_11?",
+          description: "returns whether the current time zone matches etc/gmt/plus/11.",
+          examples: [
+            "Time.etc_gmt_plus_11?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_11?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_11?"
+          ]
+        },
+        "etc_gmt_plus_12?" => {
+          name: "etc_gmt_plus_12?",
+          description: "returns whether the current time zone matches etc/gmt/plus/12.",
+          examples: [
+            "Time.etc_gmt_plus_12?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_12?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_12?"
+          ]
+        },
+        "etc_gmt_plus_2?" => {
+          name: "etc_gmt_plus_2?",
+          description: "returns whether the current time zone matches etc/gmt/plus/2.",
+          examples: [
+            "Time.etc_gmt_plus_2?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_2?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_2?"
+          ]
+        },
+        "etc_gmt_plus_3?" => {
+          name: "etc_gmt_plus_3?",
+          description: "returns whether the current time zone matches etc/gmt/plus/3.",
+          examples: [
+            "Time.etc_gmt_plus_3?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_3?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_3?"
+          ]
+        },
+        "etc_gmt_plus_4?" => {
+          name: "etc_gmt_plus_4?",
+          description: "returns whether the current time zone matches etc/gmt/plus/4.",
+          examples: [
+            "Time.etc_gmt_plus_4?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_4?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_4?"
+          ]
+        },
+        "etc_gmt_plus_5?" => {
+          name: "etc_gmt_plus_5?",
+          description: "returns whether the current time zone matches etc/gmt/plus/5.",
+          examples: [
+            "Time.etc_gmt_plus_5?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_5?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_5?"
+          ]
+        },
+        "etc_gmt_plus_6?" => {
+          name: "etc_gmt_plus_6?",
+          description: "returns whether the current time zone matches etc/gmt/plus/6.",
+          examples: [
+            "Time.etc_gmt_plus_6?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_6?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_6?"
+          ]
+        },
+        "etc_gmt_plus_7?" => {
+          name: "etc_gmt_plus_7?",
+          description: "returns whether the current time zone matches etc/gmt/plus/7.",
+          examples: [
+            "Time.etc_gmt_plus_7?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_7?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_7?"
+          ]
+        },
+        "etc_gmt_plus_8?" => {
+          name: "etc_gmt_plus_8?",
+          description: "returns whether the current time zone matches etc/gmt/plus/8.",
+          examples: [
+            "Time.etc_gmt_plus_8?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_8?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_8?"
+          ]
+        },
+        "etc_gmt_plus_9?" => {
+          name: "etc_gmt_plus_9?",
+          description: "returns whether the current time zone matches etc/gmt/plus/9.",
+          examples: [
+            "Time.etc_gmt_plus_9?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_plus_9?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_plus_9?"
+          ]
+        },
+        "etc_gmt_minus_0?" => {
+          name: "etc_gmt_minus_0?",
+          description: "returns whether the current time zone matches etc/gmt/minus/0.",
+          examples: [
+            "Time.etc_gmt_minus_0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_0?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_0?"
+          ]
+        },
+        "etc_gmt_minus_1?" => {
+          name: "etc_gmt_minus_1?",
+          description: "returns whether the current time zone matches etc/gmt/minus/1.",
+          examples: [
+            "Time.etc_gmt_minus_1?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_1?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_1?"
+          ]
+        },
+        "etc_gmt_minus_10?" => {
+          name: "etc_gmt_minus_10?",
+          description: "returns whether the current time zone matches etc/gmt/minus/10.",
+          examples: [
+            "Time.etc_gmt_minus_10?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_10?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_10?"
+          ]
+        },
+        "etc_gmt_minus_11?" => {
+          name: "etc_gmt_minus_11?",
+          description: "returns whether the current time zone matches etc/gmt/minus/11.",
+          examples: [
+            "Time.etc_gmt_minus_11?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_11?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_11?"
+          ]
+        },
+        "etc_gmt_minus_12?" => {
+          name: "etc_gmt_minus_12?",
+          description: "returns whether the current time zone matches etc/gmt/minus/12.",
+          examples: [
+            "Time.etc_gmt_minus_12?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_12?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_12?"
+          ]
+        },
+        "etc_gmt_minus_13?" => {
+          name: "etc_gmt_minus_13?",
+          description: "returns whether the current time zone matches etc/gmt/minus/13.",
+          examples: [
+            "Time.etc_gmt_minus_13?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_13?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_13?"
+          ]
+        },
+        "etc_gmt_minus_14?" => {
+          name: "etc_gmt_minus_14?",
+          description: "returns whether the current time zone matches etc/gmt/minus/14.",
+          examples: [
+            "Time.etc_gmt_minus_14?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_14?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_14?"
+          ]
+        },
+        "etc_gmt_minus_2?" => {
+          name: "etc_gmt_minus_2?",
+          description: "returns whether the current time zone matches etc/gmt/minus/2.",
+          examples: [
+            "Time.etc_gmt_minus_2?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_2?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_2?"
+          ]
+        },
+        "etc_gmt_minus_3?" => {
+          name: "etc_gmt_minus_3?",
+          description: "returns whether the current time zone matches etc/gmt/minus/3.",
+          examples: [
+            "Time.etc_gmt_minus_3?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_3?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_3?"
+          ]
+        },
+        "etc_gmt_minus_4?" => {
+          name: "etc_gmt_minus_4?",
+          description: "returns whether the current time zone matches etc/gmt/minus/4.",
+          examples: [
+            "Time.etc_gmt_minus_4?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_4?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_4?"
+          ]
+        },
+        "etc_gmt_minus_5?" => {
+          name: "etc_gmt_minus_5?",
+          description: "returns whether the current time zone matches etc/gmt/minus/5.",
+          examples: [
+            "Time.etc_gmt_minus_5?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_5?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_5?"
+          ]
+        },
+        "etc_gmt_minus_6?" => {
+          name: "etc_gmt_minus_6?",
+          description: "returns whether the current time zone matches etc/gmt/minus/6.",
+          examples: [
+            "Time.etc_gmt_minus_6?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_6?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_6?"
+          ]
+        },
+        "etc_gmt_minus_7?" => {
+          name: "etc_gmt_minus_7?",
+          description: "returns whether the current time zone matches etc/gmt/minus/7.",
+          examples: [
+            "Time.etc_gmt_minus_7?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_7?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_7?"
+          ]
+        },
+        "etc_gmt_minus_8?" => {
+          name: "etc_gmt_minus_8?",
+          description: "returns whether the current time zone matches etc/gmt/minus/8.",
+          examples: [
+            "Time.etc_gmt_minus_8?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_8?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_8?"
+          ]
+        },
+        "etc_gmt_minus_9?" => {
+          name: "etc_gmt_minus_9?",
+          description: "returns whether the current time zone matches etc/gmt/minus/9.",
+          examples: [
+            "Time.etc_gmt_minus_9?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt_minus_9?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt_minus_9?"
+          ]
+        },
+        "etc_gmt0?" => {
+          name: "etc_gmt0?",
+          description: "returns whether the current time zone matches etc/gmt0.",
+          examples: [
+            "Time.etc_gmt0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_gmt0?",
+            "Time.zone = \"Etc/UTC\" Time.etc_gmt0?"
+          ]
+        },
+        "etc_greenwich?" => {
+          name: "etc_greenwich?",
+          description: "returns whether the current time zone matches etc/greenwich.",
+          examples: [
+            "Time.etc_greenwich?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_greenwich?",
+            "Time.zone = \"Etc/UTC\" Time.etc_greenwich?"
+          ]
+        },
+        "etc_uct?" => {
+          name: "etc_uct?",
+          description: "returns whether the current time zone matches etc/uct.",
+          examples: [
+            "Time.etc_uct?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_uct?",
+            "Time.zone = \"Etc/UTC\" Time.etc_uct?"
+          ]
+        },
+        "etc_utc?" => {
+          name: "etc_utc?",
+          description: "returns whether the current time zone matches etc/utc.",
+          examples: [
+            "Time.etc_utc?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_utc?",
+            "Time.zone = \"Etc/UTC\" Time.etc_utc?"
+          ]
+        },
+        "etc_universal?" => {
+          name: "etc_universal?",
+          description: "returns whether the current time zone matches etc/universal.",
+          examples: [
+            "Time.etc_universal?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_universal?",
+            "Time.zone = \"Etc/UTC\" Time.etc_universal?"
+          ]
+        },
+        "etc_zulu?" => {
+          name: "etc_zulu?",
+          description: "returns whether the current time zone matches etc/zulu.",
+          examples: [
+            "Time.etc_zulu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").etc_zulu?",
+            "Time.zone = \"Etc/UTC\" Time.etc_zulu?"
+          ]
+        },
+        "europe_amsterdam?" => {
+          name: "europe_amsterdam?",
+          description: "returns whether the current time zone matches europe/amsterdam.",
+          examples: [
+            "Time.europe_amsterdam?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_amsterdam?",
+            "Time.zone = \"Etc/UTC\" Time.europe_amsterdam?"
+          ]
+        },
+        "europe_andorra?" => {
+          name: "europe_andorra?",
+          description: "returns whether the current time zone matches europe/andorra.",
+          examples: [
+            "Time.europe_andorra?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_andorra?",
+            "Time.zone = \"Etc/UTC\" Time.europe_andorra?"
+          ]
+        },
+        "europe_astrakhan?" => {
+          name: "europe_astrakhan?",
+          description: "returns whether the current time zone matches europe/astrakhan.",
+          examples: [
+            "Time.europe_astrakhan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_astrakhan?",
+            "Time.zone = \"Etc/UTC\" Time.europe_astrakhan?"
+          ]
+        },
+        "europe_athens?" => {
+          name: "europe_athens?",
+          description: "returns whether the current time zone matches europe/athens.",
+          examples: [
+            "Time.europe_athens?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_athens?",
+            "Time.zone = \"Etc/UTC\" Time.europe_athens?"
+          ]
+        },
+        "europe_belfast?" => {
+          name: "europe_belfast?",
+          description: "returns whether the current time zone matches europe/belfast.",
+          examples: [
+            "Time.europe_belfast?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_belfast?",
+            "Time.zone = \"Etc/UTC\" Time.europe_belfast?"
+          ]
+        },
+        "europe_belgrade?" => {
+          name: "europe_belgrade?",
+          description: "returns whether the current time zone matches europe/belgrade.",
+          examples: [
+            "Time.europe_belgrade?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_belgrade?",
+            "Time.zone = \"Etc/UTC\" Time.europe_belgrade?"
+          ]
+        },
+        "europe_berlin?" => {
+          name: "europe_berlin?",
+          description: "returns whether the current time zone matches europe/berlin.",
+          examples: [
+            "Time.europe_berlin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_berlin?",
+            "Time.zone = \"Etc/UTC\" Time.europe_berlin?"
+          ]
+        },
+        "europe_bratislava?" => {
+          name: "europe_bratislava?",
+          description: "returns whether the current time zone matches europe/bratislava.",
+          examples: [
+            "Time.europe_bratislava?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_bratislava?",
+            "Time.zone = \"Etc/UTC\" Time.europe_bratislava?"
+          ]
+        },
+        "europe_brussels?" => {
+          name: "europe_brussels?",
+          description: "returns whether the current time zone matches europe/brussels.",
+          examples: [
+            "Time.europe_brussels?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_brussels?",
+            "Time.zone = \"Etc/UTC\" Time.europe_brussels?"
+          ]
+        },
+        "europe_bucharest?" => {
+          name: "europe_bucharest?",
+          description: "returns whether the current time zone matches europe/bucharest.",
+          examples: [
+            "Time.europe_bucharest?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_bucharest?",
+            "Time.zone = \"Etc/UTC\" Time.europe_bucharest?"
+          ]
+        },
+        "europe_budapest?" => {
+          name: "europe_budapest?",
+          description: "returns whether the current time zone matches europe/budapest.",
+          examples: [
+            "Time.europe_budapest?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_budapest?",
+            "Time.zone = \"Etc/UTC\" Time.europe_budapest?"
+          ]
+        },
+        "europe_busingen?" => {
+          name: "europe_busingen?",
+          description: "returns whether the current time zone matches europe/busingen.",
+          examples: [
+            "Time.europe_busingen?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_busingen?",
+            "Time.zone = \"Etc/UTC\" Time.europe_busingen?"
+          ]
+        },
+        "europe_chisinau?" => {
+          name: "europe_chisinau?",
+          description: "returns whether the current time zone matches europe/chisinau.",
+          examples: [
+            "Time.europe_chisinau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_chisinau?",
+            "Time.zone = \"Etc/UTC\" Time.europe_chisinau?"
+          ]
+        },
+        "europe_copenhagen?" => {
+          name: "europe_copenhagen?",
+          description: "returns whether the current time zone matches europe/copenhagen.",
+          examples: [
+            "Time.europe_copenhagen?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_copenhagen?",
+            "Time.zone = \"Etc/UTC\" Time.europe_copenhagen?"
+          ]
+        },
+        "europe_dublin?" => {
+          name: "europe_dublin?",
+          description: "returns whether the current time zone matches europe/dublin.",
+          examples: [
+            "Time.europe_dublin?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_dublin?",
+            "Time.zone = \"Etc/UTC\" Time.europe_dublin?"
+          ]
+        },
+        "europe_gibraltar?" => {
+          name: "europe_gibraltar?",
+          description: "returns whether the current time zone matches europe/gibraltar.",
+          examples: [
+            "Time.europe_gibraltar?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_gibraltar?",
+            "Time.zone = \"Etc/UTC\" Time.europe_gibraltar?"
+          ]
+        },
+        "europe_guernsey?" => {
+          name: "europe_guernsey?",
+          description: "returns whether the current time zone matches europe/guernsey.",
+          examples: [
+            "Time.europe_guernsey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_guernsey?",
+            "Time.zone = \"Etc/UTC\" Time.europe_guernsey?"
+          ]
+        },
+        "europe_helsinki?" => {
+          name: "europe_helsinki?",
+          description: "returns whether the current time zone matches europe/helsinki.",
+          examples: [
+            "Time.europe_helsinki?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_helsinki?",
+            "Time.zone = \"Etc/UTC\" Time.europe_helsinki?"
+          ]
+        },
+        "europe_isle_of_man?" => {
+          name: "europe_isle_of_man?",
+          description: "returns whether the current time zone matches europe/isle/of/man.",
+          examples: [
+            "Time.europe_isle_of_man?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_isle_of_man?",
+            "Time.zone = \"Etc/UTC\" Time.europe_isle_of_man?"
+          ]
+        },
+        "europe_istanbul?" => {
+          name: "europe_istanbul?",
+          description: "returns whether the current time zone matches europe/istanbul.",
+          examples: [
+            "Time.europe_istanbul?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_istanbul?",
+            "Time.zone = \"Etc/UTC\" Time.europe_istanbul?"
+          ]
+        },
+        "europe_jersey?" => {
+          name: "europe_jersey?",
+          description: "returns whether the current time zone matches europe/jersey.",
+          examples: [
+            "Time.europe_jersey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_jersey?",
+            "Time.zone = \"Etc/UTC\" Time.europe_jersey?"
+          ]
+        },
+        "europe_kaliningrad?" => {
+          name: "europe_kaliningrad?",
+          description: "returns whether the current time zone matches europe/kaliningrad.",
+          examples: [
+            "Time.europe_kaliningrad?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_kaliningrad?",
+            "Time.zone = \"Etc/UTC\" Time.europe_kaliningrad?"
+          ]
+        },
+        "europe_kiev?" => {
+          name: "europe_kiev?",
+          description: "returns whether the current time zone matches europe/kiev.",
+          examples: [
+            "Time.europe_kiev?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_kiev?",
+            "Time.zone = \"Etc/UTC\" Time.europe_kiev?"
+          ]
+        },
+        "europe_kirov?" => {
+          name: "europe_kirov?",
+          description: "returns whether the current time zone matches europe/kirov.",
+          examples: [
+            "Time.europe_kirov?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_kirov?",
+            "Time.zone = \"Etc/UTC\" Time.europe_kirov?"
+          ]
+        },
+        "europe_kyiv?" => {
+          name: "europe_kyiv?",
+          description: "returns whether the current time zone matches europe/kyiv.",
+          examples: [
+            "Time.europe_kyiv?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_kyiv?",
+            "Time.zone = \"Etc/UTC\" Time.europe_kyiv?"
+          ]
+        },
+        "europe_lisbon?" => {
+          name: "europe_lisbon?",
+          description: "returns whether the current time zone matches europe/lisbon.",
+          examples: [
+            "Time.europe_lisbon?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_lisbon?",
+            "Time.zone = \"Etc/UTC\" Time.europe_lisbon?"
+          ]
+        },
+        "europe_ljubljana?" => {
+          name: "europe_ljubljana?",
+          description: "returns whether the current time zone matches europe/ljubljana.",
+          examples: [
+            "Time.europe_ljubljana?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_ljubljana?",
+            "Time.zone = \"Etc/UTC\" Time.europe_ljubljana?"
+          ]
+        },
+        "europe_london?" => {
+          name: "europe_london?",
+          description: "returns whether the current time zone matches europe/london.",
+          examples: [
+            "Time.europe_london?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_london?",
+            "Time.zone = \"Etc/UTC\" Time.europe_london?"
+          ]
+        },
+        "europe_luxembourg?" => {
+          name: "europe_luxembourg?",
+          description: "returns whether the current time zone matches europe/luxembourg.",
+          examples: [
+            "Time.europe_luxembourg?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_luxembourg?",
+            "Time.zone = \"Etc/UTC\" Time.europe_luxembourg?"
+          ]
+        },
+        "europe_madrid?" => {
+          name: "europe_madrid?",
+          description: "returns whether the current time zone matches europe/madrid.",
+          examples: [
+            "Time.europe_madrid?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_madrid?",
+            "Time.zone = \"Etc/UTC\" Time.europe_madrid?"
+          ]
+        },
+        "europe_malta?" => {
+          name: "europe_malta?",
+          description: "returns whether the current time zone matches europe/malta.",
+          examples: [
+            "Time.europe_malta?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_malta?",
+            "Time.zone = \"Etc/UTC\" Time.europe_malta?"
+          ]
+        },
+        "europe_mariehamn?" => {
+          name: "europe_mariehamn?",
+          description: "returns whether the current time zone matches europe/mariehamn.",
+          examples: [
+            "Time.europe_mariehamn?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_mariehamn?",
+            "Time.zone = \"Etc/UTC\" Time.europe_mariehamn?"
+          ]
+        },
+        "europe_minsk?" => {
+          name: "europe_minsk?",
+          description: "returns whether the current time zone matches europe/minsk.",
+          examples: [
+            "Time.europe_minsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_minsk?",
+            "Time.zone = \"Etc/UTC\" Time.europe_minsk?"
+          ]
+        },
+        "europe_monaco?" => {
+          name: "europe_monaco?",
+          description: "returns whether the current time zone matches europe/monaco.",
+          examples: [
+            "Time.europe_monaco?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_monaco?",
+            "Time.zone = \"Etc/UTC\" Time.europe_monaco?"
+          ]
+        },
+        "europe_moscow?" => {
+          name: "europe_moscow?",
+          description: "returns whether the current time zone matches europe/moscow.",
+          examples: [
+            "Time.europe_moscow?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_moscow?",
+            "Time.zone = \"Etc/UTC\" Time.europe_moscow?"
+          ]
+        },
+        "europe_nicosia?" => {
+          name: "europe_nicosia?",
+          description: "returns whether the current time zone matches europe/nicosia.",
+          examples: [
+            "Time.europe_nicosia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_nicosia?",
+            "Time.zone = \"Etc/UTC\" Time.europe_nicosia?"
+          ]
+        },
+        "europe_oslo?" => {
+          name: "europe_oslo?",
+          description: "returns whether the current time zone matches europe/oslo.",
+          examples: [
+            "Time.europe_oslo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_oslo?",
+            "Time.zone = \"Etc/UTC\" Time.europe_oslo?"
+          ]
+        },
+        "europe_paris?" => {
+          name: "europe_paris?",
+          description: "returns whether the current time zone matches europe/paris.",
+          examples: [
+            "Time.europe_paris?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_paris?",
+            "Time.zone = \"Etc/UTC\" Time.europe_paris?"
+          ]
+        },
+        "europe_podgorica?" => {
+          name: "europe_podgorica?",
+          description: "returns whether the current time zone matches europe/podgorica.",
+          examples: [
+            "Time.europe_podgorica?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_podgorica?",
+            "Time.zone = \"Etc/UTC\" Time.europe_podgorica?"
+          ]
+        },
+        "europe_prague?" => {
+          name: "europe_prague?",
+          description: "returns whether the current time zone matches europe/prague.",
+          examples: [
+            "Time.europe_prague?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_prague?",
+            "Time.zone = \"Etc/UTC\" Time.europe_prague?"
+          ]
+        },
+        "europe_riga?" => {
+          name: "europe_riga?",
+          description: "returns whether the current time zone matches europe/riga.",
+          examples: [
+            "Time.europe_riga?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_riga?",
+            "Time.zone = \"Etc/UTC\" Time.europe_riga?"
+          ]
+        },
+        "europe_rome?" => {
+          name: "europe_rome?",
+          description: "returns whether the current time zone matches europe/rome.",
+          examples: [
+            "Time.europe_rome?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_rome?",
+            "Time.zone = \"Etc/UTC\" Time.europe_rome?"
+          ]
+        },
+        "europe_samara?" => {
+          name: "europe_samara?",
+          description: "returns whether the current time zone matches europe/samara.",
+          examples: [
+            "Time.europe_samara?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_samara?",
+            "Time.zone = \"Etc/UTC\" Time.europe_samara?"
+          ]
+        },
+        "europe_san_marino?" => {
+          name: "europe_san_marino?",
+          description: "returns whether the current time zone matches europe/san/marino.",
+          examples: [
+            "Time.europe_san_marino?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_san_marino?",
+            "Time.zone = \"Etc/UTC\" Time.europe_san_marino?"
+          ]
+        },
+        "europe_sarajevo?" => {
+          name: "europe_sarajevo?",
+          description: "returns whether the current time zone matches europe/sarajevo.",
+          examples: [
+            "Time.europe_sarajevo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_sarajevo?",
+            "Time.zone = \"Etc/UTC\" Time.europe_sarajevo?"
+          ]
+        },
+        "europe_saratov?" => {
+          name: "europe_saratov?",
+          description: "returns whether the current time zone matches europe/saratov.",
+          examples: [
+            "Time.europe_saratov?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_saratov?",
+            "Time.zone = \"Etc/UTC\" Time.europe_saratov?"
+          ]
+        },
+        "europe_simferopol?" => {
+          name: "europe_simferopol?",
+          description: "returns whether the current time zone matches europe/simferopol.",
+          examples: [
+            "Time.europe_simferopol?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_simferopol?",
+            "Time.zone = \"Etc/UTC\" Time.europe_simferopol?"
+          ]
+        },
+        "europe_skopje?" => {
+          name: "europe_skopje?",
+          description: "returns whether the current time zone matches europe/skopje.",
+          examples: [
+            "Time.europe_skopje?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_skopje?",
+            "Time.zone = \"Etc/UTC\" Time.europe_skopje?"
+          ]
+        },
+        "europe_sofia?" => {
+          name: "europe_sofia?",
+          description: "returns whether the current time zone matches europe/sofia.",
+          examples: [
+            "Time.europe_sofia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_sofia?",
+            "Time.zone = \"Etc/UTC\" Time.europe_sofia?"
+          ]
+        },
+        "europe_stockholm?" => {
+          name: "europe_stockholm?",
+          description: "returns whether the current time zone matches europe/stockholm.",
+          examples: [
+            "Time.europe_stockholm?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_stockholm?",
+            "Time.zone = \"Etc/UTC\" Time.europe_stockholm?"
+          ]
+        },
+        "europe_tallinn?" => {
+          name: "europe_tallinn?",
+          description: "returns whether the current time zone matches europe/tallinn.",
+          examples: [
+            "Time.europe_tallinn?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_tallinn?",
+            "Time.zone = \"Etc/UTC\" Time.europe_tallinn?"
+          ]
+        },
+        "europe_tirane?" => {
+          name: "europe_tirane?",
+          description: "returns whether the current time zone matches europe/tirane.",
+          examples: [
+            "Time.europe_tirane?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_tirane?",
+            "Time.zone = \"Etc/UTC\" Time.europe_tirane?"
+          ]
+        },
+        "europe_tiraspol?" => {
+          name: "europe_tiraspol?",
+          description: "returns whether the current time zone matches europe/tiraspol.",
+          examples: [
+            "Time.europe_tiraspol?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_tiraspol?",
+            "Time.zone = \"Etc/UTC\" Time.europe_tiraspol?"
+          ]
+        },
+        "europe_ulyanovsk?" => {
+          name: "europe_ulyanovsk?",
+          description: "returns whether the current time zone matches europe/ulyanovsk.",
+          examples: [
+            "Time.europe_ulyanovsk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_ulyanovsk?",
+            "Time.zone = \"Etc/UTC\" Time.europe_ulyanovsk?"
+          ]
+        },
+        "europe_uzhgorod?" => {
+          name: "europe_uzhgorod?",
+          description: "returns whether the current time zone matches europe/uzhgorod.",
+          examples: [
+            "Time.europe_uzhgorod?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_uzhgorod?",
+            "Time.zone = \"Etc/UTC\" Time.europe_uzhgorod?"
+          ]
+        },
+        "europe_vaduz?" => {
+          name: "europe_vaduz?",
+          description: "returns whether the current time zone matches europe/vaduz.",
+          examples: [
+            "Time.europe_vaduz?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_vaduz?",
+            "Time.zone = \"Etc/UTC\" Time.europe_vaduz?"
+          ]
+        },
+        "europe_vatican?" => {
+          name: "europe_vatican?",
+          description: "returns whether the current time zone matches europe/vatican.",
+          examples: [
+            "Time.europe_vatican?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_vatican?",
+            "Time.zone = \"Etc/UTC\" Time.europe_vatican?"
+          ]
+        },
+        "europe_vienna?" => {
+          name: "europe_vienna?",
+          description: "returns whether the current time zone matches europe/vienna.",
+          examples: [
+            "Time.europe_vienna?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_vienna?",
+            "Time.zone = \"Etc/UTC\" Time.europe_vienna?"
+          ]
+        },
+        "europe_vilnius?" => {
+          name: "europe_vilnius?",
+          description: "returns whether the current time zone matches europe/vilnius.",
+          examples: [
+            "Time.europe_vilnius?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_vilnius?",
+            "Time.zone = \"Etc/UTC\" Time.europe_vilnius?"
+          ]
+        },
+        "europe_volgograd?" => {
+          name: "europe_volgograd?",
+          description: "returns whether the current time zone matches europe/volgograd.",
+          examples: [
+            "Time.europe_volgograd?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_volgograd?",
+            "Time.zone = \"Etc/UTC\" Time.europe_volgograd?"
+          ]
+        },
+        "europe_warsaw?" => {
+          name: "europe_warsaw?",
+          description: "returns whether the current time zone matches europe/warsaw.",
+          examples: [
+            "Time.europe_warsaw?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_warsaw?",
+            "Time.zone = \"Etc/UTC\" Time.europe_warsaw?"
+          ]
+        },
+        "europe_zagreb?" => {
+          name: "europe_zagreb?",
+          description: "returns whether the current time zone matches europe/zagreb.",
+          examples: [
+            "Time.europe_zagreb?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_zagreb?",
+            "Time.zone = \"Etc/UTC\" Time.europe_zagreb?"
+          ]
+        },
+        "europe_zaporozhye?" => {
+          name: "europe_zaporozhye?",
+          description: "returns whether the current time zone matches europe/zaporozhye.",
+          examples: [
+            "Time.europe_zaporozhye?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_zaporozhye?",
+            "Time.zone = \"Etc/UTC\" Time.europe_zaporozhye?"
+          ]
+        },
+        "europe_zurich?" => {
+          name: "europe_zurich?",
+          description: "returns whether the current time zone matches europe/zurich.",
+          examples: [
+            "Time.europe_zurich?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").europe_zurich?",
+            "Time.zone = \"Etc/UTC\" Time.europe_zurich?"
+          ]
+        },
+        "factory?" => {
+          name: "factory?",
+          description: "returns whether the current time zone matches factory.",
+          examples: [
+            "Time.factory?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").factory?",
+            "Time.zone = \"Etc/UTC\" Time.factory?"
+          ]
+        },
+        "gb?" => {
+          name: "gb?",
+          description: "returns whether the current time zone matches gb.",
+          examples: [
+            "Time.gb?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gb?",
+            "Time.zone = \"Etc/UTC\" Time.gb?"
+          ]
+        },
+        "gb_minus_eire?" => {
+          name: "gb_minus_eire?",
+          description: "returns whether the current time zone matches gb/minus/eire.",
+          examples: [
+            "Time.gb_minus_eire?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gb_minus_eire?",
+            "Time.zone = \"Etc/UTC\" Time.gb_minus_eire?"
+          ]
+        },
+        "gmt?" => {
+          name: "gmt?",
+          description: "returns whether the current time zone matches gmt.",
+          examples: [
+            "Time.gmt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gmt?",
+            "Time.zone = \"Etc/UTC\" Time.gmt?"
+          ]
+        },
+        "gmt_plus_0?" => {
+          name: "gmt_plus_0?",
+          description: "returns whether the current time zone matches gmt/plus/0.",
+          examples: [
+            "Time.gmt_plus_0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gmt_plus_0?",
+            "Time.zone = \"Etc/UTC\" Time.gmt_plus_0?"
+          ]
+        },
+        "gmt_minus_0?" => {
+          name: "gmt_minus_0?",
+          description: "returns whether the current time zone matches gmt/minus/0.",
+          examples: [
+            "Time.gmt_minus_0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gmt_minus_0?",
+            "Time.zone = \"Etc/UTC\" Time.gmt_minus_0?"
+          ]
+        },
+        "gmt0?" => {
+          name: "gmt0?",
+          description: "returns whether the current time zone matches gmt0.",
+          examples: [
+            "Time.gmt0?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").gmt0?",
+            "Time.zone = \"Etc/UTC\" Time.gmt0?"
+          ]
+        },
+        "greenwich?" => {
+          name: "greenwich?",
+          description: "returns whether the current time zone matches greenwich.",
+          examples: [
+            "Time.greenwich?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").greenwich?",
+            "Time.zone = \"Etc/UTC\" Time.greenwich?"
+          ]
+        },
+        "hst?" => {
+          name: "hst?",
+          description: "returns whether the current time zone matches hst.",
+          examples: [
+            "Time.hst?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").hst?",
+            "Time.zone = \"Etc/UTC\" Time.hst?"
+          ]
+        },
+        "hongkong?" => {
+          name: "hongkong?",
+          description: "returns whether the current time zone matches hongkong.",
+          examples: [
+            "Time.hongkong?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").hongkong?",
+            "Time.zone = \"Etc/UTC\" Time.hongkong?"
+          ]
+        },
+        "iceland?" => {
+          name: "iceland?",
+          description: "returns whether the current time zone matches iceland.",
+          examples: [
+            "Time.iceland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").iceland?",
+            "Time.zone = \"Etc/UTC\" Time.iceland?"
+          ]
+        },
+        "indian_antananarivo?" => {
+          name: "indian_antananarivo?",
+          description: "returns whether the current time zone matches indian/antananarivo.",
+          examples: [
+            "Time.indian_antananarivo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_antananarivo?",
+            "Time.zone = \"Etc/UTC\" Time.indian_antananarivo?"
+          ]
+        },
+        "indian_chagos?" => {
+          name: "indian_chagos?",
+          description: "returns whether the current time zone matches indian/chagos.",
+          examples: [
+            "Time.indian_chagos?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_chagos?",
+            "Time.zone = \"Etc/UTC\" Time.indian_chagos?"
+          ]
+        },
+        "indian_christmas?" => {
+          name: "indian_christmas?",
+          description: "returns whether the current time zone matches indian/christmas.",
+          examples: [
+            "Time.indian_christmas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_christmas?",
+            "Time.zone = \"Etc/UTC\" Time.indian_christmas?"
+          ]
+        },
+        "indian_cocos?" => {
+          name: "indian_cocos?",
+          description: "returns whether the current time zone matches indian/cocos.",
+          examples: [
+            "Time.indian_cocos?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_cocos?",
+            "Time.zone = \"Etc/UTC\" Time.indian_cocos?"
+          ]
+        },
+        "indian_comoro?" => {
+          name: "indian_comoro?",
+          description: "returns whether the current time zone matches indian/comoro.",
+          examples: [
+            "Time.indian_comoro?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_comoro?",
+            "Time.zone = \"Etc/UTC\" Time.indian_comoro?"
+          ]
+        },
+        "indian_kerguelen?" => {
+          name: "indian_kerguelen?",
+          description: "returns whether the current time zone matches indian/kerguelen.",
+          examples: [
+            "Time.indian_kerguelen?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_kerguelen?",
+            "Time.zone = \"Etc/UTC\" Time.indian_kerguelen?"
+          ]
+        },
+        "indian_mahe?" => {
+          name: "indian_mahe?",
+          description: "returns whether the current time zone matches indian/mahe.",
+          examples: [
+            "Time.indian_mahe?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_mahe?",
+            "Time.zone = \"Etc/UTC\" Time.indian_mahe?"
+          ]
+        },
+        "indian_maldives?" => {
+          name: "indian_maldives?",
+          description: "returns whether the current time zone matches indian/maldives.",
+          examples: [
+            "Time.indian_maldives?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_maldives?",
+            "Time.zone = \"Etc/UTC\" Time.indian_maldives?"
+          ]
+        },
+        "indian_mauritius?" => {
+          name: "indian_mauritius?",
+          description: "returns whether the current time zone matches indian/mauritius.",
+          examples: [
+            "Time.indian_mauritius?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_mauritius?",
+            "Time.zone = \"Etc/UTC\" Time.indian_mauritius?"
+          ]
+        },
+        "indian_mayotte?" => {
+          name: "indian_mayotte?",
+          description: "returns whether the current time zone matches indian/mayotte.",
+          examples: [
+            "Time.indian_mayotte?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_mayotte?",
+            "Time.zone = \"Etc/UTC\" Time.indian_mayotte?"
+          ]
+        },
+        "indian_reunion?" => {
+          name: "indian_reunion?",
+          description: "returns whether the current time zone matches indian/reunion.",
+          examples: [
+            "Time.indian_reunion?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").indian_reunion?",
+            "Time.zone = \"Etc/UTC\" Time.indian_reunion?"
+          ]
+        },
+        "iran?" => {
+          name: "iran?",
+          description: "returns whether the current time zone matches iran.",
+          examples: [
+            "Time.iran?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").iran?",
+            "Time.zone = \"Etc/UTC\" Time.iran?"
+          ]
+        },
+        "israel?" => {
+          name: "israel?",
+          description: "returns whether the current time zone matches israel.",
+          examples: [
+            "Time.israel?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").israel?",
+            "Time.zone = \"Etc/UTC\" Time.israel?"
+          ]
+        },
+        "jamaica?" => {
+          name: "jamaica?",
+          description: "returns whether the current time zone matches jamaica.",
+          examples: [
+            "Time.jamaica?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").jamaica?",
+            "Time.zone = \"Etc/UTC\" Time.jamaica?"
+          ]
+        },
+        "japan?" => {
+          name: "japan?",
+          description: "returns whether the current time zone matches japan.",
+          examples: [
+            "Time.japan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").japan?",
+            "Time.zone = \"Etc/UTC\" Time.japan?"
+          ]
+        },
+        "kwajalein?" => {
+          name: "kwajalein?",
+          description: "returns whether the current time zone matches kwajalein.",
+          examples: [
+            "Time.kwajalein?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").kwajalein?",
+            "Time.zone = \"Etc/UTC\" Time.kwajalein?"
+          ]
+        },
+        "libya?" => {
+          name: "libya?",
+          description: "returns whether the current time zone matches libya.",
+          examples: [
+            "Time.libya?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").libya?",
+            "Time.zone = \"Etc/UTC\" Time.libya?"
+          ]
+        },
+        "met?" => {
+          name: "met?",
+          description: "returns whether the current time zone matches met.",
+          examples: [
+            "Time.met?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").met?",
+            "Time.zone = \"Etc/UTC\" Time.met?"
+          ]
+        },
+        "mst?" => {
+          name: "mst?",
+          description: "returns whether the current time zone matches mst.",
+          examples: [
+            "Time.mst?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").mst?",
+            "Time.zone = \"Etc/UTC\" Time.mst?"
+          ]
+        },
+        "mst7mdt?" => {
+          name: "mst7mdt?",
+          description: "returns whether the current time zone matches mst7mdt.",
+          examples: [
+            "Time.mst7mdt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").mst7mdt?",
+            "Time.zone = \"Etc/UTC\" Time.mst7mdt?"
+          ]
+        },
+        "mexico_bajanorte?" => {
+          name: "mexico_bajanorte?",
+          description: "returns whether the current time zone matches mexico/bajanorte.",
+          examples: [
+            "Time.mexico_bajanorte?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").mexico_bajanorte?",
+            "Time.zone = \"Etc/UTC\" Time.mexico_bajanorte?"
+          ]
+        },
+        "mexico_bajasur?" => {
+          name: "mexico_bajasur?",
+          description: "returns whether the current time zone matches mexico/bajasur.",
+          examples: [
+            "Time.mexico_bajasur?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").mexico_bajasur?",
+            "Time.zone = \"Etc/UTC\" Time.mexico_bajasur?"
+          ]
+        },
+        "mexico_general?" => {
+          name: "mexico_general?",
+          description: "returns whether the current time zone matches mexico/general.",
+          examples: [
+            "Time.mexico_general?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").mexico_general?",
+            "Time.zone = \"Etc/UTC\" Time.mexico_general?"
+          ]
+        },
+        "nz?" => {
+          name: "nz?",
+          description: "returns whether the current time zone matches nz.",
+          examples: [
+            "Time.nz?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").nz?",
+            "Time.zone = \"Etc/UTC\" Time.nz?"
+          ]
+        },
+        "nz_minus_chat?" => {
+          name: "nz_minus_chat?",
+          description: "returns whether the current time zone matches nz/minus/chat.",
+          examples: [
+            "Time.nz_minus_chat?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").nz_minus_chat?",
+            "Time.zone = \"Etc/UTC\" Time.nz_minus_chat?"
+          ]
+        },
+        "navajo?" => {
+          name: "navajo?",
+          description: "returns whether the current time zone matches navajo.",
+          examples: [
+            "Time.navajo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").navajo?",
+            "Time.zone = \"Etc/UTC\" Time.navajo?"
+          ]
+        },
+        "prc?" => {
+          name: "prc?",
+          description: "returns whether the current time zone matches prc.",
+          examples: [
+            "Time.prc?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").prc?",
+            "Time.zone = \"Etc/UTC\" Time.prc?"
+          ]
+        },
+        "pst8pdt?" => {
+          name: "pst8pdt?",
+          description: "returns whether the current time zone matches pst8pdt.",
+          examples: [
+            "Time.pst8pdt?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pst8pdt?",
+            "Time.zone = \"Etc/UTC\" Time.pst8pdt?"
+          ]
+        },
+        "pacific_apia?" => {
+          name: "pacific_apia?",
+          description: "returns whether the current time zone matches pacific/apia.",
+          examples: [
+            "Time.pacific_apia?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_apia?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_apia?"
+          ]
+        },
+        "pacific_auckland?" => {
+          name: "pacific_auckland?",
+          description: "returns whether the current time zone matches pacific/auckland.",
+          examples: [
+            "Time.pacific_auckland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_auckland?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_auckland?"
+          ]
+        },
+        "pacific_bougainville?" => {
+          name: "pacific_bougainville?",
+          description: "returns whether the current time zone matches pacific/bougainville.",
+          examples: [
+            "Time.pacific_bougainville?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_bougainville?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_bougainville?"
+          ]
+        },
+        "pacific_chatham?" => {
+          name: "pacific_chatham?",
+          description: "returns whether the current time zone matches pacific/chatham.",
+          examples: [
+            "Time.pacific_chatham?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_chatham?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_chatham?"
+          ]
+        },
+        "pacific_chuuk?" => {
+          name: "pacific_chuuk?",
+          description: "returns whether the current time zone matches pacific/chuuk.",
+          examples: [
+            "Time.pacific_chuuk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_chuuk?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_chuuk?"
+          ]
+        },
+        "pacific_easter?" => {
+          name: "pacific_easter?",
+          description: "returns whether the current time zone matches pacific/easter.",
+          examples: [
+            "Time.pacific_easter?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_easter?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_easter?"
+          ]
+        },
+        "pacific_efate?" => {
+          name: "pacific_efate?",
+          description: "returns whether the current time zone matches pacific/efate.",
+          examples: [
+            "Time.pacific_efate?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_efate?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_efate?"
+          ]
+        },
+        "pacific_enderbury?" => {
+          name: "pacific_enderbury?",
+          description: "returns whether the current time zone matches pacific/enderbury.",
+          examples: [
+            "Time.pacific_enderbury?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_enderbury?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_enderbury?"
+          ]
+        },
+        "pacific_fakaofo?" => {
+          name: "pacific_fakaofo?",
+          description: "returns whether the current time zone matches pacific/fakaofo.",
+          examples: [
+            "Time.pacific_fakaofo?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_fakaofo?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_fakaofo?"
+          ]
+        },
+        "pacific_fiji?" => {
+          name: "pacific_fiji?",
+          description: "returns whether the current time zone matches pacific/fiji.",
+          examples: [
+            "Time.pacific_fiji?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_fiji?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_fiji?"
+          ]
+        },
+        "pacific_funafuti?" => {
+          name: "pacific_funafuti?",
+          description: "returns whether the current time zone matches pacific/funafuti.",
+          examples: [
+            "Time.pacific_funafuti?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_funafuti?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_funafuti?"
+          ]
+        },
+        "pacific_galapagos?" => {
+          name: "pacific_galapagos?",
+          description: "returns whether the current time zone matches pacific/galapagos.",
+          examples: [
+            "Time.pacific_galapagos?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_galapagos?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_galapagos?"
+          ]
+        },
+        "pacific_gambier?" => {
+          name: "pacific_gambier?",
+          description: "returns whether the current time zone matches pacific/gambier.",
+          examples: [
+            "Time.pacific_gambier?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_gambier?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_gambier?"
+          ]
+        },
+        "pacific_guadalcanal?" => {
+          name: "pacific_guadalcanal?",
+          description: "returns whether the current time zone matches pacific/guadalcanal.",
+          examples: [
+            "Time.pacific_guadalcanal?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_guadalcanal?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_guadalcanal?"
+          ]
+        },
+        "pacific_guam?" => {
+          name: "pacific_guam?",
+          description: "returns whether the current time zone matches pacific/guam.",
+          examples: [
+            "Time.pacific_guam?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_guam?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_guam?"
+          ]
+        },
+        "pacific_honolulu?" => {
+          name: "pacific_honolulu?",
+          description: "returns whether the current time zone matches pacific/honolulu.",
+          examples: [
+            "Time.pacific_honolulu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_honolulu?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_honolulu?"
+          ]
+        },
+        "pacific_johnston?" => {
+          name: "pacific_johnston?",
+          description: "returns whether the current time zone matches pacific/johnston.",
+          examples: [
+            "Time.pacific_johnston?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_johnston?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_johnston?"
+          ]
+        },
+        "pacific_kanton?" => {
+          name: "pacific_kanton?",
+          description: "returns whether the current time zone matches pacific/kanton.",
+          examples: [
+            "Time.pacific_kanton?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_kanton?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_kanton?"
+          ]
+        },
+        "pacific_kiritimati?" => {
+          name: "pacific_kiritimati?",
+          description: "returns whether the current time zone matches pacific/kiritimati.",
+          examples: [
+            "Time.pacific_kiritimati?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_kiritimati?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_kiritimati?"
+          ]
+        },
+        "pacific_kosrae?" => {
+          name: "pacific_kosrae?",
+          description: "returns whether the current time zone matches pacific/kosrae.",
+          examples: [
+            "Time.pacific_kosrae?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_kosrae?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_kosrae?"
+          ]
+        },
+        "pacific_kwajalein?" => {
+          name: "pacific_kwajalein?",
+          description: "returns whether the current time zone matches pacific/kwajalein.",
+          examples: [
+            "Time.pacific_kwajalein?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_kwajalein?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_kwajalein?"
+          ]
+        },
+        "pacific_majuro?" => {
+          name: "pacific_majuro?",
+          description: "returns whether the current time zone matches pacific/majuro.",
+          examples: [
+            "Time.pacific_majuro?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_majuro?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_majuro?"
+          ]
+        },
+        "pacific_marquesas?" => {
+          name: "pacific_marquesas?",
+          description: "returns whether the current time zone matches pacific/marquesas.",
+          examples: [
+            "Time.pacific_marquesas?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_marquesas?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_marquesas?"
+          ]
+        },
+        "pacific_midway?" => {
+          name: "pacific_midway?",
+          description: "returns whether the current time zone matches pacific/midway.",
+          examples: [
+            "Time.pacific_midway?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_midway?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_midway?"
+          ]
+        },
+        "pacific_nauru?" => {
+          name: "pacific_nauru?",
+          description: "returns whether the current time zone matches pacific/nauru.",
+          examples: [
+            "Time.pacific_nauru?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_nauru?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_nauru?"
+          ]
+        },
+        "pacific_niue?" => {
+          name: "pacific_niue?",
+          description: "returns whether the current time zone matches pacific/niue.",
+          examples: [
+            "Time.pacific_niue?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_niue?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_niue?"
+          ]
+        },
+        "pacific_norfolk?" => {
+          name: "pacific_norfolk?",
+          description: "returns whether the current time zone matches pacific/norfolk.",
+          examples: [
+            "Time.pacific_norfolk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_norfolk?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_norfolk?"
+          ]
+        },
+        "pacific_noumea?" => {
+          name: "pacific_noumea?",
+          description: "returns whether the current time zone matches pacific/noumea.",
+          examples: [
+            "Time.pacific_noumea?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_noumea?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_noumea?"
+          ]
+        },
+        "pacific_pago_pago?" => {
+          name: "pacific_pago_pago?",
+          description: "returns whether the current time zone matches pacific/pago/pago.",
+          examples: [
+            "Time.pacific_pago_pago?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_pago_pago?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_pago_pago?"
+          ]
+        },
+        "pacific_palau?" => {
+          name: "pacific_palau?",
+          description: "returns whether the current time zone matches pacific/palau.",
+          examples: [
+            "Time.pacific_palau?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_palau?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_palau?"
+          ]
+        },
+        "pacific_pitcairn?" => {
+          name: "pacific_pitcairn?",
+          description: "returns whether the current time zone matches pacific/pitcairn.",
+          examples: [
+            "Time.pacific_pitcairn?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_pitcairn?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_pitcairn?"
+          ]
+        },
+        "pacific_pohnpei?" => {
+          name: "pacific_pohnpei?",
+          description: "returns whether the current time zone matches pacific/pohnpei.",
+          examples: [
+            "Time.pacific_pohnpei?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_pohnpei?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_pohnpei?"
+          ]
+        },
+        "pacific_ponape?" => {
+          name: "pacific_ponape?",
+          description: "returns whether the current time zone matches pacific/ponape.",
+          examples: [
+            "Time.pacific_ponape?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_ponape?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_ponape?"
+          ]
+        },
+        "pacific_port_moresby?" => {
+          name: "pacific_port_moresby?",
+          description: "returns whether the current time zone matches pacific/port/moresby.",
+          examples: [
+            "Time.pacific_port_moresby?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_port_moresby?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_port_moresby?"
+          ]
+        },
+        "pacific_rarotonga?" => {
+          name: "pacific_rarotonga?",
+          description: "returns whether the current time zone matches pacific/rarotonga.",
+          examples: [
+            "Time.pacific_rarotonga?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_rarotonga?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_rarotonga?"
+          ]
+        },
+        "pacific_saipan?" => {
+          name: "pacific_saipan?",
+          description: "returns whether the current time zone matches pacific/saipan.",
+          examples: [
+            "Time.pacific_saipan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_saipan?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_saipan?"
+          ]
+        },
+        "pacific_samoa?" => {
+          name: "pacific_samoa?",
+          description: "returns whether the current time zone matches pacific/samoa.",
+          examples: [
+            "Time.pacific_samoa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_samoa?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_samoa?"
+          ]
+        },
+        "pacific_tahiti?" => {
+          name: "pacific_tahiti?",
+          description: "returns whether the current time zone matches pacific/tahiti.",
+          examples: [
+            "Time.pacific_tahiti?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_tahiti?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_tahiti?"
+          ]
+        },
+        "pacific_tarawa?" => {
+          name: "pacific_tarawa?",
+          description: "returns whether the current time zone matches pacific/tarawa.",
+          examples: [
+            "Time.pacific_tarawa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_tarawa?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_tarawa?"
+          ]
+        },
+        "pacific_tongatapu?" => {
+          name: "pacific_tongatapu?",
+          description: "returns whether the current time zone matches pacific/tongatapu.",
+          examples: [
+            "Time.pacific_tongatapu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_tongatapu?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_tongatapu?"
+          ]
+        },
+        "pacific_truk?" => {
+          name: "pacific_truk?",
+          description: "returns whether the current time zone matches pacific/truk.",
+          examples: [
+            "Time.pacific_truk?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_truk?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_truk?"
+          ]
+        },
+        "pacific_wake?" => {
+          name: "pacific_wake?",
+          description: "returns whether the current time zone matches pacific/wake.",
+          examples: [
+            "Time.pacific_wake?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_wake?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_wake?"
+          ]
+        },
+        "pacific_wallis?" => {
+          name: "pacific_wallis?",
+          description: "returns whether the current time zone matches pacific/wallis.",
+          examples: [
+            "Time.pacific_wallis?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_wallis?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_wallis?"
+          ]
+        },
+        "pacific_yap?" => {
+          name: "pacific_yap?",
+          description: "returns whether the current time zone matches pacific/yap.",
+          examples: [
+            "Time.pacific_yap?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").pacific_yap?",
+            "Time.zone = \"Etc/UTC\" Time.pacific_yap?"
+          ]
+        },
+        "poland?" => {
+          name: "poland?",
+          description: "returns whether the current time zone matches poland.",
+          examples: [
+            "Time.poland?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").poland?",
+            "Time.zone = \"Etc/UTC\" Time.poland?"
+          ]
+        },
+        "portugal?" => {
+          name: "portugal?",
+          description: "returns whether the current time zone matches portugal.",
+          examples: [
+            "Time.portugal?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").portugal?",
+            "Time.zone = \"Etc/UTC\" Time.portugal?"
+          ]
+        },
+        "roc?" => {
+          name: "roc?",
+          description: "returns whether the current time zone matches roc.",
+          examples: [
+            "Time.roc?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").roc?",
+            "Time.zone = \"Etc/UTC\" Time.roc?"
+          ]
+        },
+        "rok?" => {
+          name: "rok?",
+          description: "returns whether the current time zone matches rok.",
+          examples: [
+            "Time.rok?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").rok?",
+            "Time.zone = \"Etc/UTC\" Time.rok?"
+          ]
+        },
+        "singapore?" => {
+          name: "singapore?",
+          description: "returns whether the current time zone matches singapore.",
+          examples: [
+            "Time.singapore?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").singapore?",
+            "Time.zone = \"Etc/UTC\" Time.singapore?"
+          ]
+        },
+        "turkey?" => {
+          name: "turkey?",
+          description: "returns whether the current time zone matches turkey.",
+          examples: [
+            "Time.turkey?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").turkey?",
+            "Time.zone = \"Etc/UTC\" Time.turkey?"
+          ]
+        },
+        "uct?" => {
+          name: "uct?",
+          description: "returns whether the current time zone matches uct.",
+          examples: [
+            "Time.uct?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").uct?",
+            "Time.zone = \"Etc/UTC\" Time.uct?"
+          ]
+        },
+        "us_alaska?" => {
+          name: "us_alaska?",
+          description: "returns whether the current time zone matches us/alaska.",
+          examples: [
+            "Time.us_alaska?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_alaska?",
+            "Time.zone = \"Etc/UTC\" Time.us_alaska?"
+          ]
+        },
+        "us_aleutian?" => {
+          name: "us_aleutian?",
+          description: "returns whether the current time zone matches us/aleutian.",
+          examples: [
+            "Time.us_aleutian?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_aleutian?",
+            "Time.zone = \"Etc/UTC\" Time.us_aleutian?"
+          ]
+        },
+        "us_arizona?" => {
+          name: "us_arizona?",
+          description: "returns whether the current time zone matches us/arizona.",
+          examples: [
+            "Time.us_arizona?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_arizona?",
+            "Time.zone = \"Etc/UTC\" Time.us_arizona?"
+          ]
+        },
+        "us_central?" => {
+          name: "us_central?",
+          description: "returns whether the current time zone matches us/central.",
+          examples: [
+            "Time.us_central?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_central?",
+            "Time.zone = \"Etc/UTC\" Time.us_central?"
+          ]
+        },
+        "us_east_minus_indiana?" => {
+          name: "us_east_minus_indiana?",
+          description: "returns whether the current time zone matches us/east/minus/indiana.",
+          examples: [
+            "Time.us_east_minus_indiana?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_east_minus_indiana?",
+            "Time.zone = \"Etc/UTC\" Time.us_east_minus_indiana?"
+          ]
+        },
+        "us_eastern?" => {
+          name: "us_eastern?",
+          description: "returns whether the current time zone matches us/eastern.",
+          examples: [
+            "Time.us_eastern?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_eastern?",
+            "Time.zone = \"Etc/UTC\" Time.us_eastern?"
+          ]
+        },
+        "us_hawaii?" => {
+          name: "us_hawaii?",
+          description: "returns whether the current time zone matches us/hawaii.",
+          examples: [
+            "Time.us_hawaii?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_hawaii?",
+            "Time.zone = \"Etc/UTC\" Time.us_hawaii?"
+          ]
+        },
+        "us_indiana_minus_starke?" => {
+          name: "us_indiana_minus_starke?",
+          description: "returns whether the current time zone matches us/indiana/minus/starke.",
+          examples: [
+            "Time.us_indiana_minus_starke?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_indiana_minus_starke?",
+            "Time.zone = \"Etc/UTC\" Time.us_indiana_minus_starke?"
+          ]
+        },
+        "us_michigan?" => {
+          name: "us_michigan?",
+          description: "returns whether the current time zone matches us/michigan.",
+          examples: [
+            "Time.us_michigan?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_michigan?",
+            "Time.zone = \"Etc/UTC\" Time.us_michigan?"
+          ]
+        },
+        "us_mountain?" => {
+          name: "us_mountain?",
+          description: "returns whether the current time zone matches us/mountain.",
+          examples: [
+            "Time.us_mountain?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_mountain?",
+            "Time.zone = \"Etc/UTC\" Time.us_mountain?"
+          ]
+        },
+        "us_pacific?" => {
+          name: "us_pacific?",
+          description: "returns whether the current time zone matches us/pacific.",
+          examples: [
+            "Time.us_pacific?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_pacific?",
+            "Time.zone = \"Etc/UTC\" Time.us_pacific?"
+          ]
+        },
+        "us_samoa?" => {
+          name: "us_samoa?",
+          description: "returns whether the current time zone matches us/samoa.",
+          examples: [
+            "Time.us_samoa?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").us_samoa?",
+            "Time.zone = \"Etc/UTC\" Time.us_samoa?"
+          ]
+        },
+        "universal?" => {
+          name: "universal?",
+          description: "returns whether the current time zone matches universal.",
+          examples: [
+            "Time.universal?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").universal?",
+            "Time.zone = \"Etc/UTC\" Time.universal?"
+          ]
+        },
+        "w_minus_su?" => {
+          name: "w_minus_su?",
+          description: "returns whether the current time zone matches w/minus/su.",
+          examples: [
+            "Time.w_minus_su?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").w_minus_su?",
+            "Time.zone = \"Etc/UTC\" Time.w_minus_su?"
+          ]
+        },
+        "wet?" => {
+          name: "wet?",
+          description: "returns whether the current time zone matches wet.",
+          examples: [
+            "Time.wet?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").wet?",
+            "Time.zone = \"Etc/UTC\" Time.wet?"
+          ]
+        },
+        "zulu?" => {
+          name: "zulu?",
+          description: "returns whether the current time zone matches zulu.",
+          examples: [
+            "Time.zulu?",
+            "Time.new(\"2024-03-05 06:10:59 UTC\").zulu?",
+            "Time.zone = \"Etc/UTC\" Time.zulu?"
+          ]
+        }
+      }.freeze
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+        return CLASS_FUNCTIONS if scope == :class
+
+        {}
+      end
 
       class << self
         delegate(

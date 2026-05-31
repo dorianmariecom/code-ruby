@@ -3,14 +3,23 @@
 class Code
   class Object
     class Ics < Object
+      CLASS_DOCUMENTATION = {
+        name: "Ics",
+        description: "parses icalendar text and exposes events as dictionaries.",
+        examples: [
+          "Ics.parse(\"BEGIN:VCALENDAR\\nBEGIN:VEVENT\\nSUMMARY:meet\\nEND:VEVENT\\nEND:VCALENDAR\")",
+          "Ics.parse(\"BEGIN:VCALENDAR\\nVERSION:2.0\\nEND:VCALENDAR\")",
+          "Ics.parse(\"\")"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "parse" => {
           name: "parse",
-          description: "parses calendar text into event dictionaries.",
+          description: "returns event dictionaries parsed from icalendar text.",
           examples: [
-            "Ics.parse(\"\")",
-            "Ics.parse(calendar_text)",
-            "Ics.parse(\"BEGIN:VCALENDAR\\nEND:VCALENDAR\")"
+            "Ics.parse(\"BEGIN:VCALENDAR\\nBEGIN:VEVENT\\nUID:1\\nSUMMARY:demo\\nEND:VEVENT\\nEND:VCALENDAR\")",
+            "Ics.parse(\"BEGIN:VCALENDAR\\nEND:VCALENDAR\")",
+            "Ics.parse(\"not calendar data\")"
           ]
         }
       }.freeze

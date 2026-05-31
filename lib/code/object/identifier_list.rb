@@ -3,6 +3,15 @@
 class Code
   class Object
     class IdentifierList < List
+      CLASS_DOCUMENTATION = {
+        name: "IdentifierList",
+        description: "stores ordered identifier names used to assign nested values.",
+        examples: [
+          "IdentifierList",
+          "IdentifierList.new([:user, :name]).first",
+          "IdentifierList.new([:user, :name]).join(\".\")"
+        ]
+      }.freeze
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
@@ -87,7 +96,7 @@ class Code
             **args,
             operator: "#{raw.last}=",
             arguments: Object::List.new([code_value])
-          )
+          ).tap { persist_class_receiver(receiver, args.fetch(:context)) }
         else
           next_value =
             receiver.call(
@@ -104,8 +113,14 @@ class Code
             **args,
             operator: "#{raw.last}=",
             arguments: Object::List.new([next_value])
-          )
+          ).tap { persist_class_receiver(receiver, args.fetch(:context)) }
         end
+      end
+
+      def persist_class_receiver(receiver, context)
+        return unless receiver.is_a?(Object::Class)
+
+        context.code_set(raw.first, receiver)
       end
     end
   end

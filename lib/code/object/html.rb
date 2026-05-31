@@ -3,6 +3,15 @@
 class Code
   class Object
     class Html < Object
+      CLASS_DOCUMENTATION = {
+        name: "Html",
+        description: "builds, escapes, parses, and queries html fragments.",
+        examples: [
+          "Html.p { :hello }",
+          "Html.escape(\"<p>a</p>\")",
+          "Html.raw(\"<p>a</p>\").css(\"p\")"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "escape" => {
           name: "escape",
@@ -42,7 +51,7 @@ class Code
         },
         "raw" => {
           name: "raw",
-          description: "builds an html fragment without escaping the value.",
+          description: "parses markup into an html fragment without escaping text.",
           examples: [
             "Html.raw(\"<strong>hello</strong>\")",
             "Html.raw(Html.text(:hello))",
@@ -75,7 +84,7 @@ class Code
           examples: [
             "Html.raw(\"<p>a</p><p>b</p>\").css(\"p\").map((node) => { node.to_string })",
             "Html.raw(\"<p>a</p>\").css(:p).map((node, index) => { index })",
-            "Html.raw(\"<p>a</p>\").css(:p).map((node, index, nodes) => { nodes.size })"
+            "Html.raw(\"<p>a</p>\").css(:p).map((node, index, nodes) => { nodes.to_string })"
           ]
         },
         "to_string" => {

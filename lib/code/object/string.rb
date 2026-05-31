@@ -3,6 +3,524 @@
 class Code
   class Object
     class String < Object
+      CLASS_DOCUMENTATION = {
+        name: "String",
+        description: "represents text and provides parsing, search, and transformation operations.",
+        examples: [
+          "\"hello\"",
+          ":hello.upcase",
+          "\"a,b\".split(\",\")"
+        ]
+      }.freeze
+      INSTANCE_FUNCTIONS = {
+        "&" => {
+          name: "&",
+          description: "returns a function parsed from the string.",
+          examples: ["&\"x + 1\"", "&\"1 + 2\"", "&\"value\""]
+        },
+        "to_function" => {
+          name: "to_function",
+          description: "returns a function parsed from the string.",
+          examples: [
+            "\"x + 1\".to_function",
+            "\"1 + 2\".to_function",
+            "\"value\".to_function"
+          ]
+        },
+        "*" => {
+          name: "*",
+          description: "returns the string repeated a number of times.",
+          examples: ["\"a\" * 3", "\":\" * 2", "\"ab\" * 2"]
+        },
+        "+" => {
+          name: "+",
+          description: "returns the string with another value appended.",
+          examples: ["\"a\" + \"b\"", "\"count: \" + 1", "\":\" + :ok"]
+        },
+        "downcase" => {
+          name: "downcase",
+          description: "returns the string converted to lowercase.",
+          examples: ["\"HELLO\".downcase", "\"Code\".downcase", "\"A1\".downcase"]
+        },
+        "lower_case" => {
+          name: "lower_case",
+          description: "returns the string converted to lowercase.",
+          examples: [
+            "\"HELLO\".lower_case",
+            "\"Code\".lower_case",
+            "\"A1\".lower_case"
+          ]
+        },
+        "include?" => {
+          name: "include?",
+          description: "returns whether the string includes another string.",
+          examples: [
+            "\"hello\".include?(\"ell\")",
+            "\"hello\".include?(\"x\")",
+            "\":name\".include?(\":\")"
+          ]
+        },
+        "member?" => {
+          name: "member?",
+          description: "returns whether the string includes another string.",
+          examples: [
+            "\"hello\".member?(\"ell\")",
+            "\"hello\".member?(\"x\")",
+            "\":name\".member?(\":\")"
+          ]
+        },
+        "starts_with?" => {
+          name: "starts_with?",
+          description: "returns whether the string starts with another string.",
+          examples: [
+            "\"hello\".starts_with?(\"he\")",
+            "\"hello\".starts_with?(\"lo\")",
+            "\":name\".starts_with?(\":\")"
+          ]
+        },
+        "start_with?" => {
+          name: "start_with?",
+          description: "returns whether the string starts with another string.",
+          examples: [
+            "\"hello\".start_with?(\"he\")",
+            "\"hello\".start_with?(\"lo\")",
+            "\":name\".start_with?(\":\")"
+          ]
+        },
+        "ends_with?" => {
+          name: "ends_with?",
+          description: "returns whether the string ends with another string.",
+          examples: [
+            "\"hello\".ends_with?(\"lo\")",
+            "\"hello\".ends_with?(\"he\")",
+            "\"file.rb\".ends_with?(\".rb\")"
+          ]
+        },
+        "end_with?" => {
+          name: "end_with?",
+          description: "returns whether the string ends with another string.",
+          examples: [
+            "\"hello\".end_with?(\"lo\")",
+            "\"hello\".end_with?(\"he\")",
+            "\"file.rb\".end_with?(\".rb\")"
+          ]
+        },
+        "[]" => {
+          name: "[]",
+          description: "returns the character at an index.",
+          examples: ["\"abc\"[0]", "\"abc\"[1]", "\"abc\"[2]"]
+        },
+        "at" => {
+          name: "at",
+          description: "returns the character at an index.",
+          examples: ["\"abc\".at(0)", "\"abc\".at(1)", "\"abc\".at(2)"]
+        },
+        "get" => {
+          name: "get",
+          description: "returns the character at an index.",
+          examples: ["\"abc\".get(0)", "\"abc\".get(1)", "\"abc\".get(2)"]
+        },
+        "capitalize" => {
+          name: "capitalize",
+          description: "returns the string with its first character capitalized.",
+          examples: [
+            "\"hello\".capitalize",
+            "\"code\".capitalize",
+            "\"already\".capitalize"
+          ]
+        },
+        "characters" => {
+          name: "characters",
+          description: "returns the string characters as a list.",
+          examples: ["\"abc\".characters", "\"hi\".characters", "\"\".characters"]
+        },
+        "bytes" => {
+          name: "bytes",
+          description: "returns the string bytes as a list.",
+          examples: ["\"abc\".bytes", "\"A\".bytes", "\"\".bytes"]
+        },
+        "bytesize" => {
+          name: "bytesize",
+          description: "returns the number of bytes in the string.",
+          examples: ["\"abc\".bytesize", "\"A\".bytesize", "\"\".bytesize"]
+        },
+        "byte_slice" => {
+          name: "byte_slice",
+          description: "returns a byte slice from the string.",
+          examples: [
+            "\"abc\".byte_slice(0)",
+            "\"abc\".byte_slice(0, 2)",
+            "\"hello\".byte_slice(1, 3)"
+          ]
+        },
+        "codepoints" => {
+          name: "codepoints",
+          description: "returns the string codepoints as a list.",
+          examples: ["\"abc\".codepoints", "\"A\".codepoints", "\"\".codepoints"]
+        },
+        "character_code_at" => {
+          name: "character_code_at",
+          description: "returns the codepoint at an index.",
+          examples: [
+            "\"abc\".character_code_at(0)",
+            "\"abc\".character_code_at(1)",
+            "\"abc\".character_code_at"
+          ]
+        },
+        "ordinal" => {
+          name: "ordinal",
+          description: "returns the codepoint for the first character.",
+          examples: ["\"a\".ordinal", "\"A\".ordinal", "\"1\".ordinal"]
+        },
+        "chomp" => {
+          name: "chomp",
+          description: "returns the string with a trailing record separator removed.",
+          examples: ["\"a\\n\".chomp", "\"a\".chomp", "\"a\\r\\n\".chomp"]
+        },
+        "chop" => {
+          name: "chop",
+          description: "returns the string with its last character removed.",
+          examples: ["\"abc\".chop", "\"a\".chop", "\"\".chop"]
+        },
+        "delete" => {
+          name: "delete",
+          description: "returns the string with matching characters removed.",
+          examples: [
+            "\"hello\".delete(\"l\")",
+            "\"123\".delete(\"2\")",
+            "\"abc\".delete(\"z\")"
+          ]
+        },
+        "delete_prefix" => {
+          name: "delete_prefix",
+          description: "returns the string with a matching prefix removed.",
+          examples: [
+            "\"hello\".delete_prefix(\"he\")",
+            "\"hello\".delete_prefix(\"x\")",
+            "\"file.rb\".delete_prefix(\"file\")"
+          ]
+        },
+        "delete_suffix" => {
+          name: "delete_suffix",
+          description: "returns the string with a matching suffix removed.",
+          examples: [
+            "\"hello\".delete_suffix(\"lo\")",
+            "\"hello\".delete_suffix(\"x\")",
+            "\"file.rb\".delete_suffix(\".rb\")"
+          ]
+        },
+        "empty?" => {
+          name: "empty?",
+          description: "returns whether the string is empty.",
+          examples: ["\"\".empty?", "\"a\".empty?", "\" \".empty?"]
+        },
+        "clear" => {
+          name: "clear",
+          description: "empties the string and returns it.",
+          examples: ["\"abc\".clear", "\"a\".clear", "\"\".clear"]
+        },
+        "count" => {
+          name: "count",
+          description: "returns the count of matching characters.",
+          examples: [
+            "\"hello\".count(\"l\")",
+            "\"banana\".count(\"a\")",
+            "\"abc\".count(\"z\")"
+          ]
+        },
+        "insert" => {
+          name: "insert",
+          description: "inserts a value at an index and returns the string.",
+          examples: [
+            "\"ac\".insert(1, \"b\")",
+            "\"bc\".insert(0, \"a\")",
+            "\"ab\".insert(2, \"c\")"
+          ]
+        },
+        "prepend" => {
+          name: "prepend",
+          description: "prepends a value and returns the string.",
+          examples: [
+            "\"b\".prepend(\"a\")",
+            "\"world\".prepend(\"hello \")",
+            "\"1\".prepend(0)"
+          ]
+        },
+        "concat" => {
+          name: "concat",
+          description: "appends values and returns the string.",
+          examples: [
+            "\"a\".concat(\"b\")",
+            "\"a\".concat(\"b\", \"c\")",
+            "\"count\".concat(1)"
+          ]
+        },
+        "first" => {
+          name: "first",
+          description: "returns the first character or first characters.",
+          examples: ["\"abc\".first", "\"abc\".first(2)", "\"\".first"]
+        },
+        "index" => {
+          name: "index",
+          description: "returns the index of a matching substring.",
+          examples: [
+            "\"hello\".index(\"l\")",
+            "\"hello\".index(\"x\")",
+            "\"banana\".index(\"na\")"
+          ]
+        },
+        "last" => {
+          name: "last",
+          description: "returns the last character or last characters.",
+          examples: ["\"abc\".last", "\"ab\".last", "\"\".last"]
+        },
+        "lines" => {
+          name: "lines",
+          description: "returns the string lines as a list.",
+          examples: ["\"a\\nb\".lines", "\"a\".lines", "\"\".lines"]
+        },
+        "reverse" => {
+          name: "reverse",
+          description: "returns the string with characters reversed.",
+          examples: ["\"abc\".reverse", "\"ab\".reverse", "\"\".reverse"]
+        },
+        "right_index" => {
+          name: "right_index",
+          description: "returns the last index of a matching substring.",
+          examples: [
+            "\"hello\".right_index(\"l\")",
+            "\"hello\".right_index(\"x\")",
+            "\"banana\".right_index(\"na\")"
+          ]
+        },
+        "parameterize" => {
+          name: "parameterize",
+          description: "returns the string parameterized for identifiers or urls.",
+          examples: [
+            "\"Hello world\".parameterize",
+            "\"a b c\".parameterize",
+            "\"Code Ruby\".parameterize"
+          ]
+        },
+        "squish" => {
+          name: "squish",
+          description: "returns the string with surrounding and repeated whitespace collapsed.",
+          examples: [
+            "\"  hello   world  \".squish",
+            "\"a\\n b\".squish",
+            "\"a   b\".squish"
+          ]
+        },
+        "squeeze" => {
+          name: "squeeze",
+          description: "returns the string with repeated characters collapsed.",
+          examples: [
+            "\"hellooo\".squeeze",
+            "\"book\".squeeze(\"o\")",
+            "\"aaab\".squeeze"
+          ]
+        },
+        "substitute" => {
+          name: "substitute",
+          description: "returns the string with the first match replaced.",
+          examples: [
+            "\"hello\".substitute(\"l\", \"x\")",
+            "\"abc\".substitute(\"a\", \"z\")",
+            "\"abc\".substitute(\"x\", \"z\")"
+          ]
+        },
+        "substitute!" => {
+          name: "substitute!",
+          description: "replaces the first match in the string and returns it.",
+          examples: [
+            "\"hello\".substitute!(\"l\", \"x\")",
+            "\"abc\".substitute!(\"a\", \"z\")",
+            "\"abc\".substitute!(\"x\", \"z\")"
+          ]
+        },
+        "substitute_all" => {
+          name: "substitute_all",
+          description: "returns the string with all matches replaced.",
+          examples: [
+            "\"hello\".substitute_all(\"l\", \"x\")",
+            "\"abcabc\".substitute_all(\"a\", \"z\")",
+            "\"abc\".substitute_all(\"x\", \"z\")"
+          ]
+        },
+        "substitute_all!" => {
+          name: "substitute_all!",
+          description: "replaces all matches in the string and returns it.",
+          examples: [
+            "\"hello\".substitute_all!(\"l\", \"x\")",
+            "\"abcabc\".substitute_all!(\"a\", \"z\")",
+            "\"abc\".substitute_all!(\"x\", \"z\")"
+          ]
+        },
+        "substitute_once" => {
+          name: "substitute_once",
+          description: "returns the string with the first match replaced.",
+          examples: [
+            "\"hello\".substitute_once(\"l\", \"x\")",
+            "\"abc\".substitute_once(\"a\", \"z\")",
+            "\"abc\".substitute_once(\"x\", \"z\")"
+          ]
+        },
+        "substitute_once!" => {
+          name: "substitute_once!",
+          description: "replaces the first match in the string and returns it.",
+          examples: [
+            "\"hello\".substitute_once!(\"l\", \"x\")",
+            "\"abc\".substitute_once!(\"a\", \"z\")",
+            "\"abc\".substitute_once!(\"x\", \"z\")"
+          ]
+        },
+        "swapcase" => {
+          name: "swapcase",
+          description: "returns the string with letter case swapped.",
+          examples: ["\"AbC\".swapcase", "\"hello\".swapcase", "\"ABC\".swapcase"]
+        },
+        "titleize" => {
+          name: "titleize",
+          description: "returns the string converted to title case.",
+          examples: [
+            "\"hello world\".titleize",
+            "\"code ruby\".titleize",
+            "\"one\".titleize"
+          ]
+        },
+        "upcase" => {
+          name: "upcase",
+          description: "returns the string converted to uppercase.",
+          examples: ["\"hello\".upcase", "\"Code\".upcase", "\"a1\".upcase"]
+        },
+        "upper_case" => {
+          name: "upper_case",
+          description: "returns the string converted to uppercase.",
+          examples: [
+            "\"hello\".upper_case",
+            "\"Code\".upper_case",
+            "\"a1\".upper_case"
+          ]
+        },
+        "size" => {
+          name: "size",
+          description: "returns the number of characters in the string.",
+          examples: ["\"abc\".size", "\"\".size", "\"hello\".size"]
+        },
+        "length" => {
+          name: "length",
+          description: "returns the number of characters in the string.",
+          examples: ["\"abc\".length", "\"\".length", "\"hello\".length"]
+        },
+        "strip" => {
+          name: "strip",
+          description: "returns the string with surrounding whitespace removed.",
+          examples: ["\" a \".strip", "\"\\na\".strip", "\"a\".strip"]
+        },
+        "left_strip" => {
+          name: "left_strip",
+          description: "returns the string with leading whitespace removed.",
+          examples: ["\" a\".left_strip", "\"\\na\".left_strip", "\"a\".left_strip"]
+        },
+        "right_strip" => {
+          name: "right_strip",
+          description: "returns the string with trailing whitespace removed.",
+          examples: [
+            "\"a \".right_strip",
+            "\"a\\n\".right_strip",
+            "\"a\".right_strip"
+          ]
+        },
+        "slice" => {
+          name: "slice",
+          description: "returns a slice from the string.",
+          examples: ["\"abc\".slice(0)", "\"abc\".slice(0, 2)", "\"abc\".slice(1)"]
+        },
+        "left_justify" => {
+          name: "left_justify",
+          description: "returns the string left-justified to a width.",
+          examples: [
+            "\"a\".left_justify(3)",
+            "\"a\".left_justify(3, \".\")",
+            "\"abc\".left_justify(2)"
+          ]
+        },
+        "right_justify" => {
+          name: "right_justify",
+          description: "returns the string right-justified to a width.",
+          examples: [
+            "\"a\".right_justify(3)",
+            "\"a\".right_justify(3, \".\")",
+            "\"abc\".right_justify(2)"
+          ]
+        },
+        "center" => {
+          name: "center",
+          description: "returns the string centered within a width.",
+          examples: [
+            "\"a\".center(3)",
+            "\"a\".center(3, \".\")",
+            "\"abc\".center(2)"
+          ]
+        },
+        "pad_start" => {
+          name: "pad_start",
+          description: "returns the string padded at the beginning.",
+          examples: [
+            "\"a\".pad_start(3)",
+            "\"a\".pad_start(3, \"0\")",
+            "\"abc\".pad_start(2)"
+          ]
+        },
+        "pad_end" => {
+          name: "pad_end",
+          description: "returns the string padded at the end.",
+          examples: [
+            "\"a\".pad_end(3)",
+            "\"a\".pad_end(3, \"0\")",
+            "\"abc\".pad_end(2)"
+          ]
+        },
+        "repeat" => {
+          name: "repeat",
+          description: "returns the string repeated a number of times.",
+          examples: ["\"a\".repeat(3)", "\":\".repeat(2)", "\"ab\".repeat(2)"]
+        },
+        "substring" => {
+          name: "substring",
+          description: "returns a substring from the string.",
+          examples: [
+            "\"abc\".substring(0)",
+            "\"abc\".substring(0, 2)",
+            "\"hello\".substring(1, 3)"
+          ]
+        },
+        "split" => {
+          name: "split",
+          description: "returns the string split into a list.",
+          examples: [
+            "\"a,b\".split(\",\")",
+            "\"a b\".split",
+            "\"a--b\".split(\"--\")"
+          ]
+        },
+        "words" => {
+          name: "words",
+          description: "returns the words in the string as a list.",
+          examples: [
+            "\"hello world\".words",
+            "\"one two\".words",
+            "\"\".words"
+          ]
+        }
+      }.freeze
+
+      def self.function_documentation(scope)
+        return INSTANCE_FUNCTIONS if scope == :instance
+
+        {}
+      end
+
       def initialize(*args, **_kargs, &_block)
         self.raw =
           if args.first.is_an?(Class)
@@ -40,7 +558,7 @@ class Code
         when "lower_case"
           sig(args)
           code_lower_case
-        when "include?"
+        when "include?", "member?"
           sig(args) { String }
           code_include?(code_value)
         when "starts_with?"
@@ -172,7 +690,7 @@ class Code
         when "upper_case"
           sig(args)
           code_upper_case
-        when "size"
+        when "size", "length"
           sig(args)
           code_size
         when "strip"

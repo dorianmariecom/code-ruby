@@ -3,12 +3,21 @@
 class Code
   class Object
     class Code < Object
+      CLASS_DOCUMENTATION = {
+        name: "Code",
+        description: "stores parsed source code for later evaluation.",
+        examples: [
+          "Code",
+          "Code.evaluate(\"1 + 2\")",
+          "Code.new(\"1 + 2\").evaluate"
+        ]
+      }.freeze
       CLASS_FUNCTIONS = {
         "evaluate" => {
           name: "evaluate",
           description: "evaluates source code and returns the result.",
           examples: [
-            "Code.evaluate(:1)",
+            "Code.evaluate(\"1\")",
             "Code.evaluate(\"1 + 2\")",
             "Code.evaluate(\"[1, 2].size\")"
           ]
@@ -17,9 +26,9 @@ class Code
       INSTANCE_FUNCTIONS = {
         "evaluate" => {
           name: "evaluate",
-          description: "evaluates the receiver's source code and returns the result.",
+          description: "evaluates stored source code and returns the result.",
           examples: [
-            "Code(:1).evaluate",
+            "Code(\"1\").evaluate",
             "Code(\"1 + 2\").evaluate",
             "Code(\"[1, 2].size\").evaluate"
           ]
@@ -46,6 +55,32 @@ class Code
         code_args = args.to_code
 
         new(*code_args.raw).code_evaluate(**globals)
+      end
+
+      def self.call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+        globals = multi_fetch(args, *GLOBALS)
+
+        case code_operator.to_s
+        when "evaluate"
+          sig(args) { Object }
+          code_evaluate(*args.fetch(:arguments, []).to_code.raw, **globals)
+        else
+          super
+        end
+      end
+
+      def call(**args)
+        code_operator = args.fetch(:operator, nil).to_code
+        globals = multi_fetch(args, *GLOBALS)
+
+        case code_operator.to_s
+        when "evaluate"
+          sig(args)
+          code_evaluate(**globals)
+        else
+          super
+        end
       end
 
       def code_evaluate(...)

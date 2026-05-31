@@ -45,6 +45,8 @@ class Code
   end
 
   def evaluate
+    time_zone = ::Time.zone
+
     Timeout.timeout(timeout) do
       Node::Code.new(Code.parse(source)).evaluate(
         context: context,
@@ -61,6 +63,8 @@ class Code
     raise Error, "timeout"
   rescue Interrupt
     raise Error, "interrupt"
+  ensure
+    ::Time.zone = time_zone
   end
 
   private

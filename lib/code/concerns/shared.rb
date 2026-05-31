@@ -20,6 +20,7 @@ class Code
         "&&="
       ].freeze
       SHARED_OPERATORS = [
+        "documentation",
         "present?",
         "blank?",
         "presence",
@@ -110,13 +111,14 @@ class Code
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
         code_value = code_arguments.code_first
-        stored_value = code_dynamic_functions.code_fetch(code_operator)
 
-        if stored_value.is_a?(Object::Function)
-          return stored_value.call(**args, operator: nil, bound_self: self)
-        end
+        dynamic_result = code_dynamic_call(code_operator, **args)
+        return dynamic_result if dynamic_result
 
         case code_operator.to_s
+        when "documentation"
+          sig(args)
+          code_documentation
         when "present?"
           sig(args)
           code_present?
@@ -298,7 +300,7 @@ class Code
             code_context.code_set(self, code_value)
           elsif setter_operator?(code_operator)
             code_dynamic_functions.code_set(code_operator.to_s.chop, code_value)
-            code_value
+            return code_value
           else
             code_context = args.fetch(:context).code_lookup!(self)
             code_context.code_set(
@@ -513,6 +515,16 @@ class Code
         code_dynamic_functions.code_has_key?(key)
       end
 
+      def code_dynamic_call(operator, **args)
+        return nil unless code_dynamic_functions.code_has_key?(operator).truthy?
+
+        stored_value = code_dynamic_functions.code_fetch(operator)
+        return stored_value.call(**args, operator: nil, bound_self: self) if stored_value.is_a?(Object::Function)
+
+        sig(args)
+        stored_value
+      end
+
       def code_to_parameter
         code_to_string.code_parameterize
       end
@@ -617,13 +629,21 @@ class Code
         Object::String.new(name.to_s.split("::")[2..].join("::"))
       end
 
+      def code_documentation
+        Object.documentation_for(self.class)
+      end
+
       def code_functions
-        code_instance_functions.code_merge(code_class_functions)
+        Object.sorted_dictionary(
+          code_instance_functions.code_merge(code_class_functions).raw
+        )
       end
 
       def code_instance_functions
-        Object.documented_functions_for(self.class, :instance).code_merge(
-          dynamic_functions_documentation
+        Object.sorted_dictionary(
+          Object.documented_functions_for(self.class, :instance).code_merge(
+            dynamic_functions_documentation
+          ).raw
         )
       end
 
@@ -742,13 +762,13 @@ class Code
       end
 
       def code_dynamic_functions
-        self.functions = Object::Dictionary.new if functions.blank?
+        @functions = Object::Dictionary.new if @functions.blank?
 
-        functions
+        @functions
       end
 
       def dynamic_functions_documentation
-        Object::Dictionary.new(
+        Object.sorted_dictionary(
           code_documentable_functions.raw.to_h do |key, value|
             name = key.to_s
             [

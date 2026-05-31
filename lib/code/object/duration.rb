@@ -3,15 +3,24 @@
 class Code
   class Object
     class Duration < Object
+      CLASS_DOCUMENTATION = {
+        name: "Duration",
+        description: "stores a length of time for shifting dates and times.",
+        examples: [
+          "1.day",
+          "2.hours",
+          "Duration.new(\"P1D\")"
+        ]
+      }.freeze
       INSTANCE_FUNCTIONS = {
         "ago" => {
           name: "ago",
-          description: "returns the time this duration before now.",
+          description: "returns the current time minus this duration.",
           examples: ["1.day.ago", "2.hours.ago", "30.minutes.ago"]
         },
         "from_now" => {
           name: "from_now",
-          description: "returns the time this duration after now.",
+          description: "returns the current time plus this duration.",
           examples: ["1.day.from_now", "2.hours.from_now", "30.minutes.from_now"]
         }
       }.freeze
