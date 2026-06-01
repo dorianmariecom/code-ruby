@@ -68,11 +68,7 @@ class Code
       def initialize(*args, **_kargs, &_block)
         @trusted = args.first.is_a?(Node::Code)
         self.raw =
-          if trusted
-            args.first
-          else
-            Node::Code.new(::Code.parse(args.first.to_s))
-          end
+          (trusted ? args.first : Node::Code.new(::Code.parse(args.first.to_s)))
       end
 
       def self.code_evaluate(*args, **globals)
@@ -109,10 +105,7 @@ class Code
 
       def code_evaluate(trusted_evaluation: false, **globals)
         raw.evaluate(
-          **evaluation_globals(
-            globals,
-            trusted_evaluation: trusted_evaluation
-          )
+          **evaluation_globals(globals, trusted_evaluation: trusted_evaluation)
         )
       end
 

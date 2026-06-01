@@ -19,7 +19,7 @@ class Code
             args.merge(global_control_flow_root: false)
           else
             args
-        end
+          end
         last = Object::Nothing.new
         root_object = args.fetch(:root_object, args.fetch(:object))
 

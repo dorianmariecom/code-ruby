@@ -5,7 +5,8 @@ class Code
     class List < Object
       CLASS_DOCUMENTATION = {
         name: "List",
-        description: "stores ordered values and provides enumerable operations.",
+        description:
+          "stores ordered values and provides enumerable operations.",
         examples: [
           "[1, 2, 3]",
           "[1, 2, 3].map((value) => { value * 2 })",
@@ -31,11 +32,7 @@ class Code
         "fetch" => {
           name: "fetch",
           description: "returns the item at an index or nothing when missing.",
-          examples: [
-            "[1, 2, 3].fetch(0)",
-            "[1, 2, 3].fetch(2)",
-            "[1].fetch(2)"
-          ]
+          examples: ["[1, 2, 3].fetch(0)", "[1, 2, 3].fetch(2)", "[1].fetch(2)"]
         },
         "values_at" => {
           name: "values_at",
@@ -80,7 +77,8 @@ class Code
         },
         "sort" => {
           name: "sort",
-          description: "returns a new list sorted by item values or function results.",
+          description:
+            "returns a new list sorted by item values or function results.",
           examples: [
             "[3, 1, 2].sort",
             "[:b, :a].sort",
@@ -89,7 +87,8 @@ class Code
         },
         "sort!" => {
           name: "sort!",
-          description: "sorts the list in place by item values or function results.",
+          description:
+            "sorts the list in place by item values or function results.",
           examples: [
             "[3, 1, 2].sort!",
             "[:b, :a].sort!",
@@ -104,11 +103,7 @@ class Code
         "append" => {
           name: "append",
           description: "appends an item to the list and returns it.",
-          examples: [
-            "[1, 2].append(3)",
-            "[].append(:a)",
-            "[:a].append(:b)"
-          ]
+          examples: ["[1, 2].append(3)", "[].append(:a)", "[:a].append(:b)"]
         },
         "push" => {
           name: "push",
@@ -118,11 +113,7 @@ class Code
         "prepend" => {
           name: "prepend",
           description: "prepends an item to the list and returns it.",
-          examples: [
-            "[2, 3].prepend(1)",
-            "[].prepend(:a)",
-            "[:b].prepend(:a)"
-          ]
+          examples: ["[2, 3].prepend(1)", "[].prepend(:a)", "[:b].prepend(:a)"]
         },
         "insert" => {
           name: "insert",
@@ -159,11 +150,7 @@ class Code
         "plus" => {
           name: "plus",
           description: "returns a new list with another list appended.",
-          examples: [
-            "[1].plus([2])",
-            "[].plus([:a])",
-            "[1, 2].plus([3])"
-          ]
+          examples: ["[1].plus([2])", "[].plus([:a])", "[1, 2].plus([3])"]
         },
         "-" => {
           name: "-",
@@ -181,7 +168,8 @@ class Code
         },
         "any?" => {
           name: "any?",
-          description: "returns whether any item is present or matches a function or class.",
+          description:
+            "returns whether any item is present or matches a function or class.",
           examples: [
             "[1, 2, 3].any?",
             "[1, 2, 3].any?((x) => { x > 2 })",
@@ -199,7 +187,8 @@ class Code
         },
         "index" => {
           name: "index",
-          description: "returns the index of an item or first item matched by a function or class.",
+          description:
+            "returns the index of an item or first item matched by a function or class.",
           examples: [
             "[:a, :b].index(:b)",
             "[1, 2, 3].index((x) => { x > 1 })",
@@ -208,7 +197,8 @@ class Code
         },
         "find_index" => {
           name: "find_index",
-          description: "returns the index of an item or first item matched by a function or class.",
+          description:
+            "returns the index of an item or first item matched by a function or class.",
           examples: [
             "[:a, :b].find_index(:b)",
             "[1, 2, 3].find_index((x) => { x > 1 })",
@@ -217,7 +207,8 @@ class Code
         },
         "right_index" => {
           name: "right_index",
-          description: "returns the last index of an item or of an item matched by a function or class.",
+          description:
+            "returns the last index of an item or of an item matched by a function or class.",
           examples: [
             "[:a, :b, :a].right_index(:a)",
             "[1, 2, 3].right_index((x) => { x > 1 })",
@@ -226,7 +217,8 @@ class Code
         },
         "each" => {
           name: "each",
-          description: "calls a function or class for each item and returns the list.",
+          description:
+            "calls a function or class for each item and returns the list.",
           examples: [
             "[1, 2, 3].each((x) => { x })",
             "[:a, :b].each((x) => { x })",
@@ -235,7 +227,8 @@ class Code
         },
         "each_index" => {
           name: "each_index",
-          description: "calls a function for each item index and returns the list.",
+          description:
+            "calls a function for each item index and returns the list.",
           examples: [
             "[1, 2, 3].each_index((i) => { i })",
             "[:a, :b].each_index((i) => { i })",
@@ -260,17 +253,29 @@ class Code
         "fourth" => {
           name: "fourth",
           description: "returns the fourth item.",
-          examples: ["[1, 2, 3, 4].fourth", "(1..5).to_list.fourth", "[1].fourth"]
+          examples: [
+            "[1, 2, 3, 4].fourth",
+            "(1..5).to_list.fourth",
+            "[1].fourth"
+          ]
         },
         "fifth" => {
           name: "fifth",
           description: "returns the fifth item.",
-          examples: ["[1, 2, 3, 4, 5].fifth", "(1..6).to_list.fifth", "[1].fifth"]
+          examples: [
+            "[1, 2, 3, 4, 5].fifth",
+            "(1..6).to_list.fifth",
+            "[1].fifth"
+          ]
         },
         "sixth" => {
           name: "sixth",
           description: "returns the sixth item.",
-          examples: ["(1..6).to_list.sixth", "(1..7).to_list.sixth", "[1].sixth"]
+          examples: [
+            "(1..6).to_list.sixth",
+            "(1..7).to_list.sixth",
+            "[1].sixth"
+          ]
         },
         "seventh" => {
           name: "seventh",
@@ -310,7 +315,8 @@ class Code
         },
         "map" => {
           name: "map",
-          description: "returns a new list with each item transformed by a function or class.",
+          description:
+            "returns a new list with each item transformed by a function or class.",
           examples: [
             "[1, 2, 3].map(Integer)",
             "[:1, :2].map(Integer)",
@@ -343,7 +349,8 @@ class Code
         },
         "delete" => {
           name: "delete",
-          description: "removes matching items from the list and returns the removed value.",
+          description:
+            "removes matching items from the list and returns the removed value.",
           examples: [
             "[1, 2, 2].delete(2)",
             "[:a, :b].delete(:a)",
@@ -361,7 +368,8 @@ class Code
         },
         "delete_if" => {
           name: "delete_if",
-          description: "removes items matched by a function or class and returns the list.",
+          description:
+            "removes items matched by a function or class and returns the list.",
           examples: [
             "[1, 2, 3].delete_if((x) => { x > 1 })",
             "[:a, :b].delete_if((x) => { x == :a })",
@@ -370,7 +378,8 @@ class Code
         },
         "keep_if" => {
           name: "keep_if",
-          description: "keeps items matched by a function or class and returns the list.",
+          description:
+            "keeps items matched by a function or class and returns the list.",
           examples: [
             "[1, 2, 3].keep_if((x) => { x > 1 })",
             "[:a, :b].keep_if((x) => { x == :a })",
@@ -379,7 +388,8 @@ class Code
         },
         "pop" => {
           name: "pop",
-          description: "returns the last item or last items without mutating the list.",
+          description:
+            "returns the last item or last items without mutating the list.",
           examples: ["[1, 2, 3].pop", "[1, 2, 3].pop(2)", "[].pop"]
         },
         "pop!" => {
@@ -446,11 +456,7 @@ class Code
         "zip" => {
           name: "zip",
           description: "returns a list by zipping items with other lists.",
-          examples: [
-            "[1, 2].zip([3, 4])",
-            "[:a, :b].zip([1, 2])",
-            "[].zip([])"
-          ]
+          examples: ["[1, 2].zip([3, 4])", "[:a, :b].zip([1, 2])", "[].zip([])"]
         },
         "map!" => {
           name: "map!",
@@ -478,20 +484,12 @@ class Code
         "maximum" => {
           name: "maximum",
           description: "returns the maximum item.",
-          examples: [
-            "[1, 3, 2].maximum",
-            "[:a, :b].maximum",
-            "[].maximum"
-          ]
+          examples: ["[1, 3, 2].maximum", "[:a, :b].maximum", "[].maximum"]
         },
         "minimum" => {
           name: "minimum",
           description: "returns the minimum item.",
-          examples: [
-            "[1, 3, 2].minimum",
-            "[:a, :b].minimum",
-            "[].minimum"
-          ]
+          examples: ["[1, 3, 2].minimum", "[:a, :b].minimum", "[].minimum"]
         },
         "minimum_maximum" => {
           name: "minimum_maximum",
@@ -504,7 +502,8 @@ class Code
         },
         "none?" => {
           name: "none?",
-          description: "returns whether no items are present or match a function or class.",
+          description:
+            "returns whether no items are present or match a function or class.",
           examples: [
             "[].none?",
             "[1, 2, 3].none?((x) => { x > 3 })",
@@ -513,7 +512,8 @@ class Code
         },
         "all?" => {
           name: "all?",
-          description: "returns whether all items are present or match a function or class.",
+          description:
+            "returns whether all items are present or match a function or class.",
           examples: [
             "[1, 2, 3].all?",
             "[1, 2, 3].all?((x) => { x > 0 })",
@@ -531,7 +531,8 @@ class Code
         },
         "group" => {
           name: "group",
-          description: "returns a dictionary grouping items by a function result or class match.",
+          description:
+            "returns a dictionary grouping items by a function result or class match.",
           examples: [
             "[1, 2, 3].group((x) => { x.even? })",
             "[:a, :b].group(String)",
@@ -549,7 +550,8 @@ class Code
         },
         "cycle" => {
           name: "cycle",
-          description: "returns cycled items or calls a function for each cycled item.",
+          description:
+            "returns cycled items or calls a function for each cycled item.",
           examples: [
             "[1, 2].cycle(2)",
             "[1, 2].cycle(2, (x) => { x })",
@@ -676,7 +678,8 @@ class Code
         },
         "intersect?" => {
           name: "intersect?",
-          description: "returns whether the list shares items with another list.",
+          description:
+            "returns whether the list shares items with another list.",
           examples: [
             "[1, 2].intersect?([2, 3])",
             "[:a].intersect?([:b])",
@@ -685,7 +688,8 @@ class Code
         },
         "associate" => {
           name: "associate",
-          description: "returns the first nested list whose first item matches a value.",
+          description:
+            "returns the first nested list whose first item matches a value.",
           examples: [
             "[[:a, 1], [:b, 2]].associate(:a)",
             "[[1, :a], [2, :b]].associate(2)",
@@ -694,7 +698,8 @@ class Code
         },
         "right_associate" => {
           name: "right_associate",
-          description: "returns the first nested list whose second item matches a value.",
+          description:
+            "returns the first nested list whose second item matches a value.",
           examples: [
             "[[1, :a], [2, :b]].right_associate(:a)",
             "[[:a, 1], [:b, 2]].right_associate(2)",
@@ -721,7 +726,8 @@ class Code
         },
         "select!" => {
           name: "select!",
-          description: "keeps items matched by a function or class and returns the list.",
+          description:
+            "keeps items matched by a function or class and returns the list.",
           examples: [
             "[1, 2, 3].select!((x) => { x > 1 })",
             "[1, :a, 2].select!(Integer)",
@@ -730,7 +736,8 @@ class Code
         },
         "filter!" => {
           name: "filter!",
-          description: "keeps items matched by a function or class and returns the list.",
+          description:
+            "keeps items matched by a function or class and returns the list.",
           examples: [
             "[1, 2, 3].filter!((x) => { x > 1 })",
             "[1, :a, 2].filter!(Integer)",
@@ -739,7 +746,8 @@ class Code
         },
         "compact" => {
           name: "compact",
-          description: "returns a new list without nothing values or matched items.",
+          description:
+            "returns a new list without nothing values or matched items.",
           examples: [
             "[1, nothing, 2].compact",
             "[1, :a, 2].compact(String)",
@@ -748,7 +756,8 @@ class Code
         },
         "compact!" => {
           name: "compact!",
-          description: "removes nothing values or matched items in place and returns the list.",
+          description:
+            "removes nothing values or matched items in place and returns the list.",
           examples: [
             "[1, nothing, 2].compact!",
             "[1, :a, 2].compact!(String)",
@@ -766,7 +775,8 @@ class Code
         },
         "reject!" => {
           name: "reject!",
-          description: "removes items matched by a function or class and returns the list.",
+          description:
+            "removes items matched by a function or class and returns the list.",
           examples: [
             "[1, 2, 3].reject!((x) => { x > 1 })",
             "[1, :a, 2].reject!(Integer)",
@@ -805,11 +815,7 @@ class Code
         "tally" => {
           name: "tally",
           description: "returns a dictionary counting each item.",
-          examples: [
-            "[:a, :b, :a].tally",
-            "[1, 1, 2].tally",
-            "[].tally"
-          ]
+          examples: ["[:a, :b, :a].tally", "[1, 1, 2].tally", "[].tally"]
         },
         "entries" => {
           name: "entries",
@@ -818,7 +824,8 @@ class Code
         },
         "to_dictionary" => {
           name: "to_dictionary",
-          description: "converts the list to a dictionary using entry pairs or indexes.",
+          description:
+            "converts the list to a dictionary using entry pairs or indexes.",
           examples: [
             "[[:a, 1], [:b, 2]].to_dictionary",
             "[\"a\", \"b\"].to_dictionary",
@@ -1680,29 +1687,17 @@ class Code
         "zero?" => {
           name: "zero?",
           description: "returns whether the list size is zero.",
-          examples: [
-            "(1..0).to_list.zero?",
-            "(1..1).to_list.zero?",
-            "[].zero?"
-          ]
+          examples: ["(1..0).to_list.zero?", "(1..1).to_list.zero?", "[].zero?"]
         },
         "one?" => {
           name: "one?",
           description: "returns whether the list size is one.",
-          examples: [
-            "(1..1).to_list.one?",
-            "(1..2).to_list.one?",
-            "[].one?"
-          ]
+          examples: ["(1..1).to_list.one?", "(1..2).to_list.one?", "[].one?"]
         },
         "two?" => {
           name: "two?",
           description: "returns whether the list size is two.",
-          examples: [
-            "(1..2).to_list.two?",
-            "(1..3).to_list.two?",
-            "[].two?"
-          ]
+          examples: ["(1..2).to_list.two?", "(1..3).to_list.two?", "[].two?"]
         },
         "three?" => {
           name: "three?",
@@ -1716,29 +1711,17 @@ class Code
         "four?" => {
           name: "four?",
           description: "returns whether the list size is four.",
-          examples: [
-            "(1..4).to_list.four?",
-            "(1..5).to_list.four?",
-            "[].four?"
-          ]
+          examples: ["(1..4).to_list.four?", "(1..5).to_list.four?", "[].four?"]
         },
         "five?" => {
           name: "five?",
           description: "returns whether the list size is five.",
-          examples: [
-            "(1..5).to_list.five?",
-            "(1..6).to_list.five?",
-            "[].five?"
-          ]
+          examples: ["(1..5).to_list.five?", "(1..6).to_list.five?", "[].five?"]
         },
         "six?" => {
           name: "six?",
           description: "returns whether the list size is six.",
-          examples: [
-            "(1..6).to_list.six?",
-            "(1..7).to_list.six?",
-            "[].six?"
-          ]
+          examples: ["(1..6).to_list.six?", "(1..7).to_list.six?", "[].six?"]
         },
         "seven?" => {
           name: "seven?",
@@ -1770,11 +1753,7 @@ class Code
         "ten?" => {
           name: "ten?",
           description: "returns whether the list size is ten.",
-          examples: [
-            "(1..10).to_list.ten?",
-            "(1..11).to_list.ten?",
-            "[].ten?"
-          ]
+          examples: ["(1..10).to_list.ten?", "(1..11).to_list.ten?", "[].ten?"]
         },
         "eleven?" => {
           name: "eleven?",
@@ -3729,7 +3708,8 @@ class Code
               e.code_value.truthy?
             end
         elsif code_argument.is_a?(Class)
-          index = raw.index { |code_element| code_element.is_a?(code_argument.raw) }
+          index =
+            raw.index { |code_element| code_element.is_a?(code_argument.raw) }
         else
           index = raw.index(code_argument)
         end
@@ -4695,7 +4675,9 @@ class Code
 
       def code_combination(size)
         code_size = size.to_code
-        List.new(raw.combination(code_size.raw).map { |values| List.new(values) })
+        List.new(
+          raw.combination(code_size.raw).map { |values| List.new(values) }
+        )
       end
 
       def code_permutation(size = nil)
@@ -5003,7 +4985,11 @@ class Code
         if code_argument.nothing?
           return Integer.new(raw.count)
         elsif code_argument.is_a?(Class)
-          return Integer.new(raw.count { |element| element.is_a?(code_argument.raw) })
+          return(
+            Integer.new(
+              raw.count { |element| element.is_a?(code_argument.raw) }
+            )
+          )
         end
 
         index = 0
@@ -5080,7 +5066,9 @@ class Code
 
         duplicate = List.new
         seen[self] = duplicate
-        duplicate.raw.concat(raw.map { |value| value.code_deep_duplicate(seen) })
+        duplicate.raw.concat(
+          raw.map { |value| value.code_deep_duplicate(seen) }
+        )
         duplicate
       end
 

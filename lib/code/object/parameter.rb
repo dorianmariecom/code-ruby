@@ -5,7 +5,8 @@ class Code
     class Parameter < Dictionary
       CLASS_DOCUMENTATION = {
         name: "Parameter",
-        description: "describes one function parameter with its name, kind flags, and default value.",
+        description:
+          "describes one function parameter with its name, kind flags, and default value.",
         examples: [
           "((name) => { name }).parameters.first",
           "((name:) => { name }).parameters.first.keyword?",
@@ -24,7 +25,8 @@ class Code
         },
         "regular?" => {
           name: "regular?",
-          description: "returns whether the parameter is not a keyword parameter.",
+          description:
+            "returns whether the parameter is not a keyword parameter.",
           examples: [
             "((name) => { name }).parameters.first.regular?",
             "((name:) => { name }).parameters.first.regular?",
@@ -33,7 +35,8 @@ class Code
         },
         "keyword?" => {
           name: "keyword?",
-          description: "returns whether the parameter is a named keyword parameter.",
+          description:
+            "returns whether the parameter is a named keyword parameter.",
           examples: [
             "((name:) => { name }).parameters.first.keyword?",
             "((name) => { name }).parameters.first.keyword?",
@@ -42,7 +45,8 @@ class Code
         },
         "regular_splat?" => {
           name: "regular_splat?",
-          description: "returns whether the parameter captures positional arguments with *.",
+          description:
+            "returns whether the parameter captures positional arguments with *.",
           examples: [
             "((...values) => { values }).parameters.first.regular_splat?",
             "((*values) => { values }).parameters.first.regular_splat?",
@@ -51,7 +55,8 @@ class Code
         },
         "keyword_splat?" => {
           name: "keyword_splat?",
-          description: "returns whether the parameter captures keyword arguments with **.",
+          description:
+            "returns whether the parameter captures keyword arguments with **.",
           examples: [
             "((**options) => { options }).parameters.first.keyword_splat?",
             "((name:) => { name }).parameters.first.keyword_splat?",
@@ -60,7 +65,8 @@ class Code
         },
         "block?" => {
           name: "block?",
-          description: "returns whether the parameter captures one function argument with &.",
+          description:
+            "returns whether the parameter captures one function argument with &.",
           examples: [
             "((&block) => { block }).parameters.first.block?",
             "((name) => { name }).parameters.first.block?",
@@ -69,7 +75,8 @@ class Code
         },
         "blocks?" => {
           name: "blocks?",
-          description: "returns whether the parameter captures remaining function arguments with &&.",
+          description:
+            "returns whether the parameter captures remaining function arguments with &&.",
           examples: [
             "((&&blocks) => { blocks }).parameters.first.blocks?",
             "((&block) => { block }).parameters.first.blocks?",
@@ -78,7 +85,8 @@ class Code
         },
         "spread?" => {
           name: "spread?",
-          description: "returns whether the parameter captures every provided argument with spread syntax.",
+          description:
+            "returns whether the parameter captures every provided argument with spread syntax.",
           examples: [
             "((...values) => { values }).parameters.first.spread?",
             "((name) => { name }).parameters.first.spread?",
@@ -105,7 +113,8 @@ class Code
         },
         "default" => {
           name: "default",
-          description: "returns the default value for the parameter, or nothing when none is set.",
+          description:
+            "returns the default value for the parameter, or nothing when none is set.",
           examples: [
             "((name = :a) => { name }).parameters.first.default",
             "((name) => { name }).parameters.first.default",

@@ -12,9 +12,10 @@ RSpec.describe "input limits" do
   end
 
   it "limits html parse input" do
-    expect do
-      Code::Object::Html.new("<p>hi</p>")
-    end.to raise_error(Code::Error, /html is too large/)
+    expect do Code::Object::Html.new("<p>hi</p>") end.to raise_error(
+      Code::Error,
+      /html is too large/
+    )
   end
 
   it "limits html unescape input" do
@@ -29,9 +30,10 @@ RSpec.describe "input limits" do
 
     stub_const("Code::MAX_INPUT_BYTES", 4)
 
-    expect do
-      Code::Object::Html.code_raw(html)
-    end.to raise_error(Code::Error, /html is too large/)
+    expect do Code::Object::Html.code_raw(html) end.to raise_error(
+      Code::Error,
+      /html is too large/
+    )
   end
 
   it "limits ics parse input" do

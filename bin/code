@@ -95,16 +95,17 @@ def expand_arguments(arguments)
       remaining_arguments << argument
     end
 
-    raise Code::Error, "too many input files" if expanded_files.size > MAX_ARGUMENT_FILES
+    if expanded_files.size > MAX_ARGUMENT_FILES
+      raise Code::Error, "too many input files"
+    end
   end
 
   [expanded_files, remaining_arguments]
 end
 
 begin
-  @parsed_timeout = Code.normalize_timeout!(
-    parsed.options.timeout || Code::DEFAULT_TIMEOUT
-  )
+  @parsed_timeout =
+    Code.normalize_timeout!(parsed.options.timeout || Code::DEFAULT_TIMEOUT)
 rescue Code::Error => e
   abort "#{e.class}: #{e.message}"
 end
@@ -126,7 +127,9 @@ begin
       append_limited(buffer, remaining_arguments.join(" "))
 
       input_files = parsed.files + expanded_argument_files
-      raise Code::Error, "too many input files" if input_files.size > MAX_ARGUMENT_FILES
+      if input_files.size > MAX_ARGUMENT_FILES
+        raise Code::Error, "too many input files"
+      end
 
       input_files.each.with_index do |file, index|
         append_limited(buffer, "\n\n") if index.positive?

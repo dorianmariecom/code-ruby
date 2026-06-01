@@ -5,7 +5,8 @@ class Code
     class IdentifierList < List
       CLASS_DOCUMENTATION = {
         name: "IdentifierList",
-        description: "stores ordered identifier names used to assign nested values.",
+        description:
+          "stores ordered identifier names used to assign nested values.",
         examples: [
           "IdentifierList",
           "IdentifierList.new([:user, :name]).first",
@@ -92,11 +93,13 @@ class Code
           end
 
         if assignment_operator == "="
-          receiver.call(
-            **args,
-            operator: "#{raw.last}=",
-            arguments: Object::List.new([code_value])
-          ).tap { persist_class_receiver(receiver, args.fetch(:context)) }
+          receiver
+            .call(
+              **args,
+              operator: "#{raw.last}=",
+              arguments: Object::List.new([code_value])
+            )
+            .tap { persist_class_receiver(receiver, args.fetch(:context)) }
         else
           next_value =
             receiver.call(
@@ -109,11 +112,13 @@ class Code
               arguments: Object::List.new([code_value])
             )
 
-          receiver.call(
-            **args,
-            operator: "#{raw.last}=",
-            arguments: Object::List.new([next_value])
-          ).tap { persist_class_receiver(receiver, args.fetch(:context)) }
+          receiver
+            .call(
+              **args,
+              operator: "#{raw.last}=",
+              arguments: Object::List.new([next_value])
+            )
+            .tap { persist_class_receiver(receiver, args.fetch(:context)) }
         end
       end
 

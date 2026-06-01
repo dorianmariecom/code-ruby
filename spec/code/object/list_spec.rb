@@ -41,8 +41,14 @@ RSpec.describe Code::Object::List do
     ["[1, 2, 3].take_while { |value| value < 3 }", "[1, 2]"],
     ["[1, 2, 3].drop_while { |value| value < 3 }", "[3]"],
     ["[1, 2].zip([3, 4])", "[[1, 3], [2, 4]]"],
-    ["indices = [] [10, 20].each_index { |index| indices.push(index) } indices", "[0, 1]"],
-    ["values = [] [1, 2].reverse_each { |value| values.push(value) } values", "[2, 1]"],
+    [
+      "indices = [] [10, 20].each_index { |index| indices.push(index) } indices",
+      "[0, 1]"
+    ],
+    [
+      "values = [] [1, 2].reverse_each { |value| values.push(value) } values",
+      "[2, 1]"
+    ],
     ["[1, 2, 3].group(&:odd?)", "{ true => [1, 3], false => [2] }"],
     ["[1, 2, 3].partition(&:odd?)", "[[1, 3], [2]]"],
     ["[1, 2].cycle(2)", "[1, 2, 1, 2]"],

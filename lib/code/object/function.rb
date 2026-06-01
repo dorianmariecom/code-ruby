@@ -5,7 +5,8 @@ class Code
     class Function < Object
       CLASS_DOCUMENTATION = {
         name: "Function",
-        description: "stores a callable block with parameters, captured context, and documentation.",
+        description:
+          "stores a callable block with parameters, captured context, and documentation.",
         examples: [
           "Function.new",
           "((value) => { value + 1 }).call(1)",
@@ -15,7 +16,8 @@ class Code
       INSTANCE_FUNCTIONS = {
         "call" => {
           name: "call",
-          description: "evaluates the function body with the provided arguments.",
+          description:
+            "evaluates the function body with the provided arguments.",
           examples: [
             "((value) => { value + 1 }).call(1)",
             "((name:) => { name }).call(name: :ada)",
@@ -24,7 +26,8 @@ class Code
         },
         "extend" => {
           name: "extend",
-          description: "creates a child function that can call the receiver through super.",
+          description:
+            "creates a child function that can call the receiver through super.",
           examples: [
             "Base = () => { self.name = :base } Child = Base.extend(() => { super() }) Child().name",
             "Base = () => { 1 } Child = Base.extend(() => { super() }) Child()",
@@ -33,7 +36,8 @@ class Code
         },
         "documentation" => {
           name: "documentation",
-          description: "returns or replaces the function documentation dictionary.",
+          description:
+            "returns or replaces the function documentation dictionary.",
           examples: [
             "f = () => { 1 } f.documentation",
             "f = () => { 1 } f.documentation(description: \"returns one\", examples: [\"f()\"])",
@@ -51,7 +55,8 @@ class Code
         },
         "parameters" => {
           name: "parameters",
-          description: "returns a list of parameter descriptors for the function.",
+          description:
+            "returns a list of parameter descriptors for the function.",
           examples: [
             "((name) => { name }).parameters.first.name",
             "((name = :a) => { name }).parameters.first.default",
@@ -76,8 +81,11 @@ class Code
       end
 
       attr_accessor :documentation
-      attr_reader :code_parameters, :code_body, :definition_context,
-                  :instance_functions, :parent
+      attr_reader :code_parameters,
+                  :code_body,
+                  :definition_context,
+                  :instance_functions,
+                  :parent
 
       def initialize(*args, parent: nil, functions: nil, **_kargs, &_block)
         @code_parameters =
@@ -93,11 +101,12 @@ class Code
         self.functions = functions.to_code
         self.functions = Dictionary.new if self.functions.nothing?
         @instance_functions = Dictionary.new
-        self.documentation = Dictionary.new(
-          "name" => String.new(""),
-          "description" => String.new(""),
-          "examples" => List.new
-        )
+        self.documentation =
+          Dictionary.new(
+            "name" => String.new(""),
+            "description" => String.new(""),
+            "examples" => List.new
+          )
 
         self.raw = List.new([code_parameters, code_body])
       end
@@ -186,7 +195,9 @@ class Code
         end
 
         captures_function_arguments =
-          code_parameters.raw.any? { |parameter| parameter.block? || parameter.blocks? }
+          code_parameters.raw.any? do |parameter|
+            parameter.block? || parameter.blocks?
+          end
         reserved_function_arguments =
           captures_function_arguments ? code_arguments.raw.grep(Function) : []
         code_block_argument =
@@ -206,16 +217,20 @@ class Code
                 end
               )
             elsif code_parameter.keyword_splat?
-              code_arguments.raw.grep(Dictionary).inject(Dictionary.new) do |memo, argument|
-                memo.code_merge!(argument)
-              end
+              code_arguments
+                .raw
+                .grep(Dictionary)
+                .inject(Dictionary.new) do |memo, argument|
+                  memo.code_merge!(argument)
+                end
             elsif code_parameter.block?
               code_block_argument.to_code
             elsif code_parameter.blocks?
               Object::List.new(
-                code_arguments.raw.grep(Function).reject do |argument|
-                  argument == code_block_argument
-                end
+                code_arguments
+                  .raw
+                  .grep(Function)
+                  .reject { |argument| argument == code_block_argument }
               )
             elsif code_parameter.keyword?
               code_arguments
@@ -247,17 +262,19 @@ class Code
           end
 
           code_name = code_parameter.code_name
-          code_context.code_set(code_name, code_argument) unless code_name.blank?
+          unless code_name.blank?
+            code_context.code_set(code_name, code_argument)
+          end
         end
 
-        code_body.code_evaluate(
-          **globals,
-          constructing_literal_classes: constructing_literal_classes,
-          context: code_context,
-          trusted_evaluation: true
-        ).tap do
-          persist_instance_functions(code_self)
-        end
+        code_body
+          .code_evaluate(
+            **globals,
+            constructing_literal_classes: constructing_literal_classes,
+            context: code_context,
+            trusted_evaluation: true
+          )
+          .tap { persist_instance_functions(code_self) }
       rescue Error::Return => e
         persist_instance_functions(code_self)
         e.code_value
@@ -318,15 +335,17 @@ class Code
       def code_extend(function)
         code_function = function.to_code
 
-        Function.new(
-          code_function.code_parameters,
-          code_function.code_body.raw,
-          code_function.definition_context,
-          parent: self,
-          functions: functions.code_deep_duplicate
-        ).tap do |extended_function|
-          extended_function.instance_functions.code_merge!(instance_functions)
-        end
+        Function
+          .new(
+            code_function.code_parameters,
+            code_function.code_body.raw,
+            code_function.definition_context,
+            parent: self,
+            functions: functions.code_deep_duplicate
+          )
+          .tap do |extended_function|
+            extended_function.instance_functions.code_merge!(instance_functions)
+          end
       end
 
       def code_deep_duplicate(seen = {})
@@ -340,7 +359,8 @@ class Code
           code_parameters: code_parameters.code_deep_duplicate(seen),
           code_body: code_body.code_deep_duplicate(seen),
           definition_context: definition_context&.code_deep_duplicate(seen),
-          parent: parent.is_a?(Function) ? parent.code_deep_duplicate(seen) : parent,
+          parent:
+            parent.is_a?(Function) ? parent.code_deep_duplicate(seen) : parent,
           functions: functions.code_deep_duplicate(seen),
           instance_functions: instance_functions.code_deep_duplicate(seen),
           documentation: documentation.code_deep_duplicate(seen)
@@ -381,7 +401,9 @@ class Code
           end
 
         Object.sorted_dictionary(
-          parent_functions.code_merge(function_dictionary_for(instance_functions)).raw
+          parent_functions.code_merge(
+            function_dictionary_for(instance_functions)
+          ).raw
         )
       end
 
@@ -440,7 +462,9 @@ class Code
       def persist_instance_functions(code_self)
         return unless code_self.is_a?(Object)
 
-        instance_functions.code_merge!(documentable_instance_functions(code_self))
+        instance_functions.code_merge!(
+          documentable_instance_functions(code_self)
+        )
       end
 
       def documentable_instance_functions(code_self)

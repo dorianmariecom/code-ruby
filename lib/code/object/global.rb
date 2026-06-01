@@ -5,7 +5,8 @@ class Code
     class Global < Object
       CLASS_DOCUMENTATION = {
         name: "Global",
-        description: "dispatches top-level functions, constructors, and control flow helpers.",
+        description:
+          "dispatches top-level functions, constructors, and control flow helpers.",
         examples: [
           "globals.keys.include?(:puts)",
           "classes.keys.include?(:List)",
@@ -29,7 +30,8 @@ class Code
         },
         {
           name: "dictionary",
-          description: "store named values in a dictionary and read them by key.",
+          description:
+            "store named values in a dictionary and read them by key.",
           source: "user = { name: :Dorian, age: 31 } user.name",
           expected: ":Dorian",
           command: "bin/code 'user = { name: :Dorian, age: 31 } user.name'"
@@ -76,7 +78,8 @@ class Code
           },
           {
             title: "Find built-in functions",
-            action: "use globals, functions, instance_functions, and class_functions from inside Code.",
+            action:
+              "use globals, functions, instance_functions, and class_functions from inside Code.",
             example: GETTING_STARTED_EXAMPLES.fetch(4)
           }
         ],
@@ -90,254 +93,178 @@ class Code
       FUNCTIONS = {
         "Base64" => {
           name: "Base64",
-          description: "returns the Base64 class when called without arguments, otherwise calls Base64.new.",
-          examples: [
-            "Base64",
-            "Base64.new",
-            "Base64.new(nothing)"
-          ]
+          description:
+            "returns the Base64 class when called without arguments, otherwise calls Base64.new.",
+          examples: %w[Base64 Base64.new Base64.new(nothing)]
         },
         "Boolean" => {
           name: "Boolean",
-          description: "returns the Boolean class when called without arguments, otherwise calls Boolean.new.",
-          examples: [
-            "Boolean",
-            "Boolean.new",
-            "Boolean.new(nothing)"
-          ]
+          description:
+            "returns the Boolean class when called without arguments, otherwise calls Boolean.new.",
+          examples: %w[Boolean Boolean.new Boolean.new(nothing)]
         },
         "Class" => {
           name: "Class",
-          description: "returns the Class class when called without arguments, otherwise calls Class.new.",
-          examples: [
-            "Class",
-            "Class.new",
-            "Class.new(nothing)"
-          ]
+          description:
+            "returns the Class class when called without arguments, otherwise calls Class.new.",
+          examples: %w[Class Class.new Class.new(nothing)]
         },
         "Code" => {
           name: "Code",
-          description: "returns the Code class when called without arguments, otherwise calls Code.new.",
-          examples: [
-            "Code",
-            "Code.new",
-            "Code.new(nothing)"
-          ]
+          description:
+            "returns the Code class when called without arguments, otherwise calls Code.new.",
+          examples: %w[Code Code.new Code.new(nothing)]
         },
         "Context" => {
           name: "Context",
-          description: "returns the Context class when called without arguments, otherwise calls Context.new.",
-          examples: [
-            "Context",
-            "Context.new",
-            "Context.new(nothing)"
-          ]
+          description:
+            "returns the Context class when called without arguments, otherwise calls Context.new.",
+          examples: %w[Context Context.new Context.new(nothing)]
         },
         "Cryptography" => {
           name: "Cryptography",
-          description: "returns the Cryptography class when called without arguments, otherwise calls Cryptography.new.",
-          examples: [
-            "Cryptography",
-            "Cryptography.new",
-            "Cryptography.new(nothing)"
-          ]
+          description:
+            "returns the Cryptography class when called without arguments, otherwise calls Cryptography.new.",
+          examples: %w[Cryptography Cryptography.new Cryptography.new(nothing)]
         },
         "Date" => {
           name: "Date",
-          description: "returns the Date class when called without arguments, otherwise calls Date.new.",
-          examples: [
-            "Date",
-            "Date.new",
-            "Date.new(nothing)"
-          ]
+          description:
+            "returns the Date class when called without arguments, otherwise calls Date.new.",
+          examples: %w[Date Date.new Date.new(nothing)]
         },
         "Decimal" => {
           name: "Decimal",
-          description: "returns the Decimal class when called without arguments, otherwise calls Decimal.new.",
-          examples: [
-            "Decimal",
-            "Decimal.new",
-            "Decimal.new(nothing)"
-          ]
+          description:
+            "returns the Decimal class when called without arguments, otherwise calls Decimal.new.",
+          examples: %w[Decimal Decimal.new Decimal.new(nothing)]
         },
         "Dictionary" => {
           name: "Dictionary",
-          description: "returns the Dictionary class when called without arguments, otherwise calls Dictionary.new.",
-          examples: [
-            "Dictionary",
-            "Dictionary.new",
-            "Dictionary.new(nothing)"
-          ]
+          description:
+            "returns the Dictionary class when called without arguments, otherwise calls Dictionary.new.",
+          examples: %w[Dictionary Dictionary.new Dictionary.new(nothing)]
         },
         "Duration" => {
           name: "Duration",
-          description: "returns the Duration class when called without arguments, otherwise calls Duration.new.",
-          examples: [
-            "Duration",
-            "Duration.new",
-            "Duration.new(nothing)"
-          ]
+          description:
+            "returns the Duration class when called without arguments, otherwise calls Duration.new.",
+          examples: %w[Duration Duration.new Duration.new(nothing)]
         },
         "Function" => {
           name: "Function",
-          description: "returns the Function class when called without arguments, otherwise calls Function.new.",
-          examples: [
-            "Function",
-            "Function.new",
-            "Function.new(nothing)"
-          ]
+          description:
+            "returns the Function class when called without arguments, otherwise calls Function.new.",
+          examples: %w[Function Function.new Function.new(nothing)]
         },
         "Html" => {
           name: "Html",
-          description: "returns the Html class when called without arguments, otherwise calls Html.new.",
-          examples: [
-            "Html",
-            "Html.new",
-            "Html.new(nothing)"
-          ]
+          description:
+            "returns the Html class when called without arguments, otherwise calls Html.new.",
+          examples: %w[Html Html.new Html.new(nothing)]
         },
         "Http" => {
           name: "Http",
-          description: "returns the Http class when called without arguments, otherwise calls Http.new.",
-          examples: [
-            "Http",
-            "Http.new",
-            "Http.new(nothing)"
-          ]
+          description:
+            "returns the Http class when called without arguments, otherwise calls Http.new.",
+          examples: %w[Http Http.new Http.new(nothing)]
         },
         "Ics" => {
           name: "Ics",
-          description: "returns the Ics class when called without arguments, otherwise calls Ics.new.",
-          examples: [
-            "Ics",
-            "Ics.new",
-            "Ics.new(nothing)"
-          ]
+          description:
+            "returns the Ics class when called without arguments, otherwise calls Ics.new.",
+          examples: %w[Ics Ics.new Ics.new(nothing)]
         },
         "IdentifierList" => {
           name: "IdentifierList",
-          description: "returns the IdentifierList class when called without arguments, otherwise calls IdentifierList.new.",
-          examples: [
-            "IdentifierList",
-            "IdentifierList.new",
-            "IdentifierList.new(nothing)"
+          description:
+            "returns the IdentifierList class when called without arguments, otherwise calls IdentifierList.new.",
+          examples: %w[
+            IdentifierList
+            IdentifierList.new
+            IdentifierList.new(nothing)
           ]
         },
         "Integer" => {
           name: "Integer",
-          description: "returns the Integer class when called without arguments, otherwise calls Integer.new.",
-          examples: [
-            "Integer",
-            "Integer.new",
-            "Integer.new(nothing)"
-          ]
+          description:
+            "returns the Integer class when called without arguments, otherwise calls Integer.new.",
+          examples: %w[Integer Integer.new Integer.new(nothing)]
         },
         "Json" => {
           name: "Json",
-          description: "returns the Json class when called without arguments, otherwise calls Json.new.",
-          examples: [
-            "Json",
-            "Json.new",
-            "Json.new(nothing)"
-          ]
+          description:
+            "returns the Json class when called without arguments, otherwise calls Json.new.",
+          examples: %w[Json Json.new Json.new(nothing)]
         },
         "List" => {
           name: "List",
-          description: "returns the List class when called without arguments, otherwise calls List.new.",
-          examples: [
-            "List",
-            "List.new",
-            "List.new(nothing)"
-          ]
+          description:
+            "returns the List class when called without arguments, otherwise calls List.new.",
+          examples: %w[List List.new List.new(nothing)]
         },
         "Nothing" => {
           name: "Nothing",
-          description: "returns the Nothing class when called without arguments, otherwise calls Nothing.new.",
-          examples: [
-            "Nothing",
-            "Nothing.new",
-            "Nothing.new(nothing)"
-          ]
+          description:
+            "returns the Nothing class when called without arguments, otherwise calls Nothing.new.",
+          examples: %w[Nothing Nothing.new Nothing.new(nothing)]
         },
         "Number" => {
           name: "Number",
-          description: "returns the Number class when called without arguments, otherwise calls Number.new.",
-          examples: [
-            "Number",
-            "Number.new",
-            "Number.new(nothing)"
-          ]
+          description:
+            "returns the Number class when called without arguments, otherwise calls Number.new.",
+          examples: %w[Number Number.new Number.new(nothing)]
         },
         "Object" => {
           name: "Object",
-          description: "returns the Object class when called without arguments, otherwise calls Object.new.",
-          examples: [
-            "Object",
-            "Object.new",
-            "Object.new(nothing)"
-          ]
+          description:
+            "returns the Object class when called without arguments, otherwise calls Object.new.",
+          examples: %w[Object Object.new Object.new(nothing)]
         },
         "Parameter" => {
           name: "Parameter",
-          description: "returns the Parameter class when called without arguments, otherwise calls Parameter.new.",
-          examples: [
-            "Parameter",
-            "Parameter.new",
-            "Parameter.new(nothing)"
-          ]
+          description:
+            "returns the Parameter class when called without arguments, otherwise calls Parameter.new.",
+          examples: %w[Parameter Parameter.new Parameter.new(nothing)]
         },
         "Range" => {
           name: "Range",
-          description: "returns the Range class when called without arguments, otherwise calls Range.new.",
-          examples: [
-            "Range",
-            "Range.new",
-            "Range.new(nothing)"
-          ]
+          description:
+            "returns the Range class when called without arguments, otherwise calls Range.new.",
+          examples: %w[Range Range.new Range.new(nothing)]
         },
         "Smtp" => {
           name: "Smtp",
-          description: "returns the Smtp class when called without arguments, otherwise calls Smtp.new.",
-          examples: [
-            "Smtp",
-            "Smtp.new",
-            "Smtp.new(nothing)"
-          ]
+          description:
+            "returns the Smtp class when called without arguments, otherwise calls Smtp.new.",
+          examples: %w[Smtp Smtp.new Smtp.new(nothing)]
         },
         "String" => {
           name: "String",
-          description: "returns the String class when called without arguments, otherwise calls String.new.",
-          examples: [
-            "String",
-            "String.new",
-            "String.new(nothing)"
-          ]
+          description:
+            "returns the String class when called without arguments, otherwise calls String.new.",
+          examples: %w[String String.new String.new(nothing)]
         },
         "Time" => {
           name: "Time",
-          description: "returns the Time class when called without arguments, otherwise calls Time.new.",
-          examples: [
-            "Time",
-            "Time.new",
-            "Time.new(nothing)"
-          ]
+          description:
+            "returns the Time class when called without arguments, otherwise calls Time.new.",
+          examples: %w[Time Time.new Time.new(nothing)]
         },
         "Url" => {
           name: "Url",
-          description: "returns the Url class when called without arguments, otherwise calls Url.new.",
-          examples: [
-            "Url",
-            "Url.new",
-            "Url.new(nothing)"
-          ]
+          description:
+            "returns the Url class when called without arguments, otherwise calls Url.new.",
+          examples: %w[Url Url.new Url.new(nothing)]
         },
         "classes" => {
           name: "classes",
-          description: "returns documentation for built-in classes exposed by globals.",
-          examples: [
-            "classes",
-            "classes.keys.include?(:List)",
-            "classes.fetch(:String).description"
+          description:
+            "returns documentation for built-in classes exposed by globals.",
+          examples: %w[
+            classes
+            classes.keys.include?(:List)
+            classes.fetch(:String).description
           ]
         },
         "break" => {
@@ -361,15 +288,12 @@ class Code
         "context" => {
           name: "context",
           description: "returns the current evaluation context dictionary.",
-          examples: [
-            "context",
-            "context.keys",
-            "context.has_key?(:context)"
-          ]
+          examples: %w[context context.keys context.has_key?(:context)]
         },
         "evaluate" => {
           name: "evaluate",
-          description: "evaluates a string as Code source and returns its result.",
+          description:
+            "evaluates a string as Code source and returns its result.",
           examples: [
             "evaluate(\"1 + 2\")",
             "evaluate(\":hello\")",
@@ -378,25 +302,28 @@ class Code
         },
         "getting_started" => {
           name: "getting_started",
-          description: "returns a short guide with runnable examples and commands.",
-          examples: [
-            "getting_started.title",
-            "getting_started.steps.first.command",
-            "getting_started.examples.map(&:name)"
+          description:
+            "returns a short guide with runnable examples and commands.",
+          examples: %w[
+            getting_started.title
+            getting_started.steps.first.command
+            getting_started.examples.map(&:name)
           ]
         },
         "globals" => {
           name: "globals",
-          description: "returns documentation for top-level functions and constructors.",
-          examples: [
-            "globals",
-            "globals.keys.include?(:List)",
-            "globals.fetch(:puts).description"
+          description:
+            "returns documentation for top-level functions and constructors.",
+          examples: %w[
+            globals
+            globals.keys.include?(:List)
+            globals.fetch(:puts).description
           ]
         },
         "next" => {
           name: "next",
-          description: "exits the current block iteration and returns an optional value.",
+          description:
+            "exits the current block iteration and returns an optional value.",
           examples: [
             "[1].map { next }",
             "[1].map { next 2 }",
@@ -406,38 +333,23 @@ class Code
         "p" => {
           name: "p",
           description: "writes inspected values to output and returns nothing.",
-          examples: [
-            "p(:hello)",
-            "p(1, 2)",
-            "p([1, 2])"
-          ]
+          examples: ["p(:hello)", "p(1, 2)", "p([1, 2])"]
         },
         "print" => {
           name: "print",
           description: "writes values to output without adding a newline.",
-          examples: [
-            "print(:hello)",
-            "print(1, 2)",
-            "print(\"hello\")"
-          ]
+          examples: ["print(:hello)", "print(1, 2)", "print(\"hello\")"]
         },
         "puts" => {
           name: "puts",
-          description: "writes values to output with newlines and returns nothing.",
-          examples: [
-            "puts(:hello)",
-            "puts(1, 2)",
-            "puts(\"hello\")"
-          ]
+          description:
+            "writes values to output with newlines and returns nothing.",
+          examples: ["puts(:hello)", "puts(1, 2)", "puts(\"hello\")"]
         },
         "read" => {
           name: "read",
           description: "reads one line from input.",
-          examples: [
-            "read",
-            "name = read",
-            "read.to_string"
-          ]
+          examples: ["read", "name = read", "read.to_string"]
         },
         "redo" => {
           name: "redo",
@@ -459,7 +371,8 @@ class Code
         },
         "return" => {
           name: "return",
-          description: "exits the current function and returns an optional value.",
+          description:
+            "exits the current function and returns an optional value.",
           examples: [
             "() => { return }",
             "() => { return 1 }",

@@ -5,7 +5,8 @@ class Code
     class Dictionary < ::Code::Object
       CLASS_DOCUMENTATION = {
         name: "Dictionary",
-        description: "stores keyed values and provides lookup, merge, and enumerable operations.",
+        description:
+          "stores keyed values and provides lookup, merge, and enumerable operations.",
         examples: [
           "{ a: 1 }",
           "Dictionary.from_entries([[:a, 1]])",
@@ -59,16 +60,25 @@ class Code
         "at" => {
           name: "at",
           description: "alias for get.",
-          examples: ["{ a: 1 }.at(:a)", "{ a: 1 }.at(:b)", "{ a: 1, b: 2 }.at(:b)"]
+          examples: [
+            "{ a: 1 }.at(:a)",
+            "{ a: 1 }.at(:b)",
+            "{ a: 1, b: 2 }.at(:b)"
+          ]
         },
         "get" => {
           name: "get",
           description: "returns the value for a key, otherwise nothing.",
-          examples: ["{ a: 1 }.get(:a)", "{ a: 1 }.get(:b)", "{ a: 1, b: 2 }.get(:b)"]
+          examples: [
+            "{ a: 1 }.get(:a)",
+            "{ a: 1 }.get(:b)",
+            "{ a: 1, b: 2 }.get(:b)"
+          ]
         },
         "any?" => {
           name: "any?",
-          description: "returns whether any entry exists, has a class value, or matches a function.",
+          description:
+            "returns whether any entry exists, has a class value, or matches a function.",
           examples: [
             "{ a: 1 }.any?",
             "{}.any?",
@@ -77,12 +87,14 @@ class Code
         },
         "clear" => {
           name: "clear",
-          description: "removes every entry from the dictionary and returns it.",
+          description:
+            "removes every entry from the dictionary and returns it.",
           examples: ["{ a: 1 }.clear", "{ a: 1, b: 2 }.clear", "{}.clear"]
         },
         "compact" => {
           name: "compact",
-          description: "returns a dictionary without nothing values or matching values.",
+          description:
+            "returns a dictionary without nothing values or matching values.",
           examples: [
             "{ a: 1, b: nothing }.compact",
             "{ a: 1, b: :x }.compact(String)",
@@ -91,7 +103,8 @@ class Code
         },
         "compact!" => {
           name: "compact!",
-          description: "removes nothing values or matching values from the dictionary.",
+          description:
+            "removes nothing values or matching values from the dictionary.",
           examples: [
             "{ a: 1, b: nothing }.compact!",
             "{ a: 1, b: :x }.compact!(String)",
@@ -136,7 +149,8 @@ class Code
         },
         "each" => {
           name: "each",
-          description: "calls a function for each key-value pair and returns the dictionary.",
+          description:
+            "calls a function for each key-value pair and returns the dictionary.",
           examples: [
             "{ a: 1 }.each((key, value) => { value })",
             "{ a: 1 }.each((key, value, index) => { index })",
@@ -145,7 +159,8 @@ class Code
         },
         "each_key" => {
           name: "each_key",
-          description: "calls a function for each key and returns the dictionary.",
+          description:
+            "calls a function for each key and returns the dictionary.",
           examples: [
             "{ a: 1 }.each_key((key) => { key })",
             "{ a: 1, b: 2 }.each_key((key, index) => { index })",
@@ -154,7 +169,8 @@ class Code
         },
         "each_value" => {
           name: "each_value",
-          description: "calls a function for each value and returns the dictionary.",
+          description:
+            "calls a function for each value and returns the dictionary.",
           examples: [
             "{ a: 1 }.each_value((value) => { value })",
             "{ a: 1, b: 2 }.each_value((value, index) => { index })",
@@ -163,7 +179,8 @@ class Code
         },
         "each_pair" => {
           name: "each_pair",
-          description: "calls a function for each key-value pair and returns the dictionary.",
+          description:
+            "calls a function for each key-value pair and returns the dictionary.",
           examples: [
             "{ a: 1 }.each_pair((key, value) => { value })",
             "{ a: 1, b: 2 }.each_pair((key, value, index) => { index })",
@@ -204,13 +221,22 @@ class Code
         },
         "flatten" => {
           name: "flatten",
-          description: "returns a flattened list of dictionary keys and values.",
-          examples: ["{ a: 1 }.flatten", "{ a: { b: 1 } }.flatten", "{ a: 1 }.flatten(1)"]
+          description:
+            "returns a flattened list of dictionary keys and values.",
+          examples: [
+            "{ a: 1 }.flatten",
+            "{ a: { b: 1 } }.flatten",
+            "{ a: 1 }.flatten(1)"
+          ]
         },
         "has_key?" => {
           name: "has_key?",
           description: "returns whether the dictionary contains a key.",
-          examples: ["{ a: 1 }.has_key?(:a)", "{ a: 1 }.has_key?(:b)", "{}.has_key?(:a)"]
+          examples: [
+            "{ a: 1 }.has_key?(:a)",
+            "{ a: 1 }.has_key?(:b)",
+            "{}.has_key?(:a)"
+          ]
         },
         "key?" => {
           name: "key?",
@@ -220,17 +246,29 @@ class Code
         "include?" => {
           name: "include?",
           description: "alias for has_key?.",
-          examples: ["{ a: 1 }.include?(:a)", "{ a: 1 }.include?(:b)", "{}.include?(:a)"]
+          examples: [
+            "{ a: 1 }.include?(:a)",
+            "{ a: 1 }.include?(:b)",
+            "{}.include?(:a)"
+          ]
         },
         "member?" => {
           name: "member?",
           description: "alias for has_key?.",
-          examples: ["{ a: 1 }.member?(:a)", "{ a: 1 }.member?(:b)", "{}.member?(:a)"]
+          examples: [
+            "{ a: 1 }.member?(:a)",
+            "{ a: 1 }.member?(:b)",
+            "{}.member?(:a)"
+          ]
         },
         "has_own?" => {
           name: "has_own?",
           description: "returns whether the dictionary contains a key.",
-          examples: ["{ a: 1 }.has_own?(:a)", "{ a: 1 }.has_own?(:b)", "{}.has_own?(:a)"]
+          examples: [
+            "{ a: 1 }.has_own?(:a)",
+            "{ a: 1 }.has_own?(:b)",
+            "{}.has_own?(:a)"
+          ]
         },
         "has_value?" => {
           name: "has_value?",
@@ -271,7 +309,8 @@ class Code
         },
         "key" => {
           name: "key",
-          description: "returns the first key for a value, or a fallback result.",
+          description:
+            "returns the first key for a value, or a fallback result.",
           examples: [
             "{ a: 1 }.key(1)",
             "{ a: 1, b: 2 }.key(2)",
@@ -321,7 +360,8 @@ class Code
         },
         "replace" => {
           name: "replace",
-          description: "replaces the dictionary contents with another dictionary.",
+          description:
+            "replaces the dictionary contents with another dictionary.",
           examples: [
             "{ a: 1 }.replace({ b: 2 })",
             "{ a: 1, b: 2 }.replace({})",
@@ -344,7 +384,8 @@ class Code
         },
         "reject" => {
           name: "reject",
-          description: "returns a dictionary without entries matching a function.",
+          description:
+            "returns a dictionary without entries matching a function.",
           examples: [
             "{ a: 1, b: 2 }.reject((key, value) => { value > 1 })",
             "{ a: 1 }.reject((key) => { key == :a })",
@@ -399,7 +440,11 @@ class Code
         "set" => {
           name: "set",
           description: "sets a key to a value and returns the value.",
-          examples: ["{ a: 1 }.set(:b, 2)", "{}.set(:a, 1)", "{ a: 1 }.set(:a, 2)"]
+          examples: [
+            "{ a: 1 }.set(:b, 2)",
+            "{}.set(:a, 1)",
+            "{ a: 1 }.set(:a, 2)"
+          ]
         },
         "size" => {
           name: "size",
@@ -442,7 +487,11 @@ class Code
         "to_context" => {
           name: "to_context",
           description: "converts the dictionary to a context.",
-          examples: ["{ a: 1 }.to_context", "{ a: 1, b: 2 }.to_context", "{}.to_context"]
+          examples: [
+            "{ a: 1 }.to_context",
+            "{ a: 1, b: 2 }.to_context",
+            "{}.to_context"
+          ]
         },
         "to_query" => {
           name: "to_query",
@@ -455,7 +504,8 @@ class Code
         },
         "transform_keys" => {
           name: "transform_keys",
-          description: "returns a dictionary with keys transformed by a function.",
+          description:
+            "returns a dictionary with keys transformed by a function.",
           examples: [
             "{ a: 1 }.transform_keys((key) => { key.to_string })",
             "{ a: 1 }.transform_keys((key, value) => { value })",
@@ -473,7 +523,8 @@ class Code
         },
         "transform_values" => {
           name: "transform_values",
-          description: "returns a dictionary with values transformed by a key-value function.",
+          description:
+            "returns a dictionary with values transformed by a key-value function.",
           examples: [
             "{ a: 1 }.transform_values((key, value) => { value + 1 })",
             "{ a: 1 }.transform_values((key, value) => { key })",
@@ -482,7 +533,8 @@ class Code
         },
         "transform_values!" => {
           name: "transform_values!",
-          description: "transforms values in the receiver with a key-value function.",
+          description:
+            "transforms values in the receiver with a key-value function.",
           examples: [
             "{ a: 1 }.transform_values!((key, value) => { value + 1 })",
             "{ a: 1 }.transform_values!((key, value) => { key })",
@@ -509,7 +561,8 @@ class Code
         },
         "associate" => {
           name: "associate",
-          description: "returns the key-value entry for a key, otherwise nothing.",
+          description:
+            "returns the key-value entry for a key, otherwise nothing.",
           examples: [
             "{ a: 1 }.associate(:a)",
             "{ a: 1, b: 2 }.associate(:b)",
@@ -518,7 +571,8 @@ class Code
         },
         "right_associate" => {
           name: "right_associate",
-          description: "returns the first key-value entry for a value, otherwise nothing.",
+          description:
+            "returns the first key-value entry for a value, otherwise nothing.",
           examples: [
             "{ a: 1 }.right_associate(1)",
             "{ a: 1, b: 2 }.right_associate(2)",
@@ -536,27 +590,32 @@ class Code
         },
         "many?" => {
           name: "many?",
-          description: "returns whether the dictionary has more than one entry.",
+          description:
+            "returns whether the dictionary has more than one entry.",
           examples: ["{ a: 1, b: 2 }.many?", "{ a: 1 }.many?", "{}.many?"]
         },
         "positive?" => {
           name: "positive?",
           description: "returns whether the dictionary size is positive.",
-          examples: ["{ a: 1 }.positive?", "{}.positive?", "{ a: 1, b: 2 }.positive?"]
+          examples: [
+            "{ a: 1 }.positive?",
+            "{}.positive?",
+            "{ a: 1, b: 2 }.positive?"
+          ]
         },
         "negative?" => {
           name: "negative?",
           description: "returns whether the dictionary size is negative.",
-          examples: ["{}.negative?", "{ a: 1 }.negative?", "{ a: 1, b: 2 }.negative?"]
+          examples: [
+            "{}.negative?",
+            "{ a: 1 }.negative?",
+            "{ a: 1, b: 2 }.negative?"
+          ]
         },
         "zero?" => {
           name: "zero?",
           description: "returns whether the dictionary size is zero.",
-          examples: [
-            "{}.zero?",
-            "{ a: 1 }.zero?",
-            "{ a: 1, b: 2 }.zero?"
-          ]
+          examples: ["{}.zero?", "{ a: 1 }.zero?", "{ a: 1, b: 2 }.zero?"]
         },
         "one?" => {
           name: "one?",
@@ -2149,7 +2208,12 @@ class Code
       end
 
       def self.code_assign(*dictionaries)
-        Dictionary.new(dictionaries.to_code.raw.reduce({}) { |acc, item| acc.merge(item.raw) })
+        Dictionary.new(
+          dictionaries
+            .to_code
+            .raw
+            .reduce({}) { |acc, item| acc.merge(item.raw) }
+        )
       end
 
       def self.code_has_own?(dictionary, key)
@@ -2519,7 +2583,8 @@ class Code
         List.new(
           raw.map.with_index do |(key, value), index|
             code_function.call(
-              arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+              arguments:
+                List.new([key.to_code, value.to_code, index.to_code, self]),
               **globals
             )
           rescue Error::Next => e
@@ -2687,7 +2752,8 @@ class Code
         else
           raw.reject!.with_index do |(key, value), index|
             code_argument.call(
-              arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+              arguments:
+                List.new([key.to_code, value.to_code, index.to_code, self]),
               **globals
             ).truthy?
           rescue Error::Next => e
@@ -2704,12 +2770,15 @@ class Code
         code_argument = argument.to_code
 
         if code_argument.is_a?(Class)
-          Dictionary.new(raw.reject { |_, value| value.is_a?(code_argument.raw) })
+          Dictionary.new(
+            raw.reject { |_, value| value.is_a?(code_argument.raw) }
+          )
         else
           Dictionary.new(
             raw.reject.with_index do |(key, value), index|
               code_argument.call(
-                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                arguments:
+                  List.new([key.to_code, value.to_code, index.to_code, self]),
                 **globals
               ).truthy?
             rescue Error::Next => e
@@ -2764,7 +2833,8 @@ class Code
             .with_index do |(key, value), index|
               [
                 code_function.call(
-                  arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                  arguments:
+                    List.new([key.to_code, value.to_code, index.to_code, self]),
                   **globals
                 ),
                 value.to_code
@@ -2832,7 +2902,8 @@ class Code
           List.new(
             entries.map.with_index do |(key, value), index|
               code_function.call(
-                arguments: List.new([key.to_code, value.to_code, index.to_code, self]),
+                arguments:
+                  List.new([key.to_code, value.to_code, index.to_code, self]),
                 **globals
               )
             rescue Error::Next => e

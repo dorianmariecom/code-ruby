@@ -5,58 +5,63 @@ class Code
     class Class < Object
       CLASS_DOCUMENTATION = {
         name: "Class",
-        description: "wraps a value constructor and documents its class and instance functions.",
-        examples: [
-          "Class",
-          "Class.new(String)",
-          "Class.documentation.name"
-        ]
+        description:
+          "wraps a value constructor and documents its class and instance functions.",
+        examples: %w[Class Class.new(String) Class.documentation.name]
       }.freeze
       INSTANCE_FUNCTIONS = {
         "documentation" => {
           name: "documentation",
           description: "returns documentation for this class.",
-          examples: [
-            "Class.documentation.description",
-            "List.documentation.name",
-            "Dictionary.documentation.name"
+          examples: %w[
+            Class.documentation.description
+            List.documentation.name
+            Dictionary.documentation.name
           ]
         },
         "functions" => {
           name: "functions",
-          description: "returns documented class functions available on this class.",
-          examples: [
-            "Class.functions.keys.include?(:new)",
-            "List.functions.keys.include?(:new)",
-            "Dictionary.functions.keys.include?(:from_entries)"
+          description:
+            "returns documented class functions available on this class.",
+          examples: %w[
+            Class.functions.keys.include?(:new)
+            List.functions.keys.include?(:new)
+            Dictionary.functions.keys.include?(:from_entries)
           ]
         },
         "instance_functions" => {
           name: "instance_functions",
-          description: "returns documented functions available on values built by this class.",
-          examples: [
-            "Class.instance_functions.keys.include?(:documentation)",
-            "List.instance_functions.keys.include?(:map)",
-            "String.instance_functions.keys.include?(:upcase)"
+          description:
+            "returns documented functions available on values built by this class.",
+          examples: %w[
+            Class.instance_functions.keys.include?(:documentation)
+            List.instance_functions.keys.include?(:map)
+            String.instance_functions.keys.include?(:upcase)
           ]
         },
         "class_functions" => {
           name: "class_functions",
-          description: "returns documented class functions available on this class.",
-          examples: [
-            "Class.class_functions.keys.include?(:new)",
-            "List.class_functions.keys.include?(:new)",
-            "Dictionary.class_functions.keys.include?(:from_entries)"
+          description:
+            "returns documented class functions available on this class.",
+          examples: %w[
+            Class.class_functions.keys.include?(:new)
+            List.class_functions.keys.include?(:new)
+            Dictionary.class_functions.keys.include?(:from_entries)
           ]
         },
         "call" => {
           name: "call",
           description: "returns a new value by calling this class constructor.",
-          examples: ["Class.call(String)", "List.call([1, 2])", "String.call(:hello)"]
+          examples: [
+            "Class.call(String)",
+            "List.call([1, 2])",
+            "String.call(:hello)"
+          ]
         },
         "extend" => {
           name: "extend",
-          description: "returns a function that builds a value from this class before running the body.",
+          description:
+            "returns a function that builds a value from this class before running the body.",
           examples: [
             "Widget = Dictionary.extend(() => { self.name = :widget self }) Widget().fetch(:name)",
             "Person = Dictionary.extend((name) => { self.name = name self }) Person(:Ada).fetch(:name)",

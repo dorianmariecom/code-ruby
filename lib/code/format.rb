@@ -207,10 +207,7 @@ class Code
     end
 
     def escape_string_text(text)
-      text
-        .gsub("\\", "\\\\")
-        .gsub('"', '\"')
-        .gsub("{", "\\{")
+      text.gsub("\\", "\\\\").gsub('"', '\"').gsub("{", "\\{")
     end
 
     def format_string_literal(content, components:, indent:, allow_split:)
@@ -335,7 +332,7 @@ class Code
     def format_dictionary_statement_code(statement_code)
       key =
         format_dictionary_statement_key(statement_code[:statement]) ||
-        format_nested_statement(statement_code[:statement], indent: 0)
+          format_nested_statement(statement_code[:statement], indent: 0)
       return key unless statement_code.key?(:code)
 
       value = format_code_inline(statement_code[:code], indent: 0)
@@ -477,14 +474,17 @@ class Code
               first_line, *rest = right.lines(chomp: true)
               if multiline_operand_statement?(other[:statement]) ||
                    !BOOLEAN_WORD_OPERATORS.include?(operator)
-                ["#{expression} #{operator} #{first_line.lstrip}", *rest].join("\n")
+                ["#{expression} #{operator} #{first_line.lstrip}", *rest].join(
+                  "\n"
+                )
               else
                 [
                   "#{expression}\n#{INDENT * (indent + 1)}#{operator} #{first_line.lstrip}",
                   *rest
                 ].join("\n")
               end
-            elsif expression.include?("\n") || candidate.length > MAX_LINE_LENGTH
+            elsif expression.include?("\n") ||
+                  candidate.length > MAX_LINE_LENGTH
               right_lines =
                 if right.include?("\n")
                   right.lines(chomp: true).map(&:lstrip)
@@ -521,10 +521,9 @@ class Code
       return false if expression.lstrip.start_with?("(")
 
       continuation_lines =
-        expression
-          .lines(chomp: true)[1..]
-          .to_a
-          .reject { |line| line.strip.empty? || line.strip.match?(/\A[\])}]+\z/) }
+        expression.lines(chomp: true)[1..].to_a.reject do |line|
+          line.strip.empty? || line.strip.match?(/\A[\])}]+\z/)
+        end
 
       return false if continuation_lines.empty?
 
@@ -578,10 +577,7 @@ class Code
         first_line = first_line.lstrip
         return "#{left} #{operator} #{first_line}" if rest.empty?
 
-        return [
-          "#{left} #{operator} #{first_line}",
-          *rest
-        ].join("\n")
+        return ["#{left} #{operator} #{first_line}", *rest].join("\n")
       end
 
       "#{left} #{operator} #{right}"
@@ -594,7 +590,9 @@ class Code
         if nested_operator == "="
           left = format_nested_statement(nested[:left], indent: indent)
           right = format_nested_statement(nested[:right], indent: indent)
-          return "#{left} #{nested_operator} #{group_multiline_expression(right, indent: indent)}"
+          return(
+            "#{left} #{nested_operator} #{group_multiline_expression(right, indent: indent)}"
+          )
         end
       end
 
@@ -724,7 +722,8 @@ class Code
           Array(while_statement[:parameters]).map do |parameter|
             format_parameter(parameter, indent: indent)
           end
-        header = parameters.empty? ? "loop {" : "loop { |#{parameters.join(", ")}|"
+        header =
+          parameters.empty? ? "loop {" : "loop { |#{parameters.join(", ")}|"
 
         return "#{INDENT * indent}#{header}\n#{body}\n#{INDENT * indent}}"
       end
@@ -757,7 +756,9 @@ class Code
         others = Array(operation[:others])
 
         return false if others.empty?
-        return false unless others.all? { |other| compact_operator?(other[:operator]) }
+        unless others.all? { |other| compact_operator?(other[:operator]) }
+          return false
+        end
 
         return multiline_operand_statement?(operation[:first])
       end
@@ -785,7 +786,10 @@ class Code
 
     def indent_lines(value, indent)
       prefix = INDENT * indent
-      value.split("\n").map { |line| line.empty? ? "" : "#{prefix}#{line}" }.join("\n")
+      value
+        .split("\n")
+        .map { |line| line.empty? ? "" : "#{prefix}#{line}" }
+        .join("\n")
     end
 
     def statement_separator(inline:, indent: nil)

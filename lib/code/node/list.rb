@@ -11,20 +11,22 @@ class Code
       end
 
       def evaluate(**args)
-        list = ::Code::Object::List.new(
-          (@elements || []).map { |element| element.evaluate(**args) }
-        )
+        list =
+          ::Code::Object::List.new(
+            (@elements || []).map { |element| element.evaluate(**args) }
+          )
         constructor = literal_constructor(args.fetch(:context), "List")
         return list unless constructor
-        return list if Array(args[:constructing_literal_classes]).include?(
-          ::Code::Object::List
-        )
+        if Array(args[:constructing_literal_classes]).include?(
+             ::Code::Object::List
+           )
+          return list
+        end
 
         constructor.call(
           **args,
           constructing_literal_classes:
-            Array(args[:constructing_literal_classes]) +
-              [::Code::Object::List],
+            Array(args[:constructing_literal_classes]) + [::Code::Object::List],
           operator: nil,
           arguments: ::Code::Object::List.new([list]),
           explicit_arguments: true

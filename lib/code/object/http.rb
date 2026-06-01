@@ -5,7 +5,8 @@ class Code
     class Http < Object
       CLASS_DOCUMENTATION = {
         name: "Http",
-        description: "sends http requests and returns dictionaries with request and response details.",
+        description:
+          "sends http requests and returns dictionaries with request and response details.",
         examples: [
           "Http.get(\"http://httpbin.org/status/200\").success?",
           "Http.post(\"http://httpbin.org/status/200\", body: :hello).request.body",
@@ -15,7 +16,8 @@ class Code
       CLASS_FUNCTIONS = {
         "get" => {
           name: "get",
-          description: "sends a get request and returns the response dictionary.",
+          description:
+            "sends a get request and returns the response dictionary.",
           examples: [
             "Http.get(\"http://httpbin.org/status/200\").code",
             "Http.get(\"http://httpbin.org/status/200\", query: { q: :ruby }).url",
@@ -24,7 +26,8 @@ class Code
         },
         "head" => {
           name: "head",
-          description: "sends a head request and returns the response dictionary.",
+          description:
+            "sends a head request and returns the response dictionary.",
           examples: [
             "Http.head(\"http://httpbin.org/status/200\").code",
             "Http.head(\"http://httpbin.org/status/204\").status",
@@ -33,7 +36,8 @@ class Code
         },
         "post" => {
           name: "post",
-          description: "sends a post request with optional body, form data, and headers.",
+          description:
+            "sends a post request with optional body, form data, and headers.",
           examples: [
             "Http.post(\"http://httpbin.org/status/200\", body: :hello).request.body",
             "Http.post(\"http://httpbin.org/status/200\", data: { a: 1 }).success?",
@@ -51,7 +55,8 @@ class Code
         },
         "delete" => {
           name: "delete",
-          description: "sends a delete request and returns the response dictionary.",
+          description:
+            "sends a delete request and returns the response dictionary.",
           examples: [
             "Http.delete(\"http://httpbin.org/status/200\").success?",
             "Http.delete(\"http://httpbin.org/status/200\", body: :hello).request.body",
@@ -60,7 +65,8 @@ class Code
         },
         "options" => {
           name: "options",
-          description: "sends an options request and returns the response dictionary.",
+          description:
+            "sends an options request and returns the response dictionary.",
           examples: [
             "Http.options(\"http://httpbin.org/status/200\").method",
             "Http.options(\"http://httpbin.org/status/204\").code",
@@ -69,7 +75,8 @@ class Code
         },
         "trace" => {
           name: "trace",
-          description: "sends a trace request and returns the response dictionary.",
+          description:
+            "sends a trace request and returns the response dictionary.",
           examples: [
             "Http.trace(\"http://httpbin.org/status/200\").method",
             "Http.trace(\"http://httpbin.org/status/204\").code",
@@ -288,7 +295,9 @@ class Code
         validate_payload_size!(password, label: "http password")
         validate_payload_size!(query, label: "http query")
         validate_payload_size!(body, label: "http request body")
-        validate_payload_size!(data.as_json.to_query, label: "http form data") if data.present?
+        if data.present?
+          validate_payload_size!(data.as_json.to_query, label: "http form data")
+        end
 
         url = original_url
         url = "#{url}?#{query}" if query.present?
@@ -307,12 +316,9 @@ class Code
         http.ipaddr = resolved_ip
         http.use_ssl = true if uri.scheme == "https"
         default_timeout = http_timeout(timeout, DEFAULT_TIMEOUT)
-        open_timeout_value =
-          http_timeout(open_timeout, default_timeout)
-        read_timeout_value =
-          http_timeout(read_timeout, default_timeout)
-        write_timeout_value =
-          http_timeout(write_timeout, default_timeout)
+        open_timeout_value = http_timeout(open_timeout, default_timeout)
+        read_timeout_value = http_timeout(read_timeout, default_timeout)
+        write_timeout_value = http_timeout(write_timeout, default_timeout)
 
         http.open_timeout = open_timeout_value if open_timeout_value
         http.read_timeout = read_timeout_value if read_timeout_value
@@ -383,27 +389,26 @@ class Code
         else
           status = STATUS_CODES.key(code) || :ok
           response_headers = response.each_header.to_h
-          request_headers = request.to_hash.transform_values do |values|
-            List.new(values)
-          end
+          request_headers =
+            request.to_hash.transform_values { |values| List.new(values) }
           body = response_body.to_s
 
           Dictionary.new(
-            code: code,
-            status: status,
-            body: body,
-            headers: response_headers,
-            method: verb,
-            url: url,
+            :code => code,
+            :status => status,
+            :body => body,
+            :headers => response_headers,
+            :method => verb,
+            :url => url,
             "success?" => code.between?(200, 299),
             "redirect?" => code.between?(300, 399),
-            request: {
+            :request => {
               method: verb,
               url: url,
               headers: request_headers,
               body: request.body.to_s
             },
-            response: {
+            :response => {
               code: code,
               status: status,
               headers: response_headers,
@@ -421,7 +426,8 @@ class Code
 
       def self.same_origin?(new_uri, original_uri)
         new_uri.scheme == original_uri.scheme &&
-          new_uri.hostname.to_s.downcase == original_uri.hostname.to_s.downcase &&
+          new_uri.hostname.to_s.downcase ==
+            original_uri.hostname.to_s.downcase &&
           new_uri.port == original_uri.port
       end
 

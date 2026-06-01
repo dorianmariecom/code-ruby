@@ -5,7 +5,8 @@ class Code
     class Date < Object
       CLASS_DOCUMENTATION = {
         name: "Date",
-        description: "represents a calendar date with date arithmetic and formatting.",
+        description:
+          "represents a calendar date with date arithmetic and formatting.",
         examples: [
           "Date.today",
           "Date.tomorrow > Date.today",
@@ -90,7 +91,8 @@ class Code
         },
         "after?" => {
           name: "after?",
-          description: "returns whether the date is after another date or time.",
+          description:
+            "returns whether the date is after another date or time.",
           examples: [
             "Date.new(\"2024-03-05\").after?(Date.new(\"2024-03-04\"))",
             "Date.new(\"2024-03-05\").after?(Date.new(\"2024-03-06\"))",
@@ -99,7 +101,8 @@ class Code
         },
         "before?" => {
           name: "before?",
-          description: "returns whether the date is before another date or time.",
+          description:
+            "returns whether the date is before another date or time.",
           examples: [
             "Date.new(\"2024-03-05\").before?(Date.new(\"2024-03-06\"))",
             "Date.new(\"2024-03-05\").before?(Date.new(\"2024-03-04\"))",
@@ -585,7 +588,8 @@ class Code
         },
         "africa_abidjan?" => {
           name: "africa_abidjan?",
-          description: "returns whether the current time zone is africa/abidjan.",
+          description:
+            "returns whether the current time zone is africa/abidjan.",
           examples: [
             "Date.africa_abidjan?",
             "Date.new(\"2024-03-05\").africa_abidjan?",
@@ -603,7 +607,8 @@ class Code
         },
         "africa_addis_ababa?" => {
           name: "africa_addis_ababa?",
-          description: "returns whether the current time zone is africa/addis_ababa.",
+          description:
+            "returns whether the current time zone is africa/addis_ababa.",
           examples: [
             "Date.africa_addis_ababa?",
             "Date.new(\"2024-03-05\").africa_addis_ababa?",
@@ -612,7 +617,8 @@ class Code
         },
         "africa_algiers?" => {
           name: "africa_algiers?",
-          description: "returns whether the current time zone is africa/algiers.",
+          description:
+            "returns whether the current time zone is africa/algiers.",
           examples: [
             "Date.africa_algiers?",
             "Date.new(\"2024-03-05\").africa_algiers?",
@@ -621,7 +627,8 @@ class Code
         },
         "africa_asmara?" => {
           name: "africa_asmara?",
-          description: "returns whether the current time zone is africa/asmara.",
+          description:
+            "returns whether the current time zone is africa/asmara.",
           examples: [
             "Date.africa_asmara?",
             "Date.new(\"2024-03-05\").africa_asmara?",
@@ -630,7 +637,8 @@ class Code
         },
         "africa_asmera?" => {
           name: "africa_asmera?",
-          description: "returns whether the current time zone is africa/asmera.",
+          description:
+            "returns whether the current time zone is africa/asmera.",
           examples: [
             "Date.africa_asmera?",
             "Date.new(\"2024-03-05\").africa_asmera?",
@@ -639,7 +647,8 @@ class Code
         },
         "africa_bamako?" => {
           name: "africa_bamako?",
-          description: "returns whether the current time zone is africa/bamako.",
+          description:
+            "returns whether the current time zone is africa/bamako.",
           examples: [
             "Date.africa_bamako?",
             "Date.new(\"2024-03-05\").africa_bamako?",
@@ -648,7 +657,8 @@ class Code
         },
         "africa_bangui?" => {
           name: "africa_bangui?",
-          description: "returns whether the current time zone is africa/bangui.",
+          description:
+            "returns whether the current time zone is africa/bangui.",
           examples: [
             "Date.africa_bangui?",
             "Date.new(\"2024-03-05\").africa_bangui?",
@@ -657,7 +667,8 @@ class Code
         },
         "africa_banjul?" => {
           name: "africa_banjul?",
-          description: "returns whether the current time zone is africa/banjul.",
+          description:
+            "returns whether the current time zone is africa/banjul.",
           examples: [
             "Date.africa_banjul?",
             "Date.new(\"2024-03-05\").africa_banjul?",
@@ -666,7 +677,8 @@ class Code
         },
         "africa_bissau?" => {
           name: "africa_bissau?",
-          description: "returns whether the current time zone is africa/bissau.",
+          description:
+            "returns whether the current time zone is africa/bissau.",
           examples: [
             "Date.africa_bissau?",
             "Date.new(\"2024-03-05\").africa_bissau?",
@@ -675,7 +687,8 @@ class Code
         },
         "africa_blantyre?" => {
           name: "africa_blantyre?",
-          description: "returns whether the current time zone is africa/blantyre.",
+          description:
+            "returns whether the current time zone is africa/blantyre.",
           examples: [
             "Date.africa_blantyre?",
             "Date.new(\"2024-03-05\").africa_blantyre?",
@@ -684,7 +697,8 @@ class Code
         },
         "africa_brazzaville?" => {
           name: "africa_brazzaville?",
-          description: "returns whether the current time zone is africa/brazzaville.",
+          description:
+            "returns whether the current time zone is africa/brazzaville.",
           examples: [
             "Date.africa_brazzaville?",
             "Date.new(\"2024-03-05\").africa_brazzaville?",
@@ -693,7 +707,8 @@ class Code
         },
         "africa_bujumbura?" => {
           name: "africa_bujumbura?",
-          description: "returns whether the current time zone is africa/bujumbura.",
+          description:
+            "returns whether the current time zone is africa/bujumbura.",
           examples: [
             "Date.africa_bujumbura?",
             "Date.new(\"2024-03-05\").africa_bujumbura?",
@@ -711,7 +726,8 @@ class Code
         },
         "africa_casablanca?" => {
           name: "africa_casablanca?",
-          description: "returns whether the current time zone is africa/casablanca.",
+          description:
+            "returns whether the current time zone is africa/casablanca.",
           examples: [
             "Date.africa_casablanca?",
             "Date.new(\"2024-03-05\").africa_casablanca?",
@@ -729,7 +745,8 @@ class Code
         },
         "africa_conakry?" => {
           name: "africa_conakry?",
-          description: "returns whether the current time zone is africa/conakry.",
+          description:
+            "returns whether the current time zone is africa/conakry.",
           examples: [
             "Date.africa_conakry?",
             "Date.new(\"2024-03-05\").africa_conakry?",
@@ -747,7 +764,8 @@ class Code
         },
         "africa_dar_es_salaam?" => {
           name: "africa_dar_es_salaam?",
-          description: "returns whether the current time zone is africa/dar_es_salaam.",
+          description:
+            "returns whether the current time zone is africa/dar_es_salaam.",
           examples: [
             "Date.africa_dar_es_salaam?",
             "Date.new(\"2024-03-05\").africa_dar_es_salaam?",
@@ -756,7 +774,8 @@ class Code
         },
         "africa_djibouti?" => {
           name: "africa_djibouti?",
-          description: "returns whether the current time zone is africa/djibouti.",
+          description:
+            "returns whether the current time zone is africa/djibouti.",
           examples: [
             "Date.africa_djibouti?",
             "Date.new(\"2024-03-05\").africa_djibouti?",
@@ -765,7 +784,8 @@ class Code
         },
         "africa_douala?" => {
           name: "africa_douala?",
-          description: "returns whether the current time zone is africa/douala.",
+          description:
+            "returns whether the current time zone is africa/douala.",
           examples: [
             "Date.africa_douala?",
             "Date.new(\"2024-03-05\").africa_douala?",
@@ -774,7 +794,8 @@ class Code
         },
         "africa_el_aaiun?" => {
           name: "africa_el_aaiun?",
-          description: "returns whether the current time zone is africa/el_aaiun.",
+          description:
+            "returns whether the current time zone is africa/el_aaiun.",
           examples: [
             "Date.africa_el_aaiun?",
             "Date.new(\"2024-03-05\").africa_el_aaiun?",
@@ -783,7 +804,8 @@ class Code
         },
         "africa_freetown?" => {
           name: "africa_freetown?",
-          description: "returns whether the current time zone is africa/freetown.",
+          description:
+            "returns whether the current time zone is africa/freetown.",
           examples: [
             "Date.africa_freetown?",
             "Date.new(\"2024-03-05\").africa_freetown?",
@@ -792,7 +814,8 @@ class Code
         },
         "africa_gaborone?" => {
           name: "africa_gaborone?",
-          description: "returns whether the current time zone is africa/gaborone.",
+          description:
+            "returns whether the current time zone is africa/gaborone.",
           examples: [
             "Date.africa_gaborone?",
             "Date.new(\"2024-03-05\").africa_gaborone?",
@@ -801,7 +824,8 @@ class Code
         },
         "africa_harare?" => {
           name: "africa_harare?",
-          description: "returns whether the current time zone is africa/harare.",
+          description:
+            "returns whether the current time zone is africa/harare.",
           examples: [
             "Date.africa_harare?",
             "Date.new(\"2024-03-05\").africa_harare?",
@@ -810,7 +834,8 @@ class Code
         },
         "africa_johannesburg?" => {
           name: "africa_johannesburg?",
-          description: "returns whether the current time zone is africa/johannesburg.",
+          description:
+            "returns whether the current time zone is africa/johannesburg.",
           examples: [
             "Date.africa_johannesburg?",
             "Date.new(\"2024-03-05\").africa_johannesburg?",
@@ -828,7 +853,8 @@ class Code
         },
         "africa_kampala?" => {
           name: "africa_kampala?",
-          description: "returns whether the current time zone is africa/kampala.",
+          description:
+            "returns whether the current time zone is africa/kampala.",
           examples: [
             "Date.africa_kampala?",
             "Date.new(\"2024-03-05\").africa_kampala?",
@@ -837,7 +863,8 @@ class Code
         },
         "africa_khartoum?" => {
           name: "africa_khartoum?",
-          description: "returns whether the current time zone is africa/khartoum.",
+          description:
+            "returns whether the current time zone is africa/khartoum.",
           examples: [
             "Date.africa_khartoum?",
             "Date.new(\"2024-03-05\").africa_khartoum?",
@@ -846,7 +873,8 @@ class Code
         },
         "africa_kigali?" => {
           name: "africa_kigali?",
-          description: "returns whether the current time zone is africa/kigali.",
+          description:
+            "returns whether the current time zone is africa/kigali.",
           examples: [
             "Date.africa_kigali?",
             "Date.new(\"2024-03-05\").africa_kigali?",
@@ -855,7 +883,8 @@ class Code
         },
         "africa_kinshasa?" => {
           name: "africa_kinshasa?",
-          description: "returns whether the current time zone is africa/kinshasa.",
+          description:
+            "returns whether the current time zone is africa/kinshasa.",
           examples: [
             "Date.africa_kinshasa?",
             "Date.new(\"2024-03-05\").africa_kinshasa?",
@@ -873,7 +902,8 @@ class Code
         },
         "africa_libreville?" => {
           name: "africa_libreville?",
-          description: "returns whether the current time zone is africa/libreville.",
+          description:
+            "returns whether the current time zone is africa/libreville.",
           examples: [
             "Date.africa_libreville?",
             "Date.new(\"2024-03-05\").africa_libreville?",
@@ -891,7 +921,8 @@ class Code
         },
         "africa_luanda?" => {
           name: "africa_luanda?",
-          description: "returns whether the current time zone is africa/luanda.",
+          description:
+            "returns whether the current time zone is africa/luanda.",
           examples: [
             "Date.africa_luanda?",
             "Date.new(\"2024-03-05\").africa_luanda?",
@@ -900,7 +931,8 @@ class Code
         },
         "africa_lubumbashi?" => {
           name: "africa_lubumbashi?",
-          description: "returns whether the current time zone is africa/lubumbashi.",
+          description:
+            "returns whether the current time zone is africa/lubumbashi.",
           examples: [
             "Date.africa_lubumbashi?",
             "Date.new(\"2024-03-05\").africa_lubumbashi?",
@@ -909,7 +941,8 @@ class Code
         },
         "africa_lusaka?" => {
           name: "africa_lusaka?",
-          description: "returns whether the current time zone is africa/lusaka.",
+          description:
+            "returns whether the current time zone is africa/lusaka.",
           examples: [
             "Date.africa_lusaka?",
             "Date.new(\"2024-03-05\").africa_lusaka?",
@@ -918,7 +951,8 @@ class Code
         },
         "africa_malabo?" => {
           name: "africa_malabo?",
-          description: "returns whether the current time zone is africa/malabo.",
+          description:
+            "returns whether the current time zone is africa/malabo.",
           examples: [
             "Date.africa_malabo?",
             "Date.new(\"2024-03-05\").africa_malabo?",
@@ -927,7 +961,8 @@ class Code
         },
         "africa_maputo?" => {
           name: "africa_maputo?",
-          description: "returns whether the current time zone is africa/maputo.",
+          description:
+            "returns whether the current time zone is africa/maputo.",
           examples: [
             "Date.africa_maputo?",
             "Date.new(\"2024-03-05\").africa_maputo?",
@@ -936,7 +971,8 @@ class Code
         },
         "africa_maseru?" => {
           name: "africa_maseru?",
-          description: "returns whether the current time zone is africa/maseru.",
+          description:
+            "returns whether the current time zone is africa/maseru.",
           examples: [
             "Date.africa_maseru?",
             "Date.new(\"2024-03-05\").africa_maseru?",
@@ -945,7 +981,8 @@ class Code
         },
         "africa_mbabane?" => {
           name: "africa_mbabane?",
-          description: "returns whether the current time zone is africa/mbabane.",
+          description:
+            "returns whether the current time zone is africa/mbabane.",
           examples: [
             "Date.africa_mbabane?",
             "Date.new(\"2024-03-05\").africa_mbabane?",
@@ -954,7 +991,8 @@ class Code
         },
         "africa_mogadishu?" => {
           name: "africa_mogadishu?",
-          description: "returns whether the current time zone is africa/mogadishu.",
+          description:
+            "returns whether the current time zone is africa/mogadishu.",
           examples: [
             "Date.africa_mogadishu?",
             "Date.new(\"2024-03-05\").africa_mogadishu?",
@@ -963,7 +1001,8 @@ class Code
         },
         "africa_monrovia?" => {
           name: "africa_monrovia?",
-          description: "returns whether the current time zone is africa/monrovia.",
+          description:
+            "returns whether the current time zone is africa/monrovia.",
           examples: [
             "Date.africa_monrovia?",
             "Date.new(\"2024-03-05\").africa_monrovia?",
@@ -972,7 +1011,8 @@ class Code
         },
         "africa_nairobi?" => {
           name: "africa_nairobi?",
-          description: "returns whether the current time zone is africa/nairobi.",
+          description:
+            "returns whether the current time zone is africa/nairobi.",
           examples: [
             "Date.africa_nairobi?",
             "Date.new(\"2024-03-05\").africa_nairobi?",
@@ -981,7 +1021,8 @@ class Code
         },
         "africa_ndjamena?" => {
           name: "africa_ndjamena?",
-          description: "returns whether the current time zone is africa/ndjamena.",
+          description:
+            "returns whether the current time zone is africa/ndjamena.",
           examples: [
             "Date.africa_ndjamena?",
             "Date.new(\"2024-03-05\").africa_ndjamena?",
@@ -990,7 +1031,8 @@ class Code
         },
         "africa_niamey?" => {
           name: "africa_niamey?",
-          description: "returns whether the current time zone is africa/niamey.",
+          description:
+            "returns whether the current time zone is africa/niamey.",
           examples: [
             "Date.africa_niamey?",
             "Date.new(\"2024-03-05\").africa_niamey?",
@@ -999,7 +1041,8 @@ class Code
         },
         "africa_nouakchott?" => {
           name: "africa_nouakchott?",
-          description: "returns whether the current time zone is africa/nouakchott.",
+          description:
+            "returns whether the current time zone is africa/nouakchott.",
           examples: [
             "Date.africa_nouakchott?",
             "Date.new(\"2024-03-05\").africa_nouakchott?",
@@ -1008,7 +1051,8 @@ class Code
         },
         "africa_ouagadougou?" => {
           name: "africa_ouagadougou?",
-          description: "returns whether the current time zone is africa/ouagadougou.",
+          description:
+            "returns whether the current time zone is africa/ouagadougou.",
           examples: [
             "Date.africa_ouagadougou?",
             "Date.new(\"2024-03-05\").africa_ouagadougou?",
@@ -1017,7 +1061,8 @@ class Code
         },
         "africa_porto_minus_novo?" => {
           name: "africa_porto_minus_novo?",
-          description: "returns whether the current time zone is africa/porto-novo.",
+          description:
+            "returns whether the current time zone is africa/porto-novo.",
           examples: [
             "Date.africa_porto_minus_novo?",
             "Date.new(\"2024-03-05\").africa_porto_minus_novo?",
@@ -1026,7 +1071,8 @@ class Code
         },
         "africa_sao_tome?" => {
           name: "africa_sao_tome?",
-          description: "returns whether the current time zone is africa/sao_tome.",
+          description:
+            "returns whether the current time zone is africa/sao_tome.",
           examples: [
             "Date.africa_sao_tome?",
             "Date.new(\"2024-03-05\").africa_sao_tome?",
@@ -1035,7 +1081,8 @@ class Code
         },
         "africa_timbuktu?" => {
           name: "africa_timbuktu?",
-          description: "returns whether the current time zone is africa/timbuktu.",
+          description:
+            "returns whether the current time zone is africa/timbuktu.",
           examples: [
             "Date.africa_timbuktu?",
             "Date.new(\"2024-03-05\").africa_timbuktu?",
@@ -1044,7 +1091,8 @@ class Code
         },
         "africa_tripoli?" => {
           name: "africa_tripoli?",
-          description: "returns whether the current time zone is africa/tripoli.",
+          description:
+            "returns whether the current time zone is africa/tripoli.",
           examples: [
             "Date.africa_tripoli?",
             "Date.new(\"2024-03-05\").africa_tripoli?",
@@ -1062,7 +1110,8 @@ class Code
         },
         "africa_windhoek?" => {
           name: "africa_windhoek?",
-          description: "returns whether the current time zone is africa/windhoek.",
+          description:
+            "returns whether the current time zone is africa/windhoek.",
           examples: [
             "Date.africa_windhoek?",
             "Date.new(\"2024-03-05\").africa_windhoek?",
@@ -1080,7 +1129,8 @@ class Code
         },
         "america_anchorage?" => {
           name: "america_anchorage?",
-          description: "returns whether the current time zone is america/anchorage.",
+          description:
+            "returns whether the current time zone is america/anchorage.",
           examples: [
             "Date.america_anchorage?",
             "Date.new(\"2024-03-05\").america_anchorage?",
@@ -1089,7 +1139,8 @@ class Code
         },
         "america_anguilla?" => {
           name: "america_anguilla?",
-          description: "returns whether the current time zone is america/anguilla.",
+          description:
+            "returns whether the current time zone is america/anguilla.",
           examples: [
             "Date.america_anguilla?",
             "Date.new(\"2024-03-05\").america_anguilla?",
@@ -1098,7 +1149,8 @@ class Code
         },
         "america_antigua?" => {
           name: "america_antigua?",
-          description: "returns whether the current time zone is america/antigua.",
+          description:
+            "returns whether the current time zone is america/antigua.",
           examples: [
             "Date.america_antigua?",
             "Date.new(\"2024-03-05\").america_antigua?",
@@ -1107,7 +1159,8 @@ class Code
         },
         "america_araguaina?" => {
           name: "america_araguaina?",
-          description: "returns whether the current time zone is america/araguaina.",
+          description:
+            "returns whether the current time zone is america/araguaina.",
           examples: [
             "Date.america_araguaina?",
             "Date.new(\"2024-03-05\").america_araguaina?",
@@ -1116,7 +1169,8 @@ class Code
         },
         "america_argentina_buenos_aires?" => {
           name: "america_argentina_buenos_aires?",
-          description: "returns whether the current time zone is america/argentina/buenos_aires.",
+          description:
+            "returns whether the current time zone is america/argentina/buenos_aires.",
           examples: [
             "Date.america_argentina_buenos_aires?",
             "Date.new(\"2024-03-05\").america_argentina_buenos_aires?",
@@ -1125,7 +1179,8 @@ class Code
         },
         "america_argentina_catamarca?" => {
           name: "america_argentina_catamarca?",
-          description: "returns whether the current time zone is america/argentina/catamarca.",
+          description:
+            "returns whether the current time zone is america/argentina/catamarca.",
           examples: [
             "Date.america_argentina_catamarca?",
             "Date.new(\"2024-03-05\").america_argentina_catamarca?",
@@ -1134,7 +1189,8 @@ class Code
         },
         "america_argentina_comodrivadavia?" => {
           name: "america_argentina_comodrivadavia?",
-          description: "returns whether the current time zone is america/argentina/comodrivadavia.",
+          description:
+            "returns whether the current time zone is america/argentina/comodrivadavia.",
           examples: [
             "Date.america_argentina_comodrivadavia?",
             "Date.new(\"2024-03-05\").america_argentina_comodrivadavia?",
@@ -1143,7 +1199,8 @@ class Code
         },
         "america_argentina_cordoba?" => {
           name: "america_argentina_cordoba?",
-          description: "returns whether the current time zone is america/argentina/cordoba.",
+          description:
+            "returns whether the current time zone is america/argentina/cordoba.",
           examples: [
             "Date.america_argentina_cordoba?",
             "Date.new(\"2024-03-05\").america_argentina_cordoba?",
@@ -1152,7 +1209,8 @@ class Code
         },
         "america_argentina_jujuy?" => {
           name: "america_argentina_jujuy?",
-          description: "returns whether the current time zone is america/argentina/jujuy.",
+          description:
+            "returns whether the current time zone is america/argentina/jujuy.",
           examples: [
             "Date.america_argentina_jujuy?",
             "Date.new(\"2024-03-05\").america_argentina_jujuy?",
@@ -1161,7 +1219,8 @@ class Code
         },
         "america_argentina_la_rioja?" => {
           name: "america_argentina_la_rioja?",
-          description: "returns whether the current time zone is america/argentina/la_rioja.",
+          description:
+            "returns whether the current time zone is america/argentina/la_rioja.",
           examples: [
             "Date.america_argentina_la_rioja?",
             "Date.new(\"2024-03-05\").america_argentina_la_rioja?",
@@ -1170,7 +1229,8 @@ class Code
         },
         "america_argentina_mendoza?" => {
           name: "america_argentina_mendoza?",
-          description: "returns whether the current time zone is america/argentina/mendoza.",
+          description:
+            "returns whether the current time zone is america/argentina/mendoza.",
           examples: [
             "Date.america_argentina_mendoza?",
             "Date.new(\"2024-03-05\").america_argentina_mendoza?",
@@ -1179,7 +1239,8 @@ class Code
         },
         "america_argentina_rio_gallegos?" => {
           name: "america_argentina_rio_gallegos?",
-          description: "returns whether the current time zone is america/argentina/rio_gallegos.",
+          description:
+            "returns whether the current time zone is america/argentina/rio_gallegos.",
           examples: [
             "Date.america_argentina_rio_gallegos?",
             "Date.new(\"2024-03-05\").america_argentina_rio_gallegos?",
@@ -1188,7 +1249,8 @@ class Code
         },
         "america_argentina_salta?" => {
           name: "america_argentina_salta?",
-          description: "returns whether the current time zone is america/argentina/salta.",
+          description:
+            "returns whether the current time zone is america/argentina/salta.",
           examples: [
             "Date.america_argentina_salta?",
             "Date.new(\"2024-03-05\").america_argentina_salta?",
@@ -1197,7 +1259,8 @@ class Code
         },
         "america_argentina_san_juan?" => {
           name: "america_argentina_san_juan?",
-          description: "returns whether the current time zone is america/argentina/san_juan.",
+          description:
+            "returns whether the current time zone is america/argentina/san_juan.",
           examples: [
             "Date.america_argentina_san_juan?",
             "Date.new(\"2024-03-05\").america_argentina_san_juan?",
@@ -1206,7 +1269,8 @@ class Code
         },
         "america_argentina_san_luis?" => {
           name: "america_argentina_san_luis?",
-          description: "returns whether the current time zone is america/argentina/san_luis.",
+          description:
+            "returns whether the current time zone is america/argentina/san_luis.",
           examples: [
             "Date.america_argentina_san_luis?",
             "Date.new(\"2024-03-05\").america_argentina_san_luis?",
@@ -1215,7 +1279,8 @@ class Code
         },
         "america_argentina_tucuman?" => {
           name: "america_argentina_tucuman?",
-          description: "returns whether the current time zone is america/argentina/tucuman.",
+          description:
+            "returns whether the current time zone is america/argentina/tucuman.",
           examples: [
             "Date.america_argentina_tucuman?",
             "Date.new(\"2024-03-05\").america_argentina_tucuman?",
@@ -1224,7 +1289,8 @@ class Code
         },
         "america_argentina_ushuaia?" => {
           name: "america_argentina_ushuaia?",
-          description: "returns whether the current time zone is america/argentina/ushuaia.",
+          description:
+            "returns whether the current time zone is america/argentina/ushuaia.",
           examples: [
             "Date.america_argentina_ushuaia?",
             "Date.new(\"2024-03-05\").america_argentina_ushuaia?",
@@ -1233,7 +1299,8 @@ class Code
         },
         "america_aruba?" => {
           name: "america_aruba?",
-          description: "returns whether the current time zone is america/aruba.",
+          description:
+            "returns whether the current time zone is america/aruba.",
           examples: [
             "Date.america_aruba?",
             "Date.new(\"2024-03-05\").america_aruba?",
@@ -1242,7 +1309,8 @@ class Code
         },
         "america_asuncion?" => {
           name: "america_asuncion?",
-          description: "returns whether the current time zone is america/asuncion.",
+          description:
+            "returns whether the current time zone is america/asuncion.",
           examples: [
             "Date.america_asuncion?",
             "Date.new(\"2024-03-05\").america_asuncion?",
@@ -1251,7 +1319,8 @@ class Code
         },
         "america_atikokan?" => {
           name: "america_atikokan?",
-          description: "returns whether the current time zone is america/atikokan.",
+          description:
+            "returns whether the current time zone is america/atikokan.",
           examples: [
             "Date.america_atikokan?",
             "Date.new(\"2024-03-05\").america_atikokan?",
@@ -1269,7 +1338,8 @@ class Code
         },
         "america_bahia?" => {
           name: "america_bahia?",
-          description: "returns whether the current time zone is america/bahia.",
+          description:
+            "returns whether the current time zone is america/bahia.",
           examples: [
             "Date.america_bahia?",
             "Date.new(\"2024-03-05\").america_bahia?",
@@ -1278,7 +1348,8 @@ class Code
         },
         "america_bahia_banderas?" => {
           name: "america_bahia_banderas?",
-          description: "returns whether the current time zone is america/bahia_banderas.",
+          description:
+            "returns whether the current time zone is america/bahia_banderas.",
           examples: [
             "Date.america_bahia_banderas?",
             "Date.new(\"2024-03-05\").america_bahia_banderas?",
@@ -1287,7 +1358,8 @@ class Code
         },
         "america_barbados?" => {
           name: "america_barbados?",
-          description: "returns whether the current time zone is america/barbados.",
+          description:
+            "returns whether the current time zone is america/barbados.",
           examples: [
             "Date.america_barbados?",
             "Date.new(\"2024-03-05\").america_barbados?",
@@ -1296,7 +1368,8 @@ class Code
         },
         "america_belem?" => {
           name: "america_belem?",
-          description: "returns whether the current time zone is america/belem.",
+          description:
+            "returns whether the current time zone is america/belem.",
           examples: [
             "Date.america_belem?",
             "Date.new(\"2024-03-05\").america_belem?",
@@ -1305,7 +1378,8 @@ class Code
         },
         "america_belize?" => {
           name: "america_belize?",
-          description: "returns whether the current time zone is america/belize.",
+          description:
+            "returns whether the current time zone is america/belize.",
           examples: [
             "Date.america_belize?",
             "Date.new(\"2024-03-05\").america_belize?",
@@ -1314,7 +1388,8 @@ class Code
         },
         "america_blanc_minus_sablon?" => {
           name: "america_blanc_minus_sablon?",
-          description: "returns whether the current time zone is america/blanc-sablon.",
+          description:
+            "returns whether the current time zone is america/blanc-sablon.",
           examples: [
             "Date.america_blanc_minus_sablon?",
             "Date.new(\"2024-03-05\").america_blanc_minus_sablon?",
@@ -1323,7 +1398,8 @@ class Code
         },
         "america_boa_vista?" => {
           name: "america_boa_vista?",
-          description: "returns whether the current time zone is america/boa_vista.",
+          description:
+            "returns whether the current time zone is america/boa_vista.",
           examples: [
             "Date.america_boa_vista?",
             "Date.new(\"2024-03-05\").america_boa_vista?",
@@ -1332,7 +1408,8 @@ class Code
         },
         "america_bogota?" => {
           name: "america_bogota?",
-          description: "returns whether the current time zone is america/bogota.",
+          description:
+            "returns whether the current time zone is america/bogota.",
           examples: [
             "Date.america_bogota?",
             "Date.new(\"2024-03-05\").america_bogota?",
@@ -1341,7 +1418,8 @@ class Code
         },
         "america_boise?" => {
           name: "america_boise?",
-          description: "returns whether the current time zone is america/boise.",
+          description:
+            "returns whether the current time zone is america/boise.",
           examples: [
             "Date.america_boise?",
             "Date.new(\"2024-03-05\").america_boise?",
@@ -1350,7 +1428,8 @@ class Code
         },
         "america_buenos_aires?" => {
           name: "america_buenos_aires?",
-          description: "returns whether the current time zone is america/buenos_aires.",
+          description:
+            "returns whether the current time zone is america/buenos_aires.",
           examples: [
             "Date.america_buenos_aires?",
             "Date.new(\"2024-03-05\").america_buenos_aires?",
@@ -1359,7 +1438,8 @@ class Code
         },
         "america_cambridge_bay?" => {
           name: "america_cambridge_bay?",
-          description: "returns whether the current time zone is america/cambridge_bay.",
+          description:
+            "returns whether the current time zone is america/cambridge_bay.",
           examples: [
             "Date.america_cambridge_bay?",
             "Date.new(\"2024-03-05\").america_cambridge_bay?",
@@ -1368,7 +1448,8 @@ class Code
         },
         "america_campo_grande?" => {
           name: "america_campo_grande?",
-          description: "returns whether the current time zone is america/campo_grande.",
+          description:
+            "returns whether the current time zone is america/campo_grande.",
           examples: [
             "Date.america_campo_grande?",
             "Date.new(\"2024-03-05\").america_campo_grande?",
@@ -1377,7 +1458,8 @@ class Code
         },
         "america_cancun?" => {
           name: "america_cancun?",
-          description: "returns whether the current time zone is america/cancun.",
+          description:
+            "returns whether the current time zone is america/cancun.",
           examples: [
             "Date.america_cancun?",
             "Date.new(\"2024-03-05\").america_cancun?",
@@ -1386,7 +1468,8 @@ class Code
         },
         "america_caracas?" => {
           name: "america_caracas?",
-          description: "returns whether the current time zone is america/caracas.",
+          description:
+            "returns whether the current time zone is america/caracas.",
           examples: [
             "Date.america_caracas?",
             "Date.new(\"2024-03-05\").america_caracas?",
@@ -1395,7 +1478,8 @@ class Code
         },
         "america_catamarca?" => {
           name: "america_catamarca?",
-          description: "returns whether the current time zone is america/catamarca.",
+          description:
+            "returns whether the current time zone is america/catamarca.",
           examples: [
             "Date.america_catamarca?",
             "Date.new(\"2024-03-05\").america_catamarca?",
@@ -1404,7 +1488,8 @@ class Code
         },
         "america_cayenne?" => {
           name: "america_cayenne?",
-          description: "returns whether the current time zone is america/cayenne.",
+          description:
+            "returns whether the current time zone is america/cayenne.",
           examples: [
             "Date.america_cayenne?",
             "Date.new(\"2024-03-05\").america_cayenne?",
@@ -1413,7 +1498,8 @@ class Code
         },
         "america_cayman?" => {
           name: "america_cayman?",
-          description: "returns whether the current time zone is america/cayman.",
+          description:
+            "returns whether the current time zone is america/cayman.",
           examples: [
             "Date.america_cayman?",
             "Date.new(\"2024-03-05\").america_cayman?",
@@ -1422,7 +1508,8 @@ class Code
         },
         "america_chicago?" => {
           name: "america_chicago?",
-          description: "returns whether the current time zone is america/chicago.",
+          description:
+            "returns whether the current time zone is america/chicago.",
           examples: [
             "Date.america_chicago?",
             "Date.new(\"2024-03-05\").america_chicago?",
@@ -1431,7 +1518,8 @@ class Code
         },
         "america_chihuahua?" => {
           name: "america_chihuahua?",
-          description: "returns whether the current time zone is america/chihuahua.",
+          description:
+            "returns whether the current time zone is america/chihuahua.",
           examples: [
             "Date.america_chihuahua?",
             "Date.new(\"2024-03-05\").america_chihuahua?",
@@ -1440,7 +1528,8 @@ class Code
         },
         "america_ciudad_juarez?" => {
           name: "america_ciudad_juarez?",
-          description: "returns whether the current time zone is america/ciudad_juarez.",
+          description:
+            "returns whether the current time zone is america/ciudad_juarez.",
           examples: [
             "Date.america_ciudad_juarez?",
             "Date.new(\"2024-03-05\").america_ciudad_juarez?",
@@ -1449,7 +1538,8 @@ class Code
         },
         "america_coral_harbour?" => {
           name: "america_coral_harbour?",
-          description: "returns whether the current time zone is america/coral_harbour.",
+          description:
+            "returns whether the current time zone is america/coral_harbour.",
           examples: [
             "Date.america_coral_harbour?",
             "Date.new(\"2024-03-05\").america_coral_harbour?",
@@ -1458,7 +1548,8 @@ class Code
         },
         "america_cordoba?" => {
           name: "america_cordoba?",
-          description: "returns whether the current time zone is america/cordoba.",
+          description:
+            "returns whether the current time zone is america/cordoba.",
           examples: [
             "Date.america_cordoba?",
             "Date.new(\"2024-03-05\").america_cordoba?",
@@ -1467,7 +1558,8 @@ class Code
         },
         "america_costa_rica?" => {
           name: "america_costa_rica?",
-          description: "returns whether the current time zone is america/costa_rica.",
+          description:
+            "returns whether the current time zone is america/costa_rica.",
           examples: [
             "Date.america_costa_rica?",
             "Date.new(\"2024-03-05\").america_costa_rica?",
@@ -1476,7 +1568,8 @@ class Code
         },
         "america_coyhaique?" => {
           name: "america_coyhaique?",
-          description: "returns whether the current time zone is america/coyhaique.",
+          description:
+            "returns whether the current time zone is america/coyhaique.",
           examples: [
             "Date.america_coyhaique?",
             "Date.new(\"2024-03-05\").america_coyhaique?",
@@ -1485,7 +1578,8 @@ class Code
         },
         "america_creston?" => {
           name: "america_creston?",
-          description: "returns whether the current time zone is america/creston.",
+          description:
+            "returns whether the current time zone is america/creston.",
           examples: [
             "Date.america_creston?",
             "Date.new(\"2024-03-05\").america_creston?",
@@ -1494,7 +1588,8 @@ class Code
         },
         "america_cuiaba?" => {
           name: "america_cuiaba?",
-          description: "returns whether the current time zone is america/cuiaba.",
+          description:
+            "returns whether the current time zone is america/cuiaba.",
           examples: [
             "Date.america_cuiaba?",
             "Date.new(\"2024-03-05\").america_cuiaba?",
@@ -1503,7 +1598,8 @@ class Code
         },
         "america_curacao?" => {
           name: "america_curacao?",
-          description: "returns whether the current time zone is america/curacao.",
+          description:
+            "returns whether the current time zone is america/curacao.",
           examples: [
             "Date.america_curacao?",
             "Date.new(\"2024-03-05\").america_curacao?",
@@ -1512,7 +1608,8 @@ class Code
         },
         "america_danmarkshavn?" => {
           name: "america_danmarkshavn?",
-          description: "returns whether the current time zone is america/danmarkshavn.",
+          description:
+            "returns whether the current time zone is america/danmarkshavn.",
           examples: [
             "Date.america_danmarkshavn?",
             "Date.new(\"2024-03-05\").america_danmarkshavn?",
@@ -1521,7 +1618,8 @@ class Code
         },
         "america_dawson?" => {
           name: "america_dawson?",
-          description: "returns whether the current time zone is america/dawson.",
+          description:
+            "returns whether the current time zone is america/dawson.",
           examples: [
             "Date.america_dawson?",
             "Date.new(\"2024-03-05\").america_dawson?",
@@ -1530,7 +1628,8 @@ class Code
         },
         "america_dawson_creek?" => {
           name: "america_dawson_creek?",
-          description: "returns whether the current time zone is america/dawson_creek.",
+          description:
+            "returns whether the current time zone is america/dawson_creek.",
           examples: [
             "Date.america_dawson_creek?",
             "Date.new(\"2024-03-05\").america_dawson_creek?",
@@ -1539,7 +1638,8 @@ class Code
         },
         "america_denver?" => {
           name: "america_denver?",
-          description: "returns whether the current time zone is america/denver.",
+          description:
+            "returns whether the current time zone is america/denver.",
           examples: [
             "Date.america_denver?",
             "Date.new(\"2024-03-05\").america_denver?",
@@ -1548,7 +1648,8 @@ class Code
         },
         "america_detroit?" => {
           name: "america_detroit?",
-          description: "returns whether the current time zone is america/detroit.",
+          description:
+            "returns whether the current time zone is america/detroit.",
           examples: [
             "Date.america_detroit?",
             "Date.new(\"2024-03-05\").america_detroit?",
@@ -1557,7 +1658,8 @@ class Code
         },
         "america_dominica?" => {
           name: "america_dominica?",
-          description: "returns whether the current time zone is america/dominica.",
+          description:
+            "returns whether the current time zone is america/dominica.",
           examples: [
             "Date.america_dominica?",
             "Date.new(\"2024-03-05\").america_dominica?",
@@ -1566,7 +1668,8 @@ class Code
         },
         "america_edmonton?" => {
           name: "america_edmonton?",
-          description: "returns whether the current time zone is america/edmonton.",
+          description:
+            "returns whether the current time zone is america/edmonton.",
           examples: [
             "Date.america_edmonton?",
             "Date.new(\"2024-03-05\").america_edmonton?",
@@ -1575,7 +1678,8 @@ class Code
         },
         "america_eirunepe?" => {
           name: "america_eirunepe?",
-          description: "returns whether the current time zone is america/eirunepe.",
+          description:
+            "returns whether the current time zone is america/eirunepe.",
           examples: [
             "Date.america_eirunepe?",
             "Date.new(\"2024-03-05\").america_eirunepe?",
@@ -1584,7 +1688,8 @@ class Code
         },
         "america_el_salvador?" => {
           name: "america_el_salvador?",
-          description: "returns whether the current time zone is america/el_salvador.",
+          description:
+            "returns whether the current time zone is america/el_salvador.",
           examples: [
             "Date.america_el_salvador?",
             "Date.new(\"2024-03-05\").america_el_salvador?",
@@ -1593,7 +1698,8 @@ class Code
         },
         "america_ensenada?" => {
           name: "america_ensenada?",
-          description: "returns whether the current time zone is america/ensenada.",
+          description:
+            "returns whether the current time zone is america/ensenada.",
           examples: [
             "Date.america_ensenada?",
             "Date.new(\"2024-03-05\").america_ensenada?",
@@ -1602,7 +1708,8 @@ class Code
         },
         "america_fort_nelson?" => {
           name: "america_fort_nelson?",
-          description: "returns whether the current time zone is america/fort_nelson.",
+          description:
+            "returns whether the current time zone is america/fort_nelson.",
           examples: [
             "Date.america_fort_nelson?",
             "Date.new(\"2024-03-05\").america_fort_nelson?",
@@ -1611,7 +1718,8 @@ class Code
         },
         "america_fort_wayne?" => {
           name: "america_fort_wayne?",
-          description: "returns whether the current time zone is america/fort_wayne.",
+          description:
+            "returns whether the current time zone is america/fort_wayne.",
           examples: [
             "Date.america_fort_wayne?",
             "Date.new(\"2024-03-05\").america_fort_wayne?",
@@ -1620,7 +1728,8 @@ class Code
         },
         "america_fortaleza?" => {
           name: "america_fortaleza?",
-          description: "returns whether the current time zone is america/fortaleza.",
+          description:
+            "returns whether the current time zone is america/fortaleza.",
           examples: [
             "Date.america_fortaleza?",
             "Date.new(\"2024-03-05\").america_fortaleza?",
@@ -1629,7 +1738,8 @@ class Code
         },
         "america_glace_bay?" => {
           name: "america_glace_bay?",
-          description: "returns whether the current time zone is america/glace_bay.",
+          description:
+            "returns whether the current time zone is america/glace_bay.",
           examples: [
             "Date.america_glace_bay?",
             "Date.new(\"2024-03-05\").america_glace_bay?",
@@ -1638,7 +1748,8 @@ class Code
         },
         "america_godthab?" => {
           name: "america_godthab?",
-          description: "returns whether the current time zone is america/godthab.",
+          description:
+            "returns whether the current time zone is america/godthab.",
           examples: [
             "Date.america_godthab?",
             "Date.new(\"2024-03-05\").america_godthab?",
@@ -1647,7 +1758,8 @@ class Code
         },
         "america_goose_bay?" => {
           name: "america_goose_bay?",
-          description: "returns whether the current time zone is america/goose_bay.",
+          description:
+            "returns whether the current time zone is america/goose_bay.",
           examples: [
             "Date.america_goose_bay?",
             "Date.new(\"2024-03-05\").america_goose_bay?",
@@ -1656,7 +1768,8 @@ class Code
         },
         "america_grand_turk?" => {
           name: "america_grand_turk?",
-          description: "returns whether the current time zone is america/grand_turk.",
+          description:
+            "returns whether the current time zone is america/grand_turk.",
           examples: [
             "Date.america_grand_turk?",
             "Date.new(\"2024-03-05\").america_grand_turk?",
@@ -1665,7 +1778,8 @@ class Code
         },
         "america_grenada?" => {
           name: "america_grenada?",
-          description: "returns whether the current time zone is america/grenada.",
+          description:
+            "returns whether the current time zone is america/grenada.",
           examples: [
             "Date.america_grenada?",
             "Date.new(\"2024-03-05\").america_grenada?",
@@ -1674,7 +1788,8 @@ class Code
         },
         "america_guadeloupe?" => {
           name: "america_guadeloupe?",
-          description: "returns whether the current time zone is america/guadeloupe.",
+          description:
+            "returns whether the current time zone is america/guadeloupe.",
           examples: [
             "Date.america_guadeloupe?",
             "Date.new(\"2024-03-05\").america_guadeloupe?",
@@ -1683,7 +1798,8 @@ class Code
         },
         "america_guatemala?" => {
           name: "america_guatemala?",
-          description: "returns whether the current time zone is america/guatemala.",
+          description:
+            "returns whether the current time zone is america/guatemala.",
           examples: [
             "Date.america_guatemala?",
             "Date.new(\"2024-03-05\").america_guatemala?",
@@ -1692,7 +1808,8 @@ class Code
         },
         "america_guayaquil?" => {
           name: "america_guayaquil?",
-          description: "returns whether the current time zone is america/guayaquil.",
+          description:
+            "returns whether the current time zone is america/guayaquil.",
           examples: [
             "Date.america_guayaquil?",
             "Date.new(\"2024-03-05\").america_guayaquil?",
@@ -1701,7 +1818,8 @@ class Code
         },
         "america_guyana?" => {
           name: "america_guyana?",
-          description: "returns whether the current time zone is america/guyana.",
+          description:
+            "returns whether the current time zone is america/guyana.",
           examples: [
             "Date.america_guyana?",
             "Date.new(\"2024-03-05\").america_guyana?",
@@ -1710,7 +1828,8 @@ class Code
         },
         "america_halifax?" => {
           name: "america_halifax?",
-          description: "returns whether the current time zone is america/halifax.",
+          description:
+            "returns whether the current time zone is america/halifax.",
           examples: [
             "Date.america_halifax?",
             "Date.new(\"2024-03-05\").america_halifax?",
@@ -1719,7 +1838,8 @@ class Code
         },
         "america_havana?" => {
           name: "america_havana?",
-          description: "returns whether the current time zone is america/havana.",
+          description:
+            "returns whether the current time zone is america/havana.",
           examples: [
             "Date.america_havana?",
             "Date.new(\"2024-03-05\").america_havana?",
@@ -1728,7 +1848,8 @@ class Code
         },
         "america_hermosillo?" => {
           name: "america_hermosillo?",
-          description: "returns whether the current time zone is america/hermosillo.",
+          description:
+            "returns whether the current time zone is america/hermosillo.",
           examples: [
             "Date.america_hermosillo?",
             "Date.new(\"2024-03-05\").america_hermosillo?",
@@ -1737,7 +1858,8 @@ class Code
         },
         "america_indiana_indianapolis?" => {
           name: "america_indiana_indianapolis?",
-          description: "returns whether the current time zone is america/indiana/indianapolis.",
+          description:
+            "returns whether the current time zone is america/indiana/indianapolis.",
           examples: [
             "Date.america_indiana_indianapolis?",
             "Date.new(\"2024-03-05\").america_indiana_indianapolis?",
@@ -1746,7 +1868,8 @@ class Code
         },
         "america_indiana_knox?" => {
           name: "america_indiana_knox?",
-          description: "returns whether the current time zone is america/indiana/knox.",
+          description:
+            "returns whether the current time zone is america/indiana/knox.",
           examples: [
             "Date.america_indiana_knox?",
             "Date.new(\"2024-03-05\").america_indiana_knox?",
@@ -1755,7 +1878,8 @@ class Code
         },
         "america_indiana_marengo?" => {
           name: "america_indiana_marengo?",
-          description: "returns whether the current time zone is america/indiana/marengo.",
+          description:
+            "returns whether the current time zone is america/indiana/marengo.",
           examples: [
             "Date.america_indiana_marengo?",
             "Date.new(\"2024-03-05\").america_indiana_marengo?",
@@ -1764,7 +1888,8 @@ class Code
         },
         "america_indiana_petersburg?" => {
           name: "america_indiana_petersburg?",
-          description: "returns whether the current time zone is america/indiana/petersburg.",
+          description:
+            "returns whether the current time zone is america/indiana/petersburg.",
           examples: [
             "Date.america_indiana_petersburg?",
             "Date.new(\"2024-03-05\").america_indiana_petersburg?",
@@ -1773,7 +1898,8 @@ class Code
         },
         "america_indiana_tell_city?" => {
           name: "america_indiana_tell_city?",
-          description: "returns whether the current time zone is america/indiana/tell_city.",
+          description:
+            "returns whether the current time zone is america/indiana/tell_city.",
           examples: [
             "Date.america_indiana_tell_city?",
             "Date.new(\"2024-03-05\").america_indiana_tell_city?",
@@ -1782,7 +1908,8 @@ class Code
         },
         "america_indiana_vevay?" => {
           name: "america_indiana_vevay?",
-          description: "returns whether the current time zone is america/indiana/vevay.",
+          description:
+            "returns whether the current time zone is america/indiana/vevay.",
           examples: [
             "Date.america_indiana_vevay?",
             "Date.new(\"2024-03-05\").america_indiana_vevay?",
@@ -1791,7 +1918,8 @@ class Code
         },
         "america_indiana_vincennes?" => {
           name: "america_indiana_vincennes?",
-          description: "returns whether the current time zone is america/indiana/vincennes.",
+          description:
+            "returns whether the current time zone is america/indiana/vincennes.",
           examples: [
             "Date.america_indiana_vincennes?",
             "Date.new(\"2024-03-05\").america_indiana_vincennes?",
@@ -1800,7 +1928,8 @@ class Code
         },
         "america_indiana_winamac?" => {
           name: "america_indiana_winamac?",
-          description: "returns whether the current time zone is america/indiana/winamac.",
+          description:
+            "returns whether the current time zone is america/indiana/winamac.",
           examples: [
             "Date.america_indiana_winamac?",
             "Date.new(\"2024-03-05\").america_indiana_winamac?",
@@ -1809,7 +1938,8 @@ class Code
         },
         "america_indianapolis?" => {
           name: "america_indianapolis?",
-          description: "returns whether the current time zone is america/indianapolis.",
+          description:
+            "returns whether the current time zone is america/indianapolis.",
           examples: [
             "Date.america_indianapolis?",
             "Date.new(\"2024-03-05\").america_indianapolis?",
@@ -1818,7 +1948,8 @@ class Code
         },
         "america_inuvik?" => {
           name: "america_inuvik?",
-          description: "returns whether the current time zone is america/inuvik.",
+          description:
+            "returns whether the current time zone is america/inuvik.",
           examples: [
             "Date.america_inuvik?",
             "Date.new(\"2024-03-05\").america_inuvik?",
@@ -1827,7 +1958,8 @@ class Code
         },
         "america_iqaluit?" => {
           name: "america_iqaluit?",
-          description: "returns whether the current time zone is america/iqaluit.",
+          description:
+            "returns whether the current time zone is america/iqaluit.",
           examples: [
             "Date.america_iqaluit?",
             "Date.new(\"2024-03-05\").america_iqaluit?",
@@ -1836,7 +1968,8 @@ class Code
         },
         "america_jamaica?" => {
           name: "america_jamaica?",
-          description: "returns whether the current time zone is america/jamaica.",
+          description:
+            "returns whether the current time zone is america/jamaica.",
           examples: [
             "Date.america_jamaica?",
             "Date.new(\"2024-03-05\").america_jamaica?",
@@ -1845,7 +1978,8 @@ class Code
         },
         "america_jujuy?" => {
           name: "america_jujuy?",
-          description: "returns whether the current time zone is america/jujuy.",
+          description:
+            "returns whether the current time zone is america/jujuy.",
           examples: [
             "Date.america_jujuy?",
             "Date.new(\"2024-03-05\").america_jujuy?",
@@ -1854,7 +1988,8 @@ class Code
         },
         "america_juneau?" => {
           name: "america_juneau?",
-          description: "returns whether the current time zone is america/juneau.",
+          description:
+            "returns whether the current time zone is america/juneau.",
           examples: [
             "Date.america_juneau?",
             "Date.new(\"2024-03-05\").america_juneau?",
@@ -1863,7 +1998,8 @@ class Code
         },
         "america_kentucky_louisville?" => {
           name: "america_kentucky_louisville?",
-          description: "returns whether the current time zone is america/kentucky/louisville.",
+          description:
+            "returns whether the current time zone is america/kentucky/louisville.",
           examples: [
             "Date.america_kentucky_louisville?",
             "Date.new(\"2024-03-05\").america_kentucky_louisville?",
@@ -1872,7 +2008,8 @@ class Code
         },
         "america_kentucky_monticello?" => {
           name: "america_kentucky_monticello?",
-          description: "returns whether the current time zone is america/kentucky/monticello.",
+          description:
+            "returns whether the current time zone is america/kentucky/monticello.",
           examples: [
             "Date.america_kentucky_monticello?",
             "Date.new(\"2024-03-05\").america_kentucky_monticello?",
@@ -1881,7 +2018,8 @@ class Code
         },
         "america_knox_in?" => {
           name: "america_knox_in?",
-          description: "returns whether the current time zone is america/knox_in.",
+          description:
+            "returns whether the current time zone is america/knox_in.",
           examples: [
             "Date.america_knox_in?",
             "Date.new(\"2024-03-05\").america_knox_in?",
@@ -1890,7 +2028,8 @@ class Code
         },
         "america_kralendijk?" => {
           name: "america_kralendijk?",
-          description: "returns whether the current time zone is america/kralendijk.",
+          description:
+            "returns whether the current time zone is america/kralendijk.",
           examples: [
             "Date.america_kralendijk?",
             "Date.new(\"2024-03-05\").america_kralendijk?",
@@ -1899,7 +2038,8 @@ class Code
         },
         "america_la_paz?" => {
           name: "america_la_paz?",
-          description: "returns whether the current time zone is america/la_paz.",
+          description:
+            "returns whether the current time zone is america/la_paz.",
           examples: [
             "Date.america_la_paz?",
             "Date.new(\"2024-03-05\").america_la_paz?",
@@ -1917,7 +2057,8 @@ class Code
         },
         "america_los_angeles?" => {
           name: "america_los_angeles?",
-          description: "returns whether the current time zone is america/los_angeles.",
+          description:
+            "returns whether the current time zone is america/los_angeles.",
           examples: [
             "Date.america_los_angeles?",
             "Date.new(\"2024-03-05\").america_los_angeles?",
@@ -1926,7 +2067,8 @@ class Code
         },
         "america_louisville?" => {
           name: "america_louisville?",
-          description: "returns whether the current time zone is america/louisville.",
+          description:
+            "returns whether the current time zone is america/louisville.",
           examples: [
             "Date.america_louisville?",
             "Date.new(\"2024-03-05\").america_louisville?",
@@ -1935,7 +2077,8 @@ class Code
         },
         "america_lower_princes?" => {
           name: "america_lower_princes?",
-          description: "returns whether the current time zone is america/lower_princes.",
+          description:
+            "returns whether the current time zone is america/lower_princes.",
           examples: [
             "Date.america_lower_princes?",
             "Date.new(\"2024-03-05\").america_lower_princes?",
@@ -1944,7 +2087,8 @@ class Code
         },
         "america_maceio?" => {
           name: "america_maceio?",
-          description: "returns whether the current time zone is america/maceio.",
+          description:
+            "returns whether the current time zone is america/maceio.",
           examples: [
             "Date.america_maceio?",
             "Date.new(\"2024-03-05\").america_maceio?",
@@ -1953,7 +2097,8 @@ class Code
         },
         "america_managua?" => {
           name: "america_managua?",
-          description: "returns whether the current time zone is america/managua.",
+          description:
+            "returns whether the current time zone is america/managua.",
           examples: [
             "Date.america_managua?",
             "Date.new(\"2024-03-05\").america_managua?",
@@ -1962,7 +2107,8 @@ class Code
         },
         "america_manaus?" => {
           name: "america_manaus?",
-          description: "returns whether the current time zone is america/manaus.",
+          description:
+            "returns whether the current time zone is america/manaus.",
           examples: [
             "Date.america_manaus?",
             "Date.new(\"2024-03-05\").america_manaus?",
@@ -1971,7 +2117,8 @@ class Code
         },
         "america_marigot?" => {
           name: "america_marigot?",
-          description: "returns whether the current time zone is america/marigot.",
+          description:
+            "returns whether the current time zone is america/marigot.",
           examples: [
             "Date.america_marigot?",
             "Date.new(\"2024-03-05\").america_marigot?",
@@ -1980,7 +2127,8 @@ class Code
         },
         "america_martinique?" => {
           name: "america_martinique?",
-          description: "returns whether the current time zone is america/martinique.",
+          description:
+            "returns whether the current time zone is america/martinique.",
           examples: [
             "Date.america_martinique?",
             "Date.new(\"2024-03-05\").america_martinique?",
@@ -1989,7 +2137,8 @@ class Code
         },
         "america_matamoros?" => {
           name: "america_matamoros?",
-          description: "returns whether the current time zone is america/matamoros.",
+          description:
+            "returns whether the current time zone is america/matamoros.",
           examples: [
             "Date.america_matamoros?",
             "Date.new(\"2024-03-05\").america_matamoros?",
@@ -1998,7 +2147,8 @@ class Code
         },
         "america_mazatlan?" => {
           name: "america_mazatlan?",
-          description: "returns whether the current time zone is america/mazatlan.",
+          description:
+            "returns whether the current time zone is america/mazatlan.",
           examples: [
             "Date.america_mazatlan?",
             "Date.new(\"2024-03-05\").america_mazatlan?",
@@ -2007,7 +2157,8 @@ class Code
         },
         "america_mendoza?" => {
           name: "america_mendoza?",
-          description: "returns whether the current time zone is america/mendoza.",
+          description:
+            "returns whether the current time zone is america/mendoza.",
           examples: [
             "Date.america_mendoza?",
             "Date.new(\"2024-03-05\").america_mendoza?",
@@ -2016,7 +2167,8 @@ class Code
         },
         "america_menominee?" => {
           name: "america_menominee?",
-          description: "returns whether the current time zone is america/menominee.",
+          description:
+            "returns whether the current time zone is america/menominee.",
           examples: [
             "Date.america_menominee?",
             "Date.new(\"2024-03-05\").america_menominee?",
@@ -2025,7 +2177,8 @@ class Code
         },
         "america_merida?" => {
           name: "america_merida?",
-          description: "returns whether the current time zone is america/merida.",
+          description:
+            "returns whether the current time zone is america/merida.",
           examples: [
             "Date.america_merida?",
             "Date.new(\"2024-03-05\").america_merida?",
@@ -2034,7 +2187,8 @@ class Code
         },
         "america_metlakatla?" => {
           name: "america_metlakatla?",
-          description: "returns whether the current time zone is america/metlakatla.",
+          description:
+            "returns whether the current time zone is america/metlakatla.",
           examples: [
             "Date.america_metlakatla?",
             "Date.new(\"2024-03-05\").america_metlakatla?",
@@ -2043,7 +2197,8 @@ class Code
         },
         "america_mexico_city?" => {
           name: "america_mexico_city?",
-          description: "returns whether the current time zone is america/mexico_city.",
+          description:
+            "returns whether the current time zone is america/mexico_city.",
           examples: [
             "Date.america_mexico_city?",
             "Date.new(\"2024-03-05\").america_mexico_city?",
@@ -2052,7 +2207,8 @@ class Code
         },
         "america_miquelon?" => {
           name: "america_miquelon?",
-          description: "returns whether the current time zone is america/miquelon.",
+          description:
+            "returns whether the current time zone is america/miquelon.",
           examples: [
             "Date.america_miquelon?",
             "Date.new(\"2024-03-05\").america_miquelon?",
@@ -2061,7 +2217,8 @@ class Code
         },
         "america_moncton?" => {
           name: "america_moncton?",
-          description: "returns whether the current time zone is america/moncton.",
+          description:
+            "returns whether the current time zone is america/moncton.",
           examples: [
             "Date.america_moncton?",
             "Date.new(\"2024-03-05\").america_moncton?",
@@ -2070,7 +2227,8 @@ class Code
         },
         "america_monterrey?" => {
           name: "america_monterrey?",
-          description: "returns whether the current time zone is america/monterrey.",
+          description:
+            "returns whether the current time zone is america/monterrey.",
           examples: [
             "Date.america_monterrey?",
             "Date.new(\"2024-03-05\").america_monterrey?",
@@ -2079,7 +2237,8 @@ class Code
         },
         "america_montevideo?" => {
           name: "america_montevideo?",
-          description: "returns whether the current time zone is america/montevideo.",
+          description:
+            "returns whether the current time zone is america/montevideo.",
           examples: [
             "Date.america_montevideo?",
             "Date.new(\"2024-03-05\").america_montevideo?",
@@ -2088,7 +2247,8 @@ class Code
         },
         "america_montreal?" => {
           name: "america_montreal?",
-          description: "returns whether the current time zone is america/montreal.",
+          description:
+            "returns whether the current time zone is america/montreal.",
           examples: [
             "Date.america_montreal?",
             "Date.new(\"2024-03-05\").america_montreal?",
@@ -2097,7 +2257,8 @@ class Code
         },
         "america_montserrat?" => {
           name: "america_montserrat?",
-          description: "returns whether the current time zone is america/montserrat.",
+          description:
+            "returns whether the current time zone is america/montserrat.",
           examples: [
             "Date.america_montserrat?",
             "Date.new(\"2024-03-05\").america_montserrat?",
@@ -2106,7 +2267,8 @@ class Code
         },
         "america_nassau?" => {
           name: "america_nassau?",
-          description: "returns whether the current time zone is america/nassau.",
+          description:
+            "returns whether the current time zone is america/nassau.",
           examples: [
             "Date.america_nassau?",
             "Date.new(\"2024-03-05\").america_nassau?",
@@ -2115,7 +2277,8 @@ class Code
         },
         "america_new_york?" => {
           name: "america_new_york?",
-          description: "returns whether the current time zone is america/new_york.",
+          description:
+            "returns whether the current time zone is america/new_york.",
           examples: [
             "Date.america_new_york?",
             "Date.new(\"2024-03-05\").america_new_york?",
@@ -2124,7 +2287,8 @@ class Code
         },
         "america_nipigon?" => {
           name: "america_nipigon?",
-          description: "returns whether the current time zone is america/nipigon.",
+          description:
+            "returns whether the current time zone is america/nipigon.",
           examples: [
             "Date.america_nipigon?",
             "Date.new(\"2024-03-05\").america_nipigon?",
@@ -2142,7 +2306,8 @@ class Code
         },
         "america_noronha?" => {
           name: "america_noronha?",
-          description: "returns whether the current time zone is america/noronha.",
+          description:
+            "returns whether the current time zone is america/noronha.",
           examples: [
             "Date.america_noronha?",
             "Date.new(\"2024-03-05\").america_noronha?",
@@ -2151,7 +2316,8 @@ class Code
         },
         "america_north_dakota_beulah?" => {
           name: "america_north_dakota_beulah?",
-          description: "returns whether the current time zone is america/north_dakota/beulah.",
+          description:
+            "returns whether the current time zone is america/north_dakota/beulah.",
           examples: [
             "Date.america_north_dakota_beulah?",
             "Date.new(\"2024-03-05\").america_north_dakota_beulah?",
@@ -2160,7 +2326,8 @@ class Code
         },
         "america_north_dakota_center?" => {
           name: "america_north_dakota_center?",
-          description: "returns whether the current time zone is america/north_dakota/center.",
+          description:
+            "returns whether the current time zone is america/north_dakota/center.",
           examples: [
             "Date.america_north_dakota_center?",
             "Date.new(\"2024-03-05\").america_north_dakota_center?",
@@ -2169,7 +2336,8 @@ class Code
         },
         "america_north_dakota_new_salem?" => {
           name: "america_north_dakota_new_salem?",
-          description: "returns whether the current time zone is america/north_dakota/new_salem.",
+          description:
+            "returns whether the current time zone is america/north_dakota/new_salem.",
           examples: [
             "Date.america_north_dakota_new_salem?",
             "Date.new(\"2024-03-05\").america_north_dakota_new_salem?",
@@ -2187,7 +2355,8 @@ class Code
         },
         "america_ojinaga?" => {
           name: "america_ojinaga?",
-          description: "returns whether the current time zone is america/ojinaga.",
+          description:
+            "returns whether the current time zone is america/ojinaga.",
           examples: [
             "Date.america_ojinaga?",
             "Date.new(\"2024-03-05\").america_ojinaga?",
@@ -2196,7 +2365,8 @@ class Code
         },
         "america_panama?" => {
           name: "america_panama?",
-          description: "returns whether the current time zone is america/panama.",
+          description:
+            "returns whether the current time zone is america/panama.",
           examples: [
             "Date.america_panama?",
             "Date.new(\"2024-03-05\").america_panama?",
@@ -2205,7 +2375,8 @@ class Code
         },
         "america_pangnirtung?" => {
           name: "america_pangnirtung?",
-          description: "returns whether the current time zone is america/pangnirtung.",
+          description:
+            "returns whether the current time zone is america/pangnirtung.",
           examples: [
             "Date.america_pangnirtung?",
             "Date.new(\"2024-03-05\").america_pangnirtung?",
@@ -2214,7 +2385,8 @@ class Code
         },
         "america_paramaribo?" => {
           name: "america_paramaribo?",
-          description: "returns whether the current time zone is america/paramaribo.",
+          description:
+            "returns whether the current time zone is america/paramaribo.",
           examples: [
             "Date.america_paramaribo?",
             "Date.new(\"2024-03-05\").america_paramaribo?",
@@ -2223,7 +2395,8 @@ class Code
         },
         "america_phoenix?" => {
           name: "america_phoenix?",
-          description: "returns whether the current time zone is america/phoenix.",
+          description:
+            "returns whether the current time zone is america/phoenix.",
           examples: [
             "Date.america_phoenix?",
             "Date.new(\"2024-03-05\").america_phoenix?",
@@ -2232,7 +2405,8 @@ class Code
         },
         "america_port_minus_au_minus_prince?" => {
           name: "america_port_minus_au_minus_prince?",
-          description: "returns whether the current time zone is america/port-au-prince.",
+          description:
+            "returns whether the current time zone is america/port-au-prince.",
           examples: [
             "Date.america_port_minus_au_minus_prince?",
             "Date.new(\"2024-03-05\").america_port_minus_au_minus_prince?",
@@ -2241,7 +2415,8 @@ class Code
         },
         "america_port_of_spain?" => {
           name: "america_port_of_spain?",
-          description: "returns whether the current time zone is america/port_of_spain.",
+          description:
+            "returns whether the current time zone is america/port_of_spain.",
           examples: [
             "Date.america_port_of_spain?",
             "Date.new(\"2024-03-05\").america_port_of_spain?",
@@ -2250,7 +2425,8 @@ class Code
         },
         "america_porto_acre?" => {
           name: "america_porto_acre?",
-          description: "returns whether the current time zone is america/porto_acre.",
+          description:
+            "returns whether the current time zone is america/porto_acre.",
           examples: [
             "Date.america_porto_acre?",
             "Date.new(\"2024-03-05\").america_porto_acre?",
@@ -2259,7 +2435,8 @@ class Code
         },
         "america_porto_velho?" => {
           name: "america_porto_velho?",
-          description: "returns whether the current time zone is america/porto_velho.",
+          description:
+            "returns whether the current time zone is america/porto_velho.",
           examples: [
             "Date.america_porto_velho?",
             "Date.new(\"2024-03-05\").america_porto_velho?",
@@ -2268,7 +2445,8 @@ class Code
         },
         "america_puerto_rico?" => {
           name: "america_puerto_rico?",
-          description: "returns whether the current time zone is america/puerto_rico.",
+          description:
+            "returns whether the current time zone is america/puerto_rico.",
           examples: [
             "Date.america_puerto_rico?",
             "Date.new(\"2024-03-05\").america_puerto_rico?",
@@ -2277,7 +2455,8 @@ class Code
         },
         "america_punta_arenas?" => {
           name: "america_punta_arenas?",
-          description: "returns whether the current time zone is america/punta_arenas.",
+          description:
+            "returns whether the current time zone is america/punta_arenas.",
           examples: [
             "Date.america_punta_arenas?",
             "Date.new(\"2024-03-05\").america_punta_arenas?",
@@ -2286,7 +2465,8 @@ class Code
         },
         "america_rainy_river?" => {
           name: "america_rainy_river?",
-          description: "returns whether the current time zone is america/rainy_river.",
+          description:
+            "returns whether the current time zone is america/rainy_river.",
           examples: [
             "Date.america_rainy_river?",
             "Date.new(\"2024-03-05\").america_rainy_river?",
@@ -2295,7 +2475,8 @@ class Code
         },
         "america_rankin_inlet?" => {
           name: "america_rankin_inlet?",
-          description: "returns whether the current time zone is america/rankin_inlet.",
+          description:
+            "returns whether the current time zone is america/rankin_inlet.",
           examples: [
             "Date.america_rankin_inlet?",
             "Date.new(\"2024-03-05\").america_rankin_inlet?",
@@ -2304,7 +2485,8 @@ class Code
         },
         "america_recife?" => {
           name: "america_recife?",
-          description: "returns whether the current time zone is america/recife.",
+          description:
+            "returns whether the current time zone is america/recife.",
           examples: [
             "Date.america_recife?",
             "Date.new(\"2024-03-05\").america_recife?",
@@ -2313,7 +2495,8 @@ class Code
         },
         "america_regina?" => {
           name: "america_regina?",
-          description: "returns whether the current time zone is america/regina.",
+          description:
+            "returns whether the current time zone is america/regina.",
           examples: [
             "Date.america_regina?",
             "Date.new(\"2024-03-05\").america_regina?",
@@ -2322,7 +2505,8 @@ class Code
         },
         "america_resolute?" => {
           name: "america_resolute?",
-          description: "returns whether the current time zone is america/resolute.",
+          description:
+            "returns whether the current time zone is america/resolute.",
           examples: [
             "Date.america_resolute?",
             "Date.new(\"2024-03-05\").america_resolute?",
@@ -2331,7 +2515,8 @@ class Code
         },
         "america_rio_branco?" => {
           name: "america_rio_branco?",
-          description: "returns whether the current time zone is america/rio_branco.",
+          description:
+            "returns whether the current time zone is america/rio_branco.",
           examples: [
             "Date.america_rio_branco?",
             "Date.new(\"2024-03-05\").america_rio_branco?",
@@ -2340,7 +2525,8 @@ class Code
         },
         "america_rosario?" => {
           name: "america_rosario?",
-          description: "returns whether the current time zone is america/rosario.",
+          description:
+            "returns whether the current time zone is america/rosario.",
           examples: [
             "Date.america_rosario?",
             "Date.new(\"2024-03-05\").america_rosario?",
@@ -2349,7 +2535,8 @@ class Code
         },
         "america_santa_isabel?" => {
           name: "america_santa_isabel?",
-          description: "returns whether the current time zone is america/santa_isabel.",
+          description:
+            "returns whether the current time zone is america/santa_isabel.",
           examples: [
             "Date.america_santa_isabel?",
             "Date.new(\"2024-03-05\").america_santa_isabel?",
@@ -2358,7 +2545,8 @@ class Code
         },
         "america_santarem?" => {
           name: "america_santarem?",
-          description: "returns whether the current time zone is america/santarem.",
+          description:
+            "returns whether the current time zone is america/santarem.",
           examples: [
             "Date.america_santarem?",
             "Date.new(\"2024-03-05\").america_santarem?",
@@ -2367,7 +2555,8 @@ class Code
         },
         "america_santiago?" => {
           name: "america_santiago?",
-          description: "returns whether the current time zone is america/santiago.",
+          description:
+            "returns whether the current time zone is america/santiago.",
           examples: [
             "Date.america_santiago?",
             "Date.new(\"2024-03-05\").america_santiago?",
@@ -2376,7 +2565,8 @@ class Code
         },
         "america_santo_domingo?" => {
           name: "america_santo_domingo?",
-          description: "returns whether the current time zone is america/santo_domingo.",
+          description:
+            "returns whether the current time zone is america/santo_domingo.",
           examples: [
             "Date.america_santo_domingo?",
             "Date.new(\"2024-03-05\").america_santo_domingo?",
@@ -2385,7 +2575,8 @@ class Code
         },
         "america_sao_paulo?" => {
           name: "america_sao_paulo?",
-          description: "returns whether the current time zone is america/sao_paulo.",
+          description:
+            "returns whether the current time zone is america/sao_paulo.",
           examples: [
             "Date.america_sao_paulo?",
             "Date.new(\"2024-03-05\").america_sao_paulo?",
@@ -2394,7 +2585,8 @@ class Code
         },
         "america_scoresbysund?" => {
           name: "america_scoresbysund?",
-          description: "returns whether the current time zone is america/scoresbysund.",
+          description:
+            "returns whether the current time zone is america/scoresbysund.",
           examples: [
             "Date.america_scoresbysund?",
             "Date.new(\"2024-03-05\").america_scoresbysund?",
@@ -2403,7 +2595,8 @@ class Code
         },
         "america_shiprock?" => {
           name: "america_shiprock?",
-          description: "returns whether the current time zone is america/shiprock.",
+          description:
+            "returns whether the current time zone is america/shiprock.",
           examples: [
             "Date.america_shiprock?",
             "Date.new(\"2024-03-05\").america_shiprock?",
@@ -2412,7 +2605,8 @@ class Code
         },
         "america_sitka?" => {
           name: "america_sitka?",
-          description: "returns whether the current time zone is america/sitka.",
+          description:
+            "returns whether the current time zone is america/sitka.",
           examples: [
             "Date.america_sitka?",
             "Date.new(\"2024-03-05\").america_sitka?",
@@ -2421,7 +2615,8 @@ class Code
         },
         "america_st_barthelemy?" => {
           name: "america_st_barthelemy?",
-          description: "returns whether the current time zone is america/st_barthelemy.",
+          description:
+            "returns whether the current time zone is america/st_barthelemy.",
           examples: [
             "Date.america_st_barthelemy?",
             "Date.new(\"2024-03-05\").america_st_barthelemy?",
@@ -2430,7 +2625,8 @@ class Code
         },
         "america_st_johns?" => {
           name: "america_st_johns?",
-          description: "returns whether the current time zone is america/st_johns.",
+          description:
+            "returns whether the current time zone is america/st_johns.",
           examples: [
             "Date.america_st_johns?",
             "Date.new(\"2024-03-05\").america_st_johns?",
@@ -2439,7 +2635,8 @@ class Code
         },
         "america_st_kitts?" => {
           name: "america_st_kitts?",
-          description: "returns whether the current time zone is america/st_kitts.",
+          description:
+            "returns whether the current time zone is america/st_kitts.",
           examples: [
             "Date.america_st_kitts?",
             "Date.new(\"2024-03-05\").america_st_kitts?",
@@ -2448,7 +2645,8 @@ class Code
         },
         "america_st_lucia?" => {
           name: "america_st_lucia?",
-          description: "returns whether the current time zone is america/st_lucia.",
+          description:
+            "returns whether the current time zone is america/st_lucia.",
           examples: [
             "Date.america_st_lucia?",
             "Date.new(\"2024-03-05\").america_st_lucia?",
@@ -2457,7 +2655,8 @@ class Code
         },
         "america_st_thomas?" => {
           name: "america_st_thomas?",
-          description: "returns whether the current time zone is america/st_thomas.",
+          description:
+            "returns whether the current time zone is america/st_thomas.",
           examples: [
             "Date.america_st_thomas?",
             "Date.new(\"2024-03-05\").america_st_thomas?",
@@ -2466,7 +2665,8 @@ class Code
         },
         "america_st_vincent?" => {
           name: "america_st_vincent?",
-          description: "returns whether the current time zone is america/st_vincent.",
+          description:
+            "returns whether the current time zone is america/st_vincent.",
           examples: [
             "Date.america_st_vincent?",
             "Date.new(\"2024-03-05\").america_st_vincent?",
@@ -2475,7 +2675,8 @@ class Code
         },
         "america_swift_current?" => {
           name: "america_swift_current?",
-          description: "returns whether the current time zone is america/swift_current.",
+          description:
+            "returns whether the current time zone is america/swift_current.",
           examples: [
             "Date.america_swift_current?",
             "Date.new(\"2024-03-05\").america_swift_current?",
@@ -2484,7 +2685,8 @@ class Code
         },
         "america_tegucigalpa?" => {
           name: "america_tegucigalpa?",
-          description: "returns whether the current time zone is america/tegucigalpa.",
+          description:
+            "returns whether the current time zone is america/tegucigalpa.",
           examples: [
             "Date.america_tegucigalpa?",
             "Date.new(\"2024-03-05\").america_tegucigalpa?",
@@ -2493,7 +2695,8 @@ class Code
         },
         "america_thule?" => {
           name: "america_thule?",
-          description: "returns whether the current time zone is america/thule.",
+          description:
+            "returns whether the current time zone is america/thule.",
           examples: [
             "Date.america_thule?",
             "Date.new(\"2024-03-05\").america_thule?",
@@ -2502,7 +2705,8 @@ class Code
         },
         "america_thunder_bay?" => {
           name: "america_thunder_bay?",
-          description: "returns whether the current time zone is america/thunder_bay.",
+          description:
+            "returns whether the current time zone is america/thunder_bay.",
           examples: [
             "Date.america_thunder_bay?",
             "Date.new(\"2024-03-05\").america_thunder_bay?",
@@ -2511,7 +2715,8 @@ class Code
         },
         "america_tijuana?" => {
           name: "america_tijuana?",
-          description: "returns whether the current time zone is america/tijuana.",
+          description:
+            "returns whether the current time zone is america/tijuana.",
           examples: [
             "Date.america_tijuana?",
             "Date.new(\"2024-03-05\").america_tijuana?",
@@ -2520,7 +2725,8 @@ class Code
         },
         "america_toronto?" => {
           name: "america_toronto?",
-          description: "returns whether the current time zone is america/toronto.",
+          description:
+            "returns whether the current time zone is america/toronto.",
           examples: [
             "Date.america_toronto?",
             "Date.new(\"2024-03-05\").america_toronto?",
@@ -2529,7 +2735,8 @@ class Code
         },
         "america_tortola?" => {
           name: "america_tortola?",
-          description: "returns whether the current time zone is america/tortola.",
+          description:
+            "returns whether the current time zone is america/tortola.",
           examples: [
             "Date.america_tortola?",
             "Date.new(\"2024-03-05\").america_tortola?",
@@ -2538,7 +2745,8 @@ class Code
         },
         "america_vancouver?" => {
           name: "america_vancouver?",
-          description: "returns whether the current time zone is america/vancouver.",
+          description:
+            "returns whether the current time zone is america/vancouver.",
           examples: [
             "Date.america_vancouver?",
             "Date.new(\"2024-03-05\").america_vancouver?",
@@ -2547,7 +2755,8 @@ class Code
         },
         "america_virgin?" => {
           name: "america_virgin?",
-          description: "returns whether the current time zone is america/virgin.",
+          description:
+            "returns whether the current time zone is america/virgin.",
           examples: [
             "Date.america_virgin?",
             "Date.new(\"2024-03-05\").america_virgin?",
@@ -2556,7 +2765,8 @@ class Code
         },
         "america_whitehorse?" => {
           name: "america_whitehorse?",
-          description: "returns whether the current time zone is america/whitehorse.",
+          description:
+            "returns whether the current time zone is america/whitehorse.",
           examples: [
             "Date.america_whitehorse?",
             "Date.new(\"2024-03-05\").america_whitehorse?",
@@ -2565,7 +2775,8 @@ class Code
         },
         "america_winnipeg?" => {
           name: "america_winnipeg?",
-          description: "returns whether the current time zone is america/winnipeg.",
+          description:
+            "returns whether the current time zone is america/winnipeg.",
           examples: [
             "Date.america_winnipeg?",
             "Date.new(\"2024-03-05\").america_winnipeg?",
@@ -2574,7 +2785,8 @@ class Code
         },
         "america_yakutat?" => {
           name: "america_yakutat?",
-          description: "returns whether the current time zone is america/yakutat.",
+          description:
+            "returns whether the current time zone is america/yakutat.",
           examples: [
             "Date.america_yakutat?",
             "Date.new(\"2024-03-05\").america_yakutat?",
@@ -2583,7 +2795,8 @@ class Code
         },
         "america_yellowknife?" => {
           name: "america_yellowknife?",
-          description: "returns whether the current time zone is america/yellowknife.",
+          description:
+            "returns whether the current time zone is america/yellowknife.",
           examples: [
             "Date.america_yellowknife?",
             "Date.new(\"2024-03-05\").america_yellowknife?",
@@ -2592,7 +2805,8 @@ class Code
         },
         "antarctica_casey?" => {
           name: "antarctica_casey?",
-          description: "returns whether the current time zone is antarctica/casey.",
+          description:
+            "returns whether the current time zone is antarctica/casey.",
           examples: [
             "Date.antarctica_casey?",
             "Date.new(\"2024-03-05\").antarctica_casey?",
@@ -2601,7 +2815,8 @@ class Code
         },
         "antarctica_davis?" => {
           name: "antarctica_davis?",
-          description: "returns whether the current time zone is antarctica/davis.",
+          description:
+            "returns whether the current time zone is antarctica/davis.",
           examples: [
             "Date.antarctica_davis?",
             "Date.new(\"2024-03-05\").antarctica_davis?",
@@ -2610,7 +2825,8 @@ class Code
         },
         "antarctica_dumontdurville?" => {
           name: "antarctica_dumontdurville?",
-          description: "returns whether the current time zone is antarctica/dumontdurville.",
+          description:
+            "returns whether the current time zone is antarctica/dumontdurville.",
           examples: [
             "Date.antarctica_dumontdurville?",
             "Date.new(\"2024-03-05\").antarctica_dumontdurville?",
@@ -2619,7 +2835,8 @@ class Code
         },
         "antarctica_macquarie?" => {
           name: "antarctica_macquarie?",
-          description: "returns whether the current time zone is antarctica/macquarie.",
+          description:
+            "returns whether the current time zone is antarctica/macquarie.",
           examples: [
             "Date.antarctica_macquarie?",
             "Date.new(\"2024-03-05\").antarctica_macquarie?",
@@ -2628,7 +2845,8 @@ class Code
         },
         "antarctica_mawson?" => {
           name: "antarctica_mawson?",
-          description: "returns whether the current time zone is antarctica/mawson.",
+          description:
+            "returns whether the current time zone is antarctica/mawson.",
           examples: [
             "Date.antarctica_mawson?",
             "Date.new(\"2024-03-05\").antarctica_mawson?",
@@ -2637,7 +2855,8 @@ class Code
         },
         "antarctica_mcmurdo?" => {
           name: "antarctica_mcmurdo?",
-          description: "returns whether the current time zone is antarctica/mcmurdo.",
+          description:
+            "returns whether the current time zone is antarctica/mcmurdo.",
           examples: [
             "Date.antarctica_mcmurdo?",
             "Date.new(\"2024-03-05\").antarctica_mcmurdo?",
@@ -2646,7 +2865,8 @@ class Code
         },
         "antarctica_palmer?" => {
           name: "antarctica_palmer?",
-          description: "returns whether the current time zone is antarctica/palmer.",
+          description:
+            "returns whether the current time zone is antarctica/palmer.",
           examples: [
             "Date.antarctica_palmer?",
             "Date.new(\"2024-03-05\").antarctica_palmer?",
@@ -2655,7 +2875,8 @@ class Code
         },
         "antarctica_rothera?" => {
           name: "antarctica_rothera?",
-          description: "returns whether the current time zone is antarctica/rothera.",
+          description:
+            "returns whether the current time zone is antarctica/rothera.",
           examples: [
             "Date.antarctica_rothera?",
             "Date.new(\"2024-03-05\").antarctica_rothera?",
@@ -2664,7 +2885,8 @@ class Code
         },
         "antarctica_south_pole?" => {
           name: "antarctica_south_pole?",
-          description: "returns whether the current time zone is antarctica/south_pole.",
+          description:
+            "returns whether the current time zone is antarctica/south_pole.",
           examples: [
             "Date.antarctica_south_pole?",
             "Date.new(\"2024-03-05\").antarctica_south_pole?",
@@ -2673,7 +2895,8 @@ class Code
         },
         "antarctica_syowa?" => {
           name: "antarctica_syowa?",
-          description: "returns whether the current time zone is antarctica/syowa.",
+          description:
+            "returns whether the current time zone is antarctica/syowa.",
           examples: [
             "Date.antarctica_syowa?",
             "Date.new(\"2024-03-05\").antarctica_syowa?",
@@ -2682,7 +2905,8 @@ class Code
         },
         "antarctica_troll?" => {
           name: "antarctica_troll?",
-          description: "returns whether the current time zone is antarctica/troll.",
+          description:
+            "returns whether the current time zone is antarctica/troll.",
           examples: [
             "Date.antarctica_troll?",
             "Date.new(\"2024-03-05\").antarctica_troll?",
@@ -2691,7 +2915,8 @@ class Code
         },
         "antarctica_vostok?" => {
           name: "antarctica_vostok?",
-          description: "returns whether the current time zone is antarctica/vostok.",
+          description:
+            "returns whether the current time zone is antarctica/vostok.",
           examples: [
             "Date.antarctica_vostok?",
             "Date.new(\"2024-03-05\").antarctica_vostok?",
@@ -2700,7 +2925,8 @@ class Code
         },
         "arctic_longyearbyen?" => {
           name: "arctic_longyearbyen?",
-          description: "returns whether the current time zone is arctic/longyearbyen.",
+          description:
+            "returns whether the current time zone is arctic/longyearbyen.",
           examples: [
             "Date.arctic_longyearbyen?",
             "Date.new(\"2024-03-05\").arctic_longyearbyen?",
@@ -2763,7 +2989,8 @@ class Code
         },
         "asia_ashgabat?" => {
           name: "asia_ashgabat?",
-          description: "returns whether the current time zone is asia/ashgabat.",
+          description:
+            "returns whether the current time zone is asia/ashgabat.",
           examples: [
             "Date.asia_ashgabat?",
             "Date.new(\"2024-03-05\").asia_ashgabat?",
@@ -2772,7 +2999,8 @@ class Code
         },
         "asia_ashkhabad?" => {
           name: "asia_ashkhabad?",
-          description: "returns whether the current time zone is asia/ashkhabad.",
+          description:
+            "returns whether the current time zone is asia/ashkhabad.",
           examples: [
             "Date.asia_ashkhabad?",
             "Date.new(\"2024-03-05\").asia_ashkhabad?",
@@ -2862,7 +3090,8 @@ class Code
         },
         "asia_calcutta?" => {
           name: "asia_calcutta?",
-          description: "returns whether the current time zone is asia/calcutta.",
+          description:
+            "returns whether the current time zone is asia/calcutta.",
           examples: [
             "Date.asia_calcutta?",
             "Date.new(\"2024-03-05\").asia_calcutta?",
@@ -2880,7 +3109,8 @@ class Code
         },
         "asia_choibalsan?" => {
           name: "asia_choibalsan?",
-          description: "returns whether the current time zone is asia/choibalsan.",
+          description:
+            "returns whether the current time zone is asia/choibalsan.",
           examples: [
             "Date.asia_choibalsan?",
             "Date.new(\"2024-03-05\").asia_choibalsan?",
@@ -2889,7 +3119,8 @@ class Code
         },
         "asia_chongqing?" => {
           name: "asia_chongqing?",
-          description: "returns whether the current time zone is asia/chongqing.",
+          description:
+            "returns whether the current time zone is asia/chongqing.",
           examples: [
             "Date.asia_chongqing?",
             "Date.new(\"2024-03-05\").asia_chongqing?",
@@ -2898,7 +3129,8 @@ class Code
         },
         "asia_chungking?" => {
           name: "asia_chungking?",
-          description: "returns whether the current time zone is asia/chungking.",
+          description:
+            "returns whether the current time zone is asia/chungking.",
           examples: [
             "Date.asia_chungking?",
             "Date.new(\"2024-03-05\").asia_chungking?",
@@ -2925,7 +3157,8 @@ class Code
         },
         "asia_damascus?" => {
           name: "asia_damascus?",
-          description: "returns whether the current time zone is asia/damascus.",
+          description:
+            "returns whether the current time zone is asia/damascus.",
           examples: [
             "Date.asia_damascus?",
             "Date.new(\"2024-03-05\").asia_damascus?",
@@ -2961,7 +3194,8 @@ class Code
         },
         "asia_dushanbe?" => {
           name: "asia_dushanbe?",
-          description: "returns whether the current time zone is asia/dushanbe.",
+          description:
+            "returns whether the current time zone is asia/dushanbe.",
           examples: [
             "Date.asia_dushanbe?",
             "Date.new(\"2024-03-05\").asia_dushanbe?",
@@ -2970,7 +3204,8 @@ class Code
         },
         "asia_famagusta?" => {
           name: "asia_famagusta?",
-          description: "returns whether the current time zone is asia/famagusta.",
+          description:
+            "returns whether the current time zone is asia/famagusta.",
           examples: [
             "Date.asia_famagusta?",
             "Date.new(\"2024-03-05\").asia_famagusta?",
@@ -3006,7 +3241,8 @@ class Code
         },
         "asia_ho_chi_minh?" => {
           name: "asia_ho_chi_minh?",
-          description: "returns whether the current time zone is asia/ho_chi_minh.",
+          description:
+            "returns whether the current time zone is asia/ho_chi_minh.",
           examples: [
             "Date.asia_ho_chi_minh?",
             "Date.new(\"2024-03-05\").asia_ho_chi_minh?",
@@ -3015,7 +3251,8 @@ class Code
         },
         "asia_hong_kong?" => {
           name: "asia_hong_kong?",
-          description: "returns whether the current time zone is asia/hong_kong.",
+          description:
+            "returns whether the current time zone is asia/hong_kong.",
           examples: [
             "Date.asia_hong_kong?",
             "Date.new(\"2024-03-05\").asia_hong_kong?",
@@ -3042,7 +3279,8 @@ class Code
         },
         "asia_istanbul?" => {
           name: "asia_istanbul?",
-          description: "returns whether the current time zone is asia/istanbul.",
+          description:
+            "returns whether the current time zone is asia/istanbul.",
           examples: [
             "Date.asia_istanbul?",
             "Date.new(\"2024-03-05\").asia_istanbul?",
@@ -3060,7 +3298,8 @@ class Code
         },
         "asia_jayapura?" => {
           name: "asia_jayapura?",
-          description: "returns whether the current time zone is asia/jayapura.",
+          description:
+            "returns whether the current time zone is asia/jayapura.",
           examples: [
             "Date.asia_jayapura?",
             "Date.new(\"2024-03-05\").asia_jayapura?",
@@ -3069,7 +3308,8 @@ class Code
         },
         "asia_jerusalem?" => {
           name: "asia_jerusalem?",
-          description: "returns whether the current time zone is asia/jerusalem.",
+          description:
+            "returns whether the current time zone is asia/jerusalem.",
           examples: [
             "Date.asia_jerusalem?",
             "Date.new(\"2024-03-05\").asia_jerusalem?",
@@ -3087,7 +3327,8 @@ class Code
         },
         "asia_kamchatka?" => {
           name: "asia_kamchatka?",
-          description: "returns whether the current time zone is asia/kamchatka.",
+          description:
+            "returns whether the current time zone is asia/kamchatka.",
           examples: [
             "Date.asia_kamchatka?",
             "Date.new(\"2024-03-05\").asia_kamchatka?",
@@ -3114,7 +3355,8 @@ class Code
         },
         "asia_kathmandu?" => {
           name: "asia_kathmandu?",
-          description: "returns whether the current time zone is asia/kathmandu.",
+          description:
+            "returns whether the current time zone is asia/kathmandu.",
           examples: [
             "Date.asia_kathmandu?",
             "Date.new(\"2024-03-05\").asia_kathmandu?",
@@ -3123,7 +3365,8 @@ class Code
         },
         "asia_katmandu?" => {
           name: "asia_katmandu?",
-          description: "returns whether the current time zone is asia/katmandu.",
+          description:
+            "returns whether the current time zone is asia/katmandu.",
           examples: [
             "Date.asia_katmandu?",
             "Date.new(\"2024-03-05\").asia_katmandu?",
@@ -3132,7 +3375,8 @@ class Code
         },
         "asia_khandyga?" => {
           name: "asia_khandyga?",
-          description: "returns whether the current time zone is asia/khandyga.",
+          description:
+            "returns whether the current time zone is asia/khandyga.",
           examples: [
             "Date.asia_khandyga?",
             "Date.new(\"2024-03-05\").asia_khandyga?",
@@ -3150,7 +3394,8 @@ class Code
         },
         "asia_krasnoyarsk?" => {
           name: "asia_krasnoyarsk?",
-          description: "returns whether the current time zone is asia/krasnoyarsk.",
+          description:
+            "returns whether the current time zone is asia/krasnoyarsk.",
           examples: [
             "Date.asia_krasnoyarsk?",
             "Date.new(\"2024-03-05\").asia_krasnoyarsk?",
@@ -3159,7 +3404,8 @@ class Code
         },
         "asia_kuala_lumpur?" => {
           name: "asia_kuala_lumpur?",
-          description: "returns whether the current time zone is asia/kuala_lumpur.",
+          description:
+            "returns whether the current time zone is asia/kuala_lumpur.",
           examples: [
             "Date.asia_kuala_lumpur?",
             "Date.new(\"2024-03-05\").asia_kuala_lumpur?",
@@ -3213,7 +3459,8 @@ class Code
         },
         "asia_makassar?" => {
           name: "asia_makassar?",
-          description: "returns whether the current time zone is asia/makassar.",
+          description:
+            "returns whether the current time zone is asia/makassar.",
           examples: [
             "Date.asia_makassar?",
             "Date.new(\"2024-03-05\").asia_makassar?",
@@ -3249,7 +3496,8 @@ class Code
         },
         "asia_novokuznetsk?" => {
           name: "asia_novokuznetsk?",
-          description: "returns whether the current time zone is asia/novokuznetsk.",
+          description:
+            "returns whether the current time zone is asia/novokuznetsk.",
           examples: [
             "Date.asia_novokuznetsk?",
             "Date.new(\"2024-03-05\").asia_novokuznetsk?",
@@ -3258,7 +3506,8 @@ class Code
         },
         "asia_novosibirsk?" => {
           name: "asia_novosibirsk?",
-          description: "returns whether the current time zone is asia/novosibirsk.",
+          description:
+            "returns whether the current time zone is asia/novosibirsk.",
           examples: [
             "Date.asia_novosibirsk?",
             "Date.new(\"2024-03-05\").asia_novosibirsk?",
@@ -3285,7 +3534,8 @@ class Code
         },
         "asia_phnom_penh?" => {
           name: "asia_phnom_penh?",
-          description: "returns whether the current time zone is asia/phnom_penh.",
+          description:
+            "returns whether the current time zone is asia/phnom_penh.",
           examples: [
             "Date.asia_phnom_penh?",
             "Date.new(\"2024-03-05\").asia_phnom_penh?",
@@ -3294,7 +3544,8 @@ class Code
         },
         "asia_pontianak?" => {
           name: "asia_pontianak?",
-          description: "returns whether the current time zone is asia/pontianak.",
+          description:
+            "returns whether the current time zone is asia/pontianak.",
           examples: [
             "Date.asia_pontianak?",
             "Date.new(\"2024-03-05\").asia_pontianak?",
@@ -3303,7 +3554,8 @@ class Code
         },
         "asia_pyongyang?" => {
           name: "asia_pyongyang?",
-          description: "returns whether the current time zone is asia/pyongyang.",
+          description:
+            "returns whether the current time zone is asia/pyongyang.",
           examples: [
             "Date.asia_pyongyang?",
             "Date.new(\"2024-03-05\").asia_pyongyang?",
@@ -3321,7 +3573,8 @@ class Code
         },
         "asia_qostanay?" => {
           name: "asia_qostanay?",
-          description: "returns whether the current time zone is asia/qostanay.",
+          description:
+            "returns whether the current time zone is asia/qostanay.",
           examples: [
             "Date.asia_qostanay?",
             "Date.new(\"2024-03-05\").asia_qostanay?",
@@ -3330,7 +3583,8 @@ class Code
         },
         "asia_qyzylorda?" => {
           name: "asia_qyzylorda?",
-          description: "returns whether the current time zone is asia/qyzylorda.",
+          description:
+            "returns whether the current time zone is asia/qyzylorda.",
           examples: [
             "Date.asia_qyzylorda?",
             "Date.new(\"2024-03-05\").asia_qyzylorda?",
@@ -3366,7 +3620,8 @@ class Code
         },
         "asia_sakhalin?" => {
           name: "asia_sakhalin?",
-          description: "returns whether the current time zone is asia/sakhalin.",
+          description:
+            "returns whether the current time zone is asia/sakhalin.",
           examples: [
             "Date.asia_sakhalin?",
             "Date.new(\"2024-03-05\").asia_sakhalin?",
@@ -3375,7 +3630,8 @@ class Code
         },
         "asia_samarkand?" => {
           name: "asia_samarkand?",
-          description: "returns whether the current time zone is asia/samarkand.",
+          description:
+            "returns whether the current time zone is asia/samarkand.",
           examples: [
             "Date.asia_samarkand?",
             "Date.new(\"2024-03-05\").asia_samarkand?",
@@ -3393,7 +3649,8 @@ class Code
         },
         "asia_shanghai?" => {
           name: "asia_shanghai?",
-          description: "returns whether the current time zone is asia/shanghai.",
+          description:
+            "returns whether the current time zone is asia/shanghai.",
           examples: [
             "Date.asia_shanghai?",
             "Date.new(\"2024-03-05\").asia_shanghai?",
@@ -3402,7 +3659,8 @@ class Code
         },
         "asia_singapore?" => {
           name: "asia_singapore?",
-          description: "returns whether the current time zone is asia/singapore.",
+          description:
+            "returns whether the current time zone is asia/singapore.",
           examples: [
             "Date.asia_singapore?",
             "Date.new(\"2024-03-05\").asia_singapore?",
@@ -3411,7 +3669,8 @@ class Code
         },
         "asia_srednekolymsk?" => {
           name: "asia_srednekolymsk?",
-          description: "returns whether the current time zone is asia/srednekolymsk.",
+          description:
+            "returns whether the current time zone is asia/srednekolymsk.",
           examples: [
             "Date.asia_srednekolymsk?",
             "Date.new(\"2024-03-05\").asia_srednekolymsk?",
@@ -3429,7 +3688,8 @@ class Code
         },
         "asia_tashkent?" => {
           name: "asia_tashkent?",
-          description: "returns whether the current time zone is asia/tashkent.",
+          description:
+            "returns whether the current time zone is asia/tashkent.",
           examples: [
             "Date.asia_tashkent?",
             "Date.new(\"2024-03-05\").asia_tashkent?",
@@ -3456,7 +3716,8 @@ class Code
         },
         "asia_tel_aviv?" => {
           name: "asia_tel_aviv?",
-          description: "returns whether the current time zone is asia/tel_aviv.",
+          description:
+            "returns whether the current time zone is asia/tel_aviv.",
           examples: [
             "Date.asia_tel_aviv?",
             "Date.new(\"2024-03-05\").asia_tel_aviv?",
@@ -3501,7 +3762,8 @@ class Code
         },
         "asia_ujung_pandang?" => {
           name: "asia_ujung_pandang?",
-          description: "returns whether the current time zone is asia/ujung_pandang.",
+          description:
+            "returns whether the current time zone is asia/ujung_pandang.",
           examples: [
             "Date.asia_ujung_pandang?",
             "Date.new(\"2024-03-05\").asia_ujung_pandang?",
@@ -3510,7 +3772,8 @@ class Code
         },
         "asia_ulaanbaatar?" => {
           name: "asia_ulaanbaatar?",
-          description: "returns whether the current time zone is asia/ulaanbaatar.",
+          description:
+            "returns whether the current time zone is asia/ulaanbaatar.",
           examples: [
             "Date.asia_ulaanbaatar?",
             "Date.new(\"2024-03-05\").asia_ulaanbaatar?",
@@ -3519,7 +3782,8 @@ class Code
         },
         "asia_ulan_bator?" => {
           name: "asia_ulan_bator?",
-          description: "returns whether the current time zone is asia/ulan_bator.",
+          description:
+            "returns whether the current time zone is asia/ulan_bator.",
           examples: [
             "Date.asia_ulan_bator?",
             "Date.new(\"2024-03-05\").asia_ulan_bator?",
@@ -3537,7 +3801,8 @@ class Code
         },
         "asia_ust_minus_nera?" => {
           name: "asia_ust_minus_nera?",
-          description: "returns whether the current time zone is asia/ust-nera.",
+          description:
+            "returns whether the current time zone is asia/ust-nera.",
           examples: [
             "Date.asia_ust_minus_nera?",
             "Date.new(\"2024-03-05\").asia_ust_minus_nera?",
@@ -3546,7 +3811,8 @@ class Code
         },
         "asia_vientiane?" => {
           name: "asia_vientiane?",
-          description: "returns whether the current time zone is asia/vientiane.",
+          description:
+            "returns whether the current time zone is asia/vientiane.",
           examples: [
             "Date.asia_vientiane?",
             "Date.new(\"2024-03-05\").asia_vientiane?",
@@ -3555,7 +3821,8 @@ class Code
         },
         "asia_vladivostok?" => {
           name: "asia_vladivostok?",
-          description: "returns whether the current time zone is asia/vladivostok.",
+          description:
+            "returns whether the current time zone is asia/vladivostok.",
           examples: [
             "Date.asia_vladivostok?",
             "Date.new(\"2024-03-05\").asia_vladivostok?",
@@ -3582,7 +3849,8 @@ class Code
         },
         "asia_yekaterinburg?" => {
           name: "asia_yekaterinburg?",
-          description: "returns whether the current time zone is asia/yekaterinburg.",
+          description:
+            "returns whether the current time zone is asia/yekaterinburg.",
           examples: [
             "Date.asia_yekaterinburg?",
             "Date.new(\"2024-03-05\").asia_yekaterinburg?",
@@ -3600,7 +3868,8 @@ class Code
         },
         "atlantic_azores?" => {
           name: "atlantic_azores?",
-          description: "returns whether the current time zone is atlantic/azores.",
+          description:
+            "returns whether the current time zone is atlantic/azores.",
           examples: [
             "Date.atlantic_azores?",
             "Date.new(\"2024-03-05\").atlantic_azores?",
@@ -3609,7 +3878,8 @@ class Code
         },
         "atlantic_bermuda?" => {
           name: "atlantic_bermuda?",
-          description: "returns whether the current time zone is atlantic/bermuda.",
+          description:
+            "returns whether the current time zone is atlantic/bermuda.",
           examples: [
             "Date.atlantic_bermuda?",
             "Date.new(\"2024-03-05\").atlantic_bermuda?",
@@ -3618,7 +3888,8 @@ class Code
         },
         "atlantic_canary?" => {
           name: "atlantic_canary?",
-          description: "returns whether the current time zone is atlantic/canary.",
+          description:
+            "returns whether the current time zone is atlantic/canary.",
           examples: [
             "Date.atlantic_canary?",
             "Date.new(\"2024-03-05\").atlantic_canary?",
@@ -3627,7 +3898,8 @@ class Code
         },
         "atlantic_cape_verde?" => {
           name: "atlantic_cape_verde?",
-          description: "returns whether the current time zone is atlantic/cape_verde.",
+          description:
+            "returns whether the current time zone is atlantic/cape_verde.",
           examples: [
             "Date.atlantic_cape_verde?",
             "Date.new(\"2024-03-05\").atlantic_cape_verde?",
@@ -3636,7 +3908,8 @@ class Code
         },
         "atlantic_faeroe?" => {
           name: "atlantic_faeroe?",
-          description: "returns whether the current time zone is atlantic/faeroe.",
+          description:
+            "returns whether the current time zone is atlantic/faeroe.",
           examples: [
             "Date.atlantic_faeroe?",
             "Date.new(\"2024-03-05\").atlantic_faeroe?",
@@ -3645,7 +3918,8 @@ class Code
         },
         "atlantic_faroe?" => {
           name: "atlantic_faroe?",
-          description: "returns whether the current time zone is atlantic/faroe.",
+          description:
+            "returns whether the current time zone is atlantic/faroe.",
           examples: [
             "Date.atlantic_faroe?",
             "Date.new(\"2024-03-05\").atlantic_faroe?",
@@ -3654,7 +3928,8 @@ class Code
         },
         "atlantic_jan_mayen?" => {
           name: "atlantic_jan_mayen?",
-          description: "returns whether the current time zone is atlantic/jan_mayen.",
+          description:
+            "returns whether the current time zone is atlantic/jan_mayen.",
           examples: [
             "Date.atlantic_jan_mayen?",
             "Date.new(\"2024-03-05\").atlantic_jan_mayen?",
@@ -3663,7 +3938,8 @@ class Code
         },
         "atlantic_madeira?" => {
           name: "atlantic_madeira?",
-          description: "returns whether the current time zone is atlantic/madeira.",
+          description:
+            "returns whether the current time zone is atlantic/madeira.",
           examples: [
             "Date.atlantic_madeira?",
             "Date.new(\"2024-03-05\").atlantic_madeira?",
@@ -3672,7 +3948,8 @@ class Code
         },
         "atlantic_reykjavik?" => {
           name: "atlantic_reykjavik?",
-          description: "returns whether the current time zone is atlantic/reykjavik.",
+          description:
+            "returns whether the current time zone is atlantic/reykjavik.",
           examples: [
             "Date.atlantic_reykjavik?",
             "Date.new(\"2024-03-05\").atlantic_reykjavik?",
@@ -3681,7 +3958,8 @@ class Code
         },
         "atlantic_south_georgia?" => {
           name: "atlantic_south_georgia?",
-          description: "returns whether the current time zone is atlantic/south_georgia.",
+          description:
+            "returns whether the current time zone is atlantic/south_georgia.",
           examples: [
             "Date.atlantic_south_georgia?",
             "Date.new(\"2024-03-05\").atlantic_south_georgia?",
@@ -3690,7 +3968,8 @@ class Code
         },
         "atlantic_st_helena?" => {
           name: "atlantic_st_helena?",
-          description: "returns whether the current time zone is atlantic/st_helena.",
+          description:
+            "returns whether the current time zone is atlantic/st_helena.",
           examples: [
             "Date.atlantic_st_helena?",
             "Date.new(\"2024-03-05\").atlantic_st_helena?",
@@ -3699,7 +3978,8 @@ class Code
         },
         "atlantic_stanley?" => {
           name: "atlantic_stanley?",
-          description: "returns whether the current time zone is atlantic/stanley.",
+          description:
+            "returns whether the current time zone is atlantic/stanley.",
           examples: [
             "Date.atlantic_stanley?",
             "Date.new(\"2024-03-05\").atlantic_stanley?",
@@ -3708,7 +3988,8 @@ class Code
         },
         "australia_act?" => {
           name: "australia_act?",
-          description: "returns whether the current time zone is australia/act.",
+          description:
+            "returns whether the current time zone is australia/act.",
           examples: [
             "Date.australia_act?",
             "Date.new(\"2024-03-05\").australia_act?",
@@ -3717,7 +3998,8 @@ class Code
         },
         "australia_adelaide?" => {
           name: "australia_adelaide?",
-          description: "returns whether the current time zone is australia/adelaide.",
+          description:
+            "returns whether the current time zone is australia/adelaide.",
           examples: [
             "Date.australia_adelaide?",
             "Date.new(\"2024-03-05\").australia_adelaide?",
@@ -3726,7 +4008,8 @@ class Code
         },
         "australia_brisbane?" => {
           name: "australia_brisbane?",
-          description: "returns whether the current time zone is australia/brisbane.",
+          description:
+            "returns whether the current time zone is australia/brisbane.",
           examples: [
             "Date.australia_brisbane?",
             "Date.new(\"2024-03-05\").australia_brisbane?",
@@ -3735,7 +4018,8 @@ class Code
         },
         "australia_broken_hill?" => {
           name: "australia_broken_hill?",
-          description: "returns whether the current time zone is australia/broken_hill.",
+          description:
+            "returns whether the current time zone is australia/broken_hill.",
           examples: [
             "Date.australia_broken_hill?",
             "Date.new(\"2024-03-05\").australia_broken_hill?",
@@ -3744,7 +4028,8 @@ class Code
         },
         "australia_canberra?" => {
           name: "australia_canberra?",
-          description: "returns whether the current time zone is australia/canberra.",
+          description:
+            "returns whether the current time zone is australia/canberra.",
           examples: [
             "Date.australia_canberra?",
             "Date.new(\"2024-03-05\").australia_canberra?",
@@ -3753,7 +4038,8 @@ class Code
         },
         "australia_currie?" => {
           name: "australia_currie?",
-          description: "returns whether the current time zone is australia/currie.",
+          description:
+            "returns whether the current time zone is australia/currie.",
           examples: [
             "Date.australia_currie?",
             "Date.new(\"2024-03-05\").australia_currie?",
@@ -3762,7 +4048,8 @@ class Code
         },
         "australia_darwin?" => {
           name: "australia_darwin?",
-          description: "returns whether the current time zone is australia/darwin.",
+          description:
+            "returns whether the current time zone is australia/darwin.",
           examples: [
             "Date.australia_darwin?",
             "Date.new(\"2024-03-05\").australia_darwin?",
@@ -3771,7 +4058,8 @@ class Code
         },
         "australia_eucla?" => {
           name: "australia_eucla?",
-          description: "returns whether the current time zone is australia/eucla.",
+          description:
+            "returns whether the current time zone is australia/eucla.",
           examples: [
             "Date.australia_eucla?",
             "Date.new(\"2024-03-05\").australia_eucla?",
@@ -3780,7 +4068,8 @@ class Code
         },
         "australia_hobart?" => {
           name: "australia_hobart?",
-          description: "returns whether the current time zone is australia/hobart.",
+          description:
+            "returns whether the current time zone is australia/hobart.",
           examples: [
             "Date.australia_hobart?",
             "Date.new(\"2024-03-05\").australia_hobart?",
@@ -3789,7 +4078,8 @@ class Code
         },
         "australia_lhi?" => {
           name: "australia_lhi?",
-          description: "returns whether the current time zone is australia/lhi.",
+          description:
+            "returns whether the current time zone is australia/lhi.",
           examples: [
             "Date.australia_lhi?",
             "Date.new(\"2024-03-05\").australia_lhi?",
@@ -3798,7 +4088,8 @@ class Code
         },
         "australia_lindeman?" => {
           name: "australia_lindeman?",
-          description: "returns whether the current time zone is australia/lindeman.",
+          description:
+            "returns whether the current time zone is australia/lindeman.",
           examples: [
             "Date.australia_lindeman?",
             "Date.new(\"2024-03-05\").australia_lindeman?",
@@ -3807,7 +4098,8 @@ class Code
         },
         "australia_lord_howe?" => {
           name: "australia_lord_howe?",
-          description: "returns whether the current time zone is australia/lord_howe.",
+          description:
+            "returns whether the current time zone is australia/lord_howe.",
           examples: [
             "Date.australia_lord_howe?",
             "Date.new(\"2024-03-05\").australia_lord_howe?",
@@ -3816,7 +4108,8 @@ class Code
         },
         "australia_melbourne?" => {
           name: "australia_melbourne?",
-          description: "returns whether the current time zone is australia/melbourne.",
+          description:
+            "returns whether the current time zone is australia/melbourne.",
           examples: [
             "Date.australia_melbourne?",
             "Date.new(\"2024-03-05\").australia_melbourne?",
@@ -3825,7 +4118,8 @@ class Code
         },
         "australia_nsw?" => {
           name: "australia_nsw?",
-          description: "returns whether the current time zone is australia/nsw.",
+          description:
+            "returns whether the current time zone is australia/nsw.",
           examples: [
             "Date.australia_nsw?",
             "Date.new(\"2024-03-05\").australia_nsw?",
@@ -3834,7 +4128,8 @@ class Code
         },
         "australia_north?" => {
           name: "australia_north?",
-          description: "returns whether the current time zone is australia/north.",
+          description:
+            "returns whether the current time zone is australia/north.",
           examples: [
             "Date.australia_north?",
             "Date.new(\"2024-03-05\").australia_north?",
@@ -3843,7 +4138,8 @@ class Code
         },
         "australia_perth?" => {
           name: "australia_perth?",
-          description: "returns whether the current time zone is australia/perth.",
+          description:
+            "returns whether the current time zone is australia/perth.",
           examples: [
             "Date.australia_perth?",
             "Date.new(\"2024-03-05\").australia_perth?",
@@ -3852,7 +4148,8 @@ class Code
         },
         "australia_queensland?" => {
           name: "australia_queensland?",
-          description: "returns whether the current time zone is australia/queensland.",
+          description:
+            "returns whether the current time zone is australia/queensland.",
           examples: [
             "Date.australia_queensland?",
             "Date.new(\"2024-03-05\").australia_queensland?",
@@ -3861,7 +4158,8 @@ class Code
         },
         "australia_south?" => {
           name: "australia_south?",
-          description: "returns whether the current time zone is australia/south.",
+          description:
+            "returns whether the current time zone is australia/south.",
           examples: [
             "Date.australia_south?",
             "Date.new(\"2024-03-05\").australia_south?",
@@ -3870,7 +4168,8 @@ class Code
         },
         "australia_sydney?" => {
           name: "australia_sydney?",
-          description: "returns whether the current time zone is australia/sydney.",
+          description:
+            "returns whether the current time zone is australia/sydney.",
           examples: [
             "Date.australia_sydney?",
             "Date.new(\"2024-03-05\").australia_sydney?",
@@ -3879,7 +4178,8 @@ class Code
         },
         "australia_tasmania?" => {
           name: "australia_tasmania?",
-          description: "returns whether the current time zone is australia/tasmania.",
+          description:
+            "returns whether the current time zone is australia/tasmania.",
           examples: [
             "Date.australia_tasmania?",
             "Date.new(\"2024-03-05\").australia_tasmania?",
@@ -3888,7 +4188,8 @@ class Code
         },
         "australia_victoria?" => {
           name: "australia_victoria?",
-          description: "returns whether the current time zone is australia/victoria.",
+          description:
+            "returns whether the current time zone is australia/victoria.",
           examples: [
             "Date.australia_victoria?",
             "Date.new(\"2024-03-05\").australia_victoria?",
@@ -3897,7 +4198,8 @@ class Code
         },
         "australia_west?" => {
           name: "australia_west?",
-          description: "returns whether the current time zone is australia/west.",
+          description:
+            "returns whether the current time zone is australia/west.",
           examples: [
             "Date.australia_west?",
             "Date.new(\"2024-03-05\").australia_west?",
@@ -3906,7 +4208,8 @@ class Code
         },
         "australia_yancowinna?" => {
           name: "australia_yancowinna?",
-          description: "returns whether the current time zone is australia/yancowinna.",
+          description:
+            "returns whether the current time zone is australia/yancowinna.",
           examples: [
             "Date.australia_yancowinna?",
             "Date.new(\"2024-03-05\").australia_yancowinna?",
@@ -3924,7 +4227,8 @@ class Code
         },
         "brazil_denoronha?" => {
           name: "brazil_denoronha?",
-          description: "returns whether the current time zone is brazil/denoronha.",
+          description:
+            "returns whether the current time zone is brazil/denoronha.",
           examples: [
             "Date.brazil_denoronha?",
             "Date.new(\"2024-03-05\").brazil_denoronha?",
@@ -3969,7 +4273,8 @@ class Code
         },
         "canada_atlantic?" => {
           name: "canada_atlantic?",
-          description: "returns whether the current time zone is canada/atlantic.",
+          description:
+            "returns whether the current time zone is canada/atlantic.",
           examples: [
             "Date.canada_atlantic?",
             "Date.new(\"2024-03-05\").canada_atlantic?",
@@ -3978,7 +4283,8 @@ class Code
         },
         "canada_central?" => {
           name: "canada_central?",
-          description: "returns whether the current time zone is canada/central.",
+          description:
+            "returns whether the current time zone is canada/central.",
           examples: [
             "Date.canada_central?",
             "Date.new(\"2024-03-05\").canada_central?",
@@ -3987,7 +4293,8 @@ class Code
         },
         "canada_eastern?" => {
           name: "canada_eastern?",
-          description: "returns whether the current time zone is canada/eastern.",
+          description:
+            "returns whether the current time zone is canada/eastern.",
           examples: [
             "Date.canada_eastern?",
             "Date.new(\"2024-03-05\").canada_eastern?",
@@ -3996,7 +4303,8 @@ class Code
         },
         "canada_mountain?" => {
           name: "canada_mountain?",
-          description: "returns whether the current time zone is canada/mountain.",
+          description:
+            "returns whether the current time zone is canada/mountain.",
           examples: [
             "Date.canada_mountain?",
             "Date.new(\"2024-03-05\").canada_mountain?",
@@ -4005,7 +4313,8 @@ class Code
         },
         "canada_newfoundland?" => {
           name: "canada_newfoundland?",
-          description: "returns whether the current time zone is canada/newfoundland.",
+          description:
+            "returns whether the current time zone is canada/newfoundland.",
           examples: [
             "Date.canada_newfoundland?",
             "Date.new(\"2024-03-05\").canada_newfoundland?",
@@ -4014,7 +4323,8 @@ class Code
         },
         "canada_pacific?" => {
           name: "canada_pacific?",
-          description: "returns whether the current time zone is canada/pacific.",
+          description:
+            "returns whether the current time zone is canada/pacific.",
           examples: [
             "Date.canada_pacific?",
             "Date.new(\"2024-03-05\").canada_pacific?",
@@ -4023,7 +4333,8 @@ class Code
         },
         "canada_saskatchewan?" => {
           name: "canada_saskatchewan?",
-          description: "returns whether the current time zone is canada/saskatchewan.",
+          description:
+            "returns whether the current time zone is canada/saskatchewan.",
           examples: [
             "Date.canada_saskatchewan?",
             "Date.new(\"2024-03-05\").canada_saskatchewan?",
@@ -4041,7 +4352,8 @@ class Code
         },
         "chile_continental?" => {
           name: "chile_continental?",
-          description: "returns whether the current time zone is chile/continental.",
+          description:
+            "returns whether the current time zone is chile/continental.",
           examples: [
             "Date.chile_continental?",
             "Date.new(\"2024-03-05\").chile_continental?",
@@ -4050,7 +4362,8 @@ class Code
         },
         "chile_easterisland?" => {
           name: "chile_easterisland?",
-          description: "returns whether the current time zone is chile/easterisland.",
+          description:
+            "returns whether the current time zone is chile/easterisland.",
           examples: [
             "Date.chile_easterisland?",
             "Date.new(\"2024-03-05\").chile_easterisland?",
@@ -4383,7 +4696,8 @@ class Code
         },
         "etc_greenwich?" => {
           name: "etc_greenwich?",
-          description: "returns whether the current time zone is etc/greenwich.",
+          description:
+            "returns whether the current time zone is etc/greenwich.",
           examples: [
             "Date.etc_greenwich?",
             "Date.new(\"2024-03-05\").etc_greenwich?",
@@ -4410,7 +4724,8 @@ class Code
         },
         "etc_universal?" => {
           name: "etc_universal?",
-          description: "returns whether the current time zone is etc/universal.",
+          description:
+            "returns whether the current time zone is etc/universal.",
           examples: [
             "Date.etc_universal?",
             "Date.new(\"2024-03-05\").etc_universal?",
@@ -4428,7 +4743,8 @@ class Code
         },
         "europe_amsterdam?" => {
           name: "europe_amsterdam?",
-          description: "returns whether the current time zone is europe/amsterdam.",
+          description:
+            "returns whether the current time zone is europe/amsterdam.",
           examples: [
             "Date.europe_amsterdam?",
             "Date.new(\"2024-03-05\").europe_amsterdam?",
@@ -4437,7 +4753,8 @@ class Code
         },
         "europe_andorra?" => {
           name: "europe_andorra?",
-          description: "returns whether the current time zone is europe/andorra.",
+          description:
+            "returns whether the current time zone is europe/andorra.",
           examples: [
             "Date.europe_andorra?",
             "Date.new(\"2024-03-05\").europe_andorra?",
@@ -4446,7 +4763,8 @@ class Code
         },
         "europe_astrakhan?" => {
           name: "europe_astrakhan?",
-          description: "returns whether the current time zone is europe/astrakhan.",
+          description:
+            "returns whether the current time zone is europe/astrakhan.",
           examples: [
             "Date.europe_astrakhan?",
             "Date.new(\"2024-03-05\").europe_astrakhan?",
@@ -4455,7 +4773,8 @@ class Code
         },
         "europe_athens?" => {
           name: "europe_athens?",
-          description: "returns whether the current time zone is europe/athens.",
+          description:
+            "returns whether the current time zone is europe/athens.",
           examples: [
             "Date.europe_athens?",
             "Date.new(\"2024-03-05\").europe_athens?",
@@ -4464,7 +4783,8 @@ class Code
         },
         "europe_belfast?" => {
           name: "europe_belfast?",
-          description: "returns whether the current time zone is europe/belfast.",
+          description:
+            "returns whether the current time zone is europe/belfast.",
           examples: [
             "Date.europe_belfast?",
             "Date.new(\"2024-03-05\").europe_belfast?",
@@ -4473,7 +4793,8 @@ class Code
         },
         "europe_belgrade?" => {
           name: "europe_belgrade?",
-          description: "returns whether the current time zone is europe/belgrade.",
+          description:
+            "returns whether the current time zone is europe/belgrade.",
           examples: [
             "Date.europe_belgrade?",
             "Date.new(\"2024-03-05\").europe_belgrade?",
@@ -4482,7 +4803,8 @@ class Code
         },
         "europe_berlin?" => {
           name: "europe_berlin?",
-          description: "returns whether the current time zone is europe/berlin.",
+          description:
+            "returns whether the current time zone is europe/berlin.",
           examples: [
             "Date.europe_berlin?",
             "Date.new(\"2024-03-05\").europe_berlin?",
@@ -4491,7 +4813,8 @@ class Code
         },
         "europe_bratislava?" => {
           name: "europe_bratislava?",
-          description: "returns whether the current time zone is europe/bratislava.",
+          description:
+            "returns whether the current time zone is europe/bratislava.",
           examples: [
             "Date.europe_bratislava?",
             "Date.new(\"2024-03-05\").europe_bratislava?",
@@ -4500,7 +4823,8 @@ class Code
         },
         "europe_brussels?" => {
           name: "europe_brussels?",
-          description: "returns whether the current time zone is europe/brussels.",
+          description:
+            "returns whether the current time zone is europe/brussels.",
           examples: [
             "Date.europe_brussels?",
             "Date.new(\"2024-03-05\").europe_brussels?",
@@ -4509,7 +4833,8 @@ class Code
         },
         "europe_bucharest?" => {
           name: "europe_bucharest?",
-          description: "returns whether the current time zone is europe/bucharest.",
+          description:
+            "returns whether the current time zone is europe/bucharest.",
           examples: [
             "Date.europe_bucharest?",
             "Date.new(\"2024-03-05\").europe_bucharest?",
@@ -4518,7 +4843,8 @@ class Code
         },
         "europe_budapest?" => {
           name: "europe_budapest?",
-          description: "returns whether the current time zone is europe/budapest.",
+          description:
+            "returns whether the current time zone is europe/budapest.",
           examples: [
             "Date.europe_budapest?",
             "Date.new(\"2024-03-05\").europe_budapest?",
@@ -4527,7 +4853,8 @@ class Code
         },
         "europe_busingen?" => {
           name: "europe_busingen?",
-          description: "returns whether the current time zone is europe/busingen.",
+          description:
+            "returns whether the current time zone is europe/busingen.",
           examples: [
             "Date.europe_busingen?",
             "Date.new(\"2024-03-05\").europe_busingen?",
@@ -4536,7 +4863,8 @@ class Code
         },
         "europe_chisinau?" => {
           name: "europe_chisinau?",
-          description: "returns whether the current time zone is europe/chisinau.",
+          description:
+            "returns whether the current time zone is europe/chisinau.",
           examples: [
             "Date.europe_chisinau?",
             "Date.new(\"2024-03-05\").europe_chisinau?",
@@ -4545,7 +4873,8 @@ class Code
         },
         "europe_copenhagen?" => {
           name: "europe_copenhagen?",
-          description: "returns whether the current time zone is europe/copenhagen.",
+          description:
+            "returns whether the current time zone is europe/copenhagen.",
           examples: [
             "Date.europe_copenhagen?",
             "Date.new(\"2024-03-05\").europe_copenhagen?",
@@ -4554,7 +4883,8 @@ class Code
         },
         "europe_dublin?" => {
           name: "europe_dublin?",
-          description: "returns whether the current time zone is europe/dublin.",
+          description:
+            "returns whether the current time zone is europe/dublin.",
           examples: [
             "Date.europe_dublin?",
             "Date.new(\"2024-03-05\").europe_dublin?",
@@ -4563,7 +4893,8 @@ class Code
         },
         "europe_gibraltar?" => {
           name: "europe_gibraltar?",
-          description: "returns whether the current time zone is europe/gibraltar.",
+          description:
+            "returns whether the current time zone is europe/gibraltar.",
           examples: [
             "Date.europe_gibraltar?",
             "Date.new(\"2024-03-05\").europe_gibraltar?",
@@ -4572,7 +4903,8 @@ class Code
         },
         "europe_guernsey?" => {
           name: "europe_guernsey?",
-          description: "returns whether the current time zone is europe/guernsey.",
+          description:
+            "returns whether the current time zone is europe/guernsey.",
           examples: [
             "Date.europe_guernsey?",
             "Date.new(\"2024-03-05\").europe_guernsey?",
@@ -4581,7 +4913,8 @@ class Code
         },
         "europe_helsinki?" => {
           name: "europe_helsinki?",
-          description: "returns whether the current time zone is europe/helsinki.",
+          description:
+            "returns whether the current time zone is europe/helsinki.",
           examples: [
             "Date.europe_helsinki?",
             "Date.new(\"2024-03-05\").europe_helsinki?",
@@ -4590,7 +4923,8 @@ class Code
         },
         "europe_isle_of_man?" => {
           name: "europe_isle_of_man?",
-          description: "returns whether the current time zone is europe/isle_of_man.",
+          description:
+            "returns whether the current time zone is europe/isle_of_man.",
           examples: [
             "Date.europe_isle_of_man?",
             "Date.new(\"2024-03-05\").europe_isle_of_man?",
@@ -4599,7 +4933,8 @@ class Code
         },
         "europe_istanbul?" => {
           name: "europe_istanbul?",
-          description: "returns whether the current time zone is europe/istanbul.",
+          description:
+            "returns whether the current time zone is europe/istanbul.",
           examples: [
             "Date.europe_istanbul?",
             "Date.new(\"2024-03-05\").europe_istanbul?",
@@ -4608,7 +4943,8 @@ class Code
         },
         "europe_jersey?" => {
           name: "europe_jersey?",
-          description: "returns whether the current time zone is europe/jersey.",
+          description:
+            "returns whether the current time zone is europe/jersey.",
           examples: [
             "Date.europe_jersey?",
             "Date.new(\"2024-03-05\").europe_jersey?",
@@ -4617,7 +4953,8 @@ class Code
         },
         "europe_kaliningrad?" => {
           name: "europe_kaliningrad?",
-          description: "returns whether the current time zone is europe/kaliningrad.",
+          description:
+            "returns whether the current time zone is europe/kaliningrad.",
           examples: [
             "Date.europe_kaliningrad?",
             "Date.new(\"2024-03-05\").europe_kaliningrad?",
@@ -4653,7 +4990,8 @@ class Code
         },
         "europe_lisbon?" => {
           name: "europe_lisbon?",
-          description: "returns whether the current time zone is europe/lisbon.",
+          description:
+            "returns whether the current time zone is europe/lisbon.",
           examples: [
             "Date.europe_lisbon?",
             "Date.new(\"2024-03-05\").europe_lisbon?",
@@ -4662,7 +5000,8 @@ class Code
         },
         "europe_ljubljana?" => {
           name: "europe_ljubljana?",
-          description: "returns whether the current time zone is europe/ljubljana.",
+          description:
+            "returns whether the current time zone is europe/ljubljana.",
           examples: [
             "Date.europe_ljubljana?",
             "Date.new(\"2024-03-05\").europe_ljubljana?",
@@ -4671,7 +5010,8 @@ class Code
         },
         "europe_london?" => {
           name: "europe_london?",
-          description: "returns whether the current time zone is europe/london.",
+          description:
+            "returns whether the current time zone is europe/london.",
           examples: [
             "Date.europe_london?",
             "Date.new(\"2024-03-05\").europe_london?",
@@ -4680,7 +5020,8 @@ class Code
         },
         "europe_luxembourg?" => {
           name: "europe_luxembourg?",
-          description: "returns whether the current time zone is europe/luxembourg.",
+          description:
+            "returns whether the current time zone is europe/luxembourg.",
           examples: [
             "Date.europe_luxembourg?",
             "Date.new(\"2024-03-05\").europe_luxembourg?",
@@ -4689,7 +5030,8 @@ class Code
         },
         "europe_madrid?" => {
           name: "europe_madrid?",
-          description: "returns whether the current time zone is europe/madrid.",
+          description:
+            "returns whether the current time zone is europe/madrid.",
           examples: [
             "Date.europe_madrid?",
             "Date.new(\"2024-03-05\").europe_madrid?",
@@ -4707,7 +5049,8 @@ class Code
         },
         "europe_mariehamn?" => {
           name: "europe_mariehamn?",
-          description: "returns whether the current time zone is europe/mariehamn.",
+          description:
+            "returns whether the current time zone is europe/mariehamn.",
           examples: [
             "Date.europe_mariehamn?",
             "Date.new(\"2024-03-05\").europe_mariehamn?",
@@ -4725,7 +5068,8 @@ class Code
         },
         "europe_monaco?" => {
           name: "europe_monaco?",
-          description: "returns whether the current time zone is europe/monaco.",
+          description:
+            "returns whether the current time zone is europe/monaco.",
           examples: [
             "Date.europe_monaco?",
             "Date.new(\"2024-03-05\").europe_monaco?",
@@ -4734,7 +5078,8 @@ class Code
         },
         "europe_moscow?" => {
           name: "europe_moscow?",
-          description: "returns whether the current time zone is europe/moscow.",
+          description:
+            "returns whether the current time zone is europe/moscow.",
           examples: [
             "Date.europe_moscow?",
             "Date.new(\"2024-03-05\").europe_moscow?",
@@ -4743,7 +5088,8 @@ class Code
         },
         "europe_nicosia?" => {
           name: "europe_nicosia?",
-          description: "returns whether the current time zone is europe/nicosia.",
+          description:
+            "returns whether the current time zone is europe/nicosia.",
           examples: [
             "Date.europe_nicosia?",
             "Date.new(\"2024-03-05\").europe_nicosia?",
@@ -4770,7 +5116,8 @@ class Code
         },
         "europe_podgorica?" => {
           name: "europe_podgorica?",
-          description: "returns whether the current time zone is europe/podgorica.",
+          description:
+            "returns whether the current time zone is europe/podgorica.",
           examples: [
             "Date.europe_podgorica?",
             "Date.new(\"2024-03-05\").europe_podgorica?",
@@ -4779,7 +5126,8 @@ class Code
         },
         "europe_prague?" => {
           name: "europe_prague?",
-          description: "returns whether the current time zone is europe/prague.",
+          description:
+            "returns whether the current time zone is europe/prague.",
           examples: [
             "Date.europe_prague?",
             "Date.new(\"2024-03-05\").europe_prague?",
@@ -4806,7 +5154,8 @@ class Code
         },
         "europe_samara?" => {
           name: "europe_samara?",
-          description: "returns whether the current time zone is europe/samara.",
+          description:
+            "returns whether the current time zone is europe/samara.",
           examples: [
             "Date.europe_samara?",
             "Date.new(\"2024-03-05\").europe_samara?",
@@ -4815,7 +5164,8 @@ class Code
         },
         "europe_san_marino?" => {
           name: "europe_san_marino?",
-          description: "returns whether the current time zone is europe/san_marino.",
+          description:
+            "returns whether the current time zone is europe/san_marino.",
           examples: [
             "Date.europe_san_marino?",
             "Date.new(\"2024-03-05\").europe_san_marino?",
@@ -4824,7 +5174,8 @@ class Code
         },
         "europe_sarajevo?" => {
           name: "europe_sarajevo?",
-          description: "returns whether the current time zone is europe/sarajevo.",
+          description:
+            "returns whether the current time zone is europe/sarajevo.",
           examples: [
             "Date.europe_sarajevo?",
             "Date.new(\"2024-03-05\").europe_sarajevo?",
@@ -4833,7 +5184,8 @@ class Code
         },
         "europe_saratov?" => {
           name: "europe_saratov?",
-          description: "returns whether the current time zone is europe/saratov.",
+          description:
+            "returns whether the current time zone is europe/saratov.",
           examples: [
             "Date.europe_saratov?",
             "Date.new(\"2024-03-05\").europe_saratov?",
@@ -4842,7 +5194,8 @@ class Code
         },
         "europe_simferopol?" => {
           name: "europe_simferopol?",
-          description: "returns whether the current time zone is europe/simferopol.",
+          description:
+            "returns whether the current time zone is europe/simferopol.",
           examples: [
             "Date.europe_simferopol?",
             "Date.new(\"2024-03-05\").europe_simferopol?",
@@ -4851,7 +5204,8 @@ class Code
         },
         "europe_skopje?" => {
           name: "europe_skopje?",
-          description: "returns whether the current time zone is europe/skopje.",
+          description:
+            "returns whether the current time zone is europe/skopje.",
           examples: [
             "Date.europe_skopje?",
             "Date.new(\"2024-03-05\").europe_skopje?",
@@ -4869,7 +5223,8 @@ class Code
         },
         "europe_stockholm?" => {
           name: "europe_stockholm?",
-          description: "returns whether the current time zone is europe/stockholm.",
+          description:
+            "returns whether the current time zone is europe/stockholm.",
           examples: [
             "Date.europe_stockholm?",
             "Date.new(\"2024-03-05\").europe_stockholm?",
@@ -4878,7 +5233,8 @@ class Code
         },
         "europe_tallinn?" => {
           name: "europe_tallinn?",
-          description: "returns whether the current time zone is europe/tallinn.",
+          description:
+            "returns whether the current time zone is europe/tallinn.",
           examples: [
             "Date.europe_tallinn?",
             "Date.new(\"2024-03-05\").europe_tallinn?",
@@ -4887,7 +5243,8 @@ class Code
         },
         "europe_tirane?" => {
           name: "europe_tirane?",
-          description: "returns whether the current time zone is europe/tirane.",
+          description:
+            "returns whether the current time zone is europe/tirane.",
           examples: [
             "Date.europe_tirane?",
             "Date.new(\"2024-03-05\").europe_tirane?",
@@ -4896,7 +5253,8 @@ class Code
         },
         "europe_tiraspol?" => {
           name: "europe_tiraspol?",
-          description: "returns whether the current time zone is europe/tiraspol.",
+          description:
+            "returns whether the current time zone is europe/tiraspol.",
           examples: [
             "Date.europe_tiraspol?",
             "Date.new(\"2024-03-05\").europe_tiraspol?",
@@ -4905,7 +5263,8 @@ class Code
         },
         "europe_ulyanovsk?" => {
           name: "europe_ulyanovsk?",
-          description: "returns whether the current time zone is europe/ulyanovsk.",
+          description:
+            "returns whether the current time zone is europe/ulyanovsk.",
           examples: [
             "Date.europe_ulyanovsk?",
             "Date.new(\"2024-03-05\").europe_ulyanovsk?",
@@ -4914,7 +5273,8 @@ class Code
         },
         "europe_uzhgorod?" => {
           name: "europe_uzhgorod?",
-          description: "returns whether the current time zone is europe/uzhgorod.",
+          description:
+            "returns whether the current time zone is europe/uzhgorod.",
           examples: [
             "Date.europe_uzhgorod?",
             "Date.new(\"2024-03-05\").europe_uzhgorod?",
@@ -4932,7 +5292,8 @@ class Code
         },
         "europe_vatican?" => {
           name: "europe_vatican?",
-          description: "returns whether the current time zone is europe/vatican.",
+          description:
+            "returns whether the current time zone is europe/vatican.",
           examples: [
             "Date.europe_vatican?",
             "Date.new(\"2024-03-05\").europe_vatican?",
@@ -4941,7 +5302,8 @@ class Code
         },
         "europe_vienna?" => {
           name: "europe_vienna?",
-          description: "returns whether the current time zone is europe/vienna.",
+          description:
+            "returns whether the current time zone is europe/vienna.",
           examples: [
             "Date.europe_vienna?",
             "Date.new(\"2024-03-05\").europe_vienna?",
@@ -4950,7 +5312,8 @@ class Code
         },
         "europe_vilnius?" => {
           name: "europe_vilnius?",
-          description: "returns whether the current time zone is europe/vilnius.",
+          description:
+            "returns whether the current time zone is europe/vilnius.",
           examples: [
             "Date.europe_vilnius?",
             "Date.new(\"2024-03-05\").europe_vilnius?",
@@ -4959,7 +5322,8 @@ class Code
         },
         "europe_volgograd?" => {
           name: "europe_volgograd?",
-          description: "returns whether the current time zone is europe/volgograd.",
+          description:
+            "returns whether the current time zone is europe/volgograd.",
           examples: [
             "Date.europe_volgograd?",
             "Date.new(\"2024-03-05\").europe_volgograd?",
@@ -4968,7 +5332,8 @@ class Code
         },
         "europe_warsaw?" => {
           name: "europe_warsaw?",
-          description: "returns whether the current time zone is europe/warsaw.",
+          description:
+            "returns whether the current time zone is europe/warsaw.",
           examples: [
             "Date.europe_warsaw?",
             "Date.new(\"2024-03-05\").europe_warsaw?",
@@ -4977,7 +5342,8 @@ class Code
         },
         "europe_zagreb?" => {
           name: "europe_zagreb?",
-          description: "returns whether the current time zone is europe/zagreb.",
+          description:
+            "returns whether the current time zone is europe/zagreb.",
           examples: [
             "Date.europe_zagreb?",
             "Date.new(\"2024-03-05\").europe_zagreb?",
@@ -4986,7 +5352,8 @@ class Code
         },
         "europe_zaporozhye?" => {
           name: "europe_zaporozhye?",
-          description: "returns whether the current time zone is europe/zaporozhye.",
+          description:
+            "returns whether the current time zone is europe/zaporozhye.",
           examples: [
             "Date.europe_zaporozhye?",
             "Date.new(\"2024-03-05\").europe_zaporozhye?",
@@ -4995,7 +5362,8 @@ class Code
         },
         "europe_zurich?" => {
           name: "europe_zurich?",
-          description: "returns whether the current time zone is europe/zurich.",
+          description:
+            "returns whether the current time zone is europe/zurich.",
           examples: [
             "Date.europe_zurich?",
             "Date.new(\"2024-03-05\").europe_zurich?",
@@ -5103,7 +5471,8 @@ class Code
         },
         "indian_antananarivo?" => {
           name: "indian_antananarivo?",
-          description: "returns whether the current time zone is indian/antananarivo.",
+          description:
+            "returns whether the current time zone is indian/antananarivo.",
           examples: [
             "Date.indian_antananarivo?",
             "Date.new(\"2024-03-05\").indian_antananarivo?",
@@ -5112,7 +5481,8 @@ class Code
         },
         "indian_chagos?" => {
           name: "indian_chagos?",
-          description: "returns whether the current time zone is indian/chagos.",
+          description:
+            "returns whether the current time zone is indian/chagos.",
           examples: [
             "Date.indian_chagos?",
             "Date.new(\"2024-03-05\").indian_chagos?",
@@ -5121,7 +5491,8 @@ class Code
         },
         "indian_christmas?" => {
           name: "indian_christmas?",
-          description: "returns whether the current time zone is indian/christmas.",
+          description:
+            "returns whether the current time zone is indian/christmas.",
           examples: [
             "Date.indian_christmas?",
             "Date.new(\"2024-03-05\").indian_christmas?",
@@ -5139,7 +5510,8 @@ class Code
         },
         "indian_comoro?" => {
           name: "indian_comoro?",
-          description: "returns whether the current time zone is indian/comoro.",
+          description:
+            "returns whether the current time zone is indian/comoro.",
           examples: [
             "Date.indian_comoro?",
             "Date.new(\"2024-03-05\").indian_comoro?",
@@ -5148,7 +5520,8 @@ class Code
         },
         "indian_kerguelen?" => {
           name: "indian_kerguelen?",
-          description: "returns whether the current time zone is indian/kerguelen.",
+          description:
+            "returns whether the current time zone is indian/kerguelen.",
           examples: [
             "Date.indian_kerguelen?",
             "Date.new(\"2024-03-05\").indian_kerguelen?",
@@ -5166,7 +5539,8 @@ class Code
         },
         "indian_maldives?" => {
           name: "indian_maldives?",
-          description: "returns whether the current time zone is indian/maldives.",
+          description:
+            "returns whether the current time zone is indian/maldives.",
           examples: [
             "Date.indian_maldives?",
             "Date.new(\"2024-03-05\").indian_maldives?",
@@ -5175,7 +5549,8 @@ class Code
         },
         "indian_mauritius?" => {
           name: "indian_mauritius?",
-          description: "returns whether the current time zone is indian/mauritius.",
+          description:
+            "returns whether the current time zone is indian/mauritius.",
           examples: [
             "Date.indian_mauritius?",
             "Date.new(\"2024-03-05\").indian_mauritius?",
@@ -5184,7 +5559,8 @@ class Code
         },
         "indian_mayotte?" => {
           name: "indian_mayotte?",
-          description: "returns whether the current time zone is indian/mayotte.",
+          description:
+            "returns whether the current time zone is indian/mayotte.",
           examples: [
             "Date.indian_mayotte?",
             "Date.new(\"2024-03-05\").indian_mayotte?",
@@ -5193,7 +5569,8 @@ class Code
         },
         "indian_reunion?" => {
           name: "indian_reunion?",
-          description: "returns whether the current time zone is indian/reunion.",
+          description:
+            "returns whether the current time zone is indian/reunion.",
           examples: [
             "Date.indian_reunion?",
             "Date.new(\"2024-03-05\").indian_reunion?",
@@ -5283,7 +5660,8 @@ class Code
         },
         "mexico_bajanorte?" => {
           name: "mexico_bajanorte?",
-          description: "returns whether the current time zone is mexico/bajanorte.",
+          description:
+            "returns whether the current time zone is mexico/bajanorte.",
           examples: [
             "Date.mexico_bajanorte?",
             "Date.new(\"2024-03-05\").mexico_bajanorte?",
@@ -5292,7 +5670,8 @@ class Code
         },
         "mexico_bajasur?" => {
           name: "mexico_bajasur?",
-          description: "returns whether the current time zone is mexico/bajasur.",
+          description:
+            "returns whether the current time zone is mexico/bajasur.",
           examples: [
             "Date.mexico_bajasur?",
             "Date.new(\"2024-03-05\").mexico_bajasur?",
@@ -5301,7 +5680,8 @@ class Code
         },
         "mexico_general?" => {
           name: "mexico_general?",
-          description: "returns whether the current time zone is mexico/general.",
+          description:
+            "returns whether the current time zone is mexico/general.",
           examples: [
             "Date.mexico_general?",
             "Date.new(\"2024-03-05\").mexico_general?",
@@ -5364,7 +5744,8 @@ class Code
         },
         "pacific_auckland?" => {
           name: "pacific_auckland?",
-          description: "returns whether the current time zone is pacific/auckland.",
+          description:
+            "returns whether the current time zone is pacific/auckland.",
           examples: [
             "Date.pacific_auckland?",
             "Date.new(\"2024-03-05\").pacific_auckland?",
@@ -5373,7 +5754,8 @@ class Code
         },
         "pacific_bougainville?" => {
           name: "pacific_bougainville?",
-          description: "returns whether the current time zone is pacific/bougainville.",
+          description:
+            "returns whether the current time zone is pacific/bougainville.",
           examples: [
             "Date.pacific_bougainville?",
             "Date.new(\"2024-03-05\").pacific_bougainville?",
@@ -5382,7 +5764,8 @@ class Code
         },
         "pacific_chatham?" => {
           name: "pacific_chatham?",
-          description: "returns whether the current time zone is pacific/chatham.",
+          description:
+            "returns whether the current time zone is pacific/chatham.",
           examples: [
             "Date.pacific_chatham?",
             "Date.new(\"2024-03-05\").pacific_chatham?",
@@ -5391,7 +5774,8 @@ class Code
         },
         "pacific_chuuk?" => {
           name: "pacific_chuuk?",
-          description: "returns whether the current time zone is pacific/chuuk.",
+          description:
+            "returns whether the current time zone is pacific/chuuk.",
           examples: [
             "Date.pacific_chuuk?",
             "Date.new(\"2024-03-05\").pacific_chuuk?",
@@ -5400,7 +5784,8 @@ class Code
         },
         "pacific_easter?" => {
           name: "pacific_easter?",
-          description: "returns whether the current time zone is pacific/easter.",
+          description:
+            "returns whether the current time zone is pacific/easter.",
           examples: [
             "Date.pacific_easter?",
             "Date.new(\"2024-03-05\").pacific_easter?",
@@ -5409,7 +5794,8 @@ class Code
         },
         "pacific_efate?" => {
           name: "pacific_efate?",
-          description: "returns whether the current time zone is pacific/efate.",
+          description:
+            "returns whether the current time zone is pacific/efate.",
           examples: [
             "Date.pacific_efate?",
             "Date.new(\"2024-03-05\").pacific_efate?",
@@ -5418,7 +5804,8 @@ class Code
         },
         "pacific_enderbury?" => {
           name: "pacific_enderbury?",
-          description: "returns whether the current time zone is pacific/enderbury.",
+          description:
+            "returns whether the current time zone is pacific/enderbury.",
           examples: [
             "Date.pacific_enderbury?",
             "Date.new(\"2024-03-05\").pacific_enderbury?",
@@ -5427,7 +5814,8 @@ class Code
         },
         "pacific_fakaofo?" => {
           name: "pacific_fakaofo?",
-          description: "returns whether the current time zone is pacific/fakaofo.",
+          description:
+            "returns whether the current time zone is pacific/fakaofo.",
           examples: [
             "Date.pacific_fakaofo?",
             "Date.new(\"2024-03-05\").pacific_fakaofo?",
@@ -5445,7 +5833,8 @@ class Code
         },
         "pacific_funafuti?" => {
           name: "pacific_funafuti?",
-          description: "returns whether the current time zone is pacific/funafuti.",
+          description:
+            "returns whether the current time zone is pacific/funafuti.",
           examples: [
             "Date.pacific_funafuti?",
             "Date.new(\"2024-03-05\").pacific_funafuti?",
@@ -5454,7 +5843,8 @@ class Code
         },
         "pacific_galapagos?" => {
           name: "pacific_galapagos?",
-          description: "returns whether the current time zone is pacific/galapagos.",
+          description:
+            "returns whether the current time zone is pacific/galapagos.",
           examples: [
             "Date.pacific_galapagos?",
             "Date.new(\"2024-03-05\").pacific_galapagos?",
@@ -5463,7 +5853,8 @@ class Code
         },
         "pacific_gambier?" => {
           name: "pacific_gambier?",
-          description: "returns whether the current time zone is pacific/gambier.",
+          description:
+            "returns whether the current time zone is pacific/gambier.",
           examples: [
             "Date.pacific_gambier?",
             "Date.new(\"2024-03-05\").pacific_gambier?",
@@ -5472,7 +5863,8 @@ class Code
         },
         "pacific_guadalcanal?" => {
           name: "pacific_guadalcanal?",
-          description: "returns whether the current time zone is pacific/guadalcanal.",
+          description:
+            "returns whether the current time zone is pacific/guadalcanal.",
           examples: [
             "Date.pacific_guadalcanal?",
             "Date.new(\"2024-03-05\").pacific_guadalcanal?",
@@ -5490,7 +5882,8 @@ class Code
         },
         "pacific_honolulu?" => {
           name: "pacific_honolulu?",
-          description: "returns whether the current time zone is pacific/honolulu.",
+          description:
+            "returns whether the current time zone is pacific/honolulu.",
           examples: [
             "Date.pacific_honolulu?",
             "Date.new(\"2024-03-05\").pacific_honolulu?",
@@ -5499,7 +5892,8 @@ class Code
         },
         "pacific_johnston?" => {
           name: "pacific_johnston?",
-          description: "returns whether the current time zone is pacific/johnston.",
+          description:
+            "returns whether the current time zone is pacific/johnston.",
           examples: [
             "Date.pacific_johnston?",
             "Date.new(\"2024-03-05\").pacific_johnston?",
@@ -5508,7 +5902,8 @@ class Code
         },
         "pacific_kanton?" => {
           name: "pacific_kanton?",
-          description: "returns whether the current time zone is pacific/kanton.",
+          description:
+            "returns whether the current time zone is pacific/kanton.",
           examples: [
             "Date.pacific_kanton?",
             "Date.new(\"2024-03-05\").pacific_kanton?",
@@ -5517,7 +5912,8 @@ class Code
         },
         "pacific_kiritimati?" => {
           name: "pacific_kiritimati?",
-          description: "returns whether the current time zone is pacific/kiritimati.",
+          description:
+            "returns whether the current time zone is pacific/kiritimati.",
           examples: [
             "Date.pacific_kiritimati?",
             "Date.new(\"2024-03-05\").pacific_kiritimati?",
@@ -5526,7 +5922,8 @@ class Code
         },
         "pacific_kosrae?" => {
           name: "pacific_kosrae?",
-          description: "returns whether the current time zone is pacific/kosrae.",
+          description:
+            "returns whether the current time zone is pacific/kosrae.",
           examples: [
             "Date.pacific_kosrae?",
             "Date.new(\"2024-03-05\").pacific_kosrae?",
@@ -5535,7 +5932,8 @@ class Code
         },
         "pacific_kwajalein?" => {
           name: "pacific_kwajalein?",
-          description: "returns whether the current time zone is pacific/kwajalein.",
+          description:
+            "returns whether the current time zone is pacific/kwajalein.",
           examples: [
             "Date.pacific_kwajalein?",
             "Date.new(\"2024-03-05\").pacific_kwajalein?",
@@ -5544,7 +5942,8 @@ class Code
         },
         "pacific_majuro?" => {
           name: "pacific_majuro?",
-          description: "returns whether the current time zone is pacific/majuro.",
+          description:
+            "returns whether the current time zone is pacific/majuro.",
           examples: [
             "Date.pacific_majuro?",
             "Date.new(\"2024-03-05\").pacific_majuro?",
@@ -5553,7 +5952,8 @@ class Code
         },
         "pacific_marquesas?" => {
           name: "pacific_marquesas?",
-          description: "returns whether the current time zone is pacific/marquesas.",
+          description:
+            "returns whether the current time zone is pacific/marquesas.",
           examples: [
             "Date.pacific_marquesas?",
             "Date.new(\"2024-03-05\").pacific_marquesas?",
@@ -5562,7 +5962,8 @@ class Code
         },
         "pacific_midway?" => {
           name: "pacific_midway?",
-          description: "returns whether the current time zone is pacific/midway.",
+          description:
+            "returns whether the current time zone is pacific/midway.",
           examples: [
             "Date.pacific_midway?",
             "Date.new(\"2024-03-05\").pacific_midway?",
@@ -5571,7 +5972,8 @@ class Code
         },
         "pacific_nauru?" => {
           name: "pacific_nauru?",
-          description: "returns whether the current time zone is pacific/nauru.",
+          description:
+            "returns whether the current time zone is pacific/nauru.",
           examples: [
             "Date.pacific_nauru?",
             "Date.new(\"2024-03-05\").pacific_nauru?",
@@ -5589,7 +5991,8 @@ class Code
         },
         "pacific_norfolk?" => {
           name: "pacific_norfolk?",
-          description: "returns whether the current time zone is pacific/norfolk.",
+          description:
+            "returns whether the current time zone is pacific/norfolk.",
           examples: [
             "Date.pacific_norfolk?",
             "Date.new(\"2024-03-05\").pacific_norfolk?",
@@ -5598,7 +6001,8 @@ class Code
         },
         "pacific_noumea?" => {
           name: "pacific_noumea?",
-          description: "returns whether the current time zone is pacific/noumea.",
+          description:
+            "returns whether the current time zone is pacific/noumea.",
           examples: [
             "Date.pacific_noumea?",
             "Date.new(\"2024-03-05\").pacific_noumea?",
@@ -5607,7 +6011,8 @@ class Code
         },
         "pacific_pago_pago?" => {
           name: "pacific_pago_pago?",
-          description: "returns whether the current time zone is pacific/pago_pago.",
+          description:
+            "returns whether the current time zone is pacific/pago_pago.",
           examples: [
             "Date.pacific_pago_pago?",
             "Date.new(\"2024-03-05\").pacific_pago_pago?",
@@ -5616,7 +6021,8 @@ class Code
         },
         "pacific_palau?" => {
           name: "pacific_palau?",
-          description: "returns whether the current time zone is pacific/palau.",
+          description:
+            "returns whether the current time zone is pacific/palau.",
           examples: [
             "Date.pacific_palau?",
             "Date.new(\"2024-03-05\").pacific_palau?",
@@ -5625,7 +6031,8 @@ class Code
         },
         "pacific_pitcairn?" => {
           name: "pacific_pitcairn?",
-          description: "returns whether the current time zone is pacific/pitcairn.",
+          description:
+            "returns whether the current time zone is pacific/pitcairn.",
           examples: [
             "Date.pacific_pitcairn?",
             "Date.new(\"2024-03-05\").pacific_pitcairn?",
@@ -5634,7 +6041,8 @@ class Code
         },
         "pacific_pohnpei?" => {
           name: "pacific_pohnpei?",
-          description: "returns whether the current time zone is pacific/pohnpei.",
+          description:
+            "returns whether the current time zone is pacific/pohnpei.",
           examples: [
             "Date.pacific_pohnpei?",
             "Date.new(\"2024-03-05\").pacific_pohnpei?",
@@ -5643,7 +6051,8 @@ class Code
         },
         "pacific_ponape?" => {
           name: "pacific_ponape?",
-          description: "returns whether the current time zone is pacific/ponape.",
+          description:
+            "returns whether the current time zone is pacific/ponape.",
           examples: [
             "Date.pacific_ponape?",
             "Date.new(\"2024-03-05\").pacific_ponape?",
@@ -5652,7 +6061,8 @@ class Code
         },
         "pacific_port_moresby?" => {
           name: "pacific_port_moresby?",
-          description: "returns whether the current time zone is pacific/port_moresby.",
+          description:
+            "returns whether the current time zone is pacific/port_moresby.",
           examples: [
             "Date.pacific_port_moresby?",
             "Date.new(\"2024-03-05\").pacific_port_moresby?",
@@ -5661,7 +6071,8 @@ class Code
         },
         "pacific_rarotonga?" => {
           name: "pacific_rarotonga?",
-          description: "returns whether the current time zone is pacific/rarotonga.",
+          description:
+            "returns whether the current time zone is pacific/rarotonga.",
           examples: [
             "Date.pacific_rarotonga?",
             "Date.new(\"2024-03-05\").pacific_rarotonga?",
@@ -5670,7 +6081,8 @@ class Code
         },
         "pacific_saipan?" => {
           name: "pacific_saipan?",
-          description: "returns whether the current time zone is pacific/saipan.",
+          description:
+            "returns whether the current time zone is pacific/saipan.",
           examples: [
             "Date.pacific_saipan?",
             "Date.new(\"2024-03-05\").pacific_saipan?",
@@ -5679,7 +6091,8 @@ class Code
         },
         "pacific_samoa?" => {
           name: "pacific_samoa?",
-          description: "returns whether the current time zone is pacific/samoa.",
+          description:
+            "returns whether the current time zone is pacific/samoa.",
           examples: [
             "Date.pacific_samoa?",
             "Date.new(\"2024-03-05\").pacific_samoa?",
@@ -5688,7 +6101,8 @@ class Code
         },
         "pacific_tahiti?" => {
           name: "pacific_tahiti?",
-          description: "returns whether the current time zone is pacific/tahiti.",
+          description:
+            "returns whether the current time zone is pacific/tahiti.",
           examples: [
             "Date.pacific_tahiti?",
             "Date.new(\"2024-03-05\").pacific_tahiti?",
@@ -5697,7 +6111,8 @@ class Code
         },
         "pacific_tarawa?" => {
           name: "pacific_tarawa?",
-          description: "returns whether the current time zone is pacific/tarawa.",
+          description:
+            "returns whether the current time zone is pacific/tarawa.",
           examples: [
             "Date.pacific_tarawa?",
             "Date.new(\"2024-03-05\").pacific_tarawa?",
@@ -5706,7 +6121,8 @@ class Code
         },
         "pacific_tongatapu?" => {
           name: "pacific_tongatapu?",
-          description: "returns whether the current time zone is pacific/tongatapu.",
+          description:
+            "returns whether the current time zone is pacific/tongatapu.",
           examples: [
             "Date.pacific_tongatapu?",
             "Date.new(\"2024-03-05\").pacific_tongatapu?",
@@ -5733,7 +6149,8 @@ class Code
         },
         "pacific_wallis?" => {
           name: "pacific_wallis?",
-          description: "returns whether the current time zone is pacific/wallis.",
+          description:
+            "returns whether the current time zone is pacific/wallis.",
           examples: [
             "Date.pacific_wallis?",
             "Date.new(\"2024-03-05\").pacific_wallis?",
@@ -5850,7 +6267,8 @@ class Code
         },
         "us_east_minus_indiana?" => {
           name: "us_east_minus_indiana?",
-          description: "returns whether the current time zone is us/east-indiana.",
+          description:
+            "returns whether the current time zone is us/east-indiana.",
           examples: [
             "Date.us_east_minus_indiana?",
             "Date.new(\"2024-03-05\").us_east_minus_indiana?",
@@ -5877,7 +6295,8 @@ class Code
         },
         "us_indiana_minus_starke?" => {
           name: "us_indiana_minus_starke?",
-          description: "returns whether the current time zone is us/indiana-starke.",
+          description:
+            "returns whether the current time zone is us/indiana-starke.",
           examples: [
             "Date.us_indiana_minus_starke?",
             "Date.new(\"2024-03-05\").us_indiana_minus_starke?",
@@ -5994,7 +6413,8 @@ class Code
         },
         "nanosecond" => {
           name: "nanosecond",
-          description: "returns zero because dates have no nanosecond component.",
+          description:
+            "returns zero because dates have no nanosecond component.",
           examples: [
             "Date.new(\"2024-03-05\").nanosecond",
             "Date.new.nanosecond",
@@ -6003,7 +6423,8 @@ class Code
         },
         "nanoseconds" => {
           name: "nanoseconds",
-          description: "returns zero because dates have no nanosecond component.",
+          description:
+            "returns zero because dates have no nanosecond component.",
           examples: [
             "Date.new(\"2024-03-05\").nanoseconds",
             "Date.new.nanoseconds",
@@ -6012,7 +6433,8 @@ class Code
         },
         "millisecond" => {
           name: "millisecond",
-          description: "returns zero because dates have no millisecond component.",
+          description:
+            "returns zero because dates have no millisecond component.",
           examples: [
             "Date.new(\"2024-03-05\").millisecond",
             "Date.new.millisecond",
@@ -6021,7 +6443,8 @@ class Code
         },
         "milliseconds" => {
           name: "milliseconds",
-          description: "returns zero because dates have no millisecond component.",
+          description:
+            "returns zero because dates have no millisecond component.",
           examples: [
             "Date.new(\"2024-03-05\").milliseconds",
             "Date.new.milliseconds",
@@ -6031,11 +6454,7 @@ class Code
         "utc" => {
           name: "utc",
           description: "returns the date unchanged.",
-          examples: [
-            "Date.new(\"2024-03-05\").utc",
-            "Date.new.utc",
-            "Date.utc"
-          ]
+          examples: ["Date.new(\"2024-03-05\").utc", "Date.new.utc", "Date.utc"]
         },
         "local" => {
           name: "local",
@@ -11394,19 +11813,27 @@ class Code
       end
 
       def code_america_argentina_buenos_aires?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Buenos_Aires"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Buenos_Aires")
+        )
       end
 
       def code_america_argentina_catamarca?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Catamarca"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Catamarca")
+        )
       end
 
       def code_america_argentina_comodrivadavia?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/ComodRivadavia"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/ComodRivadavia")
+        )
       end
 
       def code_america_argentina_cordoba?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Cordoba"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Cordoba")
+        )
       end
 
       def code_america_argentina_jujuy?
@@ -11414,15 +11841,21 @@ class Code
       end
 
       def code_america_argentina_la_rioja?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/La_Rioja"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/La_Rioja")
+        )
       end
 
       def code_america_argentina_mendoza?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Mendoza"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Mendoza")
+        )
       end
 
       def code_america_argentina_rio_gallegos?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Rio_Gallegos"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Rio_Gallegos")
+        )
       end
 
       def code_america_argentina_salta?
@@ -11430,19 +11863,27 @@ class Code
       end
 
       def code_america_argentina_san_juan?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/San_Juan"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/San_Juan")
+        )
       end
 
       def code_america_argentina_san_luis?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/San_Luis"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/San_Luis")
+        )
       end
 
       def code_america_argentina_tucuman?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Tucuman"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Tucuman")
+        )
       end
 
       def code_america_argentina_ushuaia?
-        Boolean.new(current_time_zone_names.include?("America/Argentina/Ushuaia"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Argentina/Ushuaia")
+        )
       end
 
       def code_america_aruba?
@@ -11670,7 +12111,9 @@ class Code
       end
 
       def code_america_indiana_indianapolis?
-        Boolean.new(current_time_zone_names.include?("America/Indiana/Indianapolis"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Indiana/Indianapolis")
+        )
       end
 
       def code_america_indiana_knox?
@@ -11682,11 +12125,15 @@ class Code
       end
 
       def code_america_indiana_petersburg?
-        Boolean.new(current_time_zone_names.include?("America/Indiana/Petersburg"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Indiana/Petersburg")
+        )
       end
 
       def code_america_indiana_tell_city?
-        Boolean.new(current_time_zone_names.include?("America/Indiana/Tell_City"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Indiana/Tell_City")
+        )
       end
 
       def code_america_indiana_vevay?
@@ -11694,7 +12141,9 @@ class Code
       end
 
       def code_america_indiana_vincennes?
-        Boolean.new(current_time_zone_names.include?("America/Indiana/Vincennes"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Indiana/Vincennes")
+        )
       end
 
       def code_america_indiana_winamac?
@@ -11726,11 +12175,15 @@ class Code
       end
 
       def code_america_kentucky_louisville?
-        Boolean.new(current_time_zone_names.include?("America/Kentucky/Louisville"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Kentucky/Louisville")
+        )
       end
 
       def code_america_kentucky_monticello?
-        Boolean.new(current_time_zone_names.include?("America/Kentucky/Monticello"))
+        Boolean.new(
+          current_time_zone_names.include?("America/Kentucky/Monticello")
+        )
       end
 
       def code_america_knox_in?
@@ -11854,15 +12307,21 @@ class Code
       end
 
       def code_america_north_dakota_beulah?
-        Boolean.new(current_time_zone_names.include?("America/North_Dakota/Beulah"))
+        Boolean.new(
+          current_time_zone_names.include?("America/North_Dakota/Beulah")
+        )
       end
 
       def code_america_north_dakota_center?
-        Boolean.new(current_time_zone_names.include?("America/North_Dakota/Center"))
+        Boolean.new(
+          current_time_zone_names.include?("America/North_Dakota/Center")
+        )
       end
 
       def code_america_north_dakota_new_salem?
-        Boolean.new(current_time_zone_names.include?("America/North_Dakota/New_Salem"))
+        Boolean.new(
+          current_time_zone_names.include?("America/North_Dakota/New_Salem")
+        )
       end
 
       def code_america_nuuk?
@@ -12058,7 +12517,9 @@ class Code
       end
 
       def code_antarctica_dumontdurville?
-        Boolean.new(current_time_zone_names.include?("Antarctica/DumontDUrville"))
+        Boolean.new(
+          current_time_zone_names.include?("Antarctica/DumontDUrville")
+        )
       end
 
       def code_antarctica_macquarie?

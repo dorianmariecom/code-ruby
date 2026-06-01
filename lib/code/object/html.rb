@@ -51,7 +51,8 @@ class Code
         },
         "raw" => {
           name: "raw",
-          description: "parses markup into an html fragment without escaping text.",
+          description:
+            "parses markup into an html fragment without escaping text.",
           examples: [
             "Html.raw(\"<strong>hello</strong>\")",
             "Html.raw(Html.text(:hello))",
@@ -80,7 +81,8 @@ class Code
         },
         "map" => {
           name: "map",
-          description: "returns a list by calling a function for each html node.",
+          description:
+            "returns a list by calling a function for each html node.",
           examples: [
             "Html.raw(\"<p>a</p><p>b</p>\").css(\"p\").map((node) => { node.to_string })",
             "Html.raw(\"<p>a</p>\").css(:p).map((node, index) => { index })",

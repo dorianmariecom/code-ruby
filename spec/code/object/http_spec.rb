@@ -13,7 +13,9 @@ RSpec.describe Code::Object::Http do
     end
 
     it "blocks hostnames that resolve to local addresses" do
-      allow(Resolv).to receive(:getaddresses).with("localtest.me").and_return(["127.0.0.1"])
+      allow(Resolv).to receive(:getaddresses).with("localtest.me").and_return(
+        ["127.0.0.1"]
+      )
 
       expect do
         described_class.code_get(
@@ -43,7 +45,9 @@ RSpec.describe Code::Object::Http do
         described_class.code_get(
           Code::Object::String.new("https://httpbin.org/status/200"),
           Code::Object::Dictionary.new(
-            headers: { "X-Test\r\nInjected" => "yes" }
+            headers: {
+              "X-Test\r\nInjected" => "yes"
+            }
           )
         )
       end.to raise_error(Code::Error, /invalid header name/)
@@ -72,7 +76,9 @@ RSpec.describe Code::Object::Http do
     it "rejects oversized response headers" do
       stub_const("#{described_class}::MAX_HEADER_BYTES", 4)
       stub_request(:get, "https://example.com/large-header").to_return(
-        headers: { "X-Test" => "12345" }
+        headers: {
+          "X-Test" => "12345"
+        }
       )
 
       expect do
@@ -85,7 +91,9 @@ RSpec.describe Code::Object::Http do
     it "blocks redirects to local addresses" do
       stub_request(:get, "https://example.com/redirect").to_return(
         status: 302,
-        headers: { "Location" => "http://127.0.0.1/admin" }
+        headers: {
+          "Location" => "http://127.0.0.1/admin"
+        }
       )
 
       expect do
@@ -98,16 +106,15 @@ RSpec.describe Code::Object::Http do
     it "preserves credentials across same-origin host case redirects" do
       stub_request(:get, "https://example.com/redirect").to_return(
         status: 302,
-        headers: { "Location" => "https://EXAMPLE.com/final" }
+        headers: {
+          "Location" => "https://EXAMPLE.com/final"
+        }
       )
       stub_request(:get, "https://example.com/final").to_return(body: "ok")
 
       described_class.code_get(
         Code::Object::String.new("https://example.com/redirect"),
-        Code::Object::Dictionary.new(
-          username: "user",
-          password: "password"
-        )
+        Code::Object::Dictionary.new(username: "user", password: "password")
       )
 
       expect(
@@ -119,9 +126,7 @@ RSpec.describe Code::Object::Http do
 
     it "limits response body size" do
       stub_const("#{described_class}::MAX_RESPONSE_BYTES", 4)
-      stub_request(:get, "https://example.com/large").to_return(
-        body: "12345"
-      )
+      stub_request(:get, "https://example.com/large").to_return(body: "12345")
 
       expect do
         described_class.code_get(

@@ -5,17 +5,15 @@ class Code
     class Range < Object
       CLASS_DOCUMENTATION = {
         name: "Range",
-        description: "represents inclusive or exclusive sequences between comparable bounds.",
-        examples: [
-          "1..3",
-          "1...3",
-          "(1..3).to_list"
-        ]
+        description:
+          "represents inclusive or exclusive sequences between comparable bounds.",
+        examples: %w[1..3 1...3 (1..3).to_list]
       }.freeze
       INSTANCE_FUNCTIONS = {
         "all?" => {
           name: "all?",
-          description: "returns whether every item in the range matches a function.",
+          description:
+            "returns whether every item in the range matches a function.",
           examples: [
             "(1..3).all?((x) => { x > 0 })",
             "(1..3).all?((x) => { x < 4 })",
@@ -24,7 +22,8 @@ class Code
         },
         "any?" => {
           name: "any?",
-          description: "returns whether any item in the range matches a function.",
+          description:
+            "returns whether any item in the range matches a function.",
           examples: [
             "(1..3).any?((x) => { x == 2 })",
             "(1..3).any?((x) => { x == 1 })",
@@ -33,7 +32,8 @@ class Code
         },
         "none?" => {
           name: "none?",
-          description: "returns whether no items in the range match a function.",
+          description:
+            "returns whether no items in the range match a function.",
           examples: [
             "(1..3).none?((x) => { x > 3 })",
             "(1..3).none?((x) => { x == 2 })",
@@ -42,7 +42,8 @@ class Code
         },
         "each" => {
           name: "each",
-          description: "calls a function for each item in the range and returns the range.",
+          description:
+            "calls a function for each item in the range and returns the range.",
           examples: [
             "(1..3).each((x) => { x })",
             "(:a..:c).each((x) => { x })",
@@ -51,7 +52,8 @@ class Code
         },
         "reverse_each" => {
           name: "reverse_each",
-          description: "calls a function for each item in the range in reverse order.",
+          description:
+            "calls a function for each item in the range in reverse order.",
           examples: [
             "(1..3).reverse_each((x) => { x })",
             "(:a..:c).reverse_each((x) => { x })",
@@ -61,123 +63,88 @@ class Code
         "include?" => {
           name: "include?",
           description: "returns whether the range includes a value.",
-          examples: [
-            "(1..3).include?(2)",
-            "(1..3).include?(4)",
-            "(:a..:c).include?(:b)"
+          examples: %w[
+            (1..3).include?(2)
+            (1..3).include?(4)
+            (:a..:c).include?(:b)
           ]
         },
         "member?" => {
           name: "member?",
           description: "returns whether the range includes a value.",
-          examples: [
-            "(1..3).member?(2)",
-            "(1..3).member?(4)",
-            "(:a..:c).member?(:b)"
-          ]
+          examples: %w[(1..3).member?(2) (1..3).member?(4) (:a..:c).member?(:b)]
         },
         "cover?" => {
           name: "cover?",
           description: "returns whether a value is between the range bounds.",
-          examples: [
-            "(1..3).cover?(2)",
-            "(1..3).cover?(4)",
-            "(:a..:c).cover?(:b)"
-          ]
+          examples: %w[(1..3).cover?(2) (1..3).cover?(4) (:a..:c).cover?(:b)]
         },
         "overlap?" => {
           name: "overlap?",
           description: "returns whether the range overlaps another range.",
-          examples: [
-            "(1..3).overlap?(2..4)",
-            "(1..3).overlap?(4..6)",
-            "(:a..:c).overlap?(:b..:d)"
+          examples: %w[
+            (1..3).overlap?(2..4)
+            (1..3).overlap?(4..6)
+            (:a..:c).overlap?(:b..:d)
           ]
         },
         "empty?" => {
           name: "empty?",
           description: "returns whether the range is empty.",
-          examples: [
-            "(1..3).empty?",
-            "(1...1).empty?",
-            "(:a..:c).empty?"
-          ]
+          examples: %w[(1..3).empty? (1...1).empty? (:a..:c).empty?]
         },
         "begin" => {
           name: "begin",
           description: "returns the starting bound of the range.",
-          examples: [
-            "(1..3).begin",
-            "(:a..:c).begin",
-            "(1...3).begin"
-          ]
+          examples: %w[(1..3).begin (:a..:c).begin (1...3).begin]
         },
         "end" => {
           name: "end",
           description: "returns the ending bound of the range.",
-          examples: [
-            "(1..3).end",
-            "(:a..:c).end",
-            "(1...3).end"
-          ]
+          examples: %w[(1..3).end (:a..:c).end (1...3).end]
         },
         "exclude_end?" => {
           name: "exclude_end?",
           description: "returns whether the range excludes its ending bound.",
-          examples: [
-            "(1..3).exclude_end?",
-            "(1...3).exclude_end?",
-            "(:a...:c).exclude_end?"
+          examples: %w[
+            (1..3).exclude_end?
+            (1...3).exclude_end?
+            (:a...:c).exclude_end?
           ]
         },
         "first" => {
           name: "first",
           description: "returns the first item in the range.",
-          examples: [
-            "(1..3).first",
-            "(2..4).first",
-            "(:a..:c).first"
-          ]
+          examples: %w[(1..3).first (2..4).first (:a..:c).first]
         },
         "last" => {
           name: "last",
           description: "returns the last item in the range.",
-          examples: [
-            "(1..3).last",
-            "(2..4).last",
-            "(:a..:c).last"
-          ]
+          examples: %w[(1..3).last (2..4).last (:a..:c).last]
         },
         "minimum" => {
           name: "minimum",
           description: "returns the minimum item in the range.",
-          examples: [
-            "(1..3).minimum",
-            "(:a..:c).minimum",
-            "(3..1).minimum"
-          ]
+          examples: %w[(1..3).minimum (:a..:c).minimum (3..1).minimum]
         },
         "maximum" => {
           name: "maximum",
           description: "returns the maximum item in the range.",
-          examples: [
-            "(1..3).maximum",
-            "(:a..:c).maximum",
-            "(3..1).maximum"
-          ]
+          examples: %w[(1..3).maximum (:a..:c).maximum (3..1).maximum]
         },
         "minimum_maximum" => {
           name: "minimum_maximum",
           description: "returns the minimum and maximum items as a list.",
-          examples: [
-            "(1..3).minimum_maximum",
-            "(:a..:c).minimum_maximum",
-            "(3..1).minimum_maximum"
+          examples: %w[
+            (1..3).minimum_maximum
+            (:a..:c).minimum_maximum
+            (3..1).minimum_maximum
           ]
         },
         "map" => {
           name: "map",
-          description: "returns a list with each item transformed by a function.",
+          description:
+            "returns a list with each item transformed by a function.",
           examples: [
             "(1..3).map((x) => { x + 1 })",
             "(1..3).map((x) => { x.to_string })",
@@ -214,11 +181,7 @@ class Code
         "step" => {
           name: "step",
           description: "returns a list of items separated by a step size.",
-          examples: [
-            "(1..5).step(2)",
-            "(1..5).step(1)",
-            "(1...5).step(2)"
-          ]
+          examples: %w[(1..5).step(2) (1..5).step(1) (1...5).step(2)]
         },
         "binary_search" => {
           name: "binary_search",
@@ -232,24 +195,17 @@ class Code
         "sample" => {
           name: "sample",
           description: "returns a random item from the range.",
-          examples: [
-            "(1..3).sample",
-            "(2..4).sample",
-            "(:a..:c).sample"
-          ]
+          examples: %w[(1..3).sample (2..4).sample (:a..:c).sample]
         },
         "size" => {
           name: "size",
           description: "returns the number of items in the range.",
-          examples: [
-            "(1..3).size",
-            "(1...3).size",
-            "(:a..:c).size"
-          ]
+          examples: %w[(1..3).size (1...3).size (:a..:c).size]
         },
         "count" => {
           name: "count",
-          description: "returns the number of items, optionally matched by a function.",
+          description:
+            "returns the number of items, optionally matched by a function.",
           examples: [
             "(1..3).count",
             "(1...3).count",
@@ -259,28 +215,20 @@ class Code
         "to_list" => {
           name: "to_list",
           description: "returns the range items as a list.",
-          examples: [
-            "(1..3).to_list",
-            "(1...3).to_list",
-            "(:a..:c).to_list"
-          ]
+          examples: %w[(1..3).to_list (1...3).to_list (:a..:c).to_list]
         },
         "entries" => {
           name: "entries",
           description: "returns the range items as a list.",
-          examples: [
-            "(1..3).entries",
-            "(1...3).entries",
-            "(:a..:c).entries"
-          ]
+          examples: %w[(1..3).entries (1...3).entries (:a..:c).entries]
         },
         "to_dictionary" => {
           name: "to_dictionary",
           description: "returns a dictionary built from indexed range items.",
-          examples: [
-            "(1..3).to_dictionary",
-            "(1...3).to_dictionary",
-            "(:a..:c).to_dictionary"
+          examples: %w[
+            (1..3).to_dictionary
+            (1...3).to_dictionary
+            (:a..:c).to_dictionary
           ]
         }
       }.freeze
@@ -707,9 +655,17 @@ class Code
         loop do
           comparison =
             if step_is_positive
-              exclude_end? ? code_element.code_less(code_right) : code_element.code_less_or_equal(code_right)
+              if exclude_end?
+                code_element.code_less(code_right)
+              else
+                code_element.code_less_or_equal(code_right)
+              end
             else
-              exclude_end? ? code_element.code_greater(code_right) : code_element.code_greater_or_equal(code_right)
+              if exclude_end?
+                code_element.code_greater(code_right)
+              else
+                code_element.code_greater_or_equal(code_right)
+              end
             end
 
           break unless comparison.truthy?
@@ -755,9 +711,7 @@ class Code
       def code_count(argument = nil, **globals)
         code_argument = argument.to_code
 
-        if code_argument.nothing?
-          return Integer.new(raw.to_a.size)
-        end
+        return Integer.new(raw.to_a.size) if code_argument.nothing?
 
         index = 0
         Integer.new(

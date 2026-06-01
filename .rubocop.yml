@@ -66,9 +66,9 @@ Metrics/ParameterLists:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
-Naming/FileName:
-  Enabled: false
 Naming/BlockForwarding:
+  Enabled: false
+Naming/FileName:
   Enabled: false
 Naming/MethodParameterName:
   Enabled: false
@@ -114,9 +114,9 @@ Rails/TimeZone:
   Enabled: false
 Security/Eval:
   Enabled: false
-Style/CaseEquality:
-  Enabled: false
 Style/ArgumentsForwarding:
+  Enabled: false
+Style/CaseEquality:
   Enabled: false
 Style/Documentation:
   Enabled: false

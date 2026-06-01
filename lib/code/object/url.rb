@@ -5,7 +5,8 @@ class Code
     class Url < Object
       CLASS_DOCUMENTATION = {
         name: "Url",
-        description: "encodes text for urls, decodes url-escaped text, and parses strings as urls.",
+        description:
+          "encodes text for urls, decodes url-escaped text, and parses strings as urls.",
         examples: [
           "Url.encode(\"hello world\")",
           "Url.decode(\"a%2Fb%3Fx%3D1\")",
@@ -33,7 +34,8 @@ class Code
         },
         "parse" => {
           name: "parse",
-          description: "returns a url parsed from a value, or an empty url when parsing fails.",
+          description:
+            "returns a url parsed from a value, or an empty url when parsing fails.",
           examples: [
             "Url.parse(\"https://example.com/a?b=1\")",
             "Url.parse(\"/path\")",

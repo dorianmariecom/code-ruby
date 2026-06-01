@@ -4,8 +4,8 @@ jobs:
     name: Bundler Audit
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f
       with:
         bundler-cache: true
     - run: bundle exec bundler-audit check --update
@@ -13,18 +13,18 @@ jobs:
     name: npm Audit
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+    - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
       with:
-        node-version-file: .node-version
+        node-version-file: ".node-version"
     - run: node --version && npm --version
     - run: npm audit
   rspec:
     name: Test
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f
       with:
         bundler-cache: true
     - run: bin/test
@@ -32,17 +32,17 @@ jobs:
     name: Rubocop
     runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1
+    - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+    - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f
       with:
         bundler-cache: true
     - run: bin/rubocop
 name: CI
-permissions:
-  contents: read
 'on':
   pull_request:
   push:
   schedule:
   - cron: 0 6 * * *
   workflow_dispatch:
+permissions:
+  contents: read

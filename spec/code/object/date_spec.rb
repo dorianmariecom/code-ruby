@@ -25,7 +25,7 @@ RSpec.describe Code::Object::Date do
     %w[Date.new(0).milliseconds 0],
     %w[Date.new(0).beginning_of_day.to_integer 0],
     %w[Date.new(0).end_of_day.to_integer 86399],
-    ['Date.new(0).subtract(day: 1).iso', '"1969-12-31"']
+    ["Date.new(0).subtract(day: 1).iso", '"1969-12-31"']
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       Time.use_zone("Etc/UTC") do

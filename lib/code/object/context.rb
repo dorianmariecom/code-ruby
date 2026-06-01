@@ -5,7 +5,8 @@ class Code
     class Context < Dictionary
       CLASS_DOCUMENTATION = {
         name: "Context",
-        description: "stores scoped identifier values used while evaluating code.",
+        description:
+          "stores scoped identifier values used while evaluating code.",
         examples: [
           "context",
           "Context.new(a: 1)",
@@ -15,7 +16,8 @@ class Code
       INSTANCE_FUNCTIONS = {
         "lookup!" => {
           name: "lookup!",
-          description: "returns the context that defines an identifier or raises when it is missing.",
+          description:
+            "returns the context that defines an identifier or raises when it is missing.",
           examples: [
             "Context.new(a: 1).lookup!(:a)",
             "Context.new({ a: 1 }, Context.new(b: 2)).lookup!(:b)",

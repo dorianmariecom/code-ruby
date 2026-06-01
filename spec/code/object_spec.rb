@@ -55,14 +55,17 @@ RSpec.describe Code::Object do
     ["[].functions.keys == [].functions.keys.sort", "true"],
     ["[].instance_functions.keys == [].instance_functions.keys.sort", "true"],
     ["[].class_functions.keys == [].class_functions.keys.sort", "true"],
-    ["List.functions.keys.include?(:map)", "false"],
-    ["List.instance_functions.keys.include?(:map)", "true"],
-    ["List.class_functions.keys.include?(:new)", "true"],
+    %w[List.functions.keys.include?(:map) false],
+    %w[List.instance_functions.keys.include?(:map) true],
+    %w[List.class_functions.keys.include?(:new) true],
     ["List.functions.keys == List.functions.keys.sort", "true"],
-    ["List.instance_functions.keys == List.instance_functions.keys.sort", "true"],
+    [
+      "List.instance_functions.keys == List.instance_functions.keys.sort",
+      "true"
+    ],
     ["List.class_functions.keys == List.class_functions.keys.sort", "true"],
-    ["globals.keys.include?(:List)", "true"],
-    ["classes.keys.include?(:List)", "true"],
+    %w[globals.keys.include?(:List) true],
+    %w[classes.keys.include?(:List) true],
     [
       "globals.fetch(:puts).description",
       "\"writes values to output with newlines and returns nothing.\""
@@ -72,11 +75,11 @@ RSpec.describe Code::Object do
       "\"stores ordered values and provides enumerable operations.\""
     ],
     ["List.documentation.name", "\"List\""],
-    ["List.documentation.examples.is_a?(List)", "true"],
+    %w[List.documentation.examples.is_a?(List) true],
     ["[].documentation.name", "\"List\""],
     ["1.documentation.name", "\"Integer\""],
-    ["List.instance_functions.keys.include?(:doc)", "false"],
-    ["1.respond_to?(:doc)", "false"],
+    %w[List.instance_functions.keys.include?(:doc) false],
+    %w[1.respond_to?(:doc) false],
     ["getting_started.title", "\"Getting started with Code\""],
     ["getting_started.steps.first.command", "\"bundle install\""],
     ["getting_started.examples.first.source", "\"1 + 2\""],
@@ -89,27 +92,30 @@ RSpec.describe Code::Object do
     ["\"abc\".length", "3"],
     ["\"abc\".member?(\"b\")", "true"],
     ["[].respond_to?(:missing)", "false"],
-    ["1.respond_to?(:zero?)", "true"],
-    ["Object.new.respond_to?(:fetch)", "false"],
+    %w[1.respond_to?(:zero?) true],
+    %w[Object.new.respond_to?(:fetch) false],
     ["a = {} a.b = 1 a.respond_to?(:b)", "true"],
     ["a = {} a.b = 1 a.functions.keys.include?(:b)", "true"],
     ["a = {} a.b = 1 a.instance_functions.keys.include?(:b)", "true"],
     ["a = {} a.b = 1 a.class_functions.keys.include?(:b)", "true"],
-    ["a = {} a.z = 1 a.a = 1 a.functions.keys == a.functions.keys.sort", "true"],
-    ["a = {} a.z = 1 a.a = 1 a.instance_functions.keys == a.instance_functions.keys.sort", "true"],
-    ["a = {} a.z = 1 a.a = 1 a.class_functions.keys == a.class_functions.keys.sort", "true"],
+    [
+      "a = {} a.z = 1 a.a = 1 a.functions.keys == a.functions.keys.sort",
+      "true"
+    ],
+    [
+      "a = {} a.z = 1 a.a = 1 a.instance_functions.keys == a.instance_functions.keys.sort",
+      "true"
+    ],
+    [
+      "a = {} a.z = 1 a.a = 1 a.class_functions.keys == a.class_functions.keys.sort",
+      "true"
+    ],
     [
       "f = () => { 1 } f.documentation({ description: \"returns one\", examples: [\"f()\"] }) f.documentation.description",
       "\"returns one\""
     ],
-    [
-      "List.instance_functions.fetch(:map).description.present?",
-      "true"
-    ],
-    [
-      "List.instance_functions.fetch(:map).examples.is_a?(List)",
-      "true"
-    ],
+    %w[List.instance_functions.fetch(:map).description.present? true],
+    %w[List.instance_functions.fetch(:map).examples.is_a?(List) true],
     [
       "List.instance_functions.fetch(:map).description",
       "\"returns a new list with each item transformed by a function or class.\""
@@ -152,7 +158,9 @@ RSpec.describe Code::Object do
     it "exposes classes as documentation dictionaries" do
       documentation = described_class::List.documentation
 
-      expect(documentation.code_get("name")).to eq(Code::Object::String.new("List"))
+      expect(documentation.code_get("name")).to eq(
+        Code::Object::String.new("List")
+      )
       expect(documentation.code_get("description").present?).to be(true)
       expect(documentation.code_get("examples")).to be_a(Code::Object::List)
     end
@@ -160,7 +168,9 @@ RSpec.describe Code::Object do
     it "exposes documented classes from globals" do
       documentation = described_class::Global.classes.code_fetch("List")
 
-      expect(documentation.code_get("name")).to eq(Code::Object::String.new("List"))
+      expect(documentation.code_get("name")).to eq(
+        Code::Object::String.new("List")
+      )
       expect(documentation.code_get("description").present?).to be(true)
       expect(documentation.code_get("examples")).to be_a(Code::Object::List)
     end
@@ -197,7 +207,7 @@ RSpec.describe Code::Object do
     it "documents every shared function" do
       documented_names =
         described_class.instance_functions.raw.keys.map(&:to_s) +
-        described_class.class_functions.raw.keys.map(&:to_s)
+          described_class.class_functions.raw.keys.map(&:to_s)
 
       Code::Concerns::Shared::SHARED_OPERATORS.each do |function_name|
         expect(documented_names).to include(function_name)
@@ -209,19 +219,22 @@ RSpec.describe Code::Object do
 
       Dir["lib/code/object/*.rb"].each do |path|
         source = File.read(path)
-        call_bodies = source.scan(
-          /      def (?:self\.)?call\(\*\*args\)(.*?)(?=\n      def |\n      class |\n    end\n  end\nend)/m
-        ).map(&:first)
+        call_bodies =
+          source.scan(
+            %r{      def (?:self\.)?call\(\*\*args\)(.*?)(?=\n      def |\n      class |\n    end\n  end\nend)}m
+          ).map(&:first)
         next if call_bodies.empty?
 
         dispatched_names =
-          call_bodies.flat_map do |body|
-            body.scan(/when\s+((?:"[^"]+"\s*,?\s*)+)/).flat_map do |match|
-              match.first.scan(/"([^"]+)"/).flatten
+          call_bodies
+            .flat_map do |body|
+              body
+                .scan(/when\s+((?:"[^"]+"\s*,?\s*)+)/)
+                .flat_map { |match| match.first.scan(/"([^"]+)"/).flatten }
             end
-          end.uniq.sort
-        documented_names =
-          source.scan(/"([^"]+)"\s*=>\s*\{/).flatten.uniq.sort
+            .uniq
+            .sort
+        documented_names = source.scan(/"([^"]+)"\s*=>\s*\{/).flatten.uniq.sort
         missing_names = dispatched_names - documented_names
 
         undocumented[path] = missing_names if missing_names.any?
@@ -287,7 +300,9 @@ RSpec.describe Code::Object do
       class_names = described_class::Global.classes.raw.keys.map(&:to_s)
 
       builtin_documentation_classes.each do |klass|
-        expect(class_names).to include(klass.documentation.code_fetch("name").to_s)
+        expect(class_names).to include(
+          klass.documentation.code_fetch("name").to_s
+        )
       end
     end
 
@@ -323,17 +338,21 @@ RSpec.describe Code::Object do
       documented_functions.each do |function|
         function_name = function.code_fetch("name")
 
-        function.code_fetch("examples").raw.each do |example|
-          input = example.to_s
+        function
+          .code_fetch("examples")
+          .raw
+          .each do |example|
+            input = example.to_s
 
-          expect do
-            Code.evaluate(
-              input,
-              input: StringIO.new("example input\n"),
-              output: StringIO.new
-            )
-          end.not_to raise_error, "#{function_name}: #{input}"
-        end
+            expect do
+              Code.evaluate(
+                input,
+                input: StringIO.new("example input\n"),
+                output: StringIO.new
+              )
+            end.not_to raise_error,
+            "#{function_name}: #{input}"
+          end
       end
     end
 
@@ -341,17 +360,21 @@ RSpec.describe Code::Object do
       documented_classes.each do |documentation|
         class_name = documentation.code_fetch("name")
 
-        documentation.code_fetch("examples").raw.each do |example|
-          input = example.to_s
+        documentation
+          .code_fetch("examples")
+          .raw
+          .each do |example|
+            input = example.to_s
 
-          expect do
-            Code.evaluate(
-              input,
-              input: StringIO.new("example input\n"),
-              output: StringIO.new
-            )
-          end.not_to raise_error, "#{class_name}: #{input}"
-        end
+            expect do
+              Code.evaluate(
+                input,
+                input: StringIO.new("example input\n"),
+                output: StringIO.new
+              )
+            end.not_to raise_error,
+            "#{class_name}: #{input}"
+          end
       end
     end
 

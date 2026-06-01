@@ -5,96 +5,96 @@ class Code
     module Shared
       attr_accessor :raw, :functions
 
-      COMPOUND_ASSIGNMENT_OPERATORS = [
-        "+=",
-        "-=",
-        "*=",
-        "/=",
-        "%=",
-        "<<=",
-        ">>=",
-        "&=",
-        "|=",
-        "^=",
-        "||=",
-        "&&="
+      COMPOUND_ASSIGNMENT_OPERATORS = %w[
+        +=
+        -=
+        *=
+        /=
+        %=
+        <<=
+        >>=
+        &=
+        |=
+        ^=
+        ||=
+        &&=
       ].freeze
-      SHARED_OPERATORS = [
-        "documentation",
-        "present?",
-        "blank?",
-        "presence",
-        "presence_in",
-        "is_a?",
-        "is_an?",
-        "kind_of?",
-        "instance_of?",
-        "new",
-        "!",
-        "not",
-        "!=",
-        "different",
-        "&&",
-        "and",
-        "+",
-        "self",
-        "..",
-        "inclusive_range",
-        "...",
-        "exclusive_range",
-        "==",
-        "equal",
-        "equal?",
-        "same_object?",
-        ">",
-        "greater",
-        ">=",
-        "greater_or_equal",
-        "<=>",
-        "compare",
-        "<",
-        "less",
-        "<=",
-        "less_or_equal",
-        "===",
-        "strict_equal",
-        "!==",
-        "strict_different",
-        "falsy?",
-        "truthy?",
-        "true?",
-        "false?",
-        "||",
-        "or",
-        "to_boolean",
-        "to_class",
-        "to_date",
-        "to_decimal",
-        "to_dictionary",
-        "to_duration",
-        "to_integer",
-        "to_list",
-        "to_nothing",
-        "to_range",
-        "to_string",
-        "inspect",
-        "to_time",
-        "as_json",
-        "duplicate",
-        "deep_duplicate",
-        "to_parameter",
-        "to_json",
-        "functions",
-        "instance_functions",
-        "class_functions",
-        "respond_to?",
-        "send",
-        "itself",
-        "tap",
-        "then",
-        "name",
-        "nothing?",
-        "something?"
+      SHARED_OPERATORS = %w[
+        documentation
+        present?
+        blank?
+        presence
+        presence_in
+        is_a?
+        is_an?
+        kind_of?
+        instance_of?
+        new
+        !
+        not
+        !=
+        different
+        &&
+        and
+        +
+        self
+        ..
+        inclusive_range
+        ...
+        exclusive_range
+        ==
+        equal
+        equal?
+        same_object?
+        >
+        greater
+        >=
+        greater_or_equal
+        <=>
+        compare
+        <
+        less
+        <=
+        less_or_equal
+        ===
+        strict_equal
+        !==
+        strict_different
+        falsy?
+        truthy?
+        true?
+        false?
+        ||
+        or
+        to_boolean
+        to_class
+        to_date
+        to_decimal
+        to_dictionary
+        to_duration
+        to_integer
+        to_list
+        to_nothing
+        to_range
+        to_string
+        inspect
+        to_time
+        as_json
+        duplicate
+        deep_duplicate
+        to_parameter
+        to_json
+        functions
+        instance_functions
+        class_functions
+        respond_to?
+        send
+        itself
+        tap
+        then
+        name
+        nothing?
+        something?
       ].freeze
       OPERATOR_METHOD_ALIASES = {
         "[]" => "get",
@@ -519,7 +519,9 @@ class Code
         return nil unless code_dynamic_functions.code_has_key?(operator).truthy?
 
         stored_value = code_dynamic_functions.code_fetch(operator)
-        return stored_value.call(**args, operator: nil, bound_self: self) if stored_value.is_a?(Object::Function)
+        if stored_value.is_a?(Object::Function)
+          return stored_value.call(**args, operator: nil, bound_self: self)
+        end
 
         sig(args)
         stored_value
@@ -641,9 +643,10 @@ class Code
 
       def code_instance_functions
         Object.sorted_dictionary(
-          Object.documented_functions_for(self.class, :instance).code_merge(
-            dynamic_functions_documentation
-          ).raw
+          Object
+            .documented_functions_for(self.class, :instance)
+            .code_merge(dynamic_functions_documentation)
+            .raw
         )
       end
 
@@ -755,7 +758,8 @@ class Code
       end
 
       def code_operator_method_defined?(operator_name)
-        method_name = :"code_#{OPERATOR_METHOD_ALIASES.fetch(operator_name, operator_name)}"
+        method_name =
+          :"code_#{OPERATOR_METHOD_ALIASES.fetch(operator_name, operator_name)}"
         return false unless respond_to?(method_name)
 
         method(method_name).owner != Shared
@@ -775,10 +779,10 @@ class Code
               name,
               Object::Dictionary.new(
                 "name" => Object::String.new(name),
-                "description" => Object::String.new(
-                  dynamic_function_description(value)
-                ),
-                "examples" => Object::List.new(dynamic_function_examples(value)),
+                "description" =>
+                  Object::String.new(dynamic_function_description(value)),
+                "examples" =>
+                  Object::List.new(dynamic_function_examples(value)),
                 "function" => value
               )
             ]

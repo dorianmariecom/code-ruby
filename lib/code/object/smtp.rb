@@ -6,20 +6,16 @@ class Code
       CLASS_DOCUMENTATION = {
         name: "Smtp",
         description: "stores smtp settings and sends email messages.",
-        examples: [
-          "Smtp",
-          "Smtp.new",
-          "Smtp.new.functions.keys.include?(:send)"
-        ]
+        examples: %w[Smtp Smtp.new Smtp.new.functions.keys.include?(:send)]
       }.freeze
       INSTANCE_FUNCTIONS = {
         "send" => {
           name: "send",
           description: "sends an email using the receiver's smtp settings.",
-          examples: [
-            "Smtp.new.respond_to?(:send)",
-            "Smtp.new.functions.keys.include?(:send)",
-            "Smtp.new.instance_functions.keys.include?(:send)"
+          examples: %w[
+            Smtp.new.respond_to?(:send)
+            Smtp.new.functions.keys.include?(:send)
+            Smtp.new.instance_functions.keys.include?(:send)
           ]
         }
       }.freeze
@@ -127,14 +123,23 @@ class Code
       private
 
       def validate_delivery_target!(address, port)
-        resolved_ip = ::Code::Network.validate_public_host!(address, service: "smtp").first
+        resolved_ip =
+          ::Code::Network.validate_public_host!(address, service: "smtp").first
 
         return resolved_ip if ALLOWED_PORTS.include?(port)
 
         raise Error, "smtp: unsupported port"
       end
 
-      def deliver_mail(mail, address:, resolved_ip:, port:, user_name:, password:, authentication:)
+      def deliver_mail(
+        mail,
+        address:,
+        resolved_ip:,
+        port:,
+        user_name:,
+        password:,
+        authentication:
+      )
         envelope = Mail::SmtpEnvelope.new(mail)
         smtp =
           Net::SMTP.new(
@@ -161,7 +166,10 @@ class Code
         end
       rescue Timeout::Error
         raise Error, "smtp timeout"
-      rescue OpenSSL::SSL::SSLError, IOError, SystemCallError, SocketError,
+      rescue OpenSSL::SSL::SSLError,
+             IOError,
+             SystemCallError,
+             SocketError,
              Net::SMTPError
         raise Error, "smtp error"
       end

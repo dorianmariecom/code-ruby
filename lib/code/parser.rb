@@ -32,37 +32,37 @@ class Code
       while
     ].freeze
 
-    MULTI_CHAR_OPERATORS = [
-      "&.",
-      "&&",
-      "&&=",
-      "**",
-      "*=",
-      "+=",
-      "-=",
-      "..",
-      "...",
-      "/=",
-      "::",
-      "<<=",
-      "<<",
-      "<=>",
-      "<=",
-      "===",
-      "==",
-      "=~",
-      ">=",
-      ">>=",
-      ">>",
-      "||=",
-      "||",
-      "|=",
-      "!==",
-      "!=",
-      "!~",
-      "%=",
-      "^=",
-      "=>"
+    MULTI_CHAR_OPERATORS = %w[
+      &.
+      &&
+      &&=
+      **
+      *=
+      +=
+      -=
+      ..
+      ...
+      /=
+      ::
+      <<=
+      <<
+      <=>
+      <=
+      ===
+      ==
+      =~
+      >=
+      >>=
+      >>
+      ||=
+      ||
+      |=
+      !==
+      !=
+      !~
+      %=
+      ^=
+      =>
     ].sort_by(&:length).reverse.freeze
     CONTINUATION_KEYWORDS = %w[or and rescue].freeze
     POSTFIX_CONTINUATIONS = %w[. :: &.].freeze
@@ -1015,7 +1015,9 @@ class Code
           next
         elsif "([{".include?(char)
           depth += 1
-          raise_parse_error_at("source is too deeply nested", index) if depth > MAX_NESTING
+          if depth > MAX_NESTING
+            raise_parse_error_at("source is too deeply nested", index)
+          end
         elsif ")]}".include?(char)
           depth -= 1 if depth.positive?
         end

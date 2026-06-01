@@ -148,9 +148,7 @@ RSpec.describe Code::Format do
       expect(formatted).to include(
         'instructions.map { |instruction, index| "{index + 1}. {instruction}" }'
       )
-      expect(formatted).not_to include(
-        "\"{index\n  + 1}. {instruction}\""
-      )
+      expect(formatted).not_to include("\"{index\n  + 1}. {instruction}\"")
     end
 
     it "does not emit whitespace-only blank lines" do

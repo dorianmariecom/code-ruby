@@ -6,11 +6,7 @@ class Code
       CLASS_DOCUMENTATION = {
         name: "Boolean",
         description: "represents true or false.",
-        examples: [
-          "Boolean",
-          "Boolean.new(true)",
-          "Boolean.new(false)"
-        ]
+        examples: %w[Boolean Boolean.new(true) Boolean.new(false)]
       }.freeze
       INSTANCE_FUNCTIONS = {
         "&" => {
@@ -21,10 +17,10 @@ class Code
         "bitwise_and" => {
           name: "bitwise_and",
           description: "returns true when both booleans are true.",
-          examples: [
-            "true.bitwise_and(true)",
-            "true.bitwise_and(false)",
-            "false.bitwise_and(false)"
+          examples: %w[
+            true.bitwise_and(true)
+            true.bitwise_and(false)
+            false.bitwise_and(false)
           ]
         },
         "|" => {
@@ -35,10 +31,10 @@ class Code
         "bitwise_or" => {
           name: "bitwise_or",
           description: "returns true when either boolean is true.",
-          examples: [
-            "true.bitwise_or(false)",
-            "false.bitwise_or(true)",
-            "false.bitwise_or(false)"
+          examples: %w[
+            true.bitwise_or(false)
+            false.bitwise_or(true)
+            false.bitwise_or(false)
           ]
         },
         "^" => {
@@ -49,10 +45,10 @@ class Code
         "bitwise_xor" => {
           name: "bitwise_xor",
           description: "returns true when exactly one boolean is true.",
-          examples: [
-            "true.bitwise_xor(false)",
-            "true.bitwise_xor(true)",
-            "false.bitwise_xor(false)"
+          examples: %w[
+            true.bitwise_xor(false)
+            true.bitwise_xor(true)
+            false.bitwise_xor(false)
           ]
         }
       }.freeze

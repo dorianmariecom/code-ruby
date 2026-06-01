@@ -7,10 +7,11 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.com"
-  s.files = IO.popen(
-    %w[git ls-files -z -- lib bin/code LICENSE README.md VERSION],
-    &:read
-  ).split("\x0")
+  s.files =
+    IO.popen(
+      %w[git ls-files -z -- lib bin/code LICENSE README.md VERSION],
+      &:read
+    ).split("\x0")
   s.require_paths = ["lib"]
   s.homepage = "https://github.com/dorianmariecom/code-ruby"
   s.license = "MIT"

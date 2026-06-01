@@ -32,7 +32,10 @@ RSpec.describe Code::Object::Range do
     %w[(1..3).maximum 3],
     %w[(1..3).minimum_maximum [1,3]],
     %w[(1..3).entries [1,2,3]],
-    ["values = [] (1..3).reverse_each { |value| values.push(value) } values", "[3, 2, 1]"],
+    [
+      "values = [] (1..3).reverse_each { |value| values.push(value) } values",
+      "[3, 2, 1]"
+    ],
     ["(1..10).binary_search { |value| value >= 5 }", "5"],
     %w[(1..3).to_dictionary {0=>1,1=>2,2=>3}],
     %w[(1..3).count 3],

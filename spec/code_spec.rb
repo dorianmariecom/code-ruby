@@ -69,9 +69,10 @@ RSpec.describe Code do
   end
 
   it "rejects non-positive timeouts" do
-    expect do
-      described_class.evaluate("1", timeout: 0)
-    end.to raise_error(Code::Error, /timeout must be positive/)
+    expect do described_class.evaluate("1", timeout: 0) end.to raise_error(
+      Code::Error,
+      /timeout must be positive/
+    )
   end
 
   it "returns a deep copy of context" do
@@ -466,10 +467,10 @@ RSpec.describe Code do
       ["[1, 2].map(&:to_string)", "[:1, :2]"],
       ["[1, 2].map(&:to_string)", '["1", "2"]'],
       ["[1, 2].map(&:to_string)", '["1", "2"]'],
-      ["1.is_a?(Integer)", "true"],
-      ["1.is_an?(Integer)", "true"],
-      ["1.kind_of?(Integer)", "true"],
-      ["1.itself", "1"],
+      %w[1.is_a?(Integer) true],
+      %w[1.is_an?(Integer) true],
+      %w[1.kind_of?(Integer) true],
+      %w[1.itself 1],
       ["1.then { |value| value + 1 }", "2"],
       ["a = [] 1.tap { |value| a.push(value) }", "1"],
       ["1.send(:plus, 2)", "3"],
@@ -727,13 +728,13 @@ RSpec.describe Code do
   end
 
   it "allows dynamic functions to override built-in class functions" do
-    expect(
-      described_class.evaluate(<<~CODE)
+    expect(described_class.evaluate(<<~CODE)).to eq(
         Time.zone = "Etc/UTC"
         Time.now = () => { Time.new("2026-01-01 09:00:00 UTC") }
         Time.now.iso
       CODE
-    ).to eq(Code::Object::String.new("2026-01-01T09:00:00Z"))
+      Code::Object::String.new("2026-01-01T09:00:00Z")
+    )
   end
 
   it "does not leak dynamic class function overrides between runs" do

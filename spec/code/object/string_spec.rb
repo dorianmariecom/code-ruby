@@ -17,47 +17,47 @@ RSpec.describe Code::Object::String do
   end
 
   [
-    ['"".empty?', "true"],
-    ['"hello".last', '"o"'],
-    ['"hello".last(2)', '"lo"'],
+    %w["".empty? true],
+    %w["hello".last "o"],
+    %w["hello".last(2) "lo"],
     ['"hi\n".chomp', '"hi"'],
-    ['"hello".chop', '"hell"'],
-    ['"hello".capitalize', '"Hello"'],
+    %w["hello".chop "hell"],
+    %w["hello".capitalize "Hello"],
     ['"hello world".titleize', '"Hello World"'],
-    ['"Hello".swapcase', '"hELLO"'],
+    %w["Hello".swapcase "hELLO"],
     ['" a   b ".squish', '"a b"'],
-    ['"hello".delete("l")', '"heo"'],
-    ['"hello".delete_prefix("he")', '"llo"'],
-    ['"hello".delete_suffix("lo")', '"hel"'],
+    %w["hello".delete("l") "heo"],
+    %w["hello".delete_prefix("he") "llo"],
+    %w["hello".delete_suffix("lo") "hel"],
     ['"one one".substitute_once("one", "two")', '"two one"'],
     ['"one one".substitute("one", "two")', '"two two"'],
     ['"one one".substitute_all("one", "two")', '"two two"'],
     ['s = "one one" s.substitute_once!("one", "two") s', '"two one"'],
     ['s = "one one" s.substitute!("one", "two") s', '"two two"'],
     ['s = "one one" s.substitute_all!("one", "two") s', '"two two"'],
-    ['"hello".index("l")', "2"],
-    ['"hello".right_index("l")', "3"],
-    ['"hello".index("z")', "nothing"],
+    %w["hello".index("l") 2],
+    %w["hello".right_index("l") 3],
+    %w["hello".index("z") nothing],
     ['"hi".characters', '["h", "i"]'],
     ['"hi".bytes', "[104, 105]"],
-    ['"hi".bytesize', "2"],
+    %w["hi".bytesize 2],
     ['"hé".byte_slice(0, 1)', '"h"'],
     ['"hi".codepoints', "[104, 105]"],
-    ['"hi".character_code_at(1)', "105"],
-    ['"hi".ordinal', "104"],
+    %w["hi".character_code_at(1) 105],
+    %w["hi".ordinal 104],
     ["\"a\\nb\".lines", '["a\n", "b"]'],
     ['"a b  c".words', '["a", "b", "c"]'],
-    ['"aaab".count("a")', "3"],
+    %w["aaab".count("a") 3],
     ['s = "hello" s.clear s', '""'],
     ['s = "hllo" s.insert(1, "e") s', '"hello"'],
     ['s = "ello" s.prepend("h") s', '"hello"'],
     ['s = "he" s.concat("ll", "o") s', '"hello"'],
-    ['"hello".at(1)', '"e"'],
+    %w["hello".at(1) "e"],
     ['"hello"[10]', "nothing"],
     ['"hello".slice(1, 3)', '"ell"'],
-    ['"hello".slice(1..3)', '"ell"'],
+    %w["hello".slice(1..3) "ell"],
     ['"hello".substring(1, 4)', '"ell"'],
-    ['"haaa".squeeze', '"ha"'],
+    %w["haaa".squeeze "ha"],
     ['"  hello  ".left_strip', '"hello  "'],
     ['"  hello  ".right_strip', '"  hello"'],
     ['"hi".left_justify(5, ".")', '"hi..."'],
@@ -65,9 +65,9 @@ RSpec.describe Code::Object::String do
     ['"hi".center(6, ".")', '"..hi.."'],
     ['"hi".pad_start(5, ".")', '"...hi"'],
     ['"hi".pad_end(5, ".")', '"hi..."'],
-    ['"ha".repeat(3)', '"hahaha"'],
-    ['"HI".lower_case', '"hi"'],
-    ['"hi".upper_case', '"HI"']
+    %w["ha".repeat(3) "hahaha"],
+    %w["HI".lower_case "hi"],
+    %w["hi".upper_case "HI"]
   ].each do |input, expected|
     it "#{input} == #{expected}" do
       expect(Code.evaluate(input)).to eq(Code.evaluate(expected))
@@ -84,7 +84,7 @@ RSpec.describe Code::Object::String do
 
   describe "#code_to_function" do
     it "builds selector functions without parsing concatenated source" do
-      expect(Code.evaluate('[1, 2].map(&:to_string)')).to eq(
+      expect(Code.evaluate("[1, 2].map(&:to_string)")).to eq(
         Code.evaluate('["1", "2"]')
       )
     end

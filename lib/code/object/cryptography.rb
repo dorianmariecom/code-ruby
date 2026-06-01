@@ -5,7 +5,8 @@ class Code
     class Cryptography < Object
       CLASS_DOCUMENTATION = {
         name: "Cryptography",
-        description: "computes md5, sha1, sha256, sha384, and sha512 message digests in hex, digest, or base64 format.",
+        description:
+          "computes md5, sha1, sha256, sha384, and sha512 message digests in hex, digest, or base64 format.",
         examples: [
           "Cryptography.md5(:hello)",
           "Cryptography.sha256(:hello, format: :hex)",
@@ -15,7 +16,8 @@ class Code
       CLASS_FUNCTIONS = {
         "md5" => {
           name: "md5",
-          description: "returns an md5 message digest as hex text by default, with digest and base64 formats available.",
+          description:
+            "returns an md5 message digest as hex text by default, with digest and base64 formats available.",
           examples: [
             "Cryptography.md5(:hello)",
             "Cryptography.md5(:hello, format: :hex)",
@@ -24,7 +26,8 @@ class Code
         },
         "sha1" => {
           name: "sha1",
-          description: "returns a sha1 message digest as hex text by default, with digest and base64 formats available.",
+          description:
+            "returns a sha1 message digest as hex text by default, with digest and base64 formats available.",
           examples: [
             "Cryptography.sha1(:hello)",
             "Cryptography.sha1(:hello, format: :hex)",
@@ -33,7 +36,8 @@ class Code
         },
         "sha256" => {
           name: "sha256",
-          description: "returns a sha256 message digest as hex text by default, with digest and base64 formats available.",
+          description:
+            "returns a sha256 message digest as hex text by default, with digest and base64 formats available.",
           examples: [
             "Cryptography.sha256(:hello)",
             "Cryptography.sha256(:hello, format: :hex)",
@@ -42,7 +46,8 @@ class Code
         },
         "sha384" => {
           name: "sha384",
-          description: "returns a sha384 message digest as hex text by default, with digest and base64 formats available.",
+          description:
+            "returns a sha384 message digest as hex text by default, with digest and base64 formats available.",
           examples: [
             "Cryptography.sha384(:hello)",
             "Cryptography.sha384(:hello, format: :hex)",
@@ -51,7 +56,8 @@ class Code
         },
         "sha512" => {
           name: "sha512",
-          description: "returns a sha512 message digest as hex text by default, with digest and base64 formats available.",
+          description:
+            "returns a sha512 message digest as hex text by default, with digest and base64 formats available.",
           examples: [
             "Cryptography.sha512(:hello)",
             "Cryptography.sha512(:hello, format: :hex)",

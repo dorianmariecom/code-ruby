@@ -73,13 +73,28 @@ RSpec.describe Code::Object::Dictionary do
     ["d = { a: 1 } d.replace({ b: 2 }) d", "{ b: 2 }"],
     ["d = { a: 1 } d.shift", "[:a, 1]"],
     ["{ a: 1, b: 2 }.values_at(:b, :c)", "[2, nothing]"],
-    ["keys = [] { a: 1, b: 2 }.each_key { |key| keys.push(key) } keys", "[:a, :b]"],
-    ["values = [] { a: 1, b: 2 }.each_value { |_, value| values.push(value) } values", "[1, 2]"],
-    ["pairs = [] { a: 1 }.each_pair { |key, value| pairs.push([key, value]) } pairs", "[[:a, 1]]"],
-    ["{ a: 1, b: 2 }.map { |key, value| key.to_string + value.to_string }", "[:a1, :b2]"],
+    [
+      "keys = [] { a: 1, b: 2 }.each_key { |key| keys.push(key) } keys",
+      "[:a, :b]"
+    ],
+    [
+      "values = [] { a: 1, b: 2 }.each_value { |_, value| values.push(value) } values",
+      "[1, 2]"
+    ],
+    [
+      "pairs = [] { a: 1 }.each_pair { |key, value| pairs.push([key, value]) } pairs",
+      "[[:a, 1]]"
+    ],
+    [
+      "{ a: 1, b: 2 }.map { |key, value| key.to_string + value.to_string }",
+      "[:a1, :b2]"
+    ],
     ["{ a: 1, b: 2 }.values", "[1, 2]"],
     ["{ a: 1, b: 2 }.values(:b, :c)", "[2, nothing]"],
-    ["{ a: 1, b: 2 }.values { |key, value| key.to_string + value.to_string }", "[:a1, :b2]"],
+    [
+      "{ a: 1, b: 2 }.values { |key, value| key.to_string + value.to_string }",
+      "[:a1, :b2]"
+    ],
     ["{ a: 1, b: [2, 3] }.flatten", "[:a, 1, :b, 2, 3]"],
     ["{ a: 1, b: [2, 3] }.flatten(-1)", "[:a, 1, :b, 2, 3]"],
     ["{ a: 1, b: [2, 3] }.flatten(0)", "[[:a, 1], [:b, [2, 3]]]"],
@@ -95,7 +110,10 @@ RSpec.describe Code::Object::Dictionary do
     ["{ a: 1 }.associate(:a)", "[:a, 1]"],
     ["{ a: 1 }.right_associate(1)", "[:a, 1]"],
     ["{ a: nothing }.compact", "{}"],
-    ["{ a: nothing, b: 1, c: false, d: \"\" }.compact", '{ b: 1, c: false, d: "" }'],
+    [
+      "{ a: nothing, b: 1, c: false, d: \"\" }.compact",
+      '{ b: 1, c: false, d: "" }'
+    ],
     ["{ a: nothing, b: 1, c: false, d: \"\" }.compact(&:blank?)", "{ b: 1 }"],
     ["{ age: 31 }.delete_unless { |key| key == :age }", "{ age: 31 }"],
     ["{ age: 31 }.delete_unless(Integer)", "{ age: 31 }"],
@@ -118,7 +136,10 @@ RSpec.describe Code::Object::Dictionary do
     ["d = { a: 1 } d.reject! { |_, v| v.one? } d", "{}"],
     ["{ a: 1 }.transform_keys(&:upcase)", "{ A: 1 }"],
     ["d = { a: 1 } d.transform_keys!(&:upcase) d", "{ A: 1 }"],
-    ["d = { a: 1 } d.transform_values! { |_, value| value.next } d", "{ a: 2 }"],
+    [
+      "d = { a: 1 } d.transform_values! { |_, value| value.next } d",
+      "{ a: 2 }"
+    ],
     ["{} == {}", "true"],
     ['{ "name" => "Dorian" } == { name: :Dorian }', "true"]
   ].each do |input, expected|

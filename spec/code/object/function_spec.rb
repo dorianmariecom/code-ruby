@@ -73,9 +73,7 @@ RSpec.describe Code::Object::Function do
       object.fetch()
     CODE
 
-    expect(result).to eq(
-      Code.evaluate("1")
-    )
+    expect(result).to eq(Code.evaluate("1"))
   end
 
   it "captures self for constructor-like functions that return self" do
@@ -143,9 +141,7 @@ RSpec.describe Code::Object::Function do
         Task(name: "Import")
       CODE
 
-    expect(result).to eq(
-      Code.evaluate('["Import", "Migration", "Acme"]')
-    )
+    expect(result).to eq(Code.evaluate('["Import", "Migration", "Acme"]'))
   end
 
   it "allows parent chains deeper than two levels" do
@@ -305,15 +301,16 @@ RSpec.describe Code::Object::Function do
   end
 
   it "does not bind conventional names for unnamed argument operators" do
-    expect do
-      Code.evaluate(<<~CODE)
+    expect do Code.evaluate(<<~CODE) end.to raise_error(
         collect = (..., *, **) => {
           [rest, arguments, keyword_arguments]
         }
 
         collect(1, 2, topic: "docs")
       CODE
-    end.to raise_error(Code::Error, /rest is not defined/)
+      Code::Error,
+      /rest is not defined/
+    )
   end
 
   it "forwards unnamed argument operators as empty without matching locals" do
@@ -343,23 +340,20 @@ RSpec.describe Code::Object::Function do
         caller(1, 2, topic: "docs", &one, &&[two, three])
       CODE
 
-    expect(result).to eq(
-      Code.evaluate(
-        "[0, [], {}, true, []]"
-      )
-    )
+    expect(result).to eq(Code.evaluate("[0, [], {}, true, []]"))
   end
 
   it "raises when unnamed argument operator captures are referenced by conventional name" do
-    expect do
-      Code.evaluate(<<~CODE)
+    expect do Code.evaluate(<<~CODE) end.to raise_error(
         collect = (..., &, &&, *, **) => {
           [rest, block, blocks, arguments, keyword_arguments]
         }
 
         collect(..., &, &&, *, **)
       CODE
-    end.to raise_error(Code::Error, /rest is not defined/)
+      Code::Error,
+      /rest is not defined/
+    )
   end
 
   it "treats forwarding operators without matching locals as empty" do
@@ -436,18 +430,7 @@ RSpec.describe Code::Object::Function do
       CODE
 
     expect(result).to eq(
-      Code::Object::List.new(
-        [
-          true,
-          true,
-          true,
-          true,
-          true,
-          false,
-          false,
-          true
-        ]
-      )
+      Code::Object::List.new([true, true, true, true, true, false, false, true])
     )
   end
 

@@ -5,7 +5,9 @@ require "spec_helper"
 RSpec.describe Code::Object::Smtp do
   describe "#code_send" do
     it "blocks local delivery targets" do
-      allow(Resolv).to receive(:getaddresses).with("localtest.me").and_return(["127.0.0.1"])
+      allow(Resolv).to receive(:getaddresses).with("localtest.me").and_return(
+        ["127.0.0.1"]
+      )
       smtp = described_class.new(address: "localtest.me", port: 587)
 
       expect do

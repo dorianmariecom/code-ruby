@@ -5,7 +5,8 @@ class Code
     class Ics < Object
       CLASS_DOCUMENTATION = {
         name: "Ics",
-        description: "parses icalendar text and exposes events as dictionaries.",
+        description:
+          "parses icalendar text and exposes events as dictionaries.",
         examples: [
           "Ics.parse(\"BEGIN:VCALENDAR\\nBEGIN:VEVENT\\nSUMMARY:meet\\nEND:VEVENT\\nEND:VCALENDAR\")",
           "Ics.parse(\"BEGIN:VCALENDAR\\nVERSION:2.0\\nEND:VCALENDAR\")",

@@ -5,12 +5,9 @@ class Code
     class String < Object
       CLASS_DOCUMENTATION = {
         name: "String",
-        description: "represents text and provides parsing, search, and transformation operations.",
-        examples: [
-          "\"hello\"",
-          ":hello.upcase",
-          "\"a,b\".split(\",\")"
-        ]
+        description:
+          "represents text and provides parsing, search, and transformation operations.",
+        examples: ["\"hello\"", ":hello.upcase", "\"a,b\".split(\",\")"]
       }.freeze
       INSTANCE_FUNCTIONS = {
         "&" => {
@@ -40,7 +37,11 @@ class Code
         "downcase" => {
           name: "downcase",
           description: "returns the string converted to lowercase.",
-          examples: ["\"HELLO\".downcase", "\"Code\".downcase", "\"A1\".downcase"]
+          examples: [
+            "\"HELLO\".downcase",
+            "\"Code\".downcase",
+            "\"A1\".downcase"
+          ]
         },
         "lower_case" => {
           name: "lower_case",
@@ -122,7 +123,8 @@ class Code
         },
         "capitalize" => {
           name: "capitalize",
-          description: "returns the string with its first character capitalized.",
+          description:
+            "returns the string with its first character capitalized.",
           examples: [
             "\"hello\".capitalize",
             "\"code\".capitalize",
@@ -132,7 +134,11 @@ class Code
         "characters" => {
           name: "characters",
           description: "returns the string characters as a list.",
-          examples: ["\"abc\".characters", "\"hi\".characters", "\"\".characters"]
+          examples: [
+            "\"abc\".characters",
+            "\"hi\".characters",
+            "\"\".characters"
+          ]
         },
         "bytes" => {
           name: "bytes",
@@ -156,7 +162,11 @@ class Code
         "codepoints" => {
           name: "codepoints",
           description: "returns the string codepoints as a list.",
-          examples: ["\"abc\".codepoints", "\"A\".codepoints", "\"\".codepoints"]
+          examples: [
+            "\"abc\".codepoints",
+            "\"A\".codepoints",
+            "\"\".codepoints"
+          ]
         },
         "character_code_at" => {
           name: "character_code_at",
@@ -174,7 +184,8 @@ class Code
         },
         "chomp" => {
           name: "chomp",
-          description: "returns the string with a trailing record separator removed.",
+          description:
+            "returns the string with a trailing record separator removed.",
           examples: ["\"a\\n\".chomp", "\"a\".chomp", "\"a\\r\\n\".chomp"]
         },
         "chop" => {
@@ -295,7 +306,8 @@ class Code
         },
         "parameterize" => {
           name: "parameterize",
-          description: "returns the string parameterized for identifiers or urls.",
+          description:
+            "returns the string parameterized for identifiers or urls.",
           examples: [
             "\"Hello world\".parameterize",
             "\"a b c\".parameterize",
@@ -304,7 +316,8 @@ class Code
         },
         "squish" => {
           name: "squish",
-          description: "returns the string with surrounding and repeated whitespace collapsed.",
+          description:
+            "returns the string with surrounding and repeated whitespace collapsed.",
           examples: [
             "\"  hello   world  \".squish",
             "\"a\\n b\".squish",
@@ -377,7 +390,11 @@ class Code
         "swapcase" => {
           name: "swapcase",
           description: "returns the string with letter case swapped.",
-          examples: ["\"AbC\".swapcase", "\"hello\".swapcase", "\"ABC\".swapcase"]
+          examples: [
+            "\"AbC\".swapcase",
+            "\"hello\".swapcase",
+            "\"ABC\".swapcase"
+          ]
         },
         "titleize" => {
           name: "titleize",
@@ -414,13 +431,18 @@ class Code
         },
         "strip" => {
           name: "strip",
-          description: "returns the string with surrounding whitespace removed.",
+          description:
+            "returns the string with surrounding whitespace removed.",
           examples: ["\" a \".strip", "\"\\na\".strip", "\"a\".strip"]
         },
         "left_strip" => {
           name: "left_strip",
           description: "returns the string with leading whitespace removed.",
-          examples: ["\" a\".left_strip", "\"\\na\".left_strip", "\"a\".left_strip"]
+          examples: [
+            "\" a\".left_strip",
+            "\"\\na\".left_strip",
+            "\"a\".left_strip"
+          ]
         },
         "right_strip" => {
           name: "right_strip",
@@ -434,7 +456,11 @@ class Code
         "slice" => {
           name: "slice",
           description: "returns a slice from the string.",
-          examples: ["\"abc\".slice(0)", "\"abc\".slice(0, 2)", "\"abc\".slice(1)"]
+          examples: [
+            "\"abc\".slice(0)",
+            "\"abc\".slice(0, 2)",
+            "\"abc\".slice(1)"
+          ]
         },
         "left_justify" => {
           name: "left_justify",
@@ -507,11 +533,7 @@ class Code
         "words" => {
           name: "words",
           description: "returns the words in the string as a list.",
-          examples: [
-            "\"hello world\".words",
-            "\"one two\".words",
-            "\"\".words"
-          ]
+          examples: ["\"hello world\".words", "\"one two\".words", "\"\".words"]
         }
       }.freeze
 
@@ -932,12 +954,13 @@ class Code
             [
               {
                 left_operation: {
-                  first: { call: { name: "_" } },
-                  others: [
-                    {
-                      operator: ".",
-                      statement: { call: { name: raw } }
+                  first: {
+                    call: {
+                      name: "_"
                     }
+                  },
+                  others: [
+                    { operator: ".", statement: { call: { name: raw } } }
                   ]
                 }
               }
@@ -1095,7 +1118,8 @@ class Code
         finish_index = code_finish.nothing? ? raw.length : code_finish.raw
         start_index = 0 if start_index.negative?
         finish_index = 0 if finish_index.negative?
-        start_index, finish_index = finish_index, start_index if start_index > finish_index
+        start_index, finish_index = finish_index, start_index if start_index >
+          finish_index
 
         String.new(raw[start_index...finish_index].to_s)
       end
