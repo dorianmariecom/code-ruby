@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class Code
-  GLOBALS = %i[context error input object output source].freeze
-  DEFAULT_TIMEOUT = 0
+  GLOBALS = %i[context error input object output root_object source].freeze
+  DEFAULT_TIMEOUT = 1.hour.to_f
+  MAX_INPUT_BYTES = 10.megabytes
   LOCALES = %w[en fr].freeze
 
   def initialize(
@@ -20,13 +21,18 @@ class Code
     @object = object
     @output = output
     @source = source
-    @timeout = timeout
+    @timeout = self.class.normalize_timeout!(timeout)
   end
 
   def self.parse(source, timeout: DEFAULT_TIMEOUT)
+    timeout = normalize_timeout!(timeout)
+
+    ensure_input_size!(source, label: "source")
     Timeout.timeout(timeout) { Parser.parse(source).to_raw }
   rescue Timeout::Error
     raise Error, "timeout"
+  rescue SystemStackError
+    raise Error, "source is too deeply nested"
   end
 
   def self.evaluate(...)
@@ -44,6 +50,20 @@ class Code
     Format.format(parse_tree)
   end
 
+  def self.ensure_input_size!(source, limit: MAX_INPUT_BYTES, label: "input")
+    return if source.to_s.bytesize <= limit
+
+    raise Error, "#{label} is too large"
+  end
+
+  def self.normalize_timeout!(timeout)
+    timeout = DEFAULT_TIMEOUT if timeout.nil?
+    timeout = timeout.to_f
+    raise Error, "timeout must be positive" unless timeout.positive?
+
+    timeout
+  end
+
   def evaluate
     time_zone = ::Time.zone
 
@@ -55,6 +75,7 @@ class Code
         input: input,
         object: object,
         output: output,
+        root_object: object,
         source: source,
         timeout: timeout
       )
@@ -63,6 +84,8 @@ class Code
     raise Error, "timeout"
   rescue Interrupt
     raise Error, "interrupt"
+  rescue SystemStackError
+    raise Error, "source is too deeply nested"
   ensure
     ::Time.zone = time_zone
   end

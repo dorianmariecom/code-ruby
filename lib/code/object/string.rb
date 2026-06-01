@@ -15,15 +15,15 @@ class Code
       INSTANCE_FUNCTIONS = {
         "&" => {
           name: "&",
-          description: "returns a function parsed from the string.",
-          examples: ["&\"x + 1\"", "&\"1 + 2\"", "&\"value\""]
+          description: "returns a function that calls the named selector.",
+          examples: ["&\"to_string\"", "&\"upcase\"", "&\"value\""]
         },
         "to_function" => {
           name: "to_function",
-          description: "returns a function parsed from the string.",
+          description: "returns a function that calls the named selector.",
           examples: [
-            "\"x + 1\".to_function",
-            "\"1 + 2\".to_function",
+            "\"to_string\".to_function",
+            "\"upcase\".to_function",
             "\"value\".to_function"
           ]
         },
@@ -922,7 +922,28 @@ class Code
       end
 
       def code_to_function(**_globals)
-        Function.new([{ name: "_" }], "_.#{raw}")
+        unless /\A[A-Za-z_][A-Za-z0-9_]*[!?]?\z/.match?(raw)
+          raise Error, "String#to_function: invalid function name"
+        end
+
+        Function.new(
+          [{ name: "_" }],
+          Node::Code.new(
+            [
+              {
+                left_operation: {
+                  first: { call: { name: "_" } },
+                  others: [
+                    {
+                      operator: ".",
+                      statement: { call: { name: raw } }
+                    }
+                  ]
+                }
+              }
+            ]
+          )
+        )
       end
 
       def code_inspect

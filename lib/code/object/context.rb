@@ -30,7 +30,7 @@ class Code
         {}
       end
 
-      attr_reader :parent
+      attr_accessor :parent
 
       def initialize(*args, **_kargs, &_block)
         super(args.first)
@@ -63,6 +63,23 @@ class Code
 
       def merge(other)
         Context.new(raw.merge(other.raw), parent || other.parent)
+      end
+
+      def code_deep_duplicate(seen = {})
+        seen.compare_by_identity unless seen.compare_by_identity?
+        return seen[self] if seen.key?(self)
+
+        duplicate = Context.new
+        seen[self] = duplicate
+
+        raw.each do |key, value|
+          duplicate.code_set(
+            key.code_deep_duplicate(seen),
+            value.code_deep_duplicate(seen)
+          )
+        end
+        duplicate.parent = parent&.code_deep_duplicate(seen)
+        duplicate
       end
 
       def parent?

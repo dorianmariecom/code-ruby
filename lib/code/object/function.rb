@@ -238,7 +238,8 @@ class Code
               if code_default.is_a?(Code)
                 code_default.code_evaluate(
                   **globals,
-                  context: code_context
+                  context: code_context,
+                  trusted_evaluation: true
                 )
               else
                 code_default
@@ -252,7 +253,8 @@ class Code
         code_body.code_evaluate(
           **globals,
           constructing_literal_classes: constructing_literal_classes,
-          context: code_context
+          context: code_context,
+          trusted_evaluation: true
         ).tap do
           persist_instance_functions(code_self)
         end
@@ -325,6 +327,45 @@ class Code
         ).tap do |extended_function|
           extended_function.instance_functions.code_merge!(instance_functions)
         end
+      end
+
+      def code_deep_duplicate(seen = {})
+        seen.compare_by_identity unless seen.compare_by_identity?
+        return seen[self] if seen.key?(self)
+
+        duplicate = Function.new
+        seen[self] = duplicate
+
+        duplicate.code_replace(
+          code_parameters: code_parameters.code_deep_duplicate(seen),
+          code_body: code_body.code_deep_duplicate(seen),
+          definition_context: definition_context&.code_deep_duplicate(seen),
+          parent: parent.is_a?(Function) ? parent.code_deep_duplicate(seen) : parent,
+          functions: functions.code_deep_duplicate(seen),
+          instance_functions: instance_functions.code_deep_duplicate(seen),
+          documentation: documentation.code_deep_duplicate(seen)
+        )
+        duplicate
+      end
+
+      def code_replace(
+        code_parameters:,
+        code_body:,
+        definition_context:,
+        parent:,
+        functions:,
+        instance_functions:,
+        documentation:
+      )
+        @code_parameters = code_parameters
+        @code_body = code_body
+        @definition_context = definition_context
+        @parent = parent
+        self.functions = functions
+        @instance_functions = instance_functions
+        self.documentation = documentation
+        self.raw = List.new([code_parameters, code_body])
+        self
       end
 
       def code_functions

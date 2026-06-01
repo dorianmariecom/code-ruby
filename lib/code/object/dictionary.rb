@@ -2863,10 +2863,21 @@ class Code
         pair ? List.new(pair) : Nothing.new
       end
 
-      def code_deep_duplicate
-        Dictionary.new(
-          raw.dup.to_h { |key, value| [key, value].map(&:code_deep_duplicate) }
-        )
+      def code_deep_duplicate(seen = {})
+        seen.compare_by_identity unless seen.compare_by_identity?
+        return seen[self] if seen.key?(self)
+
+        duplicate = Dictionary.new
+        seen[self] = duplicate
+
+        raw.each do |key, value|
+          duplicate.code_set(
+            key.code_deep_duplicate(seen),
+            value.code_deep_duplicate(seen)
+          )
+        end
+
+        duplicate
       end
 
       def <=>(other)

@@ -2,20 +2,21 @@ PATH
   remote: .
   specs:
     code-ruby (3.1.2)
-      activesupport
-      base64
-      bigdecimal
-      did-you-mean
-      dorian-arguments
-      icalendar
-      json
-      language-ruby
-      mail
-      net-http
-      net-smtp
-      nokogiri
-      uri
-      zeitwerk
+      activesupport (>= 8.1, < 9)
+      base64 (>= 0.3, < 1)
+      bigdecimal (>= 4.0, < 5)
+      did-you-mean (>= 0.1, < 1)
+      dorian-arguments (>= 1.2, < 2)
+      icalendar (>= 2.12, < 3)
+      json (>= 2.19, < 3)
+      language-ruby (>= 1.2, < 2)
+      mail (>= 2.9, < 3)
+      net-http (>= 0.9, < 1)
+      net-smtp (>= 0.5, < 1)
+      nokogiri (>= 1.19, < 2)
+      ruby-prof (>= 2.0, < 3)
+      uri (>= 1.1, < 2)
+      zeitwerk (>= 2.7, < 3)
 
 GEM
   remote: https://rubygems.org/

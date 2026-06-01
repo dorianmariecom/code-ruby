@@ -64,6 +64,53 @@ RSpec.describe Code do
     ]
   end
 
+  it "uses a finite default timeout" do
+    expect(described_class::DEFAULT_TIMEOUT).to eq(1.hour.to_f)
+  end
+
+  it "rejects non-positive timeouts" do
+    expect do
+      described_class.evaluate("1", timeout: 0)
+    end.to raise_error(Code::Error, /timeout must be positive/)
+  end
+
+  it "returns a deep copy of context" do
+    context =
+      Code::Object::Context.new(
+        { "secret" => Code::Object::Dictionary.new("value" => 1) }
+      )
+
+    described_class.evaluate("context.fetch(:secret).clear", context: context)
+
+    expect(context.code_fetch("secret")).to be_code_has_key("value")
+  end
+
+  it "evaluates nested source without ambient context" do
+    expect do
+      described_class.evaluate('x = 1 evaluate("x")')
+    end.to raise_error(Code::Error, /x.*not defined/)
+  end
+
+  it "evaluates nested source without ambient globals" do
+    expect do
+      described_class.evaluate('Code("Http").evaluate')
+    end.to raise_error(Code::Error, /Http.*not defined/)
+  end
+
+  it "honors a restricted top-level object" do
+    expect do
+      described_class.evaluate("Http", object: Code::Object.new)
+    end.to raise_error(Code::Error, /Http.*not defined/)
+  end
+
+  it "does not expose trusted parameter defaults as ambient evaluators" do
+    expect do
+      described_class.evaluate(
+        "x = { value: 1 } f = (a = x.clear) => {} f.parameters.first.default.evaluate x"
+      )
+    end.to raise_error(Code::Error, /x.*not defined/)
+  end
+
   %w[return break next continue].each do |control_flow|
     it "continues after #{control_flow} in block functions" do
       aggregate_failures do

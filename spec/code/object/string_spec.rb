@@ -81,4 +81,18 @@ RSpec.describe Code::Object::String do
       expect(string.code_strip.to_s).to eq("\uFFFD")
     end
   end
+
+  describe "#code_to_function" do
+    it "builds selector functions without parsing concatenated source" do
+      expect(Code.evaluate('[1, 2].map(&:to_string)')).to eq(
+        Code.evaluate('["1", "2"]')
+      )
+    end
+
+    it "rejects source-like selectors" do
+      expect do
+        Code.evaluate(%q(f = &"to_string\nputs(:pwned)" f(1)))
+      end.to raise_error(Code::Error, /invalid function name/)
+    end
+  end
 end

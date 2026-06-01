@@ -39,6 +39,9 @@ class Code
         {}
       end
 
+      MAX_NESTING = 100
+      MAX_ITEMS = 10_000
+
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
@@ -63,14 +66,37 @@ class Code
 
       def self.code_parse(value)
         code_value = value.to_code
+        ::Code.ensure_input_size!(code_value.raw, label: "json")
 
-        ::JSON.parse(code_value.raw).to_code
+        parsed = ::JSON.parse(code_value.raw)
+        validate_shape!(parsed)
+        parsed.to_code
       rescue JSON::ParserError
         Nothing.new
       end
 
       def self.code_generate(value, pretty: nil)
         value.to_code.code_to_json(pretty: pretty)
+      end
+
+      def self.validate_shape!(value, depth: 0, count: 0)
+        raise Error, "json is too deeply nested" if depth > MAX_NESTING
+        raise Error, "json has too many items" if count > MAX_ITEMS
+
+        case value
+        when ::Array
+          count += value.size
+          value.each do |item|
+            count = validate_shape!(item, depth: depth + 1, count: count)
+          end
+        when ::Hash
+          count += value.size
+          value.each_value do |item|
+            count = validate_shape!(item, depth: depth + 1, count: count)
+          end
+        end
+
+        count
       end
     end
   end

@@ -113,6 +113,21 @@ RSpec.describe Code::Format do
       expect(Code.evaluate(formatted)).to eq(Code.evaluate(input))
     end
 
+    it "keeps escaped interpolation braces literal" do
+      input = 'x = 1 "\{x = 2}" x'
+      formatted = described_class.format(Code.parse(input))
+
+      expect(Code.evaluate(formatted)).to eq(Code.evaluate(input))
+      expect(Code.evaluate(formatted)).to eq(Code.evaluate("1"))
+    end
+
+    it "does not split escaped interpolation into executable code" do
+      input = "\"#{"a" * 49}\\{return}\""
+      formatted = described_class.format(Code.parse(input))
+
+      expect(Code.evaluate(formatted)).to eq(Code.evaluate(input))
+    end
+
     it "keeps grouped multiline receivers stable" do
       input = <<~CODE.chomp
         lines << (

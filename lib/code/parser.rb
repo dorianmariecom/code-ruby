@@ -73,7 +73,7 @@ class Code
     SUFFIX_PUNCTUATION = %w[! ?].freeze
 
     ASSIGNMENT_RHS_MIN_BP = 20
-
+    MAX_NESTING = 200
     INFIX_PRECEDENCE = {
       "if" => [10, 9],
       "unless" => [10, 9],
@@ -129,6 +129,7 @@ class Code
 
     def initialize(input)
       @input = input.to_s
+      ensure_source_nesting_limit!(@input)
       @tokens = lex(@input)
       @index = 0
     end
@@ -975,6 +976,65 @@ class Code
       raise Error, "#{message} at #{token.position}"
     end
 
+    def ensure_source_nesting_limit!(source)
+      depth = 0
+      quote = nil
+      escaped = false
+      index = 0
+
+      while index < source.length
+        char = source[index]
+        if quote
+          if escaped
+            escaped = false
+          elsif char == "\\"
+            escaped = true
+          elsif char == quote
+            quote = nil
+          end
+          index += 1
+          next
+        end
+
+        if %w[' "].include?(char)
+          quote = char
+        elsif char == "#"
+          index += 1
+          index += 1 while index < source.length &&
+            !NEWLINE_CHARACTERS.include?(source[index])
+          next
+        elsif source[index, 2] == "//"
+          index += 2
+          index += 1 while index < source.length &&
+            !NEWLINE_CHARACTERS.include?(source[index])
+          next
+        elsif source[index, 2] == "/*"
+          index += 2
+          index += 1 while index < source.length && source[index, 2] != "*/"
+          index += 2 if source[index, 2] == "*/"
+          next
+        elsif "([{".include?(char)
+          depth += 1
+          raise_parse_error_at("source is too deeply nested", index) if depth > MAX_NESTING
+        elsif ")]}".include?(char)
+          depth -= 1 if depth.positive?
+        end
+        index += 1
+      end
+    end
+
+    def raise_parse_error_at(message, position)
+      token =
+        Token.new(
+          type: :unknown,
+          value: "",
+          position: position,
+          newline_before: false,
+          space_before: false
+        )
+      raise_parse_error(message, token)
+    end
+
     def lex(source)
       tokens = []
       index = 0
@@ -1223,10 +1283,16 @@ class Code
         end
 
         if char == "{"
-          parts << { type: :text, value: text } unless text.empty?
-          text = +""
-          code, i = extract_braced(source, i)
-          parts << { type: :code, value: code }
+          code, i, closed = extract_braced(source, i)
+
+          if closed
+            parts << { type: :text, value: text } unless text.empty?
+            text = +""
+            parts << { type: :code, value: code }
+          else
+            text << "{" << code
+            text << "}" if closed
+          end
           next
         end
 
@@ -1242,28 +1308,74 @@ class Code
       depth = 1
       i = index + 1
       body = +""
+      quote = nil
+      escaped = false
 
       while i < source.length
         char = source[i]
 
-        if char == "{"
+        if quote
+          body << char
+          if escaped
+            escaped = false
+          elsif char == "\\"
+            escaped = true
+          elsif char == quote
+            quote = nil
+          end
+          i += 1
+          next
+        end
+
+        if %w[' "].include?(char)
+          quote = char
+        elsif char == "#"
+          while i < source.length && !NEWLINE_CHARACTERS.include?(source[i])
+            body << source[i]
+            i += 1
+          end
+          next
+        elsif source[i, 2] == "//"
+          2.times do
+            body << source[i]
+            i += 1
+          end
+          while i < source.length && !NEWLINE_CHARACTERS.include?(source[i])
+            body << source[i]
+            i += 1
+          end
+          next
+        elsif source[i, 2] == "/*"
+          2.times do
+            body << source[i]
+            i += 1
+          end
+          while i < source.length && source[i, 2] != "*/"
+            body << source[i]
+            i += 1
+          end
+          if source[i, 2] == "*/"
+            2.times do
+              body << source[i]
+              i += 1
+            end
+          end
+          next
+        elsif char == "{"
           depth += 1
         elsif char == "}"
           depth -= 1
-          return body, i + 1 if depth.zero?
+          return body, i + 1, true if depth.zero?
         end
         body << char
         i += 1
       end
 
-      [body, i]
+      [body, i, false]
     end
 
     def scan_number(source, index)
-      rest = source[index..]
-      return unless rest
-
-      if (match = /\A0[xX][0-9a-fA-F](?:_?[0-9a-fA-F])*/.match(rest))
+      if (match = /\G0[xX][0-9a-fA-F](?:_?[0-9a-fA-F])*/.match(source, index))
         return(
           {
             raw: {
@@ -1276,7 +1388,7 @@ class Code
         )
       end
 
-      if (match = /\A0[oO][0-7](?:_?[0-7])*/.match(rest))
+      if (match = /\G0[oO][0-7](?:_?[0-7])*/.match(source, index))
         return(
           {
             raw: {
@@ -1289,7 +1401,7 @@ class Code
         )
       end
 
-      if (match = /\A0[bB][01](?:_?[01])*/.match(rest))
+      if (match = /\G0[bB][01](?:_?[01])*/.match(source, index))
         return(
           {
             raw: {
@@ -1304,8 +1416,9 @@ class Code
 
       if (
            match =
-             /\A[0-9](?:_?[0-9])*\.[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
-               rest
+             /\G[0-9](?:_?[0-9])*\.[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
+               source,
+               index
              )
          )
         decimal, exponent = match[0].split(/[eE]/, 2)
@@ -1318,8 +1431,9 @@ class Code
 
       if (
            match =
-             /\A[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
-               rest
+             /\G[0-9](?:_?[0-9])*(?:[eE][0-9](?:_?[0-9])*(?:\.[0-9](?:_?[0-9])*)?)?/.match(
+               source,
+               index
              )
          )
         whole, exponent = match[0].split(/[eE]/, 2)

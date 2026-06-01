@@ -382,7 +382,7 @@ class Code
           examples: [
             "getting_started.title",
             "getting_started.steps.first.command",
-            "getting_started.examples.map { |example| Code(example.source).evaluate }"
+            "getting_started.examples.map(&:name)"
           ]
         },
         "globals" => {
@@ -622,7 +622,7 @@ class Code
           end
         when "context"
           sig(args)
-          code_context
+          code_context.code_deep_duplicate
         when "Object"
           sig(args)
           if code_arguments.any?

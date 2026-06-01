@@ -207,13 +207,17 @@ class Code
     end
 
     def escape_string_text(text)
-      text.gsub("\\", "\\\\").gsub('"', '\"').gsub("{", "\\{")
+      text
+        .gsub("\\", "\\\\")
+        .gsub('"', '\"')
+        .gsub("{", "\\{")
     end
 
     def format_string_literal(content, components:, indent:, allow_split:)
       literal = %("#{content}")
       return literal if literal.length <= string_inline_limit(indent)
       return literal unless allow_split
+      return literal if content.include?("\\")
 
       split_string_literal(components, indent: indent)
     end

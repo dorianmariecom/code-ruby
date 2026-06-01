@@ -17,5 +17,12 @@ end
 WebMock.disable_net_connect!
 
 RSpec.configure do |config|
-  config.before { stub_request(:any, /httpbin\.org/).to_rack(FakeHttpBin) }
+  config.before do
+    stub_request(:any, /httpbin\.org/).to_rack(FakeHttpBin)
+    allow(Resolv).to receive(:getaddresses).and_call_original
+    allow(Resolv).to receive(:getaddresses).with("api.github.com").and_return(["140.82.112.6"])
+    allow(Resolv).to receive(:getaddresses).with("example.com").and_return(["93.184.216.34"])
+    allow(Resolv).to receive(:getaddresses).with("httpbin.org").and_return(["93.184.216.34"])
+    allow(Resolv).to receive(:getaddresses).with("smtp.example.com").and_return(["93.184.216.34"])
+  end
 end

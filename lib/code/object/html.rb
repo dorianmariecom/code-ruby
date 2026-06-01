@@ -262,7 +262,9 @@ class Code
                 args.first.is_a?(Nokogiri::XML::Node)
             args.first
           else
-            Nokogiri.HTML(args.first.to_s)
+            source = args.first.to_s
+            ::Code.ensure_input_size!(source, label: "html")
+            Nokogiri.HTML(source)
           end
       end
 
@@ -337,7 +339,7 @@ class Code
 
           content =
             if code_content.is_an?(Html)
-              Nokogiri::HTML::DocumentFragment.parse(code_content.to_html)
+              fragment_from_html(code_content)
             else
               Nokogiri::XML::Text.new(code_content.to_s, fragment.document)
             end
@@ -381,7 +383,10 @@ class Code
             value_or_function.to_code
           end
 
-        String.new(Nokogiri::HTML.fragment(code_value.to_s).text)
+        source = code_value.to_s
+        ::Code.ensure_input_size!(source, label: "html")
+
+        String.new(Nokogiri::HTML.fragment(source).text)
       rescue Error::Break => e
         e.code_value
       end
@@ -408,14 +413,14 @@ class Code
         code_contents.raw.each.with_index do |code_content, index|
           content =
             if code_content.is_an?(Html)
-              Nokogiri::HTML::DocumentFragment.parse(code_content.to_html)
+              fragment_from_html(code_content)
             else
               Nokogiri::XML::Text.new(code_content.to_s, fragment.document)
             end
 
           separator =
             if code_separator.is_an?(Html)
-              Nokogiri::HTML::DocumentFragment.parse(code_separator.to_html)
+              fragment_from_html(code_separator)
             else
               Nokogiri::XML::Text.new(code_separator.to_s, fragment.document)
             end
@@ -464,12 +469,20 @@ class Code
           end
 
         if code_value.is_an?(Html)
-          Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_html))
+          Html.new(fragment_from_html(code_value))
         else
-          Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_s))
+          source = code_value.to_s
+          ::Code.ensure_input_size!(source, label: "html")
+          Html.new(Nokogiri::HTML::DocumentFragment.parse(source))
         end
       rescue Error::Break => e
         e.code_value
+      end
+
+      def self.fragment_from_html(html)
+        source = html.to_html
+        ::Code.ensure_input_size!(source, label: "html")
+        Nokogiri::HTML::DocumentFragment.parse(source)
       end
 
       def call(**args)

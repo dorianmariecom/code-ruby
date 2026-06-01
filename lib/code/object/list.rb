@@ -5074,8 +5074,14 @@ class Code
         raw.inject(&:code_plus) || Nothing.new
       end
 
-      def code_deep_duplicate
-        List.new(raw.dup.map(&:code_deep_duplicate))
+      def code_deep_duplicate(seen = {})
+        seen.compare_by_identity unless seen.compare_by_identity?
+        return seen[self] if seen.key?(self)
+
+        duplicate = List.new
+        seen[self] = duplicate
+        duplicate.raw.concat(raw.map { |value| value.code_deep_duplicate(seen) })
+        duplicate
       end
 
       def code_get(argument)

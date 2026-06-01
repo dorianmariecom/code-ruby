@@ -184,6 +184,20 @@ class Code
         network_authentication_required: 511
       }.freeze
       DEFAULT_TIMEOUT = 1.hour.to_f
+      MAX_REQUEST_BYTES = ::Code::MAX_INPUT_BYTES
+      MAX_RESPONSE_BYTES = ::Code::MAX_INPUT_BYTES
+      MAX_HEADER_BYTES = 32.kilobytes
+      HEADER_NAME = /\A[A-Za-z0-9!#$%&'*+\-.^_`|~]+\z/
+      RESTRICTED_HEADERS = %w[
+        connection
+        content-length
+        host
+        proxy-authorization
+        te
+        trailer
+        transfer-encoding
+        upgrade
+      ].freeze
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -262,7 +276,7 @@ class Code
         username = options.code_get("username").to_s
         password = options.code_get("password").to_s
         body = options.code_get("body").to_s
-        headers = options.code_get("headers").raw || {}
+        headers = sanitized_headers(options.code_get("headers").raw || {})
         data = options.code_get("data").raw || {}
         timeout = options.code_get("timeout")
         open_timeout = options.code_get("open_timeout")
@@ -270,25 +284,35 @@ class Code
         write_timeout = options.code_get("write_timeout")
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
+        validate_payload_size!(username, label: "http username")
+        validate_payload_size!(password, label: "http password")
+        validate_payload_size!(query, label: "http query")
+        validate_payload_size!(body, label: "http request body")
+        validate_payload_size!(data.as_json.to_query, label: "http form data") if data.present?
 
         url = original_url
         url = "#{url}?#{query}" if query.present?
+        validate_payload_size!(url, label: "http url")
 
         if username.present? || password.present?
           authorization = ::Base64.strict_encode64("#{username}:#{password}")
           headers["Authorization"] = "Basic #{authorization}"
+          validate_header_size!("Authorization", headers["Authorization"])
         end
 
-        uri = ::URI.parse(url)
-        http = ::Net::HTTP.new(uri.host, uri.port)
+        uri = parse_uri(url)
+        resolved_ip = ::Code::Network.validate_public_uri!(uri, service: "http")
+
+        http = ::Net::HTTP.new(uri.hostname, uri.port, nil)
+        http.ipaddr = resolved_ip
         http.use_ssl = true if uri.scheme == "https"
-        default_timeout = timeout.nothing? ? DEFAULT_TIMEOUT : timeout.to_f
+        default_timeout = http_timeout(timeout, DEFAULT_TIMEOUT)
         open_timeout_value =
-          open_timeout.nothing? ? default_timeout : open_timeout.to_f
+          http_timeout(open_timeout, default_timeout)
         read_timeout_value =
-          read_timeout.nothing? ? default_timeout : read_timeout.to_f
+          http_timeout(read_timeout, default_timeout)
         write_timeout_value =
-          write_timeout.nothing? ? default_timeout : write_timeout.to_f
+          http_timeout(write_timeout, default_timeout)
 
         http.open_timeout = open_timeout_value if open_timeout_value
         http.read_timeout = read_timeout_value if read_timeout_value
@@ -320,7 +344,19 @@ class Code
         request.set_form_data(**data.as_json) if data.present?
 
         begin
-          response = http.request(request)
+          response_body = +""
+          response =
+            http.request(request) do |http_response|
+              validate_response_headers!(http_response)
+
+              http_response.read_body do |chunk|
+                if response_body.bytesize + chunk.bytesize > MAX_RESPONSE_BYTES
+                  raise ::Code::Error, "http response is too large"
+                end
+
+                response_body << chunk
+              end
+            end
         rescue ::Timeout::Error, ::Errno::ETIMEDOUT
           raise ::Code::Error, "http timeout"
         rescue OpenSSL::SSL::SSLError, IOError, SystemCallError, SocketError
@@ -331,9 +367,10 @@ class Code
         location = response["location"].to_s
 
         if (300..399).cover?(code) && location.present? && redirects.positive?
-          new_uri = ::URI.join(uri, location)
+          new_uri = parse_uri(::URI.join(uri, location).to_s)
+          ::Code::Network.validate_public_uri!(new_uri, service: "http")
 
-          if new_uri.host == uri.host
+          if same_origin?(new_uri, uri)
             code_fetch(
               "get",
               new_uri.to_s,
@@ -349,7 +386,7 @@ class Code
           request_headers = request.to_hash.transform_values do |values|
             List.new(values)
           end
-          body = response.body.to_s
+          body = response_body.to_s
 
           Dictionary.new(
             code: code,
@@ -374,6 +411,75 @@ class Code
             }
           )
         end
+      end
+
+      def self.parse_uri(url)
+        ::URI.parse(url)
+      rescue ::URI::InvalidURIError
+        raise ::Code::Error, "http: invalid url"
+      end
+
+      def self.same_origin?(new_uri, original_uri)
+        new_uri.scheme == original_uri.scheme &&
+          new_uri.hostname.to_s.downcase == original_uri.hostname.to_s.downcase &&
+          new_uri.port == original_uri.port
+      end
+
+      def self.sanitized_headers(headers)
+        headers.to_h.to_h do |key, value|
+          name = key.to_s
+          header_value = value.to_s
+
+          validate_header_name!(name)
+          validate_header_value!(header_value)
+          validate_header_size!(name, header_value)
+
+          [name, header_value]
+        end
+      end
+
+      def self.validate_header_name!(name)
+        normalized_name = name.downcase
+
+        unless HEADER_NAME.match?(name)
+          raise ::Code::Error, "http: invalid header name"
+        end
+
+        return unless RESTRICTED_HEADERS.include?(normalized_name)
+
+        raise ::Code::Error, "http: restricted header #{name.inspect}"
+      end
+
+      def self.validate_header_value!(value)
+        return unless /[\r\n\0]/.match?(value)
+
+        raise ::Code::Error, "http: invalid header value"
+      end
+
+      def self.validate_header_size!(name, value)
+        return if name.bytesize + value.bytesize <= MAX_HEADER_BYTES
+
+        raise ::Code::Error, "http: request headers are too large"
+      end
+
+      def self.validate_response_headers!(response)
+        size =
+          response.each_header.sum do |name, value|
+            name.to_s.bytesize + value.to_s.bytesize
+          end
+        return if size <= MAX_HEADER_BYTES
+
+        raise ::Code::Error, "http response headers are too large"
+      end
+
+      def self.validate_payload_size!(value, label:)
+        return if value.to_s.bytesize <= MAX_REQUEST_BYTES
+
+        raise ::Code::Error, "#{label} is too large"
+      end
+
+      def self.http_timeout(value, default)
+        ::Code.normalize_timeout!(value.nothing? ? default : value)
       end
     end
   end

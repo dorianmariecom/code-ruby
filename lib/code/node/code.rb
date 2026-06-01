@@ -19,13 +19,13 @@ class Code
             args.merge(global_control_flow_root: false)
           else
             args
-          end
+        end
         last = Object::Nothing.new
+        root_object = args.fetch(:root_object, args.fetch(:object))
 
         begin
           (@statements || []).each do |statement|
-            last =
-              statement.evaluate(**statement_args, object: Object::Global.new)
+            last = statement.evaluate(**statement_args, object: root_object)
           end
         rescue Error::Retry
           retry if control_flow_scope == :group
@@ -48,9 +48,10 @@ class Code
 
       def resolve(**args)
         last = Object::Nothing.new
+        root_object = args.fetch(:root_object, args.fetch(:object))
 
         (@statements || []).each do |statement|
-          last = statement.resolve(**args, object: Object::Global.new)
+          last = statement.resolve(**args, object: root_object)
         end
 
         last

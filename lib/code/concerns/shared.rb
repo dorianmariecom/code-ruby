@@ -483,7 +483,7 @@ class Code
         self.class.new(self)
       end
 
-      def code_deep_duplicate
+      def code_deep_duplicate(_seen = {})
         self.class.new(self)
       end
 

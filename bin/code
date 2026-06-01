@@ -37,51 +37,128 @@ parsed =
 abort Code::Version.to_s if parsed.options.version
 abort parsed.help if parsed.options.help
 
+MAX_ARGUMENT_FILES = 1000
+
 def glob_pattern?(value)
   value.match?(/[*?\[\]{]/)
 end
 
-expanded_argument_files = []
-remaining_arguments = []
+def timeout
+  @timeout ||= @parsed_timeout
+end
 
-parsed.arguments.each do |argument|
-  if glob_pattern?(argument)
-    matches = Dir.glob(argument).select { |path| File.file?(path) }
+def with_timeout(&)
+  Timeout.timeout(timeout, &)
+rescue Timeout::Error
+  raise Code::Error, "timeout"
+end
 
-    if matches.any?
-      expanded_argument_files.concat(matches)
-    else
-      remaining_arguments << argument
-    end
-  else
-    remaining_arguments << argument
+def append_limited(buffer, value, label: "input")
+  value = value.to_s
+  if buffer.bytesize + value.bytesize > Code::MAX_INPUT_BYTES
+    raise Code::Error, "#{label} is too large"
+  end
+
+  buffer << value
+end
+
+def read_file(path)
+  raise Code::Error, "#{path} is not a regular file" unless File.file?(path)
+
+  File.open(path, "rb") do |file|
+    data = file.read(Code::MAX_INPUT_BYTES + 1).to_s
+    Code.ensure_input_size!(data, label: path)
+    data
   end
 end
 
-input = parsed.options.input.to_s
-input += File.read(input) if File.exist?(input)
-input += remaining_arguments.join(" ")
-input +=
-  (parsed.files + expanded_argument_files)
-    .map { |file| File.read(file) }
-    .join("\n\n")
+def read_stdin
+  data = $stdin.read(Code::MAX_INPUT_BYTES + 1).to_s
+  Code.ensure_input_size!(data, label: "stdin")
+  data
+end
+
+def expand_arguments(arguments)
+  expanded_files = []
+  remaining_arguments = []
+
+  arguments.each do |argument|
+    if glob_pattern?(argument)
+      matches = Dir.glob(argument).select { |path| File.file?(path) }
+
+      if matches.any?
+        expanded_files.concat(matches)
+      else
+        remaining_arguments << argument
+      end
+    else
+      remaining_arguments << argument
+    end
+
+    raise Code::Error, "too many input files" if expanded_files.size > MAX_ARGUMENT_FILES
+  end
+
+  [expanded_files, remaining_arguments]
+end
+
+begin
+  @parsed_timeout = Code.normalize_timeout!(
+    parsed.options.timeout || Code::DEFAULT_TIMEOUT
+  )
+rescue Code::Error => e
+  abort "#{e.class}: #{e.message}"
+end
+
+begin
+  input =
+    with_timeout do
+      buffer = +""
+      option_input = parsed.options.input.to_s
+      expanded_argument_files, remaining_arguments =
+        expand_arguments(parsed.arguments)
+
+      if option_input.present? && File.exist?(option_input)
+        append_limited(buffer, read_file(option_input))
+      else
+        append_limited(buffer, option_input)
+      end
+
+      append_limited(buffer, remaining_arguments.join(" "))
+
+      input_files = parsed.files + expanded_argument_files
+      raise Code::Error, "too many input files" if input_files.size > MAX_ARGUMENT_FILES
+
+      input_files.each.with_index do |file, index|
+        append_limited(buffer, "\n\n") if index.positive?
+        append_limited(buffer, read_file(file), label: file)
+      end
+
+      buffer
+    end
+rescue Code::Error => e
+  abort "#{e.class}: #{e.message}"
+end
 
 profile = parsed.options.profile || parsed.options.profiler
 require "ruby-prof" if profile
 
 RubyProf.start if profile
 
-input = $stdin.each_line.to_a.join if input.empty?
+begin
+  input = with_timeout { read_stdin } if input.empty?
+rescue Code::Error => e
+  abort "#{e.class}: #{e.message}"
+end
 
 if parsed.options.parse
   begin
-    pp Code::Parser.parse(input).to_raw
+    pp Code.parse(input, timeout: timeout)
   rescue StandardError => e
     warn e.message
   end
 elsif parsed.options.format
   begin
-    print(Code.format(input, timeout: parsed.options.timeout))
+    print(Code.format(input, timeout: timeout))
   rescue Code::Error => e
     warn "#{e.class}: #{e.message}"
   end
@@ -93,7 +170,7 @@ else
         output: $stdout,
         error: $stderr,
         input: $stdin,
-        timeout: parsed.options.timeout
+        timeout: timeout
       )
     )
   rescue Code::Error => e

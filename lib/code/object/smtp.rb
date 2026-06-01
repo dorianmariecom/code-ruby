@@ -30,6 +30,11 @@ class Code
         {}
       end
 
+      DEFAULT_PORT = 587
+      DEFAULT_TIMEOUT = 10
+      DEFAULT_DOMAIN = "localhost.localdomain"
+      ALLOWED_PORTS = [465, 587].freeze
+
       def call(**args)
         code_operator = args.fetch(:operator, nil).to_code
         code_arguments = args.fetch(:arguments, []).to_code
@@ -93,21 +98,72 @@ class Code
         mail.add_part(text_part)
         mail.add_part(html_part) if code_body_html.to_s.present?
 
-        mail.delivery_method(
-          :smtp,
-          {
-            address: code_get("address").to_s,
-            port: code_get("port").to_i,
-            user_name: code_get("user_name").to_s,
-            password: code_get("password").to_s,
-            authentication: code_get("authentication").to_s,
-            enable_starttls_auto: code_get("enable_starttls_auto").truthy?
-          }
+        address = code_get("address").to_s
+        port = code_get("port").nothing? ? DEFAULT_PORT : code_get("port").to_i
+        authentication = code_get("authentication").to_s
+        starttls = code_get("enable_starttls_auto")
+        if starttls.something? && starttls.falsy?
+          raise Error, "smtp: tls is required"
+        end
+
+        resolved_ip = validate_delivery_target!(address, port)
+
+        encoded_message = mail.encoded
+        ::Code.ensure_input_size!(encoded_message, label: "smtp message")
+
+        deliver_mail(
+          mail,
+          address: address,
+          resolved_ip: resolved_ip,
+          port: port,
+          user_name: code_get("user_name").to_s,
+          password: code_get("password").to_s,
+          authentication: authentication
         )
 
-        mail.deliver!
-
         Nothing.new
+      end
+
+      private
+
+      def validate_delivery_target!(address, port)
+        resolved_ip = ::Code::Network.validate_public_host!(address, service: "smtp").first
+
+        return resolved_ip if ALLOWED_PORTS.include?(port)
+
+        raise Error, "smtp: unsupported port"
+      end
+
+      def deliver_mail(mail, address:, resolved_ip:, port:, user_name:, password:, authentication:)
+        envelope = Mail::SmtpEnvelope.new(mail)
+        smtp =
+          Net::SMTP.new(
+            resolved_ip,
+            port,
+            tls: port == 465,
+            starttls: port == 587 ? :always : false,
+            tls_verify: true,
+            tls_hostname: address,
+            ssl_context_params: {
+              verify_mode: OpenSSL::SSL::VERIFY_PEER
+            }
+          )
+        smtp.open_timeout = DEFAULT_TIMEOUT
+        smtp.read_timeout = DEFAULT_TIMEOUT
+
+        smtp.start(
+          DEFAULT_DOMAIN,
+          user_name.presence,
+          password.presence,
+          authentication.presence
+        ) do |connection|
+          connection.sendmail(envelope.message, envelope.from, envelope.to)
+        end
+      rescue Timeout::Error
+        raise Error, "smtp timeout"
+      rescue OpenSSL::SSL::SSLError, IOError, SystemCallError, SocketError,
+             Net::SMTPError
+        raise Error, "smtp error"
       end
     end
   end
