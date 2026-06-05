@@ -104,9 +104,6 @@ class Code
 
         resolved_ip = validate_delivery_target!(address, port)
 
-        encoded_message = mail.encoded
-        ::Code.ensure_input_size!(encoded_message, label: "smtp message")
-
         deliver_mail(
           mail,
           address: address,

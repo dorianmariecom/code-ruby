@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 class Code
-  GLOBALS = %i[context error input object output root_object source].freeze
+  GLOBALS = %i[context error input object output previous_object source].freeze
   DEFAULT_TIMEOUT = 1.hour.to_f
-  MAX_INPUT_BYTES = 10.megabytes
   LOCALES = %w[en fr].freeze
 
   def initialize(
@@ -27,7 +26,6 @@ class Code
   def self.parse(source, timeout: DEFAULT_TIMEOUT)
     timeout = normalize_timeout!(timeout)
 
-    ensure_input_size!(source, label: "source")
     Timeout.timeout(timeout) { Parser.parse(source).to_raw }
   rescue Timeout::Error
     raise Error, "timeout"
@@ -50,16 +48,10 @@ class Code
     Format.format(parse_tree)
   end
 
-  def self.ensure_input_size!(source, limit: MAX_INPUT_BYTES, label: "input")
-    return if source.to_s.bytesize <= limit
-
-    raise Error, "#{label} is too large"
-  end
-
   def self.normalize_timeout!(timeout)
     timeout = DEFAULT_TIMEOUT if timeout.nil?
     timeout = timeout.to_f
-    raise Error, "timeout must be positive" unless timeout.positive?
+    raise Error, "timeout must be non-negative" unless timeout >= 0
 
     timeout
   end
@@ -75,7 +67,7 @@ class Code
         input: input,
         object: object,
         output: output,
-        root_object: object,
+        previous_object: object,
         source: source,
         timeout: timeout
       )

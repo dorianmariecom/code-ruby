@@ -42,33 +42,9 @@ class Code
         {}
       end
 
-      class ScopedObject < Object
-        def call(**args)
-          code_operator = args.fetch(:operator, nil).to_code
-          code_context = args.fetch(:context).to_code
-
-          code_context = code_context.code_lookup!(code_operator)
-          code_result = code_context.code_fetch(code_operator)
-
-          if code_result.is_a?(Super) ||
-               (
-                 code_result.is_a?(Function) &&
-                   args.fetch(:explicit_arguments, false)
-               )
-            code_result.call(**args, operator: nil)
-          else
-            sig(args)
-            code_result
-          end
-        end
-      end
-
-      attr_reader :trusted
-
       def initialize(*args, **_kargs, &_block)
-        @trusted = args.first.is_a?(Node::Code)
         self.raw =
-          (trusted ? args.first : Node::Code.new(::Code.parse(args.first.to_s)))
+          (args.first.is_a?(Node::Code) ? args.first : Node::Code.new(::Code.parse(args.first.to_s)))
       end
 
       def self.code_evaluate(*args, **globals)
@@ -103,24 +79,12 @@ class Code
         end
       end
 
-      def code_evaluate(trusted_evaluation: false, **globals)
-        raw.evaluate(
-          **evaluation_globals(globals, trusted_evaluation: trusted_evaluation)
-        )
+      def code_evaluate(**globals)
+        raw.evaluate(**globals)
       end
 
-      def code_deep_duplicate(_seen = {})
+      def code_deep_duplicate
         self.class.new(raw)
-      end
-
-      private
-
-      def evaluation_globals(globals, trusted_evaluation:)
-        return globals if trusted && trusted_evaluation
-
-        object = ScopedObject.new
-
-        globals.merge(context: Context.new, object: object, root_object: object)
       end
     end
   end

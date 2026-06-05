@@ -5,7 +5,7 @@ AllCops:
   - "**/vendor/**/*"
   - "**/db/schema.rb"
   NewCops: enable
-  TargetRubyVersion: 3.4
+  TargetRubyVersion: 3.0
 Layout/ClosingHeredocIndentation:
   Enabled: false
 Layout/ElseAlignment:
@@ -66,8 +66,6 @@ Metrics/ParameterLists:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
-Naming/BlockForwarding:
-  Enabled: false
 Naming/FileName:
   Enabled: false
 Naming/MethodParameterName:
@@ -113,8 +111,6 @@ Rails/ThreeStateBooleanColumn:
 Rails/TimeZone:
   Enabled: false
 Security/Eval:
-  Enabled: false
-Style/ArgumentsForwarding:
   Enabled: false
 Style/CaseEquality:
   Enabled: false

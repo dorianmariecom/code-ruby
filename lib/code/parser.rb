@@ -73,7 +73,6 @@ class Code
     SUFFIX_PUNCTUATION = %w[! ?].freeze
 
     ASSIGNMENT_RHS_MIN_BP = 20
-    MAX_NESTING = 200
     INFIX_PRECEDENCE = {
       "if" => [10, 9],
       "unless" => [10, 9],
@@ -129,7 +128,6 @@ class Code
 
     def initialize(input)
       @input = input.to_s
-      ensure_source_nesting_limit!(@input)
       @tokens = lex(@input)
       @index = 0
     end
@@ -974,67 +972,6 @@ class Code
 
     def raise_parse_error(message, token = current)
       raise Error, "#{message} at #{token.position}"
-    end
-
-    def ensure_source_nesting_limit!(source)
-      depth = 0
-      quote = nil
-      escaped = false
-      index = 0
-
-      while index < source.length
-        char = source[index]
-        if quote
-          if escaped
-            escaped = false
-          elsif char == "\\"
-            escaped = true
-          elsif char == quote
-            quote = nil
-          end
-          index += 1
-          next
-        end
-
-        if %w[' "].include?(char)
-          quote = char
-        elsif char == "#"
-          index += 1
-          index += 1 while index < source.length &&
-            !NEWLINE_CHARACTERS.include?(source[index])
-          next
-        elsif source[index, 2] == "//"
-          index += 2
-          index += 1 while index < source.length &&
-            !NEWLINE_CHARACTERS.include?(source[index])
-          next
-        elsif source[index, 2] == "/*"
-          index += 2
-          index += 1 while index < source.length && source[index, 2] != "*/"
-          index += 2 if source[index, 2] == "*/"
-          next
-        elsif "([{".include?(char)
-          depth += 1
-          if depth > MAX_NESTING
-            raise_parse_error_at("source is too deeply nested", index)
-          end
-        elsif ")]}".include?(char)
-          depth -= 1 if depth.positive?
-        end
-        index += 1
-      end
-    end
-
-    def raise_parse_error_at(message, position)
-      token =
-        Token.new(
-          type: :unknown,
-          value: "",
-          position: position,
-          newline_before: false,
-          space_before: false
-        )
-      raise_parse_error(message, token)
     end
 
     def lex(source)

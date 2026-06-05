@@ -21,11 +21,11 @@ class Code
             args
           end
         last = Object::Nothing.new
-        root_object = args.fetch(:root_object, args.fetch(:object))
+        object = args.fetch(:previous_object)
 
         begin
           (@statements || []).each do |statement|
-            last = statement.evaluate(**statement_args, object: root_object)
+            last = statement.evaluate(**statement_args, object: object)
           end
         rescue Error::Retry
           retry if control_flow_scope == :group
@@ -48,10 +48,10 @@ class Code
 
       def resolve(**args)
         last = Object::Nothing.new
-        root_object = args.fetch(:root_object, args.fetch(:object))
+        object = args.fetch(:previous_object)
 
         (@statements || []).each do |statement|
-          last = statement.resolve(**args, object: root_object)
+          last = statement.resolve(**args, object: object)
         end
 
         last

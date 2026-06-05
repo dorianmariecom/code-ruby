@@ -44,8 +44,6 @@ class Code
         geo
       ].freeze
       MISSING_ATTRIBUTE = Object.new.freeze
-      MAX_EVENTS = 10_000
-      MAX_NESTING = 50
 
       def self.call(**args)
         code_operator = args.fetch(:operator, nil).to_code
@@ -63,10 +61,8 @@ class Code
 
       def self.code_parse(value)
         source = value.to_code.raw
-        ::Code.ensure_input_size!(source, label: "ics")
         calendars = ::Icalendar::Calendar.parse(source)
         events = calendars.flat_map(&:events)
-        raise Error, "ics has too many events" if events.size > MAX_EVENTS
 
         events.map { |event| serialize_event(event) }.to_code
       rescue ::Code::Error
@@ -128,9 +124,7 @@ class Code
         MISSING_ATTRIBUTE
       end
 
-      def self.serialize_value(value, depth: 0)
-        raise Error, "ics is too deeply nested" if depth > MAX_NESTING
-
+      def self.serialize_value(value)
         case value
         when nil
           nil
@@ -139,17 +133,15 @@ class Code
         when ::Symbol, ::Integer, ::Float, ::BigDecimal, true, false
           value
         when ::Array
-          value.map { |item| serialize_value(item, depth: depth + 1) }
+          value.map { |item| serialize_value(item) }
         when ::Hash
-          value.transform_values do |item|
-            serialize_value(item, depth: depth + 1)
-          end
+          value.transform_values { |item| serialize_value(item) }
         else
           serialized_date = serialize_date_like(value)
           return serialized_date unless serialized_date.nil?
 
           if value.is_a?(::Icalendar::Value)
-            serialize_value(value.value, depth: depth + 1)
+            serialize_value(value.value)
           else
             normalize_string(value.to_s)
           end

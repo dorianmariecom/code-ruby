@@ -3,6 +3,7 @@
 
 require_relative "../lib/code-ruby"
 require "dorian/arguments"
+require "pp"
 
 parsed =
   Dorian::Arguments.parse(
@@ -37,8 +38,6 @@ parsed =
 abort Code::Version.to_s if parsed.options.version
 abort parsed.help if parsed.options.help
 
-MAX_ARGUMENT_FILES = 1000
-
 def glob_pattern?(value)
   value.match?(/[*?\[\]{]/)
 end
@@ -47,35 +46,22 @@ def timeout
   @timeout ||= @parsed_timeout
 end
 
-def with_timeout(&)
-  Timeout.timeout(timeout, &)
+def with_timeout(&block)
+  Timeout.timeout(timeout, &block)
 rescue Timeout::Error
   raise Code::Error, "timeout"
-end
-
-def append_limited(buffer, value, label: "input")
-  value = value.to_s
-  if buffer.bytesize + value.bytesize > Code::MAX_INPUT_BYTES
-    raise Code::Error, "#{label} is too large"
-  end
-
-  buffer << value
 end
 
 def read_file(path)
   raise Code::Error, "#{path} is not a regular file" unless File.file?(path)
 
   File.open(path, "rb") do |file|
-    data = file.read(Code::MAX_INPUT_BYTES + 1).to_s
-    Code.ensure_input_size!(data, label: path)
-    data
+    file.read.to_s
   end
 end
 
 def read_stdin
-  data = $stdin.read(Code::MAX_INPUT_BYTES + 1).to_s
-  Code.ensure_input_size!(data, label: "stdin")
-  data
+  $stdin.read.to_s
 end
 
 def expand_arguments(arguments)
@@ -93,10 +79,6 @@ def expand_arguments(arguments)
       end
     else
       remaining_arguments << argument
-    end
-
-    if expanded_files.size > MAX_ARGUMENT_FILES
-      raise Code::Error, "too many input files"
     end
   end
 
@@ -118,22 +100,20 @@ begin
       expanded_argument_files, remaining_arguments =
         expand_arguments(parsed.arguments)
 
-      if option_input.present? && File.exist?(option_input)
-        append_limited(buffer, read_file(option_input))
-      else
-        append_limited(buffer, option_input)
-      end
+      buffer <<
+        if option_input.present? && File.exist?(option_input)
+          read_file(option_input)
+        else
+          option_input
+        end
 
-      append_limited(buffer, remaining_arguments.join(" "))
+      buffer << remaining_arguments.join(" ")
 
       input_files = parsed.files + expanded_argument_files
-      if input_files.size > MAX_ARGUMENT_FILES
-        raise Code::Error, "too many input files"
-      end
 
       input_files.each.with_index do |file, index|
-        append_limited(buffer, "\n\n") if index.positive?
-        append_limited(buffer, read_file(file), label: file)
+        buffer << "\n\n" if index.positive?
+        buffer << read_file(file)
       end
 
       buffer
@@ -155,7 +135,11 @@ end
 
 if parsed.options.parse
   begin
-    pp Code.parse(input, timeout: timeout)
+    output = StringIO.new
+    with_timeout { PP.pp(Code.parse(input, timeout: timeout), output) }
+    print output.string
+  rescue SystemStackError
+    warn "timeout"
   rescue StandardError => e
     warn e.message
   end

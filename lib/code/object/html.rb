@@ -265,7 +265,6 @@ class Code
             args.first
           else
             source = args.first.to_s
-            ::Code.ensure_input_size!(source, label: "html")
             Nokogiri.HTML(source)
           end
       end
@@ -385,10 +384,7 @@ class Code
             value_or_function.to_code
           end
 
-        source = code_value.to_s
-        ::Code.ensure_input_size!(source, label: "html")
-
-        String.new(Nokogiri::HTML.fragment(source).text)
+        String.new(Nokogiri::HTML.fragment(code_value.to_s).text)
       rescue Error::Break => e
         e.code_value
       end
@@ -473,18 +469,14 @@ class Code
         if code_value.is_an?(Html)
           Html.new(fragment_from_html(code_value))
         else
-          source = code_value.to_s
-          ::Code.ensure_input_size!(source, label: "html")
-          Html.new(Nokogiri::HTML::DocumentFragment.parse(source))
+          Html.new(Nokogiri::HTML::DocumentFragment.parse(code_value.to_s))
         end
       rescue Error::Break => e
         e.code_value
       end
 
       def self.fragment_from_html(html)
-        source = html.to_html
-        ::Code.ensure_input_size!(source, label: "html")
-        Nokogiri::HTML::DocumentFragment.parse(source)
+        Nokogiri::HTML::DocumentFragment.parse(html.to_html)
       end
 
       def call(**args)

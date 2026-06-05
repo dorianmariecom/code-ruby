@@ -191,8 +191,6 @@ class Code
         network_authentication_required: 511
       }.freeze
       DEFAULT_TIMEOUT = 1.hour.to_f
-      MAX_REQUEST_BYTES = ::Code::MAX_INPUT_BYTES
-      MAX_RESPONSE_BYTES = ::Code::MAX_INPUT_BYTES
       MAX_HEADER_BYTES = 32.kilobytes
       HEADER_NAME = /\A[A-Za-z0-9!#$%&'*+\-.^_`|~]+\z/
       RESTRICTED_HEADERS = %w[
@@ -291,17 +289,9 @@ class Code
         write_timeout = options.code_get("write_timeout")
         query = options.code_get("query").raw || {}
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
-        validate_payload_size!(username, label: "http username")
-        validate_payload_size!(password, label: "http password")
-        validate_payload_size!(query, label: "http query")
-        validate_payload_size!(body, label: "http request body")
-        if data.present?
-          validate_payload_size!(data.as_json.to_query, label: "http form data")
-        end
 
         url = original_url
         url = "#{url}?#{query}" if query.present?
-        validate_payload_size!(url, label: "http url")
 
         if username.present? || password.present?
           authorization = ::Base64.strict_encode64("#{username}:#{password}")
@@ -356,10 +346,6 @@ class Code
               validate_response_headers!(http_response)
 
               http_response.read_body do |chunk|
-                if response_body.bytesize + chunk.bytesize > MAX_RESPONSE_BYTES
-                  raise ::Code::Error, "http response is too large"
-                end
-
                 response_body << chunk
               end
             end
@@ -476,12 +462,6 @@ class Code
         return if size <= MAX_HEADER_BYTES
 
         raise ::Code::Error, "http response headers are too large"
-      end
-
-      def self.validate_payload_size!(value, label:)
-        return if value.to_s.bytesize <= MAX_REQUEST_BYTES
-
-        raise ::Code::Error, "#{label} is too large"
       end
 
       def self.http_timeout(value, default)

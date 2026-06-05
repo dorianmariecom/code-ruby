@@ -67,20 +67,15 @@ class Code
         Context.new(raw.merge(other.raw), parent || other.parent)
       end
 
-      def code_deep_duplicate(seen = {})
-        seen.compare_by_identity unless seen.compare_by_identity?
-        return seen[self] if seen.key?(self)
-
+      def code_deep_duplicate
         duplicate = Context.new
-        seen[self] = duplicate
-
         raw.each do |key, value|
           duplicate.code_set(
-            key.code_deep_duplicate(seen),
-            value.code_deep_duplicate(seen)
+            key.code_deep_duplicate,
+            value.code_deep_duplicate
           )
         end
-        duplicate.parent = parent&.code_deep_duplicate(seen)
+        duplicate.parent = parent
         duplicate
       end
 

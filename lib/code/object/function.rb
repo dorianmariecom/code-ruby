@@ -24,6 +24,16 @@ class Code
             "((a, b = 2) => { a + b }).call(3)"
           ]
         },
+        "new" => {
+          name: "new",
+          description:
+            "evaluates the function body as a constructor with the provided arguments.",
+          examples: [
+            "Widget = () => { self.name = :widget return(self) } Widget.new.name",
+            "User = (name:) => { self.name = name return(self) } User.new(name: :ada).name",
+            "Counter = () => { self.count = 0 return(self) } Counter.new.count"
+          ]
+        },
         "extend" => {
           name: "extend",
           description:
@@ -84,6 +94,7 @@ class Code
       attr_reader :code_parameters,
                   :code_body,
                   :definition_context,
+                  :definition_object,
                   :instance_functions,
                   :parent
 
@@ -97,6 +108,7 @@ class Code
 
         @code_body = Code.new(args.second.presence)
         @definition_context = args.third if args.third.is_a?(Context)
+        @definition_object = args.fourth if args.fourth.is_a?(Object)
         @parent = parent.to_code
         self.functions = functions.to_code
         self.functions = Dictionary.new if self.functions.nothing?
@@ -116,8 +128,11 @@ class Code
         code_arguments = args.fetch(:arguments, List.new).to_code
         code_value = code_arguments.code_first
         globals = multi_fetch(args, *GLOBALS)
+        operator_name = code_operator.to_s
+        operator_name = "" if operator_name == "new" &&
+          code_has_key?(code_operator).falsy?
 
-        case code_operator.to_s
+        case operator_name
         when "", "call"
           sig(args) { signature_for_call }
           code_call(
@@ -171,6 +186,7 @@ class Code
       )
         code_arguments = arguments.to_code
         code_context = Context.new({}, definition_context || globals[:context])
+        evaluation_object = definition_object || globals.fetch(:previous_object)
         code_self = bound_self.to_code
         if (code_self.nil? || code_self.nothing?) && parent.is_a?(Class)
           code_self = parent.code_call(*arguments, **globals)
@@ -254,7 +270,8 @@ class Code
                 code_default.code_evaluate(
                   **globals,
                   context: code_context,
-                  trusted_evaluation: true
+                  object: evaluation_object,
+                  previous_object: evaluation_object
                 )
               else
                 code_default
@@ -272,7 +289,8 @@ class Code
             **globals,
             constructing_literal_classes: constructing_literal_classes,
             context: code_context,
-            trusted_evaluation: true
+            object: evaluation_object,
+            previous_object: evaluation_object
           )
           .tap { persist_instance_functions(code_self) }
       rescue Error::Return => e
@@ -340,6 +358,7 @@ class Code
             code_function.code_parameters,
             code_function.code_body.raw,
             code_function.definition_context,
+            code_function.definition_object,
             parent: self,
             functions: functions.code_deep_duplicate
           )
@@ -348,22 +367,19 @@ class Code
           end
       end
 
-      def code_deep_duplicate(seen = {})
-        seen.compare_by_identity unless seen.compare_by_identity?
-        return seen[self] if seen.key?(self)
-
+      def code_deep_duplicate
         duplicate = Function.new
-        seen[self] = duplicate
 
         duplicate.code_replace(
-          code_parameters: code_parameters.code_deep_duplicate(seen),
-          code_body: code_body.code_deep_duplicate(seen),
-          definition_context: definition_context&.code_deep_duplicate(seen),
+          code_parameters: code_parameters.code_deep_duplicate,
+          code_body: code_body.code_deep_duplicate,
+          definition_context: definition_context&.code_deep_duplicate,
+          definition_object: definition_object,
           parent:
-            parent.is_a?(Function) ? parent.code_deep_duplicate(seen) : parent,
-          functions: functions.code_deep_duplicate(seen),
-          instance_functions: instance_functions.code_deep_duplicate(seen),
-          documentation: documentation.code_deep_duplicate(seen)
+            parent.is_a?(Function) ? parent.code_deep_duplicate : parent,
+          functions: functions.code_deep_duplicate,
+          instance_functions: instance_functions.code_deep_duplicate,
+          documentation: documentation.code_deep_duplicate
         )
         duplicate
       end
@@ -375,11 +391,13 @@ class Code
         parent:,
         functions:,
         instance_functions:,
-        documentation:
+        documentation:,
+        definition_object: nil
       )
         @code_parameters = code_parameters
         @code_body = code_body
         @definition_context = definition_context
+        @definition_object = definition_object
         @parent = parent
         self.functions = functions
         @instance_functions = instance_functions

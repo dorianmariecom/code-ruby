@@ -41,12 +41,4 @@ RSpec.describe "parser string" do
     expect(Code.evaluate('"\\{context.clear}"').to_s).to eq("{context.clear}")
   end
 
-  it "rejects deeply nested source before stack exhaustion" do
-    input = "#{"(" * 250}1#{")" * 250}"
-
-    expect { Code.parse(input, timeout: 1) }.to raise_error(
-      Code::Error,
-      /too deeply nested/
-    )
-  end
 end

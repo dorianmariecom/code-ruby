@@ -535,7 +535,7 @@ class Code
           end
         when "context"
           sig(args)
-          code_context.code_deep_duplicate
+          code_context
         when "Object"
           sig(args)
           if code_arguments.any?

@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name = "code-ruby"
   s.version = File.read("VERSION").strip
   s.summary = "a programming language for the internet"
-  s.description = s.summary
+  s.description = "a compact, embeddable scripting language for the internet"
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.com"
   s.files =
@@ -29,11 +29,10 @@ Gem::Specification.new do |s|
   s.add_dependency "net-http", ">= 0.9", "< 1"
   s.add_dependency "net-smtp", ">= 0.5", "< 1"
   s.add_dependency "nokogiri", ">= 1.19", "< 2"
-  s.add_dependency "ruby-prof", ">= 2.0", "< 3"
   s.add_dependency "uri", ">= 1.1", "< 2"
   s.add_dependency "zeitwerk", ">= 2.7", "< 3"
 
   s.metadata["rubygems_mfa_required"] = "true"
 
-  s.required_ruby_version = ">= 3.4"
+  s.required_ruby_version = ">= 3.0"
 end

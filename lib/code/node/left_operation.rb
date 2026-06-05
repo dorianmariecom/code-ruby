@@ -54,7 +54,7 @@ class Code
             right.statement.evaluate(
               **args,
               object: left,
-              previous_object: args.fetch(:object)
+              previous_object: args.fetch(:previous_object)
             )
           elsif right.safe_call?
             if left.is_an?(Object::Nothing)
@@ -63,7 +63,7 @@ class Code
               right.statement.evaluate(
                 **args,
                 object: left,
-                previous_object: args.fetch(:object)
+                previous_object: args.fetch(:previous_object)
               )
             end
           elsif (right.or? && left.truthy?) || (right.and? && left.falsy?)
@@ -88,7 +88,7 @@ class Code
             other.statement.resolve(
               **args,
               object: list.code_last,
-              previous_object: args.fetch(:object)
+              previous_object: args.fetch(:previous_object)
             )
 
           if resolved.is_a?(Object::IdentifierList)

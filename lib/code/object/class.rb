@@ -135,6 +135,7 @@ class Code
           code_function.code_parameters,
           code_function.code_body.raw,
           code_function.definition_context,
+          code_function.definition_object,
           parent: self
         )
       end

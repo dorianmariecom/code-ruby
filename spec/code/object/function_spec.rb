@@ -110,6 +110,46 @@ RSpec.describe Code::Object::Function do
     )
   end
 
+  it "calls constructor-like functions through new" do
+    result = Code.evaluate(<<~CODE)
+        A = () => {
+          self.B = () => { :ok }
+          return(self)
+        }
+
+        A.new.B
+      CODE
+
+    expect(result).to eq(Code::Object::String.new("ok"))
+  end
+
+  it "passes arguments to constructor-like functions through new" do
+    result = Code.evaluate(<<~CODE)
+        User = (name:) => {
+          self.name = name
+          return(self)
+        }
+
+        User.new(name: "Ada").name
+      CODE
+
+    expect(result).to eq(Code::Object::String.new("Ada"))
+  end
+
+  it "allows dynamic function new to override constructor calls" do
+    result = Code.evaluate(<<~CODE)
+        Widget = () => {
+          self.name = :constructed
+          return(self)
+        }
+
+        Widget.new = () => { :override }
+        Widget.new
+      CODE
+
+    expect(result).to eq(Code::Object::String.new("override"))
+  end
+
   it "binds parent to the enclosing self for nested constructor functions" do
     result = Code.evaluate(<<~CODE)
         Account = (name:) => {
@@ -301,13 +341,15 @@ RSpec.describe Code::Object::Function do
   end
 
   it "does not bind conventional names for unnamed argument operators" do
-    expect do Code.evaluate(<<~CODE) end.to raise_error(
+    expect do
+      Code.evaluate(<<~CODE)
         collect = (..., *, **) => {
           [rest, arguments, keyword_arguments]
         }
 
         collect(1, 2, topic: "docs")
       CODE
+    end.to raise_error(
       Code::Error,
       /rest is not defined/
     )
@@ -344,13 +386,15 @@ RSpec.describe Code::Object::Function do
   end
 
   it "raises when unnamed argument operator captures are referenced by conventional name" do
-    expect do Code.evaluate(<<~CODE) end.to raise_error(
+    expect do
+      Code.evaluate(<<~CODE)
         collect = (..., &, &&, *, **) => {
           [rest, block, blocks, arguments, keyword_arguments]
         }
 
         collect(..., &, &&, *, **)
       CODE
+    end.to raise_error(
       Code::Error,
       /rest is not defined/
     )

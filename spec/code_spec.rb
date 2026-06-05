@@ -68,34 +68,38 @@ RSpec.describe Code do
     expect(described_class::DEFAULT_TIMEOUT).to eq(1.hour.to_f)
   end
 
-  it "rejects non-positive timeouts" do
-    expect do described_class.evaluate("1", timeout: 0) end.to raise_error(
-      Code::Error,
-      /timeout must be positive/
-    )
+  it "rejects negative timeouts" do
+    expect do
+      described_class.evaluate("1", timeout: -1)
+    end.to raise_error(Code::Error, /timeout must be non-negative/)
   end
 
-  it "returns a deep copy of context" do
+  it "accepts zero timeout" do
+    expect(described_class.evaluate("1", timeout: 0).raw).to eq(1)
+  end
+
+  it "returns a context that can be updated by nested code" do
     context =
       Code::Object::Context.new(
         { "secret" => Code::Object::Dictionary.new("value" => 1) }
       )
 
-    described_class.evaluate("context.fetch(:secret).clear", context: context)
+    described_class.evaluate(
+      "context.fetch(:secret).set(:updated, true)",
+      context: context
+    )
 
-    expect(context.code_fetch("secret")).to be_code_has_key("value")
+    expect(context.code_fetch("secret").to_s).to eq(
+      Code::Object::Dictionary.new("value" => 1, "updated" => true).to_s
+    )
   end
 
-  it "evaluates nested source without ambient context" do
-    expect do
-      described_class.evaluate('x = 1 evaluate("x")')
-    end.to raise_error(Code::Error, /x.*not defined/)
+  it "evaluates nested source with ambient context" do
+    expect(described_class.evaluate('x = 1 evaluate("x")').raw).to eq(1)
   end
 
-  it "evaluates nested source without ambient globals" do
-    expect do
-      described_class.evaluate('Code("Http").evaluate')
-    end.to raise_error(Code::Error, /Http.*not defined/)
+  it "evaluates nested source with ambient globals" do
+    expect { described_class.evaluate('Code("Http").evaluate') }.not_to raise_error
   end
 
   it "honors a restricted top-level object" do
@@ -104,12 +108,12 @@ RSpec.describe Code do
     end.to raise_error(Code::Error, /Http.*not defined/)
   end
 
-  it "does not expose trusted parameter defaults as ambient evaluators" do
-    expect do
+  it "evaluates stored parameter defaults with ambient context" do
+    expect(
       described_class.evaluate(
-        "x = { value: 1 } f = (a = x.clear) => {} f.parameters.first.default.evaluate x"
+        "x = { value: 1 } f = (a = x.clear) => {} f.parameters.first.default.evaluate x.empty?"
       )
-    end.to raise_error(Code::Error, /x.*not defined/)
+    ).to eq(Code::Object::Boolean.new(true))
   end
 
   %w[return break next continue].each do |control_flow|

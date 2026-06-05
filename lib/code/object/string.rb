@@ -965,7 +965,9 @@ class Code
                 }
               }
             ]
-          )
+          ),
+          nil,
+          Global.new
         )
       end
 

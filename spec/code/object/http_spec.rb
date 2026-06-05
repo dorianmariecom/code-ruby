@@ -24,6 +24,18 @@ RSpec.describe Code::Object::Http do
       end.to raise_error(Code::Error, /local network/)
     end
 
+    it "blocks hostnames that resolve to mixed public and local addresses" do
+      allow(Resolv).to receive(:getaddresses).with("mixed.test").and_return(
+        ["93.184.216.34", "127.0.0.1"]
+      )
+
+      expect do
+        described_class.code_get(
+          Code::Object::String.new("http://mixed.test/status/200")
+        )
+      end.to raise_error(Code::Error, /local network/)
+    end
+
     it "blocks nat64 embedded local addresses" do
       expect do
         described_class.code_get(
@@ -60,17 +72,6 @@ RSpec.describe Code::Object::Http do
           Code::Object::Dictionary.new(headers: { host: "example.com" })
         )
       end.to raise_error(Code::Error, /restricted header/)
-    end
-
-    it "rejects oversized request bodies" do
-      stub_const("#{described_class}::MAX_REQUEST_BYTES", 4)
-
-      expect do
-        described_class.code_post(
-          Code::Object::String.new("https://example.com/echo"),
-          Code::Object::Dictionary.new(body: "12345")
-        )
-      end.to raise_error(Code::Error, /request body is too large/)
     end
 
     it "rejects oversized response headers" do
@@ -122,17 +123,6 @@ RSpec.describe Code::Object::Http do
           request.headers["Authorization"].present?
         end
       ).to have_been_made
-    end
-
-    it "limits response body size" do
-      stub_const("#{described_class}::MAX_RESPONSE_BYTES", 4)
-      stub_request(:get, "https://example.com/large").to_return(body: "12345")
-
-      expect do
-        described_class.code_get(
-          Code::Object::String.new("https://example.com/large")
-        )
-      end.to raise_error(Code::Error, /response is too large/)
     end
 
     it "wraps connection reset errors as Code::Error" do

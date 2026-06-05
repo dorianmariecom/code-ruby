@@ -13,7 +13,12 @@ class Code
       end
 
       def evaluate(**args)
-        Object::Function.new(@parameters, @body, args.fetch(:context))
+        Object::Function.new(
+          @parameters,
+          @body,
+          args.fetch(:context),
+          args.fetch(:previous_object)
+        )
       end
     end
   end
