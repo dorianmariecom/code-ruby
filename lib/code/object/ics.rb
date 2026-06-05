@@ -165,6 +165,8 @@ class Code
           value
         when ::DateTime
           value.to_time
+        when ::Icalendar::Value
+          serialize_date_like(value.value)
         end
       end
     end

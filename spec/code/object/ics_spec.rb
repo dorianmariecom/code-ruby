@@ -47,4 +47,28 @@ RSpec.describe Code::Object::Ics do
     expect(description).to include("Le 1er avril, Kate Raworth")
     expect(description).to include("rendez-vous, pour")
   end
+
+  it "serializes all-day event dates as code dates" do
+    source = <<~ICS
+        BEGIN:VCALENDAR
+        VERSION:2.0
+        PRODID:-//code-ruby//EN
+        BEGIN:VEVENT
+        UID:event-3
+        DTSTART;VALUE=DATE:20260605
+        DTEND;VALUE=DATE:20260606
+        SUMMARY:All day
+        END:VEVENT
+        END:VCALENDAR
+      ICS
+
+    events = described_class.code_parse(Code::Object::String.new(source))
+    event = events.raw.first
+
+    expect(event.code_get("starts_at")).to be_a(Code::Object::Date)
+    expect(event.code_get("starts_at").raw).to eq(Date.new(2026, 6, 5))
+    expect(event.code_get("ends_at")).to be_a(Code::Object::Date)
+    expect(event.code_get("ends_at").raw).to eq(Date.new(2026, 6, 6))
+    expect(event.code_get("all_day").raw).to be(true)
+  end
 end
