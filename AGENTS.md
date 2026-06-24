@@ -20,7 +20,7 @@
 
 ## Coding Style & Naming Conventions
 
-- Ruby 3.4.5; 2-space indentation; keep `# frozen_string_literal: true`.
+- Ruby 4.0.5; 2-space indentation; keep `# frozen_string_literal: true`.
 - Follow `.rubocop.yml`; prefer small, single-responsibility classes under `lib/code/...` reflecting their constants.
 - File names: snake_case; tests mirror source paths under `spec/` with `_spec.rb` suffix.
 
