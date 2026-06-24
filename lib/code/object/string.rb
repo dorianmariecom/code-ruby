@@ -70,6 +70,24 @@ class Code
             "\":name\".member?(\":\")"
           ]
         },
+        "match?" => {
+          name: "match?",
+          description: "returns whether the string matches a regex.",
+          examples: [
+            "\"hello\".match?(Regex.new(\"ell\"))",
+            "\"hello\".match?(Regex.new(\"^he\"))",
+            "\"hello\".match?(Regex.new(\"world\"))"
+          ]
+        },
+        "matches?" => {
+          name: "matches?",
+          description: "returns whether the string matches a regex.",
+          examples: [
+            "\"hello\".matches?(Regex.new(\"ell\"))",
+            "\"hello\".matches?(Regex.new(\"^he\"))",
+            "\"hello\".matches?(Regex.new(\"world\"))"
+          ]
+        },
         "starts_with?" => {
           name: "starts_with?",
           description: "returns whether the string starts with another string.",
@@ -273,10 +291,10 @@ class Code
         },
         "index" => {
           name: "index",
-          description: "returns the index of a matching substring.",
+          description: "returns the index of a matching substring or regex.",
           examples: [
             "\"hello\".index(\"l\")",
-            "\"hello\".index(\"x\")",
+            "\"hello\".index(Regex.new(\"l+\"))",
             "\"banana\".index(\"na\")"
           ]
         },
@@ -297,10 +315,11 @@ class Code
         },
         "right_index" => {
           name: "right_index",
-          description: "returns the last index of a matching substring.",
+          description:
+            "returns the last index of a matching substring or regex.",
           examples: [
             "\"hello\".right_index(\"l\")",
-            "\"hello\".right_index(\"x\")",
+            "\"hello\".right_index(Regex.new(\"l\"))",
             "\"banana\".right_index(\"na\")"
           ]
         },
@@ -527,7 +546,16 @@ class Code
           examples: [
             "\"a,b\".split(\",\")",
             "\"a b\".split",
-            "\"a--b\".split(\"--\")"
+            "\"a,b;c\".split(Regex.new(\"[,;]\"))"
+          ]
+        },
+        "scan" => {
+          name: "scan",
+          description: "returns every regex match in the string.",
+          examples: [
+            "\"a1 b22\".scan(Regex.new(\"[0-9]+\"))",
+            "\"abc\".scan(Regex.new(\"[a-z]\"))",
+            "\"abc\".scan(Regex.new(\"x\"))"
           ]
         },
         "words" => {
@@ -583,6 +611,9 @@ class Code
         when "include?", "member?"
           sig(args) { String }
           code_include?(code_value)
+        when "match?", "matches?"
+          sig(args) { Regex }
+          code_match?(code_value)
         when "starts_with?"
           sig(args) { String }
           code_starts_with?(code_value)
@@ -659,7 +690,7 @@ class Code
           sig(args) { Integer.maybe }
           code_first(code_value)
         when "index"
-          sig(args) { String }
+          sig(args) { String | Regex }
           code_index(code_value)
         when "last"
           sig(args) { Integer.maybe }
@@ -671,7 +702,7 @@ class Code
           sig(args)
           code_reverse
         when "right_index"
-          sig(args) { String }
+          sig(args) { String | Regex }
           code_right_index(code_value)
         when "parameterize"
           sig(args)
@@ -683,22 +714,22 @@ class Code
           sig(args) { String.repeat }
           code_squeeze(*code_arguments.raw)
         when "substitute"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute(*code_arguments.raw)
         when "substitute!"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute!(*code_arguments.raw)
         when "substitute_all"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute_all(*code_arguments.raw)
         when "substitute_all!"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute_all!(*code_arguments.raw)
         when "substitute_once"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute_once(*code_arguments.raw)
         when "substitute_once!"
-          sig(args) { [String, String.maybe] }
+          sig(args) { [String | Regex, String.maybe] }
           code_substitute_once!(*code_arguments.raw)
         when "swapcase"
           sig(args)
@@ -749,8 +780,11 @@ class Code
           sig(args) { [Integer.maybe, Integer.maybe] }
           code_substring(*code_arguments.raw)
         when "split"
-          sig(args) { String.maybe }
+          sig(args) { (String | Regex).maybe }
           code_split(code_value)
+        when "scan"
+          sig(args) { Regex }
+          code_scan(code_value)
         when "words"
           sig(args)
           code_words
@@ -887,6 +921,11 @@ class Code
         Boolean.new(raw.include?(code_value.raw))
       end
 
+      def code_match?(value)
+        code_value = value.to_code
+        Boolean.new(code_value.raw.match?(raw))
+      end
+
       def code_index(value)
         code_value = value.to_code
         raw.index(code_value.raw).to_code
@@ -1000,8 +1039,9 @@ class Code
       def code_substitute_all(from = nil, to = nil)
         code_from = from.to_code
         code_to = to.to_code
+        from_value = code_from.is_a?(Regex) ? code_from.raw : code_from.to_s
 
-        String.new(raw.gsub(code_from.to_s, code_to.to_s))
+        String.new(raw.gsub(from_value, code_to.to_s))
       end
 
       def code_substitute_all!(from = nil, to = nil)
@@ -1012,8 +1052,9 @@ class Code
       def code_substitute_once(from = nil, to = nil)
         code_from = from.to_code
         code_to = to.to_code
+        from_value = code_from.is_a?(Regex) ? code_from.raw : code_from.to_s
 
-        String.new(raw.sub(code_from.to_s, code_to.to_s))
+        String.new(raw.sub(from_value, code_to.to_s))
       end
 
       def code_substitute_once!(from = nil, to = nil)
@@ -1132,8 +1173,20 @@ class Code
         if code_value.nothing?
           List.new(raw.split)
         else
-          List.new(raw.split(code_value.to_s))
+          separator = code_value.is_a?(Regex) ? code_value.raw : code_value.to_s
+
+          List.new(raw.split(separator))
         end
+      end
+
+      def code_scan(value)
+        code_value = value.to_code
+
+        List.new(
+          raw.scan(code_value.raw).map do |match|
+            match.is_a?(::Array) ? List.new(match) : String.new(match)
+          end
+        )
       end
 
       def code_words

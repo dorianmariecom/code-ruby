@@ -26,6 +26,7 @@ RSpec.describe Code::Object do
       described_class::Nothing,
       described_class::Number,
       described_class::Parameter,
+      described_class::Regex,
       described_class::Range,
       described_class::Smtp,
       described_class::String,
@@ -269,6 +270,7 @@ RSpec.describe Code::Object do
         Number
         Object
         Parameter
+        Regex
         Range
         Smtp
         String

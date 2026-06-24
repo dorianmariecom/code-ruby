@@ -227,6 +227,16 @@ class Code
             "returns the Parameter class when called without arguments, otherwise calls Parameter.new.",
           examples: %w[Parameter Parameter.new Parameter.new(nothing)]
         },
+        "Regex" => {
+          name: "Regex",
+          description:
+            "returns the Regex class when called without arguments, otherwise calls Regex.new.",
+          examples: [
+            "Regex",
+            "Regex.new(\"a|b|c\")",
+            "Regex(\"^hello\", ignore_case: true)"
+          ]
+        },
         "Range" => {
           name: "Range",
           description:
@@ -417,6 +427,7 @@ class Code
           "Number" => Number,
           "Object" => Object,
           "Parameter" => Parameter,
+          "Regex" => Regex,
           "Range" => Range,
           "Smtp" => Smtp,
           "String" => String,
@@ -549,6 +560,13 @@ class Code
             Range.new(*code_arguments.raw)
           else
             Class.new(Range)
+          end
+        when "Regex"
+          sig(args) { Object.repeat }
+          if code_arguments.any?
+            Regex.new(*code_arguments.raw)
+          else
+            Class.new(Regex)
           end
         when "String"
           sig(args) { Object.repeat }

@@ -724,6 +724,24 @@ class Code
             "[].filter((x) => { x })"
           ]
         },
+        "grep" => {
+          name: "grep",
+          description: "returns string items matched by a regex.",
+          examples: [
+            "[\"ant\", \"bat\", \"cat\"].grep(Regex.new(\"a\"))",
+            "[\"ant\", \"bat\"].grep(Regex.new(\"^b\"))",
+            "[\"ant\", \"bat\"].grep(Regex.new(\"z\"))"
+          ]
+        },
+        "grep_not" => {
+          name: "grep_not",
+          description: "returns string items not matched by a regex.",
+          examples: [
+            "[\"ant\", \"bat\", \"cat\"].grep_not(Regex.new(\"a\"))",
+            "[\"ant\", \"bat\"].grep_not(Regex.new(\"^b\"))",
+            "[\"ant\", \"bat\"].grep_not(Regex.new(\"z\"))"
+          ]
+        },
         "select!" => {
           name: "select!",
           description:
@@ -3218,6 +3236,12 @@ class Code
         when "select", "filter"
           sig(args) { (Function | Class).maybe }
           code_select(code_value, **globals)
+        when "grep"
+          sig(args) { [Regex, (Function | Class).maybe] }
+          code_grep(*code_arguments.raw, **globals)
+        when "grep_not"
+          sig(args) { [Regex, (Function | Class).maybe] }
+          code_grep_not(*code_arguments.raw, **globals)
         when "select!", "filter!"
           sig(args) { (Function | Class).maybe }
           code_select!(code_value, **globals)
@@ -4885,6 +4909,62 @@ class Code
         end
 
         self
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_grep(regex, argument = nil, **globals)
+        code_regex = regex.to_code
+        code_argument = argument.to_code
+        results = []
+
+        raw.each.with_index do |code_element, index|
+          next unless code_element.is_a?(String) &&
+            code_regex.raw.match?(code_element.raw)
+
+          results << if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          elsif code_argument.is_a?(Class)
+            code_argument.raw.new(code_element)
+          else
+            code_element
+          end
+        rescue Error::Next => e
+          results << e.code_value
+        end
+
+        List.new(results)
+      rescue Error::Break => e
+        e.code_value
+      end
+
+      def code_grep_not(regex, argument = nil, **globals)
+        code_regex = regex.to_code
+        code_argument = argument.to_code
+        results = []
+
+        raw.each.with_index do |code_element, index|
+          next if code_element.is_a?(String) &&
+            code_regex.raw.match?(code_element.raw)
+
+          results << if code_argument.is_a?(Function)
+            code_argument.call(
+              arguments: List.new([code_element, Integer.new(index), self]),
+              **globals
+            )
+          elsif code_argument.is_a?(Class)
+            code_argument.raw.new(code_element)
+          else
+            code_element
+          end
+        rescue Error::Next => e
+          results << e.code_value
+        end
+
+        List.new(results)
       rescue Error::Break => e
         e.code_value
       end
