@@ -5,19 +5,19 @@ class Code
     module Shared
       attr_accessor :raw, :functions
 
-      COMPOUND_ASSIGNMENT_OPERATORS = %w[
-        +=
-        -=
-        *=
-        /=
-        %=
-        <<=
-        >>=
-        &=
-        |=
-        ^=
-        ||=
-        &&=
+      COMPOUND_ASSIGNMENT_OPERATORS = [
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "%=",
+        "<<=",
+        ">>=",
+        "&=",
+        "|=",
+        "^=",
+        "||=",
+        "&&="
       ].freeze
       SHARED_OPERATORS = %w[
         documentation

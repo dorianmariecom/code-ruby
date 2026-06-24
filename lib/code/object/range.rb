@@ -660,12 +660,10 @@ class Code
               else
                 code_element.code_less_or_equal(code_right)
               end
+            elsif exclude_end?
+              code_element.code_greater(code_right)
             else
-              if exclude_end?
-                code_element.code_greater(code_right)
-              else
-                code_element.code_greater_or_equal(code_right)
-              end
+              code_element.code_greater_or_equal(code_right)
             end
 
           break unless comparison.truthy?

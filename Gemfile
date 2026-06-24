@@ -6,6 +6,7 @@ gemspec
 
 ruby "3.4.5"
 
+gem "bump"
 gem "bundler-audit"
 gem "dorian"
 gem "rake"
@@ -20,4 +21,3 @@ gem "rubocop-rspec_rails"
 gem "ruby-prof"
 gem "sinatra"
 gem "webmock"
-gem "bump"

@@ -32,42 +32,43 @@ class Code
       while
     ].freeze
 
-    MULTI_CHAR_OPERATORS = %w[
-      &.
-      &&
-      &&=
-      **
-      *=
-      +=
-      -=
-      ..
-      ...
-      /=
-      ::
-      <<=
-      <<
-      <=>
-      <=
-      ===
-      ==
-      =~
-      >=
-      >>=
-      >>
-      ||=
-      ||
-      |=
-      !==
-      !=
-      !~
-      %=
-      ^=
-      =>
+    MULTI_CHAR_OPERATORS = [
+      "&.",
+      "&&",
+      "&&=",
+      "**",
+      "*=",
+      "+=",
+      "-=",
+      "..",
+      "...",
+      "/=",
+      "::",
+      "<<=",
+      "<<",
+      "<=>",
+      "<=",
+      "===",
+      "==",
+      "=~",
+      ">=",
+      ">>=",
+      ">>",
+      "||=",
+      "||",
+      "|=",
+      "!==",
+      "!=",
+      "!~",
+      "%=",
+      "^=",
+      "=>"
     ].sort_by(&:length).reverse.freeze
     CONTINUATION_KEYWORDS = %w[or and rescue].freeze
     POSTFIX_CONTINUATIONS = %w[. :: &.].freeze
     HORIZONTAL_WHITESPACE = [" ", "\t"].freeze
     NEWLINE_CHARACTERS = ["\n", "\r"].freeze
+    QUOTE_CHARACTERS = ["'", '"'].freeze
     PUNCTUATION_CHARACTERS = %w[( ) [ ] { } , ? :].freeze
     OPERATOR_CHARACTERS = %w[. & | = ! ~ + - * / % < > ^ × ÷].freeze
     SUFFIX_PUNCTUATION = %w[! ?].freeze
@@ -1266,7 +1267,7 @@ class Code
           next
         end
 
-        if %w[' "].include?(char)
+        if QUOTE_CHARACTERS.include?(char)
           quote = char
         elsif char == "#"
           while i < source.length && !NEWLINE_CHARACTERS.include?(source[i])

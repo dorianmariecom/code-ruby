@@ -40,5 +40,4 @@ RSpec.describe "parser string" do
     expect(Code.evaluate('x = 1 "\\{x = 2}" x')).to eq(Code.evaluate("1"))
     expect(Code.evaluate('"\\{context.clear}"').to_s).to eq("{context.clear}")
   end
-
 end

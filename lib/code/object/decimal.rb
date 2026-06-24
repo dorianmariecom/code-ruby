@@ -1541,10 +1541,12 @@ class Code
 
       def code_to_precision(precision = nil)
         code_precision = precision.to_code
-        code_precision =
-          Integer.new(
-            raw.to_s("F").delete(".-").length
-          ) if code_precision.nothing?
+        if code_precision.nothing?
+          code_precision =
+            Integer.new(
+              raw.to_s("F").delete(".-").length
+            )
+        end
 
         String.new(format("%.#{code_precision.raw}g", raw))
       end

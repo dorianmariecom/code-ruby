@@ -351,7 +351,7 @@ RSpec.describe Code::Object do
                 output: StringIO.new
               )
             end.not_to raise_error,
-            "#{function_name}: #{input}"
+                       "#{function_name}: #{input}"
           end
       end
     end
@@ -373,7 +373,7 @@ RSpec.describe Code::Object do
                 output: StringIO.new
               )
             end.not_to raise_error,
-            "#{class_name}: #{input}"
+                       "#{class_name}: #{input}"
           end
       end
     end

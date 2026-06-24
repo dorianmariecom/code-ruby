@@ -5,7 +5,7 @@ AllCops:
   - "**/vendor/**/*"
   - "**/db/schema.rb"
   NewCops: enable
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.4
 Layout/ClosingHeredocIndentation:
   Enabled: false
 Layout/ElseAlignment:
@@ -31,6 +31,8 @@ Layout/MultilineOperationIndentation:
 Layout/SpaceAroundKeyword:
   Enabled: false
 Layout/SpaceInsideHashLiteralBraces:
+  Enabled: false
+Lint/ConstantDefinitionInBlock:
   Enabled: false
 Lint/EmptyClass:
   Enabled: false
@@ -70,6 +72,8 @@ Naming/FileName:
   Enabled: false
 Naming/MethodParameterName:
   Enabled: false
+Naming/PredicateMethod:
+  Enabled: false
 Naming/VariableNumber:
   Enabled: false
 Performance/Sum:
@@ -92,6 +96,8 @@ RSpec/NoExpectationExample:
   Enabled: false
 RSpec/PendingWithoutReason:
   Enabled: false
+Rails/BulkChangeTable:
+  Enabled: false
 Rails/Delegate:
   Enabled: false
 Rails/DynamicFindBy:
@@ -106,6 +112,8 @@ Rails/Presence:
   Enabled: false
 Rails/Present:
   Enabled: false
+Rails/SkipsModelValidations:
+  Enabled: false
 Rails/ThreeStateBooleanColumn:
   Enabled: false
 Rails/TimeZone:
@@ -113,6 +121,8 @@ Rails/TimeZone:
 Security/Eval:
   Enabled: false
 Style/CaseEquality:
+  Enabled: false
+Style/DocumentDynamicEvalDefinition:
   Enabled: false
 Style/Documentation:
   Enabled: false
@@ -122,9 +132,15 @@ Style/EmptyMethod:
   Enabled: false
 Style/IfUnlessModifier:
   Enabled: false
+Style/ItAssignment:
+  Enabled: false
+Style/Lambda:
+  Enabled: false
 Style/MultilineBlockChain:
   Enabled: false
 Style/NestedTernaryOperator:
+  Enabled: false
+Style/OneClassPerFile:
   Enabled: false
 Style/QuotedSymbols:
   Enabled: false

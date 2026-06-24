@@ -5063,7 +5063,7 @@ class Code
       def code_deep_duplicate
         duplicate = List.new
         duplicate.raw.concat(
-          raw.map { |value| value.code_deep_duplicate }
+          raw.map(&:code_deep_duplicate)
         )
         duplicate
       end
