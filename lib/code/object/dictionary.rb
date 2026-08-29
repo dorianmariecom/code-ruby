@@ -439,7 +439,7 @@ class Code
         },
         "set" => {
           name: "set",
-          description: "sets a key to a value and returns the value.",
+          description: "sets a key to a value and returns the dictionary.",
           examples: [
             "{ a: 1 }.set(:b, 2)",
             "{}.set(:a, 1)",
@@ -1780,9 +1780,13 @@ class Code
         when "replace"
           sig(args) { Dictionary }
           code_replace(code_value)
-        when "store", "set"
+        when "store"
           sig(args) { [Object, Object] }
           code_store(*code_arguments.raw)
+        when "set"
+          sig(args) { [Object, Object] }
+          code_set(*code_arguments.raw)
+          self
         when "shift"
           sig(args)
           code_shift
