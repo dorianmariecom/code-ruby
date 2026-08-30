@@ -562,8 +562,8 @@ class Code
       Type::Or.new(self, other)
     end
 
-    def self.code_new(*args)
-      new(*args)
+    def self.code_new(*)
+      new(*)
     end
 
     def self.functions
@@ -620,8 +620,8 @@ class Code
       self.class.name
     end
 
-    def code_new(*args)
-      self.class.code_new(*args)
+    def code_new(*)
+      self.class.code_new(*)
     end
   end
 end

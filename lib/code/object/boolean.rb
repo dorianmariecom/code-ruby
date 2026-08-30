@@ -59,7 +59,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           (args.first.is_an?(Object) ? args.first.truthy? : !!args.first)
       end

@@ -921,7 +921,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           if args.first.class.in?(NUMBER_CLASSES)
             if args.second.class.in?(NUMBER_CLASSES)

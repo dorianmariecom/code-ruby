@@ -1634,7 +1634,7 @@ class Code
         to: :code_size
       )
 
-      def initialize(*args, **kargs, &_block)
+      def initialize(*args, **kargs, &)
         self.raw =
           args
             .map do |arg|
@@ -2681,8 +2681,8 @@ class Code
         e.code_value
       end
 
-      def code_update(*arguments, **globals)
-        code_merge!(*arguments, **globals)
+      def code_update(*, **globals)
+        code_merge!(*, **globals)
       end
 
       def code_replace(dictionary)

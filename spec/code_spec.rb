@@ -563,6 +563,18 @@ RSpec.describe Code do
         ["true and false", "false"],
         ["true or false", "true"],
         ["weekday? = false\n  or true\nweekday?", "true"],
+        [
+          "chosen = nothing [1].each { |value| chosen = value } chosen",
+          "1"
+        ],
+        [
+          "value = 1 f = (value) => { value = 2 } f(3) value",
+          "1"
+        ],
+        [
+          "f = () => { local = 1 } f() local rescue nothing",
+          "nothing"
+        ],
         ["true || false", "true"],
         ["unless false 1", "1"],
         ["unless true 1", "nothing"],

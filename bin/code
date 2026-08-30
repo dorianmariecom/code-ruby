@@ -46,8 +46,8 @@ def timeout
   @timeout ||= @parsed_timeout
 end
 
-def with_timeout(&block)
-  Timeout.timeout(timeout, &block)
+def with_timeout(&)
+  Timeout.timeout(timeout, &)
 rescue Timeout::Error
   raise Code::Error, "timeout"
 end

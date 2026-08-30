@@ -27,7 +27,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           if args.first.is_an?(::ActiveSupport::Duration)
             args.first

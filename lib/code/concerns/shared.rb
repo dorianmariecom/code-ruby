@@ -297,7 +297,7 @@ class Code
 
           if code_operator.to_s == "="
             code_context = args.fetch(:context)
-            code_context.code_set(self, code_value)
+            code_context.code_assign(self, code_value)
           elsif setter_operator?(code_operator)
             code_dynamic_functions.code_set(code_operator.to_s.chop, code_value)
             return code_value
@@ -441,8 +441,8 @@ class Code
         keys.to_h { |key| [key, hash.fetch(key)] }
       end
 
-      def sig(args, &block)
-        Type::Sig.sig(args, object: self, &block)
+      def sig(args, &)
+        Type::Sig.sig(args, object: self, &)
 
         Object::Nothing.new
       end

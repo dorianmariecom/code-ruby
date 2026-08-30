@@ -34,7 +34,7 @@ class Code
 
       attr_accessor :parent
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         super(args.first)
         @parent = args.second if args.second.is_a?(Dictionary)
       end
@@ -61,6 +61,19 @@ class Code
         else
           raise Error, "#{code_identifier} is not defined"
         end
+      end
+
+      def code_assign(identifier, value)
+        code_identifier = identifier.to_code
+        context = self
+
+        context = context.parent while context.parent? && context.code_has_key?(code_identifier).falsy?
+
+        if context.code_has_key?(code_identifier).falsy?
+          context = self
+        end
+
+        context.code_set(code_identifier, value)
       end
 
       def merge(other)

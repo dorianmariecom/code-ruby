@@ -42,7 +42,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           (args.first.is_a?(Node::Code) ? args.first : Node::Code.new(::Code.parse(args.first.to_s)))
       end

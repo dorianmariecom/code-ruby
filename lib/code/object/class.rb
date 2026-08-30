@@ -76,7 +76,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           if args.first.is_a?(Class)
             args.first.raw
@@ -124,8 +124,8 @@ class Code
         end
       end
 
-      def code_call(*arguments, **_globals)
-        raw.code_new(*arguments)
+      def code_call(*, **_globals)
+        raw.code_new(*)
       end
 
       def code_extend(function)

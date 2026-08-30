@@ -2698,7 +2698,7 @@ class Code
         to: :code_size
       )
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           if args.first.is_a?(List)
             args.first.raw.map(&:to_code)

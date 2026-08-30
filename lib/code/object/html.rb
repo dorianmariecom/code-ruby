@@ -256,7 +256,7 @@ class Code
         wbr
       ].freeze
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw =
           if args.first.is_an?(Html)
             args.first.raw

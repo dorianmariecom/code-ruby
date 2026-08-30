@@ -40,7 +40,7 @@ class Code
         {}
       end
 
-      def initialize(*_args, **_kargs, &_block)
+      def initialize(*_args, **_kargs, &)
         self.raw = nil
       end
 

@@ -7282,7 +7282,7 @@ class Code
         )
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         ::Time.zone ||= DEFAULT_ZONE
 
         first = args.first

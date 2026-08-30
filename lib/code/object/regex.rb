@@ -101,7 +101,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **kargs, &_block)
+      def initialize(*args, **kargs, &)
         raise Error, "Regex.new: pattern is required" if args.empty?
         raise Error, "Regex.new: expected 1-2 arguments" if args.size > 2
 
@@ -195,30 +195,30 @@ class Code
 
       def code_options
         Dictionary.new(
-          OPTION_FLAGS.transform_values { |flag| (raw.options & flag) == flag }
+          OPTION_FLAGS.transform_values { |flag| raw.options.allbits?(flag) }
         )
       end
 
       def code_ignore_case?
-        Boolean.new((raw.options & ::Regexp::IGNORECASE) == ::Regexp::IGNORECASE)
+        Boolean.new(raw.options.allbits?(::Regexp::IGNORECASE))
       end
 
       def code_extended?
-        Boolean.new((raw.options & ::Regexp::EXTENDED) == ::Regexp::EXTENDED)
+        Boolean.new(raw.options.allbits?(::Regexp::EXTENDED))
       end
 
       def code_multiple_lines?
-        Boolean.new((raw.options & ::Regexp::MULTILINE) == ::Regexp::MULTILINE)
+        Boolean.new(raw.options.allbits?(::Regexp::MULTILINE))
       end
 
       def code_fixed_encoding?
         Boolean.new(
-          (raw.options & ::Regexp::FIXEDENCODING) == ::Regexp::FIXEDENCODING
+          raw.options.allbits?(::Regexp::FIXEDENCODING)
         )
       end
 
       def code_no_encoding?
-        Boolean.new((raw.options & ::Regexp::NOENCODING) == ::Regexp::NOENCODING)
+        Boolean.new(raw.options.allbits?(::Regexp::NOENCODING))
       end
 
       def code_to_string
@@ -228,7 +228,6 @@ class Code
       def code_inspect
         String.new(raw.inspect)
       end
-
     end
   end
 end

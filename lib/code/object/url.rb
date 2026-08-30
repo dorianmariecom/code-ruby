@@ -50,7 +50,7 @@ class Code
         {}
       end
 
-      def initialize(*args, **_kargs, &_block)
+      def initialize(*args, **_kargs, &)
         self.raw = ::URI.parse(args.first.to_s)
       rescue ::URI::InvalidURIError
         self.raw = ::URI.parse("")
