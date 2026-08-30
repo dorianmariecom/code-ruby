@@ -291,6 +291,7 @@ RSpec.describe Code::Object do
         redo
         retry
         return
+        warn
       ]
 
       expected_names.each do |function_name|

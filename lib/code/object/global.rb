@@ -356,6 +356,12 @@ class Code
             "writes values to output with newlines and returns nothing.",
           examples: ["puts(:hello)", "puts(1, 2)", "puts(\"hello\")"]
         },
+        "warn" => {
+          name: "warn",
+          description:
+            "writes values to error with newlines and returns nothing.",
+          examples: ["warn(:hello)", "warn(1, 2)", "warn(\"hello\")"]
+        },
         "read" => {
           name: "read",
           description: "reads one line from input.",
@@ -651,6 +657,10 @@ class Code
         when "puts"
           sig(args) { Object.repeat }
           output.puts(*code_arguments.raw)
+          Nothing.new
+        when "warn"
+          sig(args) { Object.repeat }
+          args.fetch(:error).puts(*code_arguments.raw)
           Nothing.new
         when "Number"
           sig(args) { Object.repeat }

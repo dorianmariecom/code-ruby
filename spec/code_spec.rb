@@ -701,6 +701,30 @@ RSpec.describe Code do
     end
   end
 
+  it "writes warnings to error without writing to output" do
+    output = StringIO.new
+    error = StringIO.new
+
+    result =
+      described_class.evaluate(
+        'warn(:hello, 1) warn("goodbye")',
+        output: output,
+        error: error
+      )
+
+    expect(result).to eq(Code::Object::Nothing.new)
+    expect(output.string).to eq("")
+    expect(error.string).to eq("hello\n1\ngoodbye\n")
+  end
+
+  it "passes error through nested evaluation" do
+    error = StringIO.new
+
+    described_class.evaluate('evaluate("warn(:nested)")', error: error)
+
+    expect(error.string).to eq("nested\n")
+  end
+
   it "doesn't crash with dictionnary as parameter" do
     input = <<~INPUT
       [
