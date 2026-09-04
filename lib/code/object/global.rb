@@ -90,6 +90,15 @@ class Code
           "run bin/code 'List.instance_functions.keys'"
         ]
       }.freeze
+      WAIT_UNIT_SECONDS = {
+        milliseconds: 0.001,
+        seconds: 1,
+        minutes: ::ActiveSupport::Duration::SECONDS_PER_MINUTE,
+        hours: ::ActiveSupport::Duration::SECONDS_PER_HOUR,
+        days: ::ActiveSupport::Duration::SECONDS_PER_DAY,
+        months: ::ActiveSupport::Duration::SECONDS_PER_MONTH,
+        years: ::ActiveSupport::Duration::SECONDS_PER_YEAR
+      }.freeze
       FUNCTIONS = {
         "Base64" => {
           name: "Base64",
@@ -361,6 +370,16 @@ class Code
           description:
             "writes values to error with newlines and returns nothing.",
           examples: ["warn(:hello)", "warn(1, 2)", "warn(\"hello\")"]
+        },
+        "wait" => {
+          name: "wait",
+          description:
+            "waits for the combined duration, defaulting to one second, and returns nothing.",
+          examples: [
+            "wait(milliseconds: 0)",
+            "wait(seconds: 0, minutes: 0)",
+            "wait(hours: 0, days: 0, months: 0, years: 0)"
+          ]
         },
         "read" => {
           name: "read",
@@ -662,6 +681,32 @@ class Code
           sig(args) { Object.repeat }
           args.fetch(:error).puts(*code_arguments.raw)
           Nothing.new
+        when "wait"
+          sig(args) do
+            {
+              milliseconds: Number.maybe,
+              seconds: Number.maybe,
+              minutes: Number.maybe,
+              hours: Number.maybe,
+              days: Number.maybe,
+              months: Number.maybe,
+              years: Number.maybe
+            }
+          end
+
+          if code_arguments.any?
+            code_wait(
+              milliseconds: code_value.code_get(:milliseconds),
+              seconds: code_value.code_get(:seconds),
+              minutes: code_value.code_get(:minutes),
+              hours: code_value.code_get(:hours),
+              days: code_value.code_get(:days),
+              months: code_value.code_get(:months),
+              years: code_value.code_get(:years)
+            )
+          else
+            code_wait
+          end
         when "Number"
           sig(args) { Object.repeat }
           if code_arguments.any?
@@ -687,6 +732,38 @@ class Code
             code_result
           end
         end
+      end
+
+      def code_wait(
+        milliseconds: nil,
+        seconds: nil,
+        minutes: nil,
+        hours: nil,
+        days: nil,
+        months: nil,
+        years: nil
+      )
+        values = {
+          milliseconds: milliseconds,
+          seconds: seconds,
+          minutes: minutes,
+          hours: hours,
+          days: days,
+          months: months,
+          years: years
+        }
+        duration =
+          if values.values.all?(&:nil?)
+            1
+          else
+            WAIT_UNIT_SECONDS.sum do |unit, seconds_per_unit|
+              value = values.fetch(unit).to_code
+              value.nothing? ? 0 : value.raw * seconds_per_unit
+            end
+          end
+
+        ::Kernel.sleep(duration)
+        Nothing.new
       end
     end
   end
