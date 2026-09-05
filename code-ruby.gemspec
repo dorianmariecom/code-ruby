@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "dorian-arguments", ">= 2.0.1", "< 3"
   s.add_dependency "icalendar", ">= 2.12.4", "< 3"
   s.add_dependency "json", ">= 2.21.2", "< 3"
-  s.add_dependency "language-ruby", ">= 2.0.1", "< 3"
+  s.add_dependency "language-ruby", ">= 2.0.2", "< 3"
   s.add_dependency "mail", ">= 2.9.1", "< 3"
   s.add_dependency "net-http", ">= 0.9.1", "< 1"
   s.add_dependency "net-smtp", ">= 0.5.1", "< 1"
