@@ -465,7 +465,9 @@ class Code
       end
 
       def self.http_timeout(value, default)
-        ::Code.normalize_timeout!(value.nothing? ? default : value)
+        timeout = value.nothing? ? default : value.raw
+
+        ::Code.normalize_timeout!(timeout)
       end
     end
   end

@@ -150,5 +150,28 @@ RSpec.describe Code::Object::Http do
         )
       end.to raise_error(Code::Error, "http error")
     end
+
+    it "accepts integer and decimal request timeouts" do
+      response =
+        Code.evaluate(<<~CODE)
+          Http.get(
+            "https://httpbin.org/status/200",
+            timeout: 45,
+            open_timeout: 10,
+            read_timeout: 30.5,
+            write_timeout: 30
+          )
+        CODE
+
+      expect(response.code_get("code").raw).to eq(200)
+    end
+
+    it "rejects negative request timeouts" do
+      expect do
+        Code.evaluate(
+          'Http.get("https://httpbin.org/status/200", timeout: -1)'
+        )
+      end.to raise_error(Code::Error, /timeout must be non-negative/)
+    end
   end
 end
