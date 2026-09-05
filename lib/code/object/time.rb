@@ -11592,14 +11592,14 @@ class Code
 
       def code_after?(other = nil)
         code_other = other.to_code
-        code_other = Time.new if code_other.nothing?
+        code_other = self.class.new if code_other.nothing?
 
         Boolean.new(raw.after?(code_other.raw))
       end
 
       def code_before?(other = nil)
         code_other = other.to_code
-        code_other = Time.new if code_other.nothing?
+        code_other = self.class.new if code_other.nothing?
 
         Boolean.new(raw.before?(code_other.raw))
       end
@@ -14272,15 +14272,15 @@ class Code
       end
 
       def code_today
-        Time.new
+        self.class.new
       end
 
       def code_now
-        Time.new
+        self.class.new
       end
 
       def code_current
-        Time.new
+        self.class.new
       end
 
       def code_tomorrow
