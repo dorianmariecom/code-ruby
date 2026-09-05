@@ -91,12 +91,19 @@ class Code
         ]
       }.freeze
       WAIT_UNIT_SECONDS = {
+        millisecond: 0.001,
         milliseconds: 0.001,
+        second: 1,
         seconds: 1,
+        minute: ::ActiveSupport::Duration::SECONDS_PER_MINUTE,
         minutes: ::ActiveSupport::Duration::SECONDS_PER_MINUTE,
+        hour: ::ActiveSupport::Duration::SECONDS_PER_HOUR,
         hours: ::ActiveSupport::Duration::SECONDS_PER_HOUR,
+        day: ::ActiveSupport::Duration::SECONDS_PER_DAY,
         days: ::ActiveSupport::Duration::SECONDS_PER_DAY,
+        month: ::ActiveSupport::Duration::SECONDS_PER_MONTH,
         months: ::ActiveSupport::Duration::SECONDS_PER_MONTH,
+        year: ::ActiveSupport::Duration::SECONDS_PER_YEAR,
         years: ::ActiveSupport::Duration::SECONDS_PER_YEAR
       }.freeze
       FUNCTIONS = {
@@ -376,9 +383,9 @@ class Code
           description:
             "waits for the combined duration, defaulting to one second, and returns nothing.",
           examples: [
-            "wait(milliseconds: 0)",
-            "wait(seconds: 0, minutes: 0)",
-            "wait(hours: 0, days: 0, months: 0, years: 0)"
+            "wait(second: 0)",
+            "wait(minutes: 0, second: 0)",
+            "wait(hour: 0, days: 0, month: 0, years: 0, millisecond: 0)"
           ]
         },
         "read" => {
@@ -684,24 +691,38 @@ class Code
         when "wait"
           sig(args) do
             {
+              millisecond: Number.maybe,
               milliseconds: Number.maybe,
+              second: Number.maybe,
               seconds: Number.maybe,
+              minute: Number.maybe,
               minutes: Number.maybe,
+              hour: Number.maybe,
               hours: Number.maybe,
+              day: Number.maybe,
               days: Number.maybe,
+              month: Number.maybe,
               months: Number.maybe,
+              year: Number.maybe,
               years: Number.maybe
             }
           end
 
           if code_arguments.any?
             code_wait(
+              millisecond: code_value.code_get(:millisecond),
               milliseconds: code_value.code_get(:milliseconds),
+              second: code_value.code_get(:second),
               seconds: code_value.code_get(:seconds),
+              minute: code_value.code_get(:minute),
               minutes: code_value.code_get(:minutes),
+              hour: code_value.code_get(:hour),
               hours: code_value.code_get(:hours),
+              day: code_value.code_get(:day),
               days: code_value.code_get(:days),
+              month: code_value.code_get(:month),
               months: code_value.code_get(:months),
+              year: code_value.code_get(:year),
               years: code_value.code_get(:years)
             )
           else
@@ -735,21 +756,35 @@ class Code
       end
 
       def code_wait(
+        millisecond: nil,
         milliseconds: nil,
+        second: nil,
         seconds: nil,
+        minute: nil,
         minutes: nil,
+        hour: nil,
         hours: nil,
+        day: nil,
         days: nil,
+        month: nil,
         months: nil,
+        year: nil,
         years: nil
       )
         values = {
+          millisecond: millisecond,
           milliseconds: milliseconds,
+          second: second,
           seconds: seconds,
+          minute: minute,
           minutes: minutes,
+          hour: hour,
           hours: hours,
+          day: day,
           days: days,
+          month: month,
           months: months,
+          year: year,
           years: years
         }
         duration =

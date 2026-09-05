@@ -10,15 +10,17 @@ RSpec.describe Code::Object::Global do
     expect(Kernel).to have_received(:sleep).with(1)
   end
 
-  it "accepts integer and decimal numbers for every time unit" do
+  it "accepts integer and decimal numbers for singular and plural time units" do
     described_class::WAIT_UNIT_SECONDS.each do |unit, seconds_per_unit|
       Code.evaluate("wait(#{unit}: 2)")
       Code.evaluate("wait(#{unit}: 1.5)")
 
-      expect(Kernel).to have_received(:sleep).with(2 * seconds_per_unit)
+      expect(Kernel).to have_received(:sleep).with(
+        2 * seconds_per_unit
+      ).at_least(:once)
       expect(Kernel).to have_received(:sleep).with(
         BigDecimal("1.5") * seconds_per_unit
-      )
+      ).at_least(:once)
     end
   end
 
@@ -37,6 +39,12 @@ RSpec.describe Code::Object::Global do
         (6 * ActiveSupport::Duration::SECONDS_PER_YEAR)
 
     expect(Kernel).to have_received(:sleep).with(expected)
+  end
+
+  it "adds singular and plural forms of the same unit" do
+    Code.evaluate("wait(second: 1, seconds: 1.5)")
+
+    expect(Kernel).to have_received(:sleep).with(BigDecimal("2.5"))
   end
 
   it "rejects non-number durations" do
