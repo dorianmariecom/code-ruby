@@ -61,6 +61,15 @@ class Code
         }
       }.freeze
       INSTANCE_FUNCTIONS = {
+        "size" => {
+          name: "size",
+          description: "returns the number of matched html nodes.",
+          examples: [
+            "Html.raw(\"<p>a</p><p>b</p>\").css(:p).size",
+            "Html.raw(\"<p>a</p>\").css(:p).size",
+            "Html.raw(\"<p>a</p>\").css(:a).size"
+          ]
+        },
         "css" => {
           name: "css",
           description: "returns all html nodes matching a css selector.",
@@ -489,6 +498,9 @@ class Code
         when "css"
           sig(args) { String }
           code_css(code_value)
+        when "size"
+          sig(args)
+          code_size
         when "at_css"
           sig(args) { String }
           code_at_css(code_value)
@@ -519,6 +531,10 @@ class Code
         code_query = query.to_code
 
         Html.new(raw.css(code_query.raw))
+      end
+
+      def code_size
+        Integer.new(raw.size)
       end
 
       def code_at_css(query)
