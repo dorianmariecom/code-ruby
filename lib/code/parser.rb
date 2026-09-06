@@ -253,7 +253,9 @@ class Code
       case token.value
       when "&"
         { splat: { operator: token.value, right: parse_expression(5) } }
-      when "!", "~", "+"
+      when "!"
+        { negation: { operator: token.value, right: parse_expression(145) } }
+      when "~", "+"
         wrap_prefixed_expression(:negation, token.value, parse_expression(145))
       when "-"
         wrap_prefixed_expression(
