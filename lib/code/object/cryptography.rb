@@ -13,7 +13,18 @@ class Code
           "Cryptography.sha512(:hello, format: :base64)"
         ]
       }.freeze
+      HMAC_ALGORITHM = "SHA256"
+      DEFAULT_FORMAT = "hex"
       CLASS_FUNCTIONS = {
+        "hmac_sha256" => {
+          name: "hmac_sha256",
+          description: "returns an HMAC SHA256 signature as hex, digest, or base64.",
+          examples: [
+            'Cryptography.hmac_sha256("key", "hello")',
+            'Cryptography.hmac_sha256("key", "hello", format: :base64)',
+            'Cryptography.hmac_sha256("key", "hello", format: :digest).size'
+          ]
+        },
         "md5" => {
           name: "md5",
           description:
@@ -78,6 +89,9 @@ class Code
         arguments = code_arguments.raw
 
         case code_operator.to_s
+        when "hmac_sha256"
+          sig(args) { [Object, Object, { format: String.maybe }] }
+          code_hmac_sha256(*arguments)
         when "md5"
           sig(args) { [Object, { format: String.maybe }] }
           code_md5(*arguments)
@@ -95,6 +109,22 @@ class Code
           code_sha512(*arguments)
         else
           super
+        end
+      end
+
+      def self.code_hmac_sha256(key, payload, options = nil)
+        code_format = (options || {}).to_code.code_get("format")
+        format = code_format.nothing? ? DEFAULT_FORMAT : code_format.to_s.downcase
+        digest = OpenSSL::HMAC.digest(HMAC_ALGORITHM, key.to_s, payload.to_s)
+        case format
+        when "hex", "hexdigest"
+          digest.unpack1("H*").to_code
+        when "digest"
+          digest.to_code
+        when "base64"
+          ::Base64.strict_encode64(digest).to_code
+        else
+          raise Error, "Cryptography: unknown format #{format.inspect}"
         end
       end
 
