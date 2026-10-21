@@ -10,6 +10,16 @@ class Code
         examples: ["\"hello\"", ":hello.upcase", "\"a,b\".split(\",\")"]
       }.freeze
       INSTANCE_FUNCTIONS = {
+        "truncate" => {
+          name: "truncate",
+          description:
+            "shortens text to a character limit with an optional omission.",
+          examples: [
+            "\"abcdef\".truncate(5)",
+            "\"abcdef\".truncate(5, omission: \"…\")",
+            "\"abc\".truncate(5)"
+          ]
+        },
         "&" => {
           name: "&",
           description: "returns a function that calls the named selector.",
@@ -593,6 +603,9 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "truncate"
+          sig(args) { [Integer, { omission: String.maybe }] }
+          code_truncate(code_arguments.code_first, code_arguments.code_second)
         when "&", "to_function"
           sig(args)
           code_to_function(**globals)
@@ -1183,9 +1196,11 @@ class Code
         code_value = value.to_code
 
         List.new(
-          raw.scan(code_value.raw).map do |match|
-            match.is_a?(::Array) ? List.new(match) : String.new(match)
-          end
+          raw
+            .scan(code_value.raw)
+            .map do |match|
+              match.is_a?(::Array) ? List.new(match) : String.new(match)
+            end
         )
       end
 
@@ -1204,6 +1219,17 @@ class Code
           .dup
           .force_encoding(::Encoding::UTF_8)
           .encode(::Encoding::UTF_8, invalid: :replace, undef: :replace)
+      end
+
+      def code_truncate(limit, options = nil)
+        limit = limit.to_code.raw
+        omission = options.to_code.code_get("omission")
+        omission = omission.nothing? ? "..." : omission.to_s
+        if limit < omission.length
+          raise ::Code::Error, "invalid truncation limit"
+        end
+
+        raw.truncate(limit, omission: omission).to_code
       end
     end
   end

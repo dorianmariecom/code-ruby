@@ -13,6 +13,16 @@ class Code
         ]
       }.freeze
       CLASS_FUNCTIONS = {
+        "parse!" => {
+          name: "parse!",
+          description:
+            "parses JSON and raises an evaluation error on invalid input.",
+          examples: [
+            'Json.parse!("[1]")',
+            'Json.parse!("true")',
+            'Json.parse!("bad") rescue nothing'
+          ]
+        },
         "parse" => {
           name: "parse",
           description:
@@ -47,6 +57,9 @@ class Code
         code_value = code_arguments.code_first
 
         case code_operator.to_s
+        when "parse!"
+          sig(args) { String }
+          code_parse!(code_value)
         when "parse"
           sig(args) { String }
           code_parse(code_value)
@@ -73,6 +86,12 @@ class Code
         parsed.to_code
       rescue JSON::ParserError
         Nothing.new
+      end
+
+      def self.code_parse!(value)
+        ::JSON.parse(value.to_code.raw).to_code
+      rescue ::JSON::ParserError
+        raise ::Code::Error, "invalid JSON"
       end
 
       def self.code_generate(value, pretty: nil)

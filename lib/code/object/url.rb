@@ -14,6 +14,15 @@ class Code
         ]
       }.freeze
       CLASS_FUNCTIONS = {
+        "join" => {
+          name: "join",
+          description: "resolves a relative URL against a base URL.",
+          examples: [
+            "Url.join(\"https://example.com/a/b\", \"../c\")",
+            "Url.join(\"https://example.com/a\", \"/b\")",
+            "Url.join(\"https://example.com\", \"https://other.example.com\")"
+          ]
+        },
         "encode" => {
           name: "encode",
           description: "returns url-escaped text for a value.",
@@ -44,8 +53,75 @@ class Code
         }
       }.freeze
 
+      INSTANCE_FUNCTIONS = {
+        "scheme" => {
+          name: "scheme",
+          description: "returns the scheme URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").scheme",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").scheme",
+            "Url.parse(\"/relative\").scheme"
+          ]
+        },
+        "host" => {
+          name: "host",
+          description: "returns the host URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").host",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").host",
+            "Url.parse(\"/relative\").host"
+          ]
+        },
+        "path" => {
+          name: "path",
+          description: "returns the path URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").path",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").path",
+            "Url.parse(\"/relative\").path"
+          ]
+        },
+        "query" => {
+          name: "query",
+          description: "returns the query URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").query",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").query",
+            "Url.parse(\"/relative\").query"
+          ]
+        },
+        "fragment" => {
+          name: "fragment",
+          description: "returns the fragment URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").fragment",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").fragment",
+            "Url.parse(\"/relative\").fragment"
+          ]
+        },
+        "user" => {
+          name: "user",
+          description: "returns the user URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").user",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").user",
+            "Url.parse(\"/relative\").user"
+          ]
+        },
+        "password" => {
+          name: "password",
+          description: "returns the password URL component.",
+          examples: [
+            "Url.parse(\"https://example.com/path?q=1\").password",
+            "Url.parse(\"https://user:pass@example.com/#fragment\").password",
+            "Url.parse(\"/relative\").password"
+          ]
+        }
+      }.freeze
+
       def self.function_documentation(scope)
         return CLASS_FUNCTIONS if scope == :class
+        return INSTANCE_FUNCTIONS if scope == :instance
 
         {}
       end
@@ -61,6 +137,9 @@ class Code
         code_arguments = args.fetch(:arguments, []).to_code
 
         case code_operator.to_s
+        when "join"
+          sig(args) { [String, String] }
+          code_join(*code_arguments.raw)
         when "encode"
           sig(args) { Object.maybe }
           code_encode(*code_arguments.raw)
@@ -70,6 +149,41 @@ class Code
         when "parse"
           sig(args) { Object.maybe }
           code_parse(*code_arguments.raw)
+        else
+          super
+        end
+      end
+
+      def self.code_join(base, relative)
+        ::URI.join(base.to_s, relative.to_s).to_s.to_code
+      rescue ::URI::InvalidURIError, ::URI::BadURIError
+        raise ::Code::Error, "invalid URL"
+      end
+
+      def call(**args)
+        operator = args.fetch(:operator, nil).to_s
+        case operator
+        when "scheme"
+          sig(args)
+          code_scheme
+        when "host"
+          sig(args)
+          code_host
+        when "path"
+          sig(args)
+          code_path
+        when "query"
+          sig(args)
+          code_query
+        when "fragment"
+          sig(args)
+          code_fragment
+        when "user"
+          sig(args)
+          code_user
+        when "password"
+          sig(args)
+          code_password
         else
           super
         end
@@ -87,6 +201,34 @@ class Code
 
       def self.code_parse(string = nil)
         new(string)
+      end
+
+      def code_scheme
+        raw.scheme.to_code
+      end
+
+      def code_host
+        raw.host.to_code
+      end
+
+      def code_path
+        raw.path.to_code
+      end
+
+      def code_query
+        raw.query.to_code
+      end
+
+      def code_fragment
+        raw.fragment.to_code
+      end
+
+      def code_user
+        raw.user.to_code
+      end
+
+      def code_password
+        raw.password.to_code
       end
     end
   end

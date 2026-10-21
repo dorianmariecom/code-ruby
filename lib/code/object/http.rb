@@ -94,7 +94,8 @@ class Code
         },
         "fetch" => {
           name: "fetch",
-          description: "sends an http request using the given method name.",
+          description:
+            "sends an http request with optional json, redirects, max_retries, retry_delays, retry_unsafe and max_bytes controls.",
           examples: [
             "Http.fetch(:get, \"http://httpbin.org/status/200\").success?",
             "Http.fetch(:post, \"http://httpbin.org/status/200\", body: :hello).request.body",
@@ -121,7 +122,13 @@ class Code
           timeout: (Integer | Decimal).maybe,
           open_timeout: (Integer | Decimal).maybe,
           read_timeout: (Integer | Decimal).maybe,
-          write_timeout: (Integer | Decimal).maybe
+          write_timeout: (Integer | Decimal).maybe,
+          redirects: Integer.maybe,
+          max_retries: Integer.maybe,
+          retry_delays: List.maybe,
+          retry_unsafe: Boolean.maybe,
+          max_bytes: Integer.maybe,
+          json: Object.maybe
         }
       ].freeze
 
@@ -273,16 +280,106 @@ class Code
         code_fetch("patch", ...)
       end
 
-      def self.code_fetch(*arguments, redirects: 10)
+      def self.code_fetch(*arguments, redirects: nil)
+        options = arguments.third.to_code
+        options = Dictionary.new if options.nothing?
+        delays = options.code_get("retry_delays")
+        delays = delays.nothing? ? [] : delays.as_json
+        unless delays.size <= 5 &&
+                 delays.all? do |delay|
+                   delay.is_a?(::Numeric) && delay.finite? &&
+                     delay.between?(0, 60)
+                 end
+          raise ::Code::Error, "http: invalid retry delays"
+        end
+
+        safe = %w[get head options].include?(arguments.first.to_s.downcase)
+        safe ||= options.code_get("retry_unsafe").truthy?
+        safe ||=
+          (options.code_get("headers").as_json || {}).any? do |key, value|
+            key.downcase == "idempotency-key" && value.present?
+          end
+        delays = [] unless safe
+        attempt = 0
+        loop do
+          begin
+            response = code_request(*arguments, redirects: redirects)
+          rescue ::Code::Error => e
+            unless ["http timeout", "http error"].include?(e.message) &&
+                     attempt < delays.size
+              raise
+            end
+
+            sleep(delays[attempt])
+            attempt += 1
+            next
+          end
+          status = response.code_get("code").raw
+          unless [408, 429].include?(status) || status.between?(500, 599)
+            return response
+          end
+          return response if attempt >= delays.size
+
+          retry_after =
+            response.code_get("headers").code_get("retry-after").to_s
+          delay = delays[attempt]
+          if retry_after.match?(/\A\d+\z/)
+            delay = [delay, retry_after.to_i].max
+          elsif retry_after.present?
+            begin
+              delay = [delay, ::Time.httpdate(retry_after) - ::Time.now].max
+            rescue ::ArgumentError
+              delay = delays[attempt]
+            end
+          end
+          return response if delay > 60
+
+          sleep(delay)
+          attempt += 1
+        end
+      end
+
+      def self.code_request(*arguments, redirects: nil)
         verb = arguments.first.to_code.to_s.downcase
         original_url = arguments.second.to_code.to_s
         options = arguments.third.to_code
         options = Dictionary.new if options.nothing?
+        if redirects.nil?
+          redirects =
+            (
+              if options.code_get("redirects").nothing?
+                10
+              else
+                options.code_get("redirects").raw
+              end
+            )
+        end
+        max_retries =
+          (
+            if options.code_get("max_retries").nothing?
+              0
+            else
+              options.code_get("max_retries").raw
+            end
+          )
+        unless redirects.between?(0, 10) && max_retries.between?(0, 5)
+          raise ::Code::Error, "http: invalid request limits"
+        end
+
         username = options.code_get("username").to_s
         password = options.code_get("password").to_s
         body = options.code_get("body").to_s
         headers = sanitized_headers(options.code_get("headers").raw || {})
         data = options.code_get("data").raw || {}
+        if options.code_has_key?("json").truthy?
+          if options.code_get("body").something? ||
+               options.code_get("data").something?
+            raise ::Code::Error,
+                  "http: json cannot be combined with body or data"
+          end
+          body = ::JSON.generate(options.code_get("json").as_json)
+          headers["Content-Type"] = "application/json"
+        end
         timeout = options.code_get("timeout")
         open_timeout = options.code_get("open_timeout")
         read_timeout = options.code_get("read_timeout")
@@ -291,12 +388,18 @@ class Code
         query = query.to_a.flatten.map(&:to_s).each_slice(2).to_h.to_query
 
         url = original_url
-        url = "#{url}?#{query}" if query.present?
+        url = "#{url}#{url.include?("?") ? "&" : "?"}#{query}" if query.present?
 
         if username.present? || password.present?
           authorization = ::Base64.strict_encode64("#{username}:#{password}")
           headers["Authorization"] = "Basic #{authorization}"
           validate_header_size!("Authorization", headers["Authorization"])
+        end
+
+        max_bytes = options.code_get("max_bytes")
+        max_bytes = max_bytes.nothing? ? nil : max_bytes.raw
+        if max_bytes && !max_bytes.between?(1, 50.megabytes)
+          raise ::Code::Error, "http: invalid response size limit"
         end
 
         uri = parse_uri(url)
@@ -305,6 +408,7 @@ class Code
         http = ::Net::HTTP.new(uri.hostname, uri.port, nil)
         http.ipaddr = resolved_ip
         http.use_ssl = true if uri.scheme == "https"
+        http.max_retries = max_retries
         default_timeout = http_timeout(timeout, DEFAULT_TIMEOUT)
         open_timeout_value = http_timeout(open_timeout, default_timeout)
         read_timeout_value = http_timeout(read_timeout, default_timeout)
@@ -346,6 +450,11 @@ class Code
               validate_response_headers!(http_response)
 
               http_response.read_body do |chunk|
+                if max_bytes &&
+                     response_body.bytesize + chunk.bytesize > max_bytes
+                  raise ::Code::Error, "http response is too large"
+                end
+
                 response_body << chunk
               end
             end
@@ -362,16 +471,25 @@ class Code
           new_uri = parse_uri(::URI.join(uri, location).to_s)
           ::Code::Network.validate_public_uri!(new_uri, service: "http")
 
-          if same_origin?(new_uri, uri)
-            code_fetch(
-              "get",
-              new_uri.to_s,
-              { username: username, password: password, headers: headers },
-              redirects: redirects - 1
-            )
-          else
-            code_fetch("get", new_uri.to_s, redirects: redirects - 1)
+          redirect_options = options.as_json.except("query")
+          redirect_method = [307, 308].include?(code) ? verb : "get"
+          unless same_origin?(new_uri, uri)
+            unless %w[get head].include?(redirect_method)
+              raise ::Code::Error,
+                    "http: cannot redirect request body to another origin"
+            end
+            redirect_options =
+              redirect_options.except("username", "password", "headers")
           end
+          if redirect_method == "get"
+            redirect_options = redirect_options.except("body", "data", "json")
+          end
+          code_request(
+            redirect_method,
+            new_uri.to_s,
+            redirect_options,
+            redirects: redirects - 1
+          )
         else
           status = STATUS_CODES.key(code) || :ok
           response_headers = response.each_header.to_h
@@ -379,7 +497,7 @@ class Code
             request.to_hash.transform_values { |values| List.new(values) }
           body = response_body.to_s
 
-          Dictionary.new(
+          HttpResponse.new(
             :code => code,
             :status => status,
             :body => body,

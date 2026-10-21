@@ -107,6 +107,25 @@ class Code
         years: ::ActiveSupport::Duration::SECONDS_PER_YEAR
       }.freeze
       FUNCTIONS = {
+        "fail" => {
+          name: "fail",
+          description: "raises an explicit evaluation error.",
+          examples: [
+            "fail(\"missing configuration\") rescue nothing",
+            "fail(\"invalid response\") rescue :failed",
+            "fail(\"unavailable\") rescue \"fallback\""
+          ]
+        },
+        "assert" => {
+          name: "assert",
+          description:
+            "raises the supplied error unless the condition is truthy.",
+          examples: [
+            "assert(true, \"required\")",
+            "assert(1 == 1, \"unexpected\")",
+            "assert(false, \"required\") rescue nothing"
+          ]
+        },
         "Base64" => {
           name: "Base64",
           description:
@@ -493,6 +512,12 @@ class Code
         end
 
         case code_operator.to_s
+        when "fail"
+          sig(args) { String }
+          code_fail(code_value)
+        when "assert"
+          sig(args) { [Object, String] }
+          code_assert(code_value, code_arguments.code_second)
         when "Boolean"
           sig(args) { Object.repeat }
           if code_arguments.any?
@@ -799,6 +824,16 @@ class Code
 
         ::Kernel.sleep(duration)
         Nothing.new
+      end
+
+      def code_fail(message)
+        raise ::Code::Error, message.to_s
+      end
+
+      def code_assert(value, message)
+        raise ::Code::Error, message.to_s unless value.to_code.truthy?
+
+        value.to_code
       end
     end
   end
