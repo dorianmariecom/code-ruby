@@ -287,6 +287,16 @@ RSpec.describe Code do
 
   examples =
     [
+      ["{}.user", "nothing"],
+      ["1.user", "nothing"],
+      ["''.user", "nothing"],
+      ["[].user", "nothing"],
+      ["true.user", "nothing"],
+      ["nothing.user", "nothing"],
+      ["{}.user.address", "nothing"],
+      ["{ user: false }.user", "false"],
+      ["{ user: 1 }.user", "1"],
+      ["value = 1 value.user = 2 value.user", "2"],
       [
         "user = { name: :Dorian, age: 31 } user.delete_if(String) user.keys",
         '["age"]'

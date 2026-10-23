@@ -319,10 +319,14 @@ class Code
 
           code_context.code_fetch(self)
         else
-          raise(
-            Error,
-            "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}"
-          )
+          if code_operator.to_s.match?(/\A[A-Z]/)
+            raise(
+              Error,
+              "#{code_operator.inspect} not defined on #{code_inspect}:#{code_name}"
+            )
+          end
+
+          Object::Nothing.new
         end
       end
 
