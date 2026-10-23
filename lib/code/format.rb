@@ -201,7 +201,7 @@ class Code
       return nil unless node.is_a?(Hash) && node.key?(:text)
 
       text = node[:text].to_s
-      return nil unless text.match?(/\A[a-z_][a-z0-9_]*\z/)
+      return nil unless text.match?(/\A[a-z_][a-z0-9_]*[?!]?\z/)
 
       ":#{text}"
     end
@@ -349,7 +349,7 @@ class Code
       return unless part.is_a?(Hash) && part.key?(:text)
 
       text = part[:text].to_s
-      return unless text.match?(/\A[a-z_][a-z0-9_]*\z/)
+      return unless text.match?(/\A[a-z_][a-z0-9_]*[?!]?\z/)
 
       text
     end
@@ -459,11 +459,16 @@ class Code
         extract_string_concatenation_parts(left_operation: operation)
       return format_string(merged_string, indent: indent) if merged_string
 
-      expression = format_nested_statement(operation[:first], indent: indent)
+      first_operator = format_operator(Array(operation[:others]).first&.fetch(:operator, ""))
+      expression = format_boolean_operand(operation[:first], first_operator, indent: indent)
 
       Array(operation[:others]).each do |other|
-        right = format_nested_statement(other[:statement], indent: indent)
         operator = format_operator(other[:operator])
+        right = if compact_operator?(operator)
+          format_member_statement(other[:statement], indent: indent)
+        else
+          format_boolean_operand(other[:statement], operator, indent: indent)
+        end
 
         expression =
           if compact_operator?(operator)
@@ -508,6 +513,36 @@ class Code
       end
 
       expression
+    end
+
+    def format_member_statement(statement, indent:)
+      if statement.is_a?(Hash) && statement[:call] && (statement[:call][:arguments] || []).empty?
+        format_call(statement[:call].except(:arguments), indent: indent)
+      elsif statement.is_a?(Hash) && statement[:left_operation]
+        operation = statement[:left_operation].deep_dup
+        first = operation[:first]
+        if first[:call] && (first[:call][:arguments] || []).empty?
+          first[:call].delete(:arguments)
+        end
+        format_left_operation(operation, indent: indent)
+      else
+        format_nested_statement(statement, indent: indent)
+      end
+    end
+
+    def format_boolean_operand(statement, operator, indent:)
+      if BOOLEAN_WORD_OPERATORS.include?(operator) && statement.is_a?(Hash) &&
+           statement[:left_operation]
+        nested = Array(statement[:left_operation][:others])
+        if nested.any? do |other|
+             nested_operator = format_operator(other[:operator])
+             BOOLEAN_WORD_OPERATORS.include?(nested_operator) && nested_operator != operator
+           end
+          return format_group([statement], indent: indent)
+        end
+      end
+
+      format_nested_statement(statement, indent: indent)
     end
 
     def format_compact_receiver(expression, indent:)

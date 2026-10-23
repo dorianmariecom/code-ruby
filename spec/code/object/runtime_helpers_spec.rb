@@ -147,15 +147,22 @@ RSpec.describe "runtime helpers" do
       ).to_return(body: "ok")
     expect(
       Code.evaluate(
-        'Http.post("https://example.com/", json: { a: 1 }).body'
+        'Http.post("https://example.com/", json: { a: 1 }, redirects: 1).body'
       ).to_s
     ).to eq("ok")
     expect(request).to have_been_requested.once
   end
 
   it "shortens strings and appends query parameters to existing queries" do
-    expect(Code.evaluate('"abcdef".truncate(5)').to_s).to eq("ab...")
-    expect { Code.evaluate('"abcdef".truncate(1)') }.to raise_error(Code::Error)
+    expect(Code.evaluate('"abcdef".truncate(5)').to_s).to eq("abcd…")
+    expect(Code.evaluate('"abcdef".truncate(1)').to_s).to eq("…")
+    expect(Code.evaluate('"abcdef".truncate(5, omission: "...")').to_s).to eq(
+      "ab..."
+    )
+    expect { Code.evaluate('"abcdef".truncate(0)') }.to raise_error(Code::Error)
+    expect do
+      Code.evaluate('"abcdef".truncate(2, omission: "...")')
+    end.to raise_error(Code::Error)
     request =
       stub_request(:get, "https://example.com/?old=1&new=2").to_return(
         status: 200

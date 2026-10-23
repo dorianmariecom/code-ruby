@@ -99,7 +99,8 @@ RSpec.describe Code::Object::Http do
 
       expect do
         described_class.code_get(
-          Code::Object::String.new("https://example.com/redirect")
+          Code::Object::String.new("https://example.com/redirect"),
+          Code::Object::Dictionary.new(redirects: 1)
         )
       end.to raise_error(Code::Error, /local network/)
     end
@@ -115,7 +116,7 @@ RSpec.describe Code::Object::Http do
 
       described_class.code_get(
         Code::Object::String.new("https://example.com/redirect"),
-        Code::Object::Dictionary.new(username: "user", password: "password")
+        Code::Object::Dictionary.new(username: "user", password: "password", redirects: 1)
       )
 
       expect(

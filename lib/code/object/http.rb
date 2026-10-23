@@ -197,7 +197,22 @@ class Code
         not_extended: 510,
         network_authentication_required: 511
       }.freeze
-      DEFAULT_TIMEOUT = 1.hour.to_f
+      DEFAULT_TIMEOUT = 30
+      DEFAULT_OPEN_TIMEOUT = 10
+      DEFAULT_REDIRECTS = 0
+      DEFAULT_MAX_RETRIES = 0
+      DEFAULT_RETRY_DELAYS = [].freeze
+      MAX_REDIRECTS = 10
+      MAX_RETRIES = 5
+      MAX_RETRY_DELAY = 60
+      MAX_RESPONSE_BYTES = 50.megabytes
+      SAFE_RETRY_METHODS = %w[get head options].freeze
+      RETRYABLE_ERRORS = ["http timeout", "http error"].freeze
+      RETRYABLE_STATUSES = [408, 429].freeze
+      SERVER_ERROR_STATUSES = (500..599)
+      SUCCESS_STATUSES = (200..299)
+      REDIRECT_STATUSES = (300..399)
+      PRESERVE_METHOD_REDIRECT_STATUSES = [307, 308].freeze
       MAX_HEADER_BYTES = 32.kilobytes
       HEADER_NAME = /\A[A-Za-z0-9!#$%&'*+\-.^_`|~]+\z/
       RESTRICTED_HEADERS = %w[
@@ -284,16 +299,16 @@ class Code
         options = arguments.third.to_code
         options = Dictionary.new if options.nothing?
         delays = options.code_get("retry_delays")
-        delays = delays.nothing? ? [] : delays.as_json
-        unless delays.size <= 5 &&
+        delays = delays.nothing? ? DEFAULT_RETRY_DELAYS : delays.as_json
+        unless delays.size <= MAX_RETRIES &&
                  delays.all? do |delay|
                    delay.is_a?(::Numeric) && delay.finite? &&
-                     delay.between?(0, 60)
+                     delay.between?(0, MAX_RETRY_DELAY)
                  end
           raise ::Code::Error, "http: invalid retry delays"
         end
 
-        safe = %w[get head options].include?(arguments.first.to_s.downcase)
+        safe = SAFE_RETRY_METHODS.include?(arguments.first.to_s.downcase)
         safe ||= options.code_get("retry_unsafe").truthy?
         safe ||=
           (options.code_get("headers").as_json || {}).any? do |key, value|
@@ -305,7 +320,7 @@ class Code
           begin
             response = code_request(*arguments, redirects: redirects)
           rescue ::Code::Error => e
-            unless ["http timeout", "http error"].include?(e.message) &&
+            unless RETRYABLE_ERRORS.include?(e.message) &&
                      attempt < delays.size
               raise
             end
@@ -315,7 +330,7 @@ class Code
             next
           end
           status = response.code_get("code").raw
-          unless [408, 429].include?(status) || status.between?(500, 599)
+          unless RETRYABLE_STATUSES.include?(status) || SERVER_ERROR_STATUSES.cover?(status)
             return response
           end
           return response if attempt >= delays.size
@@ -332,7 +347,7 @@ class Code
               delay = delays[attempt]
             end
           end
-          return response if delay > 60
+          return response if delay > MAX_RETRY_DELAY
 
           sleep(delay)
           attempt += 1
@@ -348,7 +363,7 @@ class Code
           redirects =
             (
               if options.code_get("redirects").nothing?
-                10
+                DEFAULT_REDIRECTS
               else
                 options.code_get("redirects").raw
               end
@@ -357,12 +372,13 @@ class Code
         max_retries =
           (
             if options.code_get("max_retries").nothing?
-              0
+              DEFAULT_MAX_RETRIES
             else
               options.code_get("max_retries").raw
             end
           )
-        unless redirects.between?(0, 10) && max_retries.between?(0, 5)
+        unless redirects.between?(0, MAX_REDIRECTS) &&
+                 max_retries.between?(0, MAX_RETRIES)
           raise ::Code::Error, "http: invalid request limits"
         end
 
@@ -398,7 +414,7 @@ class Code
 
         max_bytes = options.code_get("max_bytes")
         max_bytes = max_bytes.nothing? ? nil : max_bytes.raw
-        if max_bytes && !max_bytes.between?(1, 50.megabytes)
+        if max_bytes && !max_bytes.between?(1, MAX_RESPONSE_BYTES)
           raise ::Code::Error, "http: invalid response size limit"
         end
 
@@ -410,7 +426,11 @@ class Code
         http.use_ssl = true if uri.scheme == "https"
         http.max_retries = max_retries
         default_timeout = http_timeout(timeout, DEFAULT_TIMEOUT)
-        open_timeout_value = http_timeout(open_timeout, default_timeout)
+        open_timeout_value =
+          http_timeout(
+            open_timeout,
+            timeout.nothing? ? DEFAULT_OPEN_TIMEOUT : default_timeout
+          )
         read_timeout_value = http_timeout(read_timeout, default_timeout)
         write_timeout_value = http_timeout(write_timeout, default_timeout)
 
@@ -467,12 +487,12 @@ class Code
         code = response.code.to_i
         location = response["location"].to_s
 
-        if (300..399).cover?(code) && location.present? && redirects.positive?
+        if REDIRECT_STATUSES.cover?(code) && location.present? && redirects.positive?
           new_uri = parse_uri(::URI.join(uri, location).to_s)
           ::Code::Network.validate_public_uri!(new_uri, service: "http")
 
           redirect_options = options.as_json.except("query")
-          redirect_method = [307, 308].include?(code) ? verb : "get"
+          redirect_method = PRESERVE_METHOD_REDIRECT_STATUSES.include?(code) ? verb : "get"
           unless same_origin?(new_uri, uri)
             unless %w[get head].include?(redirect_method)
               raise ::Code::Error,
@@ -504,8 +524,8 @@ class Code
             :headers => response_headers,
             :method => verb,
             :url => url,
-            "success?" => code.between?(200, 299),
-            "redirect?" => code.between?(300, 399),
+            "success?" => SUCCESS_STATUSES.cover?(code),
+            "redirect?" => REDIRECT_STATUSES.cover?(code),
             :request => {
               method: verb,
               url: url,

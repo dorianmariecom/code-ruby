@@ -17,6 +17,11 @@ class Code
       examples: %w[Object Object.new Object.documentation.description]
     }.freeze
     INSTANCE_FUNCTIONS = {
+      "in?" => {
+        name: "in?",
+        description: "checks whether a collection includes this value.",
+        examples: ["200.in?(200...300)", "300.in?(200...300)", ":ok.in?([:ok, :accepted])"]
+      },
       "documentation" => {
         name: "documentation",
         description: "returns documentation for the value's class.",

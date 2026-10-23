@@ -22,6 +22,7 @@ class Code
       SHARED_OPERATORS = %w[
         documentation
         present?
+        in?
         blank?
         presence
         presence_in
@@ -161,6 +162,9 @@ class Code
         when "==", "equal", "equal?"
           sig(args) { Object }
           code_equal(code_value)
+        when "in?"
+          sig(args) { Object::List | Object::Range | Object::String | Object::Dictionary }
+          code_in?(code_value)
         when "same_object?"
           sig(args) { Object }
           code_same_object?(code_value)
@@ -389,6 +393,15 @@ class Code
         code_other = other.to_code
 
         Object::Boolean.new((self <=> code_other) <= 0)
+      end
+
+      def code_in?(collection)
+        collection = collection.to_code
+        if collection.is_a?(Object::Dictionary)
+          collection.code_has_key?(self)
+        else
+          collection.code_include?(self)
+        end
       end
 
       def code_exclamation_mark

@@ -3,6 +3,8 @@
 class Code
   class Object
     class String < Object
+      DEFAULT_OMISSION = "…"
+
       CLASS_DOCUMENTATION = {
         name: "String",
         description:
@@ -1224,7 +1226,7 @@ class Code
       def code_truncate(limit, options = nil)
         limit = limit.to_code.raw
         omission = options.to_code.code_get("omission")
-        omission = omission.nothing? ? "..." : omission.to_s
+        omission = omission.nothing? ? DEFAULT_OMISSION : omission.to_s
         if limit < omission.length
           raise ::Code::Error, "invalid truncation limit"
         end

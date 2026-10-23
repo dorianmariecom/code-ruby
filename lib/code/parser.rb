@@ -523,7 +523,12 @@ class Code
       if match?(:punctuation, ":") || match?(:operator, "=>")
         advance
         code = parse_optional_code(%w[, }])
-        { statement_code: { statement: statement, code: code }.compact }
+        parts = statement[:string]
+        if parts&.one? && parts.first[:text]&.match?(/\A[a-z_][a-z0-9_]*[?!]?\z/)
+          { name_code: { name: parts.first[:text], code: code }.compact }
+        else
+          { statement_code: { statement: statement, code: code }.compact }
+        end
       else
         { code: wrap_code(statement) }
       end
